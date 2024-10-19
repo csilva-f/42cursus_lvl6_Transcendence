@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create User</title>
+</head>
+<body>
+    <h2>Create a New User</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name"><br><br>
+
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username"><br><br>
+
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+
+        <button type="submit">Create User</button>
+    </form>
+
+    <a href="{% url 'get_users' %}">View Users</a>
+</body>
+</html>
+
