@@ -10,7 +10,8 @@ def index(request):
 
 from django.shortcuts import render, redirect
 from appcarol.models import User
-from django.http import HttpResponse
+from django.utils import timezone
+from django.contrib import messages  # Import for displaying messages
 
 def create_user_view(request):
     if request.method == 'POST':
@@ -32,3 +33,21 @@ def get_users_view(request):
     users = User.objects.all()
     return render(request, 'user_list.html', {'users': users})
 
+def login_user_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        # Check if the user exists and the password matches
+        try:
+            user = User.objects.get(username=username, password=password)
+            # Update the last_login timestamp
+            user.last_login = timezone.now()
+            user.save()
+
+            return redirect('get_users')
+        except User.DoesNotExist:
+            messages.error(request, "Invalid username or password.")
+            return redirect('login_user')
+
+    return render(request, 'login.html')
