@@ -1,9 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
-    <link rel="stylesheet" href="{% static 'design.css' %}">
+    <link rel="stylesheet" href="{% static 'appcarol/design.css' %}">
 </head>
 <body>
     <h2>Register</h2>
@@ -57,5 +58,18 @@
     </form>
 
     <p class="footer-text">Already have an account? <a href="{% url 'login' %}">Login here</a>.</p>
+
+    <script>
+        // Show help text for fields if they have errors
+        document.addEventListener('DOMContentLoaded', function() {
+            const helpTexts = document.querySelectorAll('.help-text');
+            helpTexts.forEach(helpText => {
+                const inputField = helpText.previousElementSibling;
+                if (inputField && inputField.nextElementSibling.classList.contains('error-message')) {
+                    helpText.style.display = 'inline';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
