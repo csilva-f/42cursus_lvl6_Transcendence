@@ -1,0 +1,45 @@
+services:
+  python:
+    container_name: python
+    build: ./python
+    volumes:
+      - ./code:/code
+    networks:
+      - ft_transcendence
+    init: true
+    restart: on-failure
+    env_file:
+      - ./python/.env
+    depends_on:
+      - db
+
+  nginx:
+    container_name: nginx
+    build: ./nginx
+    networks:
+      - ft_transcendence
+    ports:
+      - "8000:443"
+    init: true
+    restart: on-failure
+    env_file:
+      - ./nginx/.env
+    depends_on:
+      - python
+
+  db:
+    image: postgres:13
+    container_name: db
+    env_file:
+      - ./postgres/.env
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data:rw
+    networks:
+      - ft_transcendence
+
+networks:
+  ft_transcendence:
+    name: ft_transcendence
+    driver: bridge
+# volumes:
+#   postgres_data:
