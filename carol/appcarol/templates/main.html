@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cuca Beludo 🍑</title>
+    <style>
+        /* Hide all blocks by default */
+        #home, #login, #create_user, #user_list { display: none; }
+        
+        /* Show specific block based on the section */
+        {% if section == "home" %}
+            #home { display: block; }
+        {% elif section == "user_list" %}
+            #user_list { display: block; }
+        {% endif %}
+    </style>
+</head>
+<body>
+    <h1>
+        {% if section == "home" %}
+            Welcome to Cuca Beludo 🍑
+        {% else %}
+            Cuca Beludo 🍑
+        {% endif %}
+    </h1>
+
+    <nav>
+        <button onclick="window.location.href='{% url 'index' %}'">Home</button>
+        {% if user.is_authenticated %}
+            <button onclick="window.location.href='{% url 'get_users' %}'">User List</button>
+            <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        {% else %}
+            <button onclick="window.location.href='{% url 'login' %}'">Login</button>
+            <button onclick="window.location.href='{% url 'create_user' %}'">Register</button>
+        {% endif %}
+    </nav>
+
+    <!-- Include blocks.html -->
+    {% include "blocks.html" %}
+</body>
+</html>

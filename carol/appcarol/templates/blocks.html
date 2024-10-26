@@ -1,0 +1,39 @@
+{# blocks.html #}
+
+<!-- Block for the Home Section -->
+<div id="home">
+    <p>Welcome to Cuca Beludo 🍑<br>Use the navigation to explore different sections.</p>
+</div>
+
+<!-- Block for the User List Section -->
+<div id="user_list">
+    <h2>List of Users</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Victories</th>
+                <th>Losses</th>
+                <th>Last login</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.first_name }} {{ user.last_name }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.profile.victories }}</td>
+                <td>{{ user.profile.losses }}</td>
+                <td>{{ user.last_login}}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No users found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

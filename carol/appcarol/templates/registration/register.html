@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="{% static 'design.css' %}">
+</head>
+<body>
+    <h2>Register</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <label class="required-field" for="id_username">Username:</label>
+        {{ form.username }}
+        <span class="help-text">150 characters or fewer. Letters, digits and @/./+/-/_ only.</span>
+        {% if form.username.errors %}
+            <div class="error-message">{{ form.username.errors.0 }}</div>
+        {% endif %}
+        <br><br>
+
+        <label class="required-field" for="id_first_name">First name:</label>
+        {{ form.first_name }}
+        {% if form.first_name.errors %}
+            <div class="error-message">{{ form.first_name.errors.0 }}</div>
+        {% endif %}
+        <br><br>
+
+        <label class="required-field" for="id_last_name">Last name:</label>
+        {{ form.last_name }}
+        {% if form.last_name.errors %}
+            <div class="error-message">{{ form.last_name.errors.0 }}</div>
+        {% endif %}
+        <br><br>
+
+        <label class="required-field" for="id_email">Email:</label>
+        {{ form.email }}
+        {% if form.email.errors %}
+            <div class="error-message">{{ form.email.errors.0 }}</div>
+        {% endif %}
+        <br><br>
+
+        <label class="required-field" for="id_password1">Password:</label>
+        {{ form.password1 }}
+        <span class="help-text">Minimum 8 characters. Avoid common or entirely numeric passwords.</span>
+        {% if form.password1.errors %}
+            <div class="error-message">{{ form.password1.errors.0 }}</div>
+        {% endif %}
+        <br><br>
+
+        <label class="required-field" for="id_password2">Password confirmation:</label>
+        {{ form.password2 }}
+        {% if form.password2.errors %}
+            <div class="error-message">{{ form.password2.errors.0 }}</div>
+        {% endif %}
+        <br><br>
+        <button type="submit">Register</button>
+    </form>
+
+    <p class="footer-text">Already have an account? <a href="{% url 'login' %}">Login here</a>.</p>
+</body>
+</html>

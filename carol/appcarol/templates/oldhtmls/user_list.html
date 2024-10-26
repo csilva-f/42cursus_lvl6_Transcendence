@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% extends "blocks.html" %}
+
+{% block content %}
+<h2>List of Users</h2>
+<p>{{ users }}</p> <!-- Should display the QuerySet if passed correctly -->
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Victories</th>
+            <th>Losses</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.victories }}</td>
+            <td>{{ user.losses }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No users found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<br>
+<a href="{% url 'create_user' %}">Add user</a>
+<br>
+{% endblock %}
+
+

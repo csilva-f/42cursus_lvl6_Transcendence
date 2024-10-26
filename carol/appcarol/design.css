@@ -1,0 +1,22 @@
+/* All the css properties will go in this file. */
+
+.footer-text { 
+    font-size: 14px;
+    color: gray;
+    text-align: left;
+    margin-top: 20px;
+  }
+
+.required-field::after {
+    content: " *";
+    color: red;
+}
+.help-text {
+    color: gray;
+    font-size: 0.9em;
+    display: none; /* Hide by default */
+}
+.error-message {
+    color: red;
+    font-size: 0.9em;
+}
