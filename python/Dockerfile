@@ -12,4 +12,4 @@ RUN apk del .build-deps
 # Expose the port
 EXPOSE 8000
 # Command to run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "ft_transcendence.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--reload", "ft_transcendence.wsgi:application"]

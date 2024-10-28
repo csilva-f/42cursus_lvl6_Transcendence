@@ -3,7 +3,7 @@ services:
     container_name: python
     build: ./python
     volumes:
-      - ./code:/code
+      - ./code:/code:rw
     networks:
       - ft_transcendence
     init: true

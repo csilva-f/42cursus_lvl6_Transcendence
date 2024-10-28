@@ -6,6 +6,7 @@ build:
 	@docker compose -p $(NAME) build
 
 up:
+	@mkdir -p ./postgres/data
 	@echo "Running Docker Compose setup..."
 	@docker compose up -d
 

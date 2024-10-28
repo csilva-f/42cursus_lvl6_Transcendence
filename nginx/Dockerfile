@@ -8,15 +8,8 @@ RUN apk update && \
 RUN openrc
 RUN touch /run/openrc/softlevel
 
-COPY ./tools/* /nginx 
+COPY ./tools/* /nginx
 RUN chmod +x /nginx/*.sh
-#COPY ./init.sql /mariadb
-
-
-
-
-COPY ./tools/index.html /var/html/www/
-
 COPY ./conf/nginx.conf /etc/nginx/nginx.conf
 
 RUN mkdir -p /etc/nginx/ssl && \
