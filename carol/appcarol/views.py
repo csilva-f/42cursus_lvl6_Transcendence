@@ -25,3 +25,6 @@ def register_view(request):
 def get_users_view(request):
     users = User.objects.all()
     return render(request, 'main.html', {'section': 'user_list', 'users': users})
+
+def game(request):
+    return render(request, 'game.html')
