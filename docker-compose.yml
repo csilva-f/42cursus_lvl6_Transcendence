@@ -28,8 +28,9 @@ services:
       - python
 
   db:
-    image: postgres:13
+    # image: postgres:13
     container_name: db
+    build: ./postgres
     env_file:
       - ./postgres/.env
     volumes:
@@ -41,5 +42,8 @@ networks:
   ft_transcendence:
     name: ft_transcendence
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
 # volumes:
 #   postgres_data:
