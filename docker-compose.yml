@@ -16,6 +16,8 @@ services:
   nginx:
     container_name: nginx
     build: ./nginx
+    volumes:
+      - ./code/static:/static:rw
     networks:
       - ft_transcendence
     ports:
@@ -35,6 +37,7 @@ services:
       - ./postgres/.env
     volumes:
       - ./postgres/data:/var/lib/postgresql/data:rw
+      - ./postgres/dataa:/dataa:rw
     networks:
       - ft_transcendence
 

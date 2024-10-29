@@ -17,7 +17,6 @@ down:
 
 migrate:
 	@echo "Applying migrations to the database..."
-	@docker compose exec python python manage.py collectstatic
 	@docker compose exec python python manage.py migrate
 	@docker compose exec python python manage.py makemigrations
 
@@ -29,6 +28,6 @@ fclean: clean
 	@echo "Force cleaning: removing all images..."
 	@docker compose -p $(NAME) down --rmi all
 	@docker system prune -af
-	@rm -rf ./postgres/data
+
 
 re: fclean all
