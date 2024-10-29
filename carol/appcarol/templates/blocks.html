@@ -37,3 +37,36 @@
         </tbody>
     </table>
 </div>
+
+<!-- Block for the Edit Profile Section -->
+<!-- Block for Edit Profile Section -->
+<div id="edit_user">
+    <h2>Edit Profile</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- This should now only render first name, last name, and email -->
+        <button type="submit">Save Changes</button>
+    </form>
+</div>
+
+<!-- Block for Password Confirmation -->
+<div id="confirm_password">
+    <h2>Confirm Changes</h2>
+    <p>Please enter your password to save changes to your profile.</p>
+    <form method="post">
+        {% csrf_token %}
+        <label for="password">Password:</label>
+        <input type="password" name="password" required>
+        <button type="submit">Confirm</button>
+    </form>
+</div>
+
+<!-- Block for Change Password Section -->
+<div id="change_password">
+    <h2>Change Password</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ password_form.as_p }}
+        <button type="submit">Change Password</button>
+    </form>
+</div>

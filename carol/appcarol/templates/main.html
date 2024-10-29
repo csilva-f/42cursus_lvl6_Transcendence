@@ -5,17 +5,100 @@
     <title>Cuca Beludo 🍑</title>
     <style>
         /* Hide all blocks by default */
-        #home, #login, #create_user, #user_list { display: none; }
+        #home, #login, #create_user, #user_list, #edit_user, #confirm_password, #change_password { display: none; }
         
         /* Show specific block based on the section */
         {% if section == "home" %}
             #home { display: block; }
         {% elif section == "user_list" %}
             #user_list { display: block; }
+        {% elif section == "edit_user" %}
+            #edit_user { display: block; }
+        {% elif section == "confirm_password" %}
+            #confirm_password { display: block; }
+        {% elif section == "change_password" %}
+            #change_password { display: block; }
         {% endif %}
+
+        /* Toast notification styling */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin: auto;
+            color: white;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            top: 30px;
+            transform: translateX(-50%);
+            font-size: 17px;
+            opacity: 0; /* Start with 0 opacity */
+        }
+    
+        /* Background color for success messages */
+        .toast.success {
+            background-color: #4CAF50; /* Green for success */
+        }
+    
+        /* Background color for error messages */
+        .toast.error {
+            background-color: #f44336; /* Red for error */
+        }
+
+        /* Show the toast when visibility is set */
+        .toast.show {
+            visibility: visible;
+            animation: slideDown 0.5s forwards, fadeout 0.5s 4s forwards;
+        }
+    
+        @keyframes slideDown {
+            0% {
+                top: -100px;  /* Start well above the screen */
+                opacity: 0;   /* Invisible at start */
+            }
+            60% {
+                opacity: 1;   /* Fade in during the slide */
+            }
+            100% {
+                top: 30px;    /* Final position */
+                opacity: 1;   /* Fully visible */
+            }
+        }
+        /* Animation for fading out the toast */
+        @keyframes fadeout {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
     </style>
 </head>
 <body>
+    {% if messages %}
+        {% for message in messages %}
+            <div id="toast" class="toast {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <script>
+        // Function to show toast message
+        function showToast() {
+            var toast = document.getElementById("toast");
+            toast.classList.add("show");
+            setTimeout(function() {
+                toast.classList.remove("show");
+            }, 3500);  // Display duration: 3.5 seconds
+        }
+
+        // Show toast if there's a message from Django
+        {% if messages %}
+            {% for message in messages %}
+                document.getElementById("toast").innerHTML = "{{ message }}";
+                showToast();
+            {% endfor %}
+        {% endif %}
+    </script>
     <h1>
         {% if section == "home" %}
             Welcome to Cuca Beludo 🍑
@@ -28,6 +111,8 @@
         <button onclick="window.location.href='{% url 'index' %}'">Home</button>
         {% if user.is_authenticated %}
             <button onclick="window.location.href='{% url 'get_users' %}'">User List</button>
+            <button onclick="window.location.href='{% url 'edit_user' %}'">Edit Profile</button>
+            <button onclick="window.location.href='{% url 'change_password' %}'">Change Password</button>
             <form action="{% url 'logout' %}" method="post" style="display: inline;">
                 {% csrf_token %}
                 <button type="submit">Logout</button>
