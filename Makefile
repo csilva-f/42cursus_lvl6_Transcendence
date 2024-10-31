@@ -1,4 +1,5 @@
 NAME	= ft_transcendence
+DB_CONTAINER_NAME=db
 all: build up migrate
 
 build:
@@ -17,6 +18,13 @@ down:
 
 migrate:
 	@echo "Applying migrations to the database..."
+	@echo "Waiting for the database to be up..."
+	@while ! docker inspect -f '{{.State.Health.Status}}' $(DB_CONTAINER_NAME) | grep -q "healthy"; do \
+		echo "Database is not ready yet..."; \
+		sleep 2; \
+	done
+	@echo "Database is up and running! Applying Migrations..."
+	@sleep 5
 	@docker compose exec python python manage.py migrate
 	@docker compose exec python python manage.py makemigrations
 

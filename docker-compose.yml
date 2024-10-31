@@ -17,7 +17,8 @@ services:
     container_name: nginx
     build: ./nginx
     volumes:
-      - ./code/static:/static:rw
+      - ./frontend:/frontend:rw
+      #- ./code/static:/static:rw
     networks:
       - ft_transcendence
     ports:
@@ -30,14 +31,12 @@ services:
       - python
 
   db:
-    # image: postgres:13
     container_name: db
     build: ./postgres
     env_file:
       - ./postgres/.env
     volumes:
       - ./postgres/data:/var/lib/postgresql/data:rw
-      - ./postgres/dataa:/dataa:rw
     networks:
       - ft_transcendence
 
@@ -48,5 +47,3 @@ networks:
     ipam:
       config:
         - subnet: 172.18.0.0/24
-# volumes:
-#   postgres_data:
