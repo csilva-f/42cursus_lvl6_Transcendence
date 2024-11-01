@@ -1,26 +1,75 @@
 services:
-  python:
-    container_name: python
-    build: ./python
+  api:
+    container_name: api
+    build: ./API
     volumes:
-      - ./code:/code:rw
+      - ./API/code:/code:rw
     networks:
-      - ft_transcendence
+      - backend
+      - frontend
+    ports:
+      - "5555:8000"
     init: true
     restart: on-failure
     env_file:
-      - ./python/.env
+      - ./API/.env
     depends_on:
-      - db
+      - backend
+
+  backend:
+    container_name: backend
+    build: ./backend
+    volumes:
+      - ./backend/code:/code:rw
+    networks:
+      - backend
+    init: true
+    restart: on-failure
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - backend-db
+
+  backend-db:
+    container_name: backend-db
+    build: ./backend-db
+    env_file:
+      - ./backend-db/.env
+    volumes:
+      - ./backend-db/data:/var/lib/postgresql/data:rw
+    networks:
+      - backend
+  auth:
+    container_name: auth
+    build: ./auth
+    volumes:
+      - ./auth/code:/code:rw
+    networks:
+      - backend
+    init: true
+    restart: on-failure
+    env_file:
+      - ./auth/.env
+    depends_on:
+      - auth-db
+
+  auth-db:
+    container_name: auth-db
+    build: ./auth-db
+    env_file:
+      - ./auth-db/.env
+    volumes:
+      - ./auth-db/data:/var/lib/postgresql/data:rw
+    networks:
+      - backend
 
   nginx:
     container_name: nginx
     build: ./nginx
     volumes:
       - ./frontend:/frontend:rw
-      #- ./code/static:/static:rw
     networks:
-      - ft_transcendence
+      - frontend
     ports:
       - "8000:443"
     init: true
@@ -28,22 +77,18 @@ services:
     env_file:
       - ./nginx/.env
     depends_on:
-      - python
-
-  db:
-    container_name: db
-    build: ./postgres
-    env_file:
-      - ./postgres/.env
-    volumes:
-      - ./postgres/data:/var/lib/postgresql/data:rw
-    networks:
-      - ft_transcendence
+      - api
 
 networks:
-  ft_transcendence:
-    name: ft_transcendence
+  backend:
+    name: backend
     driver: bridge
     ipam:
       config:
         - subnet: 172.18.0.0/24
+  frontend:
+    name: frontend
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/24

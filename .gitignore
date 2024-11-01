@@ -1,2 +1,3 @@
 # Ignore PostgreSQL data directory
-postgres/data/
+backend-db/data/
+auth-db/data/

@@ -1,5 +1,6 @@
 NAME	= ft_transcendence
-DB_CONTAINER_NAME=db
+BACKEND_DB_CONTAINER_NAME=backend-db
+AUTH_DB_CONTAINER_NAME=backend-db
 all: build up migrate
 
 build:
@@ -17,16 +18,27 @@ down:
 	@docker compose down
 
 migrate:
-	@echo "Applying migrations to the database..."
+	@echo "Applying migrations to the backend database..."
 	@echo "Waiting for the database to be up..."
-	@while ! docker inspect -f '{{.State.Health.Status}}' $(DB_CONTAINER_NAME) | grep -q "healthy"; do \
+	@while ! docker inspect -f '{{.State.Health.Status}}' $(BACKEND_DB_CONTAINER_NAME) | grep -q "healthy"; do \
 		echo "Database is not ready yet..."; \
 		sleep 2; \
 	done
 	@echo "Database is up and running! Applying Migrations..."
 	@sleep 5
-	@docker compose exec python python manage.py migrate
-	@docker compose exec python python manage.py makemigrations
+	@docker compose exec backend python manage.py migrate
+	@docker compose exec backend python manage.py makemigrations
+
+	@echo "Applying migrations to the authentication database..."
+	@echo "Waiting for the database to be up..."
+	@while ! docker inspect -f '{{.State.Health.Status}}' $(AUTH_DB_CONTAINER_NAME) | grep -q "healthy"; do \
+		echo "Database is not ready yet..."; \
+		sleep 2; \
+	done
+	@echo "Database is up and running! Applying Migrations..."
+	@sleep 5
+	@docker compose exec backend python manage.py migrate
+	@docker compose exec backend python manage.py makemigrations
 
 clean:
 	@echo "Cleaning up stopped containers and networks..."
