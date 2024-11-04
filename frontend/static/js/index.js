@@ -17,3 +17,21 @@ function setRandomImage() {
 }
 
 window.onload = setRandomImage;
+
+$(document).ready(function () {
+    $("#learnMoreBtn").on("click", function () {
+        $.ajax({
+            type: "GET",
+            url: "/api/get-datetime/", // adjust the URL according to your Django app's URL configuration
+            success: function (data) {
+                console.log(data.current_datetime);
+                const pElement = document.getElementById("datetime");
+                pElement.innerText = data.current_datetime;
+            },
+            error: function (xhr, status, error) {
+                console.log("Error:", error);
+                // update your HTML with an error message
+            },
+        });
+    });
+});

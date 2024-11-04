@@ -12,11 +12,12 @@
     <!-- Encontrar maneira melhor para importar o css de cada ficheiro -->
     <link rel="stylesheet" href="templates/Home/Home.css" />
     <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
-<body>
+<body style="background-color: #F2F2F2;">
     <div class="container-fluid shadow-sm">
         <div class="row" style="height: 13vh;">
             <div class="d-flex align-items-center justify-content-center border border-black" style="width: 20vh;">
@@ -25,6 +26,7 @@
             <div class="col-sm-8 p-3 d-flex align-items-center border border-black">
                 <h1 class="display-6" style="font-weight: bold;">Welcome,</h1>
                 <p class="h3 ms-2 mb-0"> {Diogo Souza}</p>
+                <p class="h4 ms-2 mb-0" id="datetime"></p>
             </div>
             <div class="col-sm p-3 border border-black">
 
@@ -40,25 +42,25 @@
                         <li class="nav-item border border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
                             <a href="/"
                                 class="nav-link fas fa-home fa-xl d-flex align-items-center justify-content-center"
-                                style="height: 100%;">
+                                style="height: 100%; color: black;">
                             </a>
                         </li>
                         <li class="nav-item border border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
                             <a href="/games"
                                 class="nav-link fa-solid fa-trophy fa-xl d-flex align-items-center justify-content-center"
-                                style="height: 100%;">
+                                style="height: 100%; color: black;">
                             </a>
                         </li>
                         <li class="nav-item border border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
                             <a href="/statistics"
                                 class="nav-link fa-solid fa-chart-simple fa-xl d-flex align-items-center justify-content-center"
-                                style="height: 100%;"></a>
+                                style="height: 100%; color: black;"></a>
                             </a>
                         </li>
                         <li class="nav-item border border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
-                            <a href="/social"
+                            <a href="/social" id="learnMoreBtn"
                                 class="nav-link fa-solid fa-users fa-xl d-flex align-items-center justify-content-center"
-                                style="height: 100%;"></a>
+                                style="height: 100%; color: black;"></a>
                             </a>
                         </li>
                     </ul>
