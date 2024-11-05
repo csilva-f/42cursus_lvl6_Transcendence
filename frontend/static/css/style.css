@@ -19,3 +19,17 @@
 .nav a:hover {
     color: red;
 }
+
+.pop-hover {
+    transition: transform .3s;
+}
+
+.pop-hover:hover {
+    transform: scale(1.2);
+    /*background-color: black;*/
+}
+
+.noBorder {
+    border: none !important;
+    
+}

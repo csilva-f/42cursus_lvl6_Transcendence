@@ -13,8 +13,10 @@
     <link rel="stylesheet" href="templates/Home/Home.css" />
     <script src="/static/js/bootstrap.bundle.min.js"></script>
     <script src="/static/js/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/language.js"></script>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!--https://flagicons.lipis.dev/-->
 </head>
 
 <body style="background-color: #F2F2F2;">
@@ -24,7 +26,7 @@
                 <img id="logoImg" src="/static/img/loadLogo.png" alt="Logo" class="w-50 h-100" style="object-fit: contain;">
             </div>
             <div class="col-sm-8 p-3 d-flex align-items-center border border-black">
-                <h1 class="display-6" style="font-weight: bold;">Welcome,</h1>
+                <h1 class="display-6" style="font-weight: bold;" data-i18n="welcome"></h1>
                 <p class="h3 ms-2 mb-0"> {Diogo Souza}</p>
                 <p class="h4 ms-2 mb-0" id="datetime"></p>
             </div>
@@ -36,31 +38,51 @@
     <nav class="container-fluid">
         <div class="row">
             <div class="col-sm-auto sticky-top rounded-5 my-3 ms-2 shadow" style="min-width: 19vh;">
-                <div class="d-flex flex-sm-column flex-row flex-nowrap align-items-center sticky-top mt-4">
+                <div class="d-flex flex-sm-column flex-row flex-nowrap align-items-center sticky-top mt-4 h-75">
                     <ul
                         class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center">
-                        <li class="nav-item border border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
+                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
                             <a href="/"
                                 class="nav-link fas fa-home fa-xl d-flex align-items-center justify-content-center"
                                 style="height: 100%; color: black;">
                             </a>
                         </li>
-                        <li class="nav-item border border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
+                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
                             <a href="/games"
                                 class="nav-link fa-solid fa-trophy fa-xl d-flex align-items-center justify-content-center"
                                 style="height: 100%; color: black;">
                             </a>
                         </li>
-                        <li class="nav-item border border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
+                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
                             <a href="/statistics"
                                 class="nav-link fa-solid fa-chart-simple fa-xl d-flex align-items-center justify-content-center"
                                 style="height: 100%; color: black;"></a>
                             </a>
                         </li>
-                        <li class="nav-item border border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
+                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
                             <a href="/social" id="learnMoreBtn"
                                 class="nav-link fa-solid fa-users fa-xl d-flex align-items-center justify-content-center"
                                 style="height: 100%; color: black;"></a>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="btn-group dropup-center dropup mb-3" role="group">
+                        <button type="button" class="btn fa-solid fa-language fa-xl noBorder" style="color: black;" data-bs-toggle="dropdown" aria-expanded="false">
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><i class="dropdown-item" href="/" onclick="changeLanguage('en')" data-i18n="en"></i></li>
+                          <li><i class="dropdown-item" href="/" onclick="changeLanguage('pt')" data-i18n="pt"></i></li>
+                          <li><i class="dropdown-item" href="/" onclick="changeLanguage('fr')" data-i18n="fr"></i></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="d-flex flex-sm-column flex-row flex-nowrap align-items-end sticky-top h-2">
+                    <ul
+                        class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-end align-items-end">
+                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
+                            <a href="/"
+                                class="nav-link fas fa-right-from-bracket fa-xl d-flex align-items-center justify-content-center"
+                                style="height: 100%; color: black;">
                             </a>
                         </li>
                     </ul>
