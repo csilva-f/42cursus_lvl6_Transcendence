@@ -1,35 +1,36 @@
 /* Header */
 
 /* Sidebar */
-
-
-/*.main-page {
-    height: 100%;
-    width: 100%;
-    position: fixed;
-    overflow-x: hidden;
-}*/
-
-/* Main Container */
-.main-container {
-    overflow-y: auto;
-    height: 100%;
-}
-
-.nav a:hover {
-    color: red;
-}
-
 .pop-hover {
     transition: transform .3s;
 }
 
 .pop-hover:hover {
     transform: scale(1.2);
-    /*background-color: black;*/
 }
 
 .noBorder {
     border: none !important;
-    
+}
+
+.iconActive {
+    background-color: black;
+}
+
+.iconActive .nav-link {
+    color: white !important;
+}
+
+.iconInactive {
+    background-color: white;
+}
+
+.iconInactive .nav-link {
+    color: black !important;
+}
+
+/* Main Container */
+.main-container {
+    overflow-y: auto;
+    height: 100%;
 }

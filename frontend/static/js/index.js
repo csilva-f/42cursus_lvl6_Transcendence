@@ -1,4 +1,4 @@
-const images = [
+/*const images = [
     '/static/img/logos/1.svg',
     '/static/img/logos/2.svg',
     '/static/img/logos/3.svg',
@@ -16,7 +16,10 @@ function setRandomImage() {
     imgElement.src = images[randomIndex];
 }
 
-window.onload = setRandomImage;
+window.onload = setRandomImage();*/
+
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
 $(document).ready(function () {
     $("#learnMoreBtn").on("click", function () {

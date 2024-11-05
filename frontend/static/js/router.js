@@ -32,7 +32,43 @@ const route = (event) => {
     console.log(event);
     console.log(event.target);
     console.log(event.target.href);
-    window.history.pushState({}, "", event.target.href);    locationHandler();
+    window.history.pushState({}, "", event.target.href); locationHandler();
+}
+
+function activateIcon(element) {
+    element.classList.remove('iconInactive');
+    element.classList.add('iconActive');
+}
+
+function disableIcon(element) {
+    element.classList.remove('iconActive');
+    element.classList.add('iconInactive');
+}
+
+function changeActive(location) {
+    const iconsElements = [document.getElementById('homepageIcon'), document.getElementById('gamesIcon'), document.getElementById('statsIcon'), document.getElementById('socialIcon')];
+    switch (location) {
+        case "/games":
+            iconsElements.forEach(element => {
+                element.id == 'gamesIcon' ? activateIcon(element) : disableIcon(element);
+            });
+            break;
+        case "/statistics":
+            iconsElements.forEach(element => {
+                element.id == 'statsIcon' ? activateIcon(element) : disableIcon(element);
+            });
+            break;
+        case "/social":
+            iconsElements.forEach(element => {
+                element.id == 'socialIcon' ? activateIcon(element) : disableIcon(element);
+            });
+            break;
+        default:
+            iconsElements.forEach(element => {
+                element.id == 'homepageIcon' ? activateIcon(element) : disableIcon(element);
+            });
+            break;
+    }
 }
 
 const locationHandler = async () => {
@@ -46,6 +82,7 @@ const locationHandler = async () => {
     document.getElementById("content").innerHTML = html;
     document.title = route.title;
     document.querySelector('meta[name="description"]').setAttribute("content", route.descripton);
+    changeActive(location);
 }
 
 document.addEventListener("click", (e) => {

@@ -11,23 +11,28 @@
     <link rel="stylesheet" href="/static/css/style.css" />
     <!-- Encontrar maneira melhor para importar o css de cada ficheiro -->
     <link rel="stylesheet" href="templates/Home/Home.css" />
-    <script src="/static/js/bootstrap.bundle.min.js"></script>
     <script src="/static/js/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap Imports -->
+    <script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.6.12"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/static/js/language.js"></script>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <!-- FontAwesome Imports -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <!--https://flagicons.lipis.dev/-->
+    <!-- Font Imports -->
+    <link rel="stylesheet" href="/static/css/font.css">
 </head>
 
-<body style="background-color: #F2F2F2;">
+<body style="background-color: #F2F2F2; font-family: 'Poppins';">
     <div class="container-fluid shadow-sm">
         <div class="row" style="height: 13vh;">
             <div class="d-flex align-items-center justify-content-center border border-black" style="width: 20vh;">
-                <img id="logoImg" src="/static/img/loadLogo.png" alt="Logo" class="w-50 h-100" style="object-fit: contain;">
+                <img id="logoImg" src="/static/img/logos/buttLogo.svg" alt="Logo" class="w-50 h-100" style="object-fit: contain;">
             </div>
             <div class="col-sm-8 p-3 d-flex align-items-center border border-black">
                 <h1 class="display-6" style="font-weight: bold;" data-i18n="welcome"></h1>
-                <p class="h3 ms-2 mb-0"> {Diogo Souza}</p>
+                <p class="h3 ms-2 mb-0">{Diogo Souza}</p>
                 <p class="h4 ms-2 mb-0" id="datetime"></p>
             </div>
             <div class="col-sm p-3 border border-black">
@@ -41,25 +46,25 @@
                 <div class="d-flex flex-sm-column flex-row flex-nowrap align-items-center sticky-top mt-4 h-75">
                     <ul
                         class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center">
-                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
+                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" id="homepageIcon" style="width: 3rem; height: 3rem;">
                             <a href="/"
                                 class="nav-link fas fa-home fa-xl d-flex align-items-center justify-content-center"
                                 style="height: 100%; color: black;">
                             </a>
                         </li>
-                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
+                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" id="gamesIcon" style="width: 3rem; height: 3rem;">
                             <a href="/games"
                                 class="nav-link fa-solid fa-trophy fa-xl d-flex align-items-center justify-content-center"
                                 style="height: 100%; color: black;">
                             </a>
                         </li>
-                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
+                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" id="statsIcon" style="width: 3rem; height: 3rem;">
                             <a href="/statistics"
                                 class="nav-link fa-solid fa-chart-simple fa-xl d-flex align-items-center justify-content-center"
                                 style="height: 100%; color: black;"></a>
                             </a>
                         </li>
-                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
+                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" id="socialIcon" style="width: 3rem; height: 3rem;">
                             <a href="/social" id="learnMoreBtn"
                                 class="nav-link fa-solid fa-users fa-xl d-flex align-items-center justify-content-center"
                                 style="height: 100%; color: black;"></a>
