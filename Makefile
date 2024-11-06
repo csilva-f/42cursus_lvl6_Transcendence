@@ -15,6 +15,8 @@ up:
 # Stop the Docker Compose setup
 down:
 	@echo "Stopping Docker Compose setup..."
+	@docker exec -it backend-db chmod 777 /var/lib/postgresql/data -R
+	@docker exec -it auth-db chmod 777 /var/lib/postgresql/data -R
 	@docker compose down
 
 migrate:
@@ -40,7 +42,7 @@ migrate:
 	@docker compose exec backend python manage.py migrate
 	@docker compose exec backend python manage.py makemigrations
 
-clean:
+clean:down
 	@echo "Cleaning up stopped containers and networks..."
 	@docker compose -p $(NAME) down
 
