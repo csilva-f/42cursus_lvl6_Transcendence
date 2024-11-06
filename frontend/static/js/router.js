@@ -45,28 +45,43 @@ function disableIcon(element) {
     element.classList.add('iconInactive');
 }
 
-function changeActive(location) {
+async function changeActive(location) {
     const iconsElements = [document.getElementById('homepageIcon'), document.getElementById('gamesIcon'), document.getElementById('statsIcon'), document.getElementById('socialIcon')];
+    const headerElement = document.getElementById('mainMsg');
+    const userLang = localStorage.getItem('language') || 'en';
+    const langData = await getLanguageData(userLang);
     switch (location) {
         case "/games":
             iconsElements.forEach(element => {
                 element.id == 'gamesIcon' ? activateIcon(element) : disableIcon(element);
             });
+            headerElement.setAttribute("data-i18n", "games&tournaments");
+            updateContent(langData);
+            document.getElementById('subMsg').style.display = 'none';
             break;
         case "/statistics":
             iconsElements.forEach(element => {
                 element.id == 'statsIcon' ? activateIcon(element) : disableIcon(element);
             });
+            headerElement.setAttribute("data-i18n", "statistics");
+            updateContent(langData);
+            document.getElementById('subMsg').style.display = 'none';
             break;
         case "/social":
             iconsElements.forEach(element => {
                 element.id == 'socialIcon' ? activateIcon(element) : disableIcon(element);
             });
+            headerElement.setAttribute("data-i18n", "socialhub");
+            updateContent(langData);
+            document.getElementById('subMsg').style.display = 'none';
             break;
         default:
             iconsElements.forEach(element => {
                 element.id == 'homepageIcon' ? activateIcon(element) : disableIcon(element);
             });
+            headerElement.setAttribute("data-i18n", "welcome");
+            updateContent(langData);
+            document.getElementById('subMsg').style.display = 'block';
             break;
     }
 }

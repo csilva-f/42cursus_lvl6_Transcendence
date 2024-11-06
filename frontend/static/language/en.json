@@ -1,6 +1,12 @@
 {
     "welcome": "Welcome,",
+    "games&tournaments": "Games and Tournaments",
+    "statistics": "Statistics",
+    "socialhub": "Social Hub",
     "en": "English",
     "pt": "Portuguese",
-    "fr": "French"
+    "fr": "French",
+    "games": "Games",
+    "tournaments": "Tournaments",
+    "create": "Create"
 }

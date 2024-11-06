@@ -1,6 +1,12 @@
 {
     "welcome": "Bem-vindo,",
+    "games&tournaments": "Jogos e Torneios",
+    "statistics": "Estatísticas",
+    "socialhub": "Centro de Utilizadores",
     "en": "Inglês",
     "pt": "Português",
-    "fr": "Francês"
+    "fr": "Francês",
+    "games": "Jogos",
+    "tournaments": "Torneios",
+    "create": "Criar"
 }
