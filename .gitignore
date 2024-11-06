@@ -1,3 +1,49 @@
 # Ignore PostgreSQL data directory
 backend-db/data/
 auth-db/data/
+# Ignore all Django project folders
+*/__pycache__/
+*/*.py[cod]
+
+# Ignore migrations in any Django project
+*/migrations/*.py
+*/migrations/*.pyc
+*/migrations/__init__.py
+
+# Ignore database files in any Django project
+*/migrations/*.sqlite3
+*/migrations/*.db
+
+# Ignore IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore Python virtual environments
+*/venv/
+*/ENV/
+*/ .venv/
+
+
+# Ignore coverage reports
+*/.coverage
+*/htmlcov/
+
+# Ignore Pytest cache
+*/.cache
+
+# Ignore Jupyter Notebook checkpoints
+*/.ipynb_checkpoints/
+
+# Ignore log files
+*/.log
+
+# Ignore other files
+*/.pot
+*/.pyc
+*/.pyo
+*/.pyd
+*/.egg-info/
+*/dist/
+*/build/
