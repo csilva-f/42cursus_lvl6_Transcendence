@@ -21,3 +21,13 @@ class GetDateTime(APIView):
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class PostMyName(APIView):
+    permission_classes = [AllowAny]  # Adjust permissions as needed
+
+    def post(self, request):
+        name = request.data.get('name')
+        if (name == "rita"):
+            return Response("True", status=status.HTTP_200_OK)
+        else:
+            return Response("False", status=status.HTTP_200_OK)
