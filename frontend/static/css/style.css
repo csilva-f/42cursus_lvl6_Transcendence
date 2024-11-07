@@ -9,6 +9,14 @@
     transform: scale(1.2);
 }
 
+.pop-hover-s {
+    transition: transform .3s;
+}
+
+.pop-hover-s:hover {
+    transform: scale(1.1);
+}
+
 .noBorder {
     border: none !important;
 }
