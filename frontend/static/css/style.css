@@ -29,11 +29,27 @@
     color: white !important;
 }
 
+.iconActive i {
+    color: white !important;
+}
+
+.iconActive p {
+    color: white !important;
+}
+
 .iconInactive {
     background-color: white;
 }
 
 .iconInactive .nav-link {
+    color: black !important;
+}
+
+.iconInactive i {
+    color: black !important;
+}
+
+.iconInactive p {
     color: black !important;
 }
 
