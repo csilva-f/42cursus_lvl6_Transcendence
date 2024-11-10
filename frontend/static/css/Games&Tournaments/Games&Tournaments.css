@@ -1,0 +1,11 @@
+.menuLi {
+    width: 16rem;
+    cursor: pointer;
+}
+
+@media (width < 1200px) {
+    .menuLi {
+        width: 3rem;
+        cursor: pointer;
+    }
+}

@@ -8,9 +8,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link rel="icon" type="image/x-icon" href="/static/img/favicon.png">
+    <!-- Own CSS -->
     <link rel="stylesheet" href="/static/css/style.css" />
-    <!-- Encontrar maneira melhor para importar o css de cada ficheiro -->
-    <link rel="stylesheet" href="templates/Home/Home.css" />
+    <link rel="stylesheet" href="/static/css/Games&Tournaments/Games&Tournaments.css" />
     <script src="/static/js/jquery-3.7.1.min.js"></script>
     <!-- Bootstrap Imports -->
     <script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.8"></script>
@@ -26,45 +26,60 @@
 
 <body style="background-color: #F2F2F2; font-family: 'Poppins';">
     <div class="container-fluid shadow-sm">
-        <div class="row" style="height: 13vh;">
-            <div class="d-flex align-items-center justify-content-center" style="width: 20vh;">
-                <img id="logoImg" src="/static/img/logos/buttLogo.svg" alt="Logo" class="w-50 h-100" style="object-fit: contain;">
+        <div class="row d-flex flex-nowrap" style="height: 7rem;">
+            <div class="col-auto d-flex align-items-center justify-content-center"
+                style="min-width: 9rem;">
+                <img id="logoImg" src="/static/img/logos/buttLogo.svg" alt="Logo" class="w-75 h-100"
+                    style="object-fit: contain; cursor: pointer;" onclick="spankShinChan()">
             </div>
-            <div class="col-sm-8 p-3 d-flex align-items-center">
+            <div class="col-lg-8 col-md col-sm col p-3 d-flex align-items-center" id="mainMsgDiv">
                 <h1 class="display-6" style="font-weight: bold;" id="mainMsg" data-i18n="welcome"></h1>
-                <p class="h3 ms-2 mb-0" id="subMsg" >{Diogo Souza}</p>
+                <p class="h3 ms-2 mb-0" id="subMsg">{Diogo Souza}</p>
                 <p class="h4 ms-2 mb-0" id="datetime"></p>
+                <ul class="nav nav-pills align-items-center justify-content-center me-4" style="display: none;" id="sidebarBtn">
+                    <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2 bg-white d-flex align-items-center justify-content-center me-2"
+                        style="width: 3rem; height: 3rem;">
+                        <i class="fa-solid fa-bars fa-xl"></i>
+                    </li>
+                </ul>
             </div>
-            <div class="col-sm p-3">
-
+            <div
+                class="col-lg d-none d-lg-block p-3 d-flex align-items-center justify-content-center">
+                <p class="h3 mb-0">Profile</p>
             </div>
         </div>
     </div>
+
     <nav class="container-fluid">
         <div class="row">
-            <div class="col-sm-auto sticky-top rounded-5 my-3 ms-2 shadow  border border-black border-2" style="min-width: 19vh;">
+            <div class="col-sm-auto d-none d-lg-block sticky-top rounded-5 my-3 ms-2 shadow  border border-black border-2"
+                style="min-width: 8rem;">
                 <div class="d-flex flex-sm-column flex-row flex-nowrap align-items-center sticky-top mt-4 h-75">
                     <ul
                         class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center">
-                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" id="homepageIcon" style="width: 3rem; height: 3rem;">
+                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" id="homepageIcon"
+                            style="width: 3rem; height: 3rem;">
                             <a href="/"
                                 class="nav-link fas fa-home fa-xl d-flex align-items-center justify-content-center"
                                 style="height: 100%; color: black;">
                             </a>
                         </li>
-                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" id="gamesIcon" style="width: 3rem; height: 3rem;">
+                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" id="gamesIcon"
+                            style="width: 3rem; height: 3rem;">
                             <a href="/games"
                                 class="nav-link fa-solid fa-trophy fa-xl d-flex align-items-center justify-content-center"
                                 style="height: 100%; color: black;">
                             </a>
                         </li>
-                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" id="statsIcon" style="width: 3rem; height: 3rem;">
+                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" id="statsIcon"
+                            style="width: 3rem; height: 3rem;">
                             <a href="/statistics"
                                 class="nav-link fa-solid fa-chart-simple fa-xl d-flex align-items-center justify-content-center"
                                 style="height: 100%; color: black;"></a>
                             </a>
                         </li>
-                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" id="socialIcon" style="width: 3rem; height: 3rem;">
+                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" id="socialIcon"
+                            style="width: 3rem; height: 3rem;">
                             <a href="/social" id="learnMoreBtn"
                                 class="nav-link fa-solid fa-globe fa-xl d-flex align-items-center justify-content-center"
                                 style="height: 100%; color: black;"></a>
@@ -72,19 +87,24 @@
                         </li>
                     </ul>
                     <div class="btn-group dropup-center dropup mb-3" role="group">
-                        <button type="button" class="btn fa-solid fa-language fa-xl noBorder" style="color: black;" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button type="button" class="btn fa-solid fa-language fa-xl noBorder" style="color: black;"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                         </button>
                         <ul class="dropdown-menu">
-                          <li><i class="dropdown-item" href="/" onclick="changeLanguage('en')" data-i18n="en"></i></li>
-                          <li><i class="dropdown-item" href="/" onclick="changeLanguage('pt')" data-i18n="pt"></i></li>
-                          <li><i class="dropdown-item" href="/" onclick="changeLanguage('fr')" data-i18n="fr"></i></li>
+                            <li><i class="dropdown-item" href="/" onclick="changeLanguage('en')" data-i18n="en"></i>
+                            </li>
+                            <li><i class="dropdown-item" href="/" onclick="changeLanguage('pt')" data-i18n="pt"></i>
+                            </li>
+                            <li><i class="dropdown-item" href="/" onclick="changeLanguage('fr')" data-i18n="fr"></i>
+                            </li>
                         </ul>
                     </div>
                 </div>
                 <div class="d-flex flex-sm-column flex-row flex-nowrap align-items-end sticky-top h-2">
                     <ul
                         class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-end align-items-end">
-                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
+                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2"
+                            style="width: 3rem; height: 3rem;">
                             <a href="/"
                                 class="nav-link fas fa-right-from-bracket fa-xl d-flex align-items-center justify-content-center"
                                 style="height: 100%; color: black;">
@@ -93,7 +113,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-sm p-3" id="content" style="height: calc(100vh - 13vh);"></div>
+            <div class="col-sm p-3" id="content" style="height: calc(100vh - 7rem);"></div>
         </div>
     </nav>
     <script type="text/javascript" src="/static/js/router.js"></script>
