@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import get_current_datetime
+from .views import UserCreate
 
 urlpatterns = [
-    path('current_datetime/', get_current_datetime, name='get_current_datetime'),
+    path('', UserCreate.as_view(), name='UserCreate'),
 ]

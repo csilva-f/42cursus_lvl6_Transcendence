@@ -44,6 +44,8 @@ services:
     build: ./auth
     volumes:
       - ./auth/code:/code:rw
+    ports:
+      - "9001:8000"
     networks:
       - backend
     init: true
