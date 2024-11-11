@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'rest_framework',
     'rest_framework_simplejwt',
+    'django_otp',
     'cuca',
+
 ]
 
 MIDDLEWARE = [

@@ -3,3 +3,4 @@ gunicorn
 psycopg2-binary
 djangorestframework==3.15.2
 djangorestframework-simplejwt
+pyotp
