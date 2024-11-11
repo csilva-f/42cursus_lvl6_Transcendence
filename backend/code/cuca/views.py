@@ -55,7 +55,7 @@ def post_create_game(request):
                 user2=user2_id,
                 winner=winner_id,
                 istournament=is_tournament,
-                tournamentid=tournament_id
+                tournament=tournament_id
             )
             return JsonResponse({"message": "Game created successfully", "game_id": game.id}, status=201)
         except json.JSONDecodeError:

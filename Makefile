@@ -15,8 +15,8 @@ up:
 # Stop the Docker Compose setup
 down:
 	@echo "Stopping Docker Compose setup..."
-	@docker exec -it backend-db chmod 777 /var/lib/postgresql/data -R
-	@docker exec -it auth-db chmod 777 /var/lib/postgresql/data -R
+	# @docker exec -it backend-db chmod 777 /var/lib/postgresql/data -R
+	# @docker exec -it auth-db chmod 777 /var/lib/postgresql/data -R
 	@docker compose down
 
 migrate:

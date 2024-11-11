@@ -81,6 +81,7 @@ async function changeActive(location) {
       document.getElementById("subMsg").style.display = "none";
       const iconElement = document.getElementById("loadGamesIcon");
       activateIcon(iconElement);
+      fetchGames();
       break;
     case "/statistics":
       iconsElements.forEach((element) => {
