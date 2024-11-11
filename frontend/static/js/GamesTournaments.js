@@ -12,6 +12,7 @@ async function fetchGames() {
             success: function (res) {
                 console.log(res);
                 const divElement = document.getElementById("gamesContent");
+                gamesContent.innerHTML = "";
                 const cardElement = document.getElementById("gameCard");
                 res.games.forEach(element => {
                     const newDiv = document.createElement('div');
