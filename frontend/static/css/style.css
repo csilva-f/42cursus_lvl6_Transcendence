@@ -59,6 +59,10 @@
     height: 100%;
 }
 
+.loginActive {
+    display: block !important;
+}
+
 @media (width < 1200px) {
 
 }

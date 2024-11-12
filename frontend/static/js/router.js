@@ -5,9 +5,14 @@ const routes = {
     descripton: "Page not found",
   },
   "/": {
-    template: "/templates/Home/Home.html",
+    template: "/templates/Home.html",
     title: "Home",
     descripton: "This is the Home Page",
+  },
+  "/login": {
+    template: "/templates/Login.html",
+    title: "Login",
+    descripton: "This is the Login Page",
   },
   "/games": {
     template: "/templates/Games&Tournaments/Games&Tournaments.html",
@@ -20,12 +25,12 @@ const routes = {
         descripton: "This is the Games Page",
     },*/
   "/statistics": {
-    template: "/templates/Statistics/Statistics.html",
+    template: "/templates/Statistics.html",
     title: "Statistics",
     descripton: "This is the Stats Page",
   },
   "/social": {
-    template: "/templates/Social/Social.html",
+    template: "/templates/Social.html",
     title: "Social",
     descripton: "This is the Social Hub Page",
   },
@@ -58,6 +63,20 @@ function disableIcon(element) {
     activateIcon(iconStatusElement);
     window.history.pushState({}, "", "/games/games"); locationHandler("gamesContent");
 }*/
+
+async function changeToLogin() {
+  const headerElement = document.getElementById("mainMsg");
+  const userLang = localStorage.getItem("language") || "en";
+  const langData = await getLanguageData(userLang);
+  const mainDiv = document.getElementById("loginContent");
+
+  headerElement.setAttribute("data-i18n", "login");
+  updateContent(langData);
+  document.getElementById("subMsg").style.display = "none";
+  document.getElementById("content").style.display = "none";
+  document.getElementById("sidebar").style.display = "none";
+  mainDiv.classList.add("loginActive");
+}
 
 async function changeActive(location) {
   const iconsElements = [
@@ -120,25 +139,34 @@ const locationHandler = async (elementID) => {
   let location = window.location.pathname;
   if (location.length == 0) location = "/";
   console.log("location: ", location);
-  if (elementID == "content" && location == "/games/games") location = "/games";
+  //if (elementID == "content" && location == "/games/games") location = "/games";
   const route = routes[location] || routes["404"];
   console.log(route);
   const html = await fetch(route.template).then((response) => response.text());
-  document.getElementById(elementID).innerHTML = html;
   document.title = route.title;
-  document
-    .querySelector('meta[name="description"]')
-    .setAttribute("content", route.descripton);
-  if (elementID == "content") changeActive(location);
+  if (location == "/login") {
+    document.getElementById("loginContent").innerHTML = html;
+    changeToLogin();
+    document
+      .querySelector('meta[name="description"]')
+      .setAttribute("loginContent", route.descripton);
+  }
+  else {
+    document.getElementById(elementID).innerHTML = html;
+    document
+      .querySelector('meta[name="description"]')
+      .setAttribute("content", route.descripton);
+    if (elementID == "content") changeActive(location);
+  }
 };
 
 document.addEventListener("click", (e) => {
-    const { target } = e;
-    console.log("Target: ", target);
-    if (target.matches("nav a")) {
-        e.preventDefault();
-        route();
-    }/*else if (target.matches("nav p") || target.matches("nav i")) {
+  const { target } = e;
+  console.log("Target: ", target);
+  if (target.matches("nav a")) {
+    e.preventDefault();
+    route();
+  }/*else if (target.matches("nav p") || target.matches("nav i")) {
         console.log("Entered nav p or nav i");
     }*/
 });
