@@ -16,8 +16,10 @@ async function fetchGames() {
                 res.games.forEach(element => {
                     const newDiv = document.createElement('div');
                     newDiv.innerHTML = data;
-                    const title = newDiv.querySelector('#game-title');
-                    title.textContent = element.id;
+                    //const enterBtn = newDiv.querySelector('#enterLi');
+                    //enterBtn.setAttribute('data-id', element.id);
+                    //const title = newDiv.querySelector('#game-title');
+                    //title.textContent = element.id;
                     divElement.appendChild(newDiv);
                 });
             },

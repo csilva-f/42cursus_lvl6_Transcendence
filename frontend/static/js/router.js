@@ -56,14 +56,6 @@ function disableIcon(element) {
   element.classList.add("iconInactive");
 }
 
-/*async function loadGamePage() {
-    const iconElement = document.getElementById('loadGamesIcon');
-    activateIcon(iconElement);
-    const iconStatusElement = document.getElementById('searchingIcon');
-    activateIcon(iconStatusElement);
-    window.history.pushState({}, "", "/games/games"); locationHandler("gamesContent");
-}*/
-
 async function changeToLogin() {
   const headerElement = document.getElementById("mainMsg");
   const userLang = localStorage.getItem("language") || "en";
@@ -100,6 +92,8 @@ async function changeActive(location) {
       document.getElementById("subMsg").style.display = "none";
       const iconElement = document.getElementById("loadGamesIcon");
       activateIcon(iconElement);
+      const iconStatusElement = document.getElementById('searchingLi');
+      activateIcon(iconStatusElement);
       fetchGames();
       break;
     case "/statistics":

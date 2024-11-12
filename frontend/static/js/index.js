@@ -1,6 +1,6 @@
 const images = [
-    '/static/img/logos/buttLogoMirror.svg',
     '/static/img/logos/buttLogo.svg',
+    '/static/img/logos/buttLogoMirror.svg',
 ];
 
 let incrementImg = 0;
