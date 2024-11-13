@@ -1,22 +1,15 @@
-/*const images = [
-    '/static/img/logos/1.svg',
-    '/static/img/logos/2.svg',
-    '/static/img/logos/3.svg',
-    '/static/img/logos/4.svg',
-    '/static/img/logos/5.svg',
-    '/static/img/logos/6.svg',
-    '/static/img/logos/7.svg',
-    '/static/img/logos/8.svg',
+const images = [
+    '/static/img/logos/buttLogo.svg',
+    '/static/img/logos/buttLogoMirror.svg',
 ];
 
-// Function to set a random image
-function setRandomImage() {
-    const imgElement = document.getElementById("logoImg");
-    const randomIndex = Math.floor(Math.random() * images.length);
-    imgElement.src = images[randomIndex];
-}
+let incrementImg = 0;
 
-window.onload = setRandomImage();*/
+function spankShinChan() {
+    const imgElement = document.getElementById("logoImg");
+    incrementImg++;
+    imgElement.src = images[incrementImg % 2];
+}
 
 //* Initialization of the tooltips
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')

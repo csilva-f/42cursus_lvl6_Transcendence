@@ -9,15 +9,31 @@
     transform: scale(1.2);
 }
 
+.pop-hover-s {
+    transition: transform .3s;
+}
+
+.pop-hover-s:hover {
+    transform: scale(1.1);
+}
+
 .noBorder {
     border: none !important;
 }
 
 .iconActive {
-    background-color: black;
+    background-color: #7C64F6;
 }
 
 .iconActive .nav-link {
+    color: white !important;
+}
+
+.iconActive i {
+    color: white !important;
+}
+
+.iconActive p {
     color: white !important;
 }
 
@@ -26,6 +42,14 @@
 }
 
 .iconInactive .nav-link {
+    color: #a594f9 !important;
+}
+
+.iconInactive i {
+    color: #a594f9 !important;
+}
+
+.iconInactive p {
     color: black !important;
 }
 
@@ -33,4 +57,30 @@
 .main-container {
     overflow-y: auto;
     height: 100%;
+}
+
+.loginActive {
+    display: block !important;
+}
+
+@media (width < 1200px) {
+
+}
+
+@media (width < 992px) {
+    #mainMsgDiv {
+        justify-content: end;
+    }
+    
+    #mainMsg {
+        display: none;
+    }
+
+    #subMsg {
+        display: none !important;
+    }
+    
+    #sidebarBtn {
+        display: block !important;
+    }
 }

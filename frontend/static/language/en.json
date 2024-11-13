@@ -1,4 +1,5 @@
 {
+    "login": "Login",
     "welcome": "Welcome,",
     "games&tournaments": "Games and Tournaments",
     "statistics": "Statistics",
@@ -8,5 +9,9 @@
     "fr": "French",
     "games": "Games",
     "tournaments": "Tournaments",
-    "create": "Create"
+    "create": "Create",
+    "searching": "Searching",
+    "happening": "Happening",
+    "finished": "Finished",
+    "waiting": "Waiting"
 }

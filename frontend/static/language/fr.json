@@ -1,4 +1,5 @@
 {
+    "login": "Login",
     "welcome": "Bienvenue,",
     "games&tournaments": "Jeux et Tournois",
     "statistics": "Statistiques",
@@ -8,5 +9,9 @@
     "fr": "Français",
     "games": "Jeux",
     "tournaments": "Tournois",
-    "create": "Créer"
+    "create": "Créer",
+    "searching": "Chercher",
+    "happening": "En ce moment",
+    "finished": "Fini",
+    "waiting": "Traduzir Waiting"
 }

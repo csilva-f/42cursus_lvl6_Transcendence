@@ -1,0 +1,25 @@
+.menuLi {
+    width: 15rem;
+    cursor: pointer;
+}
+
+@media (width < 1200px) {
+    .menuLi {
+        width: 3rem;
+        cursor: pointer;
+    }
+}
+
+.rotate {
+    animation: rotate 0.5s linear forwards;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

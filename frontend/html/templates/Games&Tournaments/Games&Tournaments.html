@@ -1,52 +1,93 @@
 <div class="h-100">
   <div class="container-fluid h-100 d-flex flex-column">
-    <div class="row p-2" style="height: 14vh">
-      <div
-        class="col-sm-12 border border-2 border-black shadow rounded-3 d-flex align-items-center w-100"
-      >
-        <div class="container-fluid">
+    <div class="row p-2" style="min-height: 6rem">
+      <div class="col-sm-12 border border-2 border-black shadow rounded-3 d-flex align-items-center w-100">
+        <nav class="container-fluid">
           <div class="row">
-            <div class="col-8">
+            <div class="col-lg-10 col-md-10 col-10">
               <div class="d-flex gap-2 h-100">
-                <button
-                  type="button"
-                  class="btn btn-lg btn-dark d-flex align-items-center"
-                  style="width: 25vh"
-                >
-                  <i class="fa-solid fa-gamepad"></i>
-                  <p class="h5 m-0 ms-2" style="font-weight: bold" data-i18n="games"></p>
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-lg btn-outline-dark d-flex align-items-center ms-2"
-                  style="width: 25vh"
-                >
-                  <i class="fa-solid fa-users"></i>
-                  <p class="h5 m-0 ms-2" style="font-weight: bold" data-i18n="tournaments">
-                  </p>
-                </button>
+                <ul class="nav nav-pills" style="height: 3rem">
+                  <li class="pop-hover-s menuLi nav-item border border-2 border-black rounded-3 me-2 d-flex align-items-center"
+                    id="loadGamesIcon">
+                    <i class="fa-solid fa-gamepad fa-xl ms-2"></i>
+                    <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="games"></p>
+                  </li>
+                  <li class="pop-hover-s menuLi nav-item border border-2 border-black rounded-3 ms-2 d-flex align-items-center"
+                    id="loadTournamentsIcon">
+                    <i class="fa-solid fa-users fa-xl ms-2"></i>
+                    <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="tournaments"></p>
+                  </li>
+                </ul>
               </div>
             </div>
-            <div class="col-4">
-              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button
-                  type="button"
-                  class="btn btn-lg btn-outline-dark d-flex align-items-center ms-2"
-                  style="width: 25vh"
-                >
-                  <i class="fa-solid fa-plus"></i>
-                  <p class="h5 m-0 ms-2" style="font-weight: bold" data-i18n="create">
-                  </p>
-                </button>
+            <div class="col-2">
+              <div class="d-grid gap-2 d-flex justify-content-end">
+                <ul class="nav nav-pills" style="height: 3rem">
+                  <li
+                    class="pop-hover-s menuLi nav-item border border-2 border-black rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+                    style="width: 3rem; cursor: pointer; background-color: #94F9A5;">
+                    <i class="fa-solid fa-plus fa-xl" style="color: black"></i>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
-        </div>
+        </nav>
       </div>
     </div>
-    <div class="row p-2" style="height: calc(100vh - 14vh)">
+    <div class="row p-2" style="height: calc(100% - 6rem)">
       <div class="col-sm-12 border border-2 border-black shadow rounded-3 h-100">
-        content
+        <div class="container-fluid h-100 d-flex flex-column">
+          <div class="row" style="height: 5rem">
+            <div class="col-sm-12 d-flex align-items-center w-100"
+              style="padding-left: 0 !important; padding-right: 0 !important">
+              <nav class="container-fluid">
+                <div class="row">
+                  <div class="col-lg-10 col-md-10 col-10">
+                    <div class="d-flex gap-2 h-100">
+                      <ul class="nav nav-pills" style="height: 3rem">
+                        <li
+                          class="pop-hover-s menuLi nav-item border border-2 border-black rounded-3 me-2 d-flex align-items-center"
+                          id="searchingLi">
+                          <i class="fa-solid fa-tower-broadcast fa-xl ms-2" id="searchingIcon"></i>
+                          <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="searching" id="searchingID"></p>
+                        </li>
+                        <li
+                          class="pop-hover-s menuLi nav-item border border-2 border-black rounded-3 ms-2 me-2 d-flex align-items-center"
+                          id="happeningLi">
+                          <i class="fa-solid fa-clock fa-xl ms-2" id="happeningIcon"></i>
+                          <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="happening" id="happeningID"></p>
+                        </li>
+                        <li
+                          class="pop-hover-s menuLi nav-item border border-2 border-black rounded-3 ms-2 d-flex align-items-center"
+                          id="finishedLi">
+                          <i class="fa-solid fa-hourglass-end fa-xl ms-2" id="finishedIcon"></i>
+                          <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="finished" id="finishedID"></p>
+                        </li>
+                      </ul>                      
+                    </div>
+                  </div>
+                  <div class="col-2">
+                    <div class="d-grid gap-2 d-flex justify-content-end">
+                      <ul class="nav nav-pills" style="height: 3rem">
+                        <li
+                          class="pop-hover-s nav-item border border-2 border-black rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+                          onclick="fetchGames()"
+                          style="cursor: pointer; width: 3rem">
+                          <i class="fa-solid fa-rotate fa-xl" style="color: black" id="reloadIcon"></i>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </nav>
+            </div>
+          </div>
+          <div class="row p-2 overflow-y-auto" style="height: 100%; padding-top: 0 !important">
+            <div class="col-sm-12 border border-2 border-black shadow rounded-3" id="gamesContent">
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

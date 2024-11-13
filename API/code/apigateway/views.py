@@ -68,6 +68,7 @@ class GetTournaments(APIView):
 class PostAddGame(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         backend_url = 'http://backend:8002/backend/create_game/'
         game_data = request.data.get('game')
         try:
