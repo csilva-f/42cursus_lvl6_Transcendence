@@ -4,7 +4,7 @@ from datetime import timedelta, date, datetime
 from django.contrib.auth.forms import UserCreationForm
 
 # Create your models here.
-class Tournaments(models.Model):
+class Tournaments(models.Model): #change is_active para status #create status table
     id = models.AutoField(primary_key=True)
     init_date = models.DateField()
     end_date = models.DateField()
@@ -28,7 +28,7 @@ class Tournaments(models.Model):
     def __str__(self):
         return f"Tournament {self.id} starting on {self.init_date} until {self.end_date}"
 
-class Games(models.Model):
+class Games(models.Model): #resultado do jogo
 
     id = models.AutoField(primary_key=True)
     date = models.DateTimeField(auto_now_add=True)

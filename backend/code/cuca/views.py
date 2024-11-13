@@ -19,7 +19,7 @@ def get_games(request):
             'is_tournament': game.istournament,
             'tournament_id': game.tournament.id if game.tournament else None
         }
-        for game in Games.objects.select_related('tournament').all()
+        for game in Games.objects.select_related('tournament').all() #retrieves all records from the Games model in the database.
     ]
     return JsonResponse({'games': games_data}, safe=False)
 
@@ -55,7 +55,7 @@ def post_create_game(request):
                 user2=user2_id,
                 winner=winner_id,
                 istournament=is_tournament,
-                tournamentid=tournament_id
+                tournament=tournament_id
             )
             return JsonResponse({"message": "Game created successfully", "game_id": game.id}, status=201)
         except json.JSONDecodeError:
