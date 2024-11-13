@@ -1,4 +1,3 @@
 backend-db/data/
 auth-db/data/
 **/__pycache__/
-**/migrations/
