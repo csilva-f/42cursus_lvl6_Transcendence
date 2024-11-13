@@ -9,3 +9,17 @@
         cursor: pointer;
     }
 }
+
+.rotate {
+    animation: rotate 0.5s linear forwards;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
