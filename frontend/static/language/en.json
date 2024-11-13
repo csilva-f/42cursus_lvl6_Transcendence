@@ -13,5 +13,6 @@
     "searching": "Searching",
     "happening": "Happening",
     "finished": "Finished",
-    "waiting": "Waiting"
+    "waiting": "Waiting",
+    "createModal": "Create Game"
 }

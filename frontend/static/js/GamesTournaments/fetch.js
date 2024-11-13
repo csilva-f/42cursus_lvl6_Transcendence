@@ -35,7 +35,7 @@ async function fetchGames() {
             user1Level.textContent = element.user1;
             user1Nick.textContent = "{Nickname}";
             if (element.user2 == null) {
-              user2Img.src = "/static/img/pfpWaiting.jpg";
+              setRandomImage(user2Img);
               user2LvlLabel.style.display = "none";
               user2Nick.setAttribute("data-i18n", "waiting");
             } else {

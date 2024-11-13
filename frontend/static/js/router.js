@@ -15,15 +15,10 @@ const routes = {
     descripton: "This is the Login Page",
   },
   "/games": {
-    template: "/templates/Games&Tournaments/Games&Tournaments.html",
+    template: "/templates/GamesTournaments.html",
     title: "Games and Tournaments",
     descripton: "This is the Games and Tournaments Page",
   },
-  /*"/games/games": {
-        template: "/templates/Games&Tournaments/Games/Games.html",
-        title: "Games",
-        descripton: "This is the Games Page",
-    },*/
   "/statistics": {
     template: "/templates/Statistics.html",
     title: "Statistics",
@@ -35,6 +30,12 @@ const routes = {
     descripton: "This is the Social Hub Page",
   },
 };
+
+const gameIDCheck = [
+  "searchingLi", "searchingID", "searchingIcon",
+  "happeningLi", "happeningID", "happeningIcon",
+  "finishedLi", "finishedID", "finishedIcon"
+];
 
 const route = (event) => {
   event = event || window.event;
@@ -160,9 +161,8 @@ document.addEventListener("click", (e) => {
   if (target.matches("nav a")) {
     e.preventDefault();
     route();
-  }/*else if (target.matches("nav p") || target.matches("nav i")) {
-        console.log("Entered nav p or nav i");
-    }*/
+  } else if (gameIDCheck.includes(target.id))
+    GamesTournamentsMatches(target.id);
 });
 
 

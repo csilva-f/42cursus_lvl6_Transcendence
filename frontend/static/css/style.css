@@ -53,12 +53,6 @@
     color: black !important;
 }
 
-/* Main Container */
-.main-container {
-    overflow-y: auto;
-    height: 100%;
-}
-
 .loginActive {
     display: block !important;
 }

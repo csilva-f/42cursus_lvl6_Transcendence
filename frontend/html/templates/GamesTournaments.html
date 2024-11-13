@@ -7,14 +7,16 @@
             <div class="col-lg-10 col-md-10 col-10">
               <div class="d-flex gap-2 h-100">
                 <ul class="nav nav-pills" style="height: 3rem">
-                  <li class="pop-hover-s menuLi nav-item border border-2 border-black rounded-3 me-2 d-flex align-items-center"
+                  <li
+                    class="pop-hover-s menuLi nav-item border border-2 border-black rounded-3 me-2 d-flex align-items-center"
                     id="loadGamesIcon">
-                    <i class="fa-solid fa-gamepad fa-xl ms-2"></i>
+                    <i class="fa-solid fa-gamepad fa-xl ms-2" style="color: #a594f9"></i>
                     <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="games"></p>
                   </li>
-                  <li class="pop-hover-s menuLi nav-item border border-2 border-black rounded-3 ms-2 d-flex align-items-center"
+                  <li
+                    class="pop-hover-s menuLi nav-item border border-2 border-black rounded-3 ms-2 d-flex align-items-center"
                     id="loadTournamentsIcon">
-                    <i class="fa-solid fa-users fa-xl ms-2"></i>
+                    <i class="fa-solid fa-users fa-xl ms-2" style="color: #a594f9"></i>
                     <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="tournaments"></p>
                   </li>
                 </ul>
@@ -25,7 +27,8 @@
                 <ul class="nav nav-pills" style="height: 3rem">
                   <li
                     class="pop-hover-s menuLi nav-item border border-2 border-black rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-                    style="width: 3rem; cursor: pointer; background-color: #94F9A5;">
+                    style="width: 3rem; cursor: pointer; background-color: #94F9A5;" data-bs-toggle="modal"
+                    data-bs-target="#createModal">
                     <i class="fa-solid fa-plus fa-xl" style="color: black"></i>
                   </li>
                 </ul>
@@ -49,22 +52,26 @@
                         <li
                           class="pop-hover-s menuLi nav-item border border-2 border-black rounded-3 me-2 d-flex align-items-center"
                           id="searchingLi">
-                          <i class="fa-solid fa-tower-broadcast fa-xl ms-2" id="searchingIcon"></i>
-                          <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="searching" id="searchingID"></p>
+                          <i class="fa-solid fa-tower-broadcast fa-xl ms-2" id="searchingIcon"
+                            style="color: #a594f9"></i>
+                          <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="searching"
+                            id="searchingID"></p>
                         </li>
                         <li
                           class="pop-hover-s menuLi nav-item border border-2 border-black rounded-3 ms-2 me-2 d-flex align-items-center"
                           id="happeningLi">
-                          <i class="fa-solid fa-clock fa-xl ms-2" id="happeningIcon"></i>
-                          <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="happening" id="happeningID"></p>
+                          <i class="fa-solid fa-clock fa-xl ms-2" id="happeningIcon" style="color: #a594f9"></i>
+                          <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="happening"
+                            id="happeningID"></p>
                         </li>
                         <li
                           class="pop-hover-s menuLi nav-item border border-2 border-black rounded-3 ms-2 d-flex align-items-center"
                           id="finishedLi">
-                          <i class="fa-solid fa-hourglass-end fa-xl ms-2" id="finishedIcon"></i>
-                          <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="finished" id="finishedID"></p>
+                          <i class="fa-solid fa-hourglass-end fa-xl ms-2" id="finishedIcon" style="color: #a594f9"></i>
+                          <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="finished"
+                            id="finishedID"></p>
                         </li>
-                      </ul>                      
+                      </ul>
                     </div>
                   </div>
                   <div class="col-2">
@@ -72,8 +79,7 @@
                       <ul class="nav nav-pills" style="height: 3rem">
                         <li
                           class="pop-hover-s nav-item border border-2 border-black rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-                          onclick="fetchGames()"
-                          style="cursor: pointer; width: 3rem">
+                          onclick="fetchGames()" style="cursor: pointer; width: 3rem">
                           <i class="fa-solid fa-rotate fa-xl" style="color: black" id="reloadIcon"></i>
                         </li>
                       </ul>
@@ -88,6 +94,27 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CREATE MODAL -->
+
+<div class="modal fade" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel"><strong data-i18n="createModal"></strong></h1>
+        <i class="fa-solid fa-xmark fa-2xl" style="cursor: pointer;" data-bs-dismiss="modal" aria-label="Close"></i>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
       </div>
     </div>
   </div>
