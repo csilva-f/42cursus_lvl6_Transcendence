@@ -1,103 +1,181 @@
 <!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>2FA Demo</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <h1>2FA Demo</h1>
 
-<head>
-    <title></title>
-    <!-- Required meta tags -->
-    <meta name="description" content="">
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link rel="icon" type="image/x-icon" href="/static/img/favicon.png">
-    <link rel="stylesheet" href="/static/css/style.css" />
-    <!-- Encontrar maneira melhor para importar o css de cada ficheiro -->
-    <link rel="stylesheet" href="templates/Home/Home.css" />
-    <script src="/static/js/jquery-3.7.1.min.js"></script>
-    <!-- Bootstrap Imports -->
-    <script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.8"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.6.12"></script>
-    <script src="/static/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript" src="/static/js/language.js"></script>
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
-    <!-- FontAwesome Imports -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <!-- Font Imports -->
-    <link rel="stylesheet" href="/static/css/font.css">
-</head>
-
-<body style="background-color: #F2F2F2; font-family: 'Poppins';">
-    <div class="container-fluid shadow-sm">
-        <div class="row" style="height: 13vh;">
-            <div class="d-flex align-items-center justify-content-center border border-black" style="width: 20vh;">
-                <img id="logoImg" src="/static/img/logos/buttLogo.svg" alt="Logo" class="w-50 h-100" style="object-fit: contain;">
-            </div>
-            <div class="col-sm-8 p-3 d-flex align-items-center border border-black">
-                <h1 class="display-6" style="font-weight: bold;" id="mainMsg" data-i18n="welcome"></h1>
-                <p class="h3 ms-2 mb-0" id="subMsg" >{Diogo Souza}</p>
-                <p class="h4 ms-2 mb-0" id="datetime"></p>
-            </div>
-            <div class="col-sm p-3 border border-black">
-
-            </div>
+        <div>
+            <h2>Login</h2>
+            <form id="login-form">
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="Username"
+                    required
+                />
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Password"
+                    required
+                />
+                <button type="submit">Login</button>
+            </form>
+            <p id="login-message" aria-live="polite"></p>
         </div>
-    </div>
-    <nav class="container-fluid">
-        <div class="row">
-            <div class="col-sm-auto sticky-top rounded-5 my-3 ms-2 shadow" style="min-width: 19vh;">
-                <div class="d-flex flex-sm-column flex-row flex-nowrap align-items-center sticky-top mt-4 h-75">
-                    <ul
-                        class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center">
-                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" id="homepageIcon" style="width: 3rem; height: 3rem;">
-                            <a href="/"
-                                class="nav-link fas fa-home fa-xl d-flex align-items-center justify-content-center"
-                                style="height: 100%; color: black;">
-                            </a>
-                        </li>
-                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" id="gamesIcon" style="width: 3rem; height: 3rem;">
-                            <a href="/games"
-                                class="nav-link fa-solid fa-trophy fa-xl d-flex align-items-center justify-content-center"
-                                style="height: 100%; color: black;">
-                            </a>
-                        </li>
-                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" id="statsIcon" style="width: 3rem; height: 3rem;">
-                            <a href="/statistics"
-                                class="nav-link fa-solid fa-chart-simple fa-xl d-flex align-items-center justify-content-center"
-                                style="height: 100%; color: black;"></a>
-                            </a>
-                        </li>
-                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" id="socialIcon" style="width: 3rem; height: 3rem;">
-                            <a href="/social" id="learnMoreBtn"
-                                class="nav-link fa-solid fa-globe fa-xl d-flex align-items-center justify-content-center"
-                                style="height: 100%; color: black;"></a>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="btn-group dropup-center dropup mb-3" role="group">
-                        <button type="button" class="btn fa-solid fa-language fa-xl noBorder" style="color: black;" data-bs-toggle="dropdown" aria-expanded="false">
-                        </button>
-                        <ul class="dropdown-menu">
-                          <li><i class="dropdown-item" href="/" onclick="changeLanguage('en')" data-i18n="en"></i></li>
-                          <li><i class="dropdown-item" href="/" onclick="changeLanguage('pt')" data-i18n="pt"></i></li>
-                          <li><i class="dropdown-item" href="/" onclick="changeLanguage('fr')" data-i18n="fr"></i></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="d-flex flex-sm-column flex-row flex-nowrap align-items-end sticky-top h-2">
-                    <ul
-                        class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-end align-items-end">
-                        <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" style="width: 3rem; height: 3rem;">
-                            <a href="/"
-                                class="nav-link fas fa-right-from-bracket fa-xl d-flex align-items-center justify-content-center"
-                                style="height: 100%; color: black;">
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-sm p-3" id="content" style="height: calc(100vh - 13vh);"></div>
-        </div>
-    </nav>
-    <script type="text/javascript" src="/static/js/router.js"></script>
-    <script type="text/javascript" src="/static/js/index.js"></script>
-</body>
 
+        <div>
+            <h2>Enable 2FA</h2>
+            <form id="enable-2fa-form">
+                <input
+                    type="text"
+                    id="enable-userId"
+                    placeholder="User ID"
+                    required
+                />
+                <button type="submit">Enable 2FA</button>
+            </form>
+            <p id="enable-2fa-message" aria-live="polite"></p>
+        </div>
+
+        <div>
+            <h2>Send OTP</h2>
+            <form id="send-otp-form">
+                <input
+                    type="text"
+                    id="send-userId"
+                    placeholder="User ID"
+                    required
+                />
+                <button type="submit">Send OTP</button>
+            </form>
+            <p id="send-otp-message" aria-live="polite"></p>
+        </div>
+
+        <div>
+            <h2>Verify OTP</h2>
+            <form id="verify-otp-form">
+                <input
+                    type="text"
+                    id="verify-userId"
+                    placeholder="User ID"
+                    required
+                />
+                <input type="text" id="otp" placeholder="OTP" required />
+                <button type="submit">Verify OTP</button>
+            </form>
+            <p id="verify-otp-message" aria-live="polite"></p>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- Include jQuery -->
+
+        <script>
+            const apiUrl = "/authapi"; // Use the Nginx route for API requests
+            let jwtToken = ""; // Variable to store the JWT token
+
+            // Login function
+            $(document).ready(function () {
+                $("#login-form").on("submit", function (e) {
+                    e.preventDefault();
+                    const username = $("#username").val();
+                    const password = $("#password").val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: `${apiUrl}/auth/`, // Adjust the endpoint as needed
+                        contentType: "application/json",
+                        data: JSON.stringify({ username, password }),
+                        success: function (data) {
+                            jwtToken = data.token; // Store the JWT token
+                            $("#login-message").text("Login successful!");
+                        },
+                        error: function (xhr) {
+                            const data = xhr.responseJSON;
+                            $("#login-message").text(
+                                data.error || "Login failed.",
+                            );
+                        },
+                    });
+                });
+
+                // Enable 2FA function
+                $("#enable-2fa-form").on("submit", function (e) {
+                    e.preventDefault();
+                    const userId = $("#enable-userId").val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: `${apiUrl}/otp/enable/`,
+                        contentType: "application/json",
+                        headers: {
+                            Authorization: `Bearer ${jwtToken}`, // Use the stored JWT token
+                        },
+                        data: JSON.stringify({ userId }),
+                        success: function (data) {
+                            $("#enable-2fa-message").text(
+                                data.message || data.otp_secret,
+                            );
+                        },
+                        error: function (xhr) {
+                            const data = xhr.responseJSON;
+                            $("#enable-2fa-message").text(data.error);
+                        },
+                    });
+                });
+
+                // Send OTP function
+                $("#send-otp-form").on("submit", function (e) {
+                    e.preventDefault();
+                    const userId = $("#send-userId").val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: `${apiUrl}/otp/send/`,
+                        contentType: "application/json",
+                        headers: {
+                            Authorization: `Bearer ${jwtToken}`, // Use the stored JWT token
+                        },
+                        data: JSON.stringify({ userId }),
+                        success: function (data) {
+                            $("#send-otp-message").text(data.message);
+                        },
+                        error: function (xhr) {
+                            const data = xhr.responseJSON;
+                            $("#send-otp-message").text(data.error);
+                        },
+                    });
+                });
+
+                // Verify OTP function
+                $("#verify-otp-form").on("submit", function (e) {
+                    e.preventDefault();
+                    const userId = $("#verify-userId").val();
+                    const otp = $("#otp").val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: `${apiUrl}/otp/verify/`,
+                        contentType: "application/json",
+                        headers: {
+                            Authorization: `Bearer ${jwtToken}`, // Use the stored JWT token
+                        },
+                        data: JSON.stringify({ userId, otp }),
+                        success: function (data) {
+                            $("#verify-otp-message").text(data.message);
+                        },
+                        error: function (xhr) {
+                            const data = xhr.responseJSON;
+                            $("#verify-otp-message").text(data.error);
+                        },
+                    });
+                });
+            });
+        </script>
+    </body>
 </html>
