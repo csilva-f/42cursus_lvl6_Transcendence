@@ -35,7 +35,16 @@ class GetGames(APIView):
     permission_classes = [AllowAny]  # Adjust permissions as needed
 
     def get(self, request):
-        backend_url = 'http://backend:8002/backend/games/'
+        # Extract statusID from query parameters
+        statusID = request.query_params.get('statusID', None)
+
+        # Check if statusID is provided, if not return an error response
+        if not statusID:
+            backend_url = 'http://backend:8002/backend/games/'
+        else:
+        # Construct the backend URL, passing the statusID as a query parameter
+            backend_url = f'http://backend:8002/backend/games/?statusID={statusID}'
+        
         try:
             backend_response = requests.get(backend_url)
             backend_response.raise_for_status()
