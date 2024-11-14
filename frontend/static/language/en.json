@@ -15,5 +15,10 @@
     "finished": "Finished",
     "waiting": "Waiting",
     "createModal": "Create Game",
-    "close": "Close"
+    "close": "Close",
+    "local": "Local",
+    "remote": "Remote",
+    "apiError": "API Error",
+    "passwordProtected": "Password protected?",
+    "password": "Password"
 }

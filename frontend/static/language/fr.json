@@ -15,5 +15,10 @@
     "finished": "Fini",
     "waiting": "En attente",
     "createModal": "Créer Jeu",
-    "close": "Fermer"
+    "close": "Fermer",
+    "local": "Local fr",
+    "remote": "Remote fr",
+    "apiError": "API Error fr",
+    "passwordProtected": "Password protected? fr",
+    "password": "Password fr"
 }

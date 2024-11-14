@@ -3,8 +3,13 @@
     cursor: pointer;
 }
 
-.modalLi {
+.modalActionsLi {
     width: 7rem;
+    cursor: pointer;
+}
+
+.modalLi {
+    width: 9rem;
     cursor: pointer;
 }
 
@@ -14,7 +19,7 @@
         cursor: pointer;
     }
 
-    .modalLi {
+    .modalActionsLi {
         width: 3rem;
         cursor: pointer;
     }
@@ -32,4 +37,20 @@
     to {
         transform: rotate(360deg);
     }
+}
+
+.form-check-input:checked {
+    background-color: black !important;
+    border: 0;
+}
+
+.form-check-input:focus,
+.label::after,
+label.form-check-label:focus,
+.form-check-input::after,
+.form-check-input:not(:disabled):not(.disabled):active:focus {
+    color: black;
+    outline: 0;
+    border: 0;
+    box-shadow: none !important;
 }

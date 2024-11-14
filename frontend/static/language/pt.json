@@ -15,5 +15,10 @@
     "finished": "Terminados",
     "waiting": "Á espera",
     "createModal": "Criar jogo",
-    "close": "Fechar"
+    "close": "Fechar",
+    "local": "Local",
+    "remote": "Remoto",
+    "apiError": "Erro na API",
+    "passwordProtected": "Proteger com password?",
+    "password": "Password"
 }

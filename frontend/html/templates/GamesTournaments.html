@@ -100,25 +100,89 @@
 </div>
 
 <!-- CREATE MODAL -->
-
 <div class="modal fade" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
   aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+    <div class="modal-content" style="min-height: 22rem;">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="staticBackdropLabel"><strong data-i18n="createModal"></strong></h1>
       </div>
-      <div class="modal-body">
-        ...
+      <!-- Select Game Type -->
+      <div class="modal-body d-flex justify-content-center align-items-center" id="selectForm">
+        <ul class="nav nav-pills justify-content-center gap-5" style="height: 9rem" id="createGameOptions">
+          <li class="pop-hover-s modalLi nav-item border border-2 border-black rounded-3 d-flex align-items-center"
+            onclick="activateGameForm('localForm')">
+            <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+              <div class="d-flex align-items-center justify-content-center my-3">
+                <i class="fa-solid fa-user-group fa-2xl" style="color: black"></i>
+              </div>
+              <p class="h3 px-3 mt-3 d-none d-xl-block justify-content-center align-content-center"
+                style="font-weight: bold; text-align: center;" data-i18n="local"></p>
+            </div>
+          </li>
+          <li class="pop-hover-s modalLi nav-item border border-2 border-black rounded-3 d-flex align-items-center"
+            onclick="activateGameForm('remoteForm')">
+            <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+              <div class="d-flex align-items-center justify-content-center my-3">
+                <i class="fa-solid fa-computer fa-2xl" style="color: black"></i>
+              </div>
+              <p class="h3 px-3 mt-3 d-none d-xl-block justify-content-center align-content-center"
+                style="font-weight: bold; text-align: center;" data-i18n="remote"></p>
+            </div>
+          </li>
+        </ul>
       </div>
+      <!-- End Select Game Type -->
+       <!-- Local Create Form -->
+      <div class="modal-body d-none" id="localForm">
+        <form class="row g-3 needs-validation p-3 mb-3" novalidate>
+          <div class="input-group mb-3 mt-3">
+            <span class="input-group-text" id="basic-addon1" style="margin-top: 10px;">
+              <i class="fa-solid fa-user fa-lg" style="color: blue;"></i>
+            </span>
+            <input type="text" class="form-control" placeholder="Player1 Nickname(traduzir)"
+              aria-label="Username" aria-describedby="basic-addon1" style="margin-top: 10px;">
+          </div>
+          <div class="input-group mb-3 mt-3">
+            <span class="input-group-text" id="basic-addon1">
+              <i class="fa-solid fa-user fa-lg" style="color: red;"></i>
+            </span>
+            <input type="text" class="form-control" placeholder="Player2 Nickname(traduzir)"
+              aria-label="Username" aria-describedby="basic-addon1">
+          </div>
+        </form>
+      </div>
+      <!-- End Local Create Form -->
+      <!-- Remote Create Form -->
+      <div class="modal-body d-none" id="remoteForm">
+        <form class="row g-3 needs-validation p-3 mb-3" novalidate>
+          <div class="form-check d-flex align-items-center">
+            <input class="form-check-input border border-black bigger-checkbox m-0 p-0 me-2" type="checkbox" value=""
+              id="flexCheckDefault" onclick="activateInput('passwordInput')">
+            <label class="form-check-label h5 m-0" for="flexCheckDefault" style="font-weight: bold;"
+              data-i18n="passwordProtected">
+            </label>
+          </div>
+          <div class="input-group mb-3 mt-4">
+            <span class="input-group-text" id="basic-addon1" style="margin-top: 20px;">
+              <i class="fa-solid fa-key fa-lg"></i>
+            </span>
+            <input id="passwordInput" type="text" class="form-control" placeholder="Password(traduzir)"
+              aria-label="Username" aria-describedby="basic-addon1" style="margin-top: 20px;" disabled>
+          </div>
+        </form>
+      </div>
+      <!-- End Remote Create Form -->
       <div class="modal-footer">
         <ul class="nav nav-pills" style="height: 2.5rem">
-          <li class="pop-hover-xs modalLi nav-item border border-2 border-black rounded-3 me-2 d-flex align-items-center"
-            data-bs-dismiss="modal">
+          <li
+            class="pop-hover-xs modalActionsLi nav-item border border-2 border-black rounded-3 me-2 d-flex align-items-center"
+            data-bs-dismiss="modal" onclick="resetModal()">
             <i class="fa-solid fa-xmark fa-2xl ms-2" style="color: black"></i>
             <p class="h6 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="close"></p>
           </li>
-          <li class="pop-hover-xs modalLi nav-item border border-2 border-black rounded-3 ms-2 d-flex align-items-center bg-black">
+          <li id="createGameLi"
+            class="pop-hover-xs modalActionsLi disabled-content nav-item border border-2 border-black rounded-3 ms-2 d-flex align-items-center bg-black">
             <i class="fa-solid fa-check fa-xl ms-2" style="color: white"></i>
             <p class="h6 m-0 ms-2 d-none d-xl-block" style="font-weight: bold; color: white" data-i18n="create"></p>
           </li>
@@ -127,3 +191,4 @@
     </div>
   </div>
 </div>
+<!-- END CREATE MODAL -->

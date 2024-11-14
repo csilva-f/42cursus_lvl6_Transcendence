@@ -14,9 +14,10 @@ async function fetchGames(statusID) {
       return response.text();
     })
     .then((data) => {
+      const APIurl = `/api/get-games/?statusID=${statusID}`
       $.ajax({
         type: "GET",
-        url: `/api/get-games/?statusID=${statusID}`,
+        url: APIurl,
         success: function (res) {
           const divElement = document.getElementById("gamesContent");
           gamesContent.innerHTML = "";
@@ -29,7 +30,8 @@ async function fetchGames(statusID) {
           updateContent(langData);
         },
         error: function (xhr, status, error) {
-          console.log("Error:", error);
+          console.error("Error Thrown:", error);
+          showErrorToast(APIurl, error, langData);
         },
       });
     })

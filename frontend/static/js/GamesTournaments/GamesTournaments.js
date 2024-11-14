@@ -10,6 +10,70 @@ const botImages = [
     '/static/img/bot/bot6.jpg',
 ];
 
+function showErrorToast(APIurl, error, langData) {
+    fetch("/templates/Components/ErrorToast.html")
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok " + response.statusText);
+            }
+            return response.text();
+        })
+        .then((data) => {
+            const bodyElement = document.getElementById("body");
+            const newToast = document.createElement("div");
+            newToast.innerHTML = data;
+            const errorToast = newToast.querySelector('#errorToast')
+            const toastShow = bootstrap.Toast.getOrCreateInstance(errorToast)
+            const errorMsg = newToast.querySelector('#errorMsg')
+            const urlAPIElement = newToast.querySelector('#urlAPI')
+            errorMsg.textContent = error;
+            urlAPIElement.textContent = APIurl;
+            bodyElement.appendChild(newToast);
+            updateContent(langData);
+            toastShow.show()
+        })
+}
+
+function activateInput(elementID) {
+    const formElement = document.getElementById(elementID);
+    formElement.disabled = !formElement.disabled;
+}
+
+function activateGameForm(typeForm) {
+    const formElement = document.getElementById(typeForm);
+    const selectForm = document.getElementById('selectForm');
+    if (formElement) {
+        formElement.classList.remove('d-none');
+        selectForm.classList.add('d-none');
+        document.getElementById('createGameLi').classList.remove('disabled-content');
+        document.getElementById('createGameLi').classList.add('enabled-content');
+    }
+}
+
+function resetModal() {
+    document.getElementById('localForm').classList.add('d-none');
+    document.getElementById('remoteForm').classList.add('d-none');
+    document.getElementById('selectForm').classList.remove('d-none');
+    document.getElementById('createGameLi').classList.remove('enabled-content');
+    document.getElementById('createGameLi').classList.add('disabled-content');
+
+    const localInputs = document.querySelectorAll('#localForm input[type="text"]');
+    localInputs.forEach(input => {
+        input.value = '';
+    });
+    const remoteInputs = document.querySelectorAll('#remoteForm input[type="text"]');
+    remoteInputs.forEach(input => {
+        input.value = '';
+    });
+
+    const checkbox = document.getElementById('flexCheckDefault');
+    checkbox.checked = false;
+
+    const passwordInput = document.getElementById('passwordInput');
+    passwordInput.disabled = true;
+}
+
+
 function GamesTournamentsMatches(elementID) {
     const searchingLi = document.getElementById('searchingLi');
     const happeningLi = document.getElementById('happeningLi');
