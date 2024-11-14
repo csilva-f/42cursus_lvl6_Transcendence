@@ -4,30 +4,60 @@ from .models import *
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
+from rest_framework.response import Response
+from rest_framework import status, generics
+from rest_framework.permissions import IsAuthenticated,AllowAny
+from rest_framework.views import APIView
+
 
 def get_current_datetime(request):
     current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return JsonResponse({'current_datetime': current_datetime})
 
-def get_games(request): #change logic to commented stuf; handle null statusID
-    status = request.GET.get('statusID')
-    #game_data = tGames.objects.select_related('tournament', 'statusID').filter(statusID=status)
-    #game_data = serializers.serialize('json', game_data)
-    games_data = [
-        {
-            'id': game.id,
-            'date': game.date.strftime("%Y-%m-%d %H:%M:%S"),
-            'user1': game.user1,
-            'user2': game.user2,
-            'winner': game.winner,
-            'statusID': game.statusID.statusID,  # Accessing the status of the related tauxStatus
-            'status': game.statusID.status,
-            'is_tournament': game.istournament,
-            'tournament_id': game.tournament.id if game.tournament else None
-        }
-        for game in tGames.objects.select_related('tournament', 'statusID').filter(statusID=status)  # Make sure statusID and tournament are retrieved with the game
-    ]
-    return JsonResponse({'games': games_data}, safe=False)
+class backendView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request): #change logic to commented stuf; handle null statusID
+        status_id = request.query_params.get('statusID', None)
+        if not status_id:
+            games_data = [
+                {
+                    'id': game.id,
+                    'date': game.date.strftime("%Y-%m-%d %H:%M:%S"),
+                    'user1': game.user1,
+                    'user2': game.user2,
+                    'winner': game.winner,
+                    'statusID': game.statusID.statusID,  # Accessing the status of the related tauxStatus
+                    'status': game.statusID.status,
+                    'is_tournament': game.istournament,
+                    'tournament_id': game.tournament.id if game.tournament else None
+                }
+                for game in tGames.objects.select_related('tournament', 'statusID')  # Make sure statusID and tournament are retrieved with the game
+            ]
+            return Response({'games': games_data}, status=status.HTTP_200_OK)
+        try:
+            status_id = int(status_id)
+        except ValueError:
+            return Response({'error': 'Invalid status value.'}, status=status.HTTP_400_BAD_REQUEST)
+        if status_id > 3 or status_id < 1:
+            return Response({'error': 'Invalid status.'}, status=status.HTTP_400_BAD_REQUEST)
+        #game_data = tGames.objects.select_related('tournament', 'statusID').filter(statusID=status)
+        #game_data = serializers.serialize('json', game_data)
+
+        games_data = [
+            {
+                'id': game.id,
+                'date': game.date.strftime("%Y-%m-%d %H:%M:%S"),
+                'user1': game.user1,
+                'user2': game.user2,
+                'winner': game.winner,
+                'statusID': game.statusID.statusID,  # Accessing the status of the related tauxStatus
+                'status': game.statusID.status,
+                'is_tournament': game.istournament,
+                'tournament_id': game.tournament.id if game.tournament else None
+            }
+            for game in tGames.objects.select_related('tournament', 'statusID').filter(statusID=status_id)  # Make sure statusID and tournament are retrieved with the game
+        ]
+        return Response({'games': games_data}, status=status.HTTP_200_OK)
 
 def get_tournaments(request):
     tournaments_data = [
@@ -137,3 +167,12 @@ def post_update_game(request): #update statusID acording to user2 and winner var
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method"}, status=405)
+
+
+
+
+
+
+
+
+
