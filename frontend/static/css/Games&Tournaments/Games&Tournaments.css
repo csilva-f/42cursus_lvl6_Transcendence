@@ -3,8 +3,18 @@
     cursor: pointer;
 }
 
+.modalLi {
+    width: 7rem;
+    cursor: pointer;
+}
+
 @media (width < 1200px) {
     .menuLi {
+        width: 3rem;
+        cursor: pointer;
+    }
+
+    .modalLi {
         width: 3rem;
         cursor: pointer;
     }

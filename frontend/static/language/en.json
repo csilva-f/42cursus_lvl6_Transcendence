@@ -14,5 +14,6 @@
     "happening": "Happening",
     "finished": "Finished",
     "waiting": "Waiting",
-    "createModal": "Create Game"
+    "createModal": "Create Game",
+    "close": "Close"
 }

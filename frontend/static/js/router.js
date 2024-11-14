@@ -95,7 +95,7 @@ async function changeActive(location) {
       activateIcon(iconElement);
       const iconStatusElement = document.getElementById('searchingLi');
       activateIcon(iconStatusElement);
-      fetchGames();
+      fetchGames(1);
       break;
     case "/statistics":
       iconsElements.forEach((element) => {

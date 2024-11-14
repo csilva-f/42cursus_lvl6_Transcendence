@@ -10,7 +10,7 @@ def get_current_datetime(request):
     return JsonResponse({'current_datetime': current_datetime})
 
 def get_games(request): #change logic to commented stuf; handle null statusID
-    status = request.statusID
+    status = request.GET.get('statusID')
     #game_data = tGames.objects.select_related('tournament', 'statusID').filter(statusID=status)
     #game_data = serializers.serialize('json', game_data)
     games_data = [

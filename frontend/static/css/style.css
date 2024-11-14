@@ -17,6 +17,15 @@
     transform: scale(1.1);
 }
 
+.pop-hover-xs {
+    transition: transform .3s;
+}
+
+.pop-hover-xs:hover {
+    transform: scale(1.05);
+}
+
+
 .noBorder {
     border: none !important;
 }

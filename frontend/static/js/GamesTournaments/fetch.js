@@ -1,4 +1,4 @@
-async function fetchGames() {
+async function fetchGames(statusID) {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
   const reloadIcon = document.getElementById("reloadIcon");
@@ -16,32 +16,14 @@ async function fetchGames() {
     .then((data) => {
       $.ajax({
         type: "GET",
-        url: "/api/get-games/",
+        url: `/api/get-games/?statusID=${statusID}`,
         success: function (res) {
-          console.log(res);
           const divElement = document.getElementById("gamesContent");
           gamesContent.innerHTML = "";
           res.games.forEach((element) => {
             const newCard = document.createElement("div");
             newCard.innerHTML = data;
-            const enterBtn = newCard.querySelector("#enterLi");
-            const user1Level = newCard.querySelector("#user1Level");
-            const user1Nick = newCard.querySelector("#user1Nick");
-            const user2Img = newCard.querySelector("#user2Img");
-            const user2LvlLabel = newCard.querySelector("#user2LvlLabel");
-            const user2Level = newCard.querySelector("#user2Level");
-            const user2Nick = newCard.querySelector("#user2Nick");
-            enterBtn.setAttribute("data-id", element.id);
-            user1Level.textContent = element.user1;
-            user1Nick.textContent = "{Nickname}";
-            if (element.user2 == null) {
-              setRandomImage(user2Img);
-              user2LvlLabel.style.display = "none";
-              user2Nick.setAttribute("data-i18n", "waiting");
-            } else {
-              user2Level.textContent = element.user2;
-              user2Nick.textContent = "{Nickname2}";
-            }
+            insertInfo(newCard, element);
             divElement.appendChild(newCard);
           });
           updateContent(langData);

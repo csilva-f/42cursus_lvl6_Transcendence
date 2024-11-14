@@ -79,7 +79,7 @@
                       <ul class="nav nav-pills" style="height: 3rem">
                         <li
                           class="pop-hover-s nav-item border border-2 border-black rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-                          onclick="fetchGames()" style="cursor: pointer; width: 3rem">
+                          style="cursor: pointer; width: 3rem">
                           <i class="fa-solid fa-rotate fa-xl" style="color: black" id="reloadIcon"></i>
                         </li>
                       </ul>
@@ -107,14 +107,22 @@
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="staticBackdropLabel"><strong data-i18n="createModal"></strong></h1>
-        <i class="fa-solid fa-xmark fa-2xl" style="cursor: pointer;" data-bs-dismiss="modal" aria-label="Close"></i>
       </div>
       <div class="modal-body">
         ...
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
+        <ul class="nav nav-pills" style="height: 2.5rem">
+          <li class="pop-hover-xs modalLi nav-item border border-2 border-black rounded-3 me-2 d-flex align-items-center"
+            data-bs-dismiss="modal">
+            <i class="fa-solid fa-xmark fa-2xl ms-2" style="color: black"></i>
+            <p class="h6 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="close"></p>
+          </li>
+          <li class="pop-hover-xs modalLi nav-item border border-2 border-black rounded-3 ms-2 d-flex align-items-center bg-black">
+            <i class="fa-solid fa-check fa-xl ms-2" style="color: white"></i>
+            <p class="h6 m-0 ms-2 d-none d-xl-block" style="font-weight: bold; color: white" data-i18n="create"></p>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
