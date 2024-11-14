@@ -83,16 +83,20 @@
             $(document).ready(function () {
                 $("#login-form").on("submit", function (e) {
                     e.preventDefault();
-                    const username = $("#username").val();
+                    const email = $("#username").val();
                     const password = $("#password").val();
 
                     $.ajax({
                         type: "POST",
                         url: `${apiUrl}/auth/`, // Adjust the endpoint as needed
                         contentType: "application/json",
-                        data: JSON.stringify({ username, password }),
+                        headers: { Accept: "application/json" },
+                        data: JSON.stringify({ email, password }),
                         success: function (data) {
-                            jwtToken = data.token; // Store the JWT token
+                            jwtToken = data.access; // Store the JWT token
+                            if (jwtToken) {
+                                localStorage.setItem("jwt", jwtToken);
+                            }
                             $("#login-message").text("Login successful!");
                         },
                         error: function (xhr) {
@@ -111,9 +115,10 @@
 
                     $.ajax({
                         type: "POST",
-                        url: `${apiUrl}/otp/enable/`,
+                        url: `${apiUrl}/otp-enable/`,
                         contentType: "application/json",
                         headers: {
+                            Accept: "application/json",
                             Authorization: `Bearer ${jwtToken}`, // Use the stored JWT token
                         },
                         data: JSON.stringify({ userId }),
@@ -136,9 +141,10 @@
 
                     $.ajax({
                         type: "POST",
-                        url: `${apiUrl}/otp/send/`,
+                        url: `${apiUrl}/otp-send/`,
                         contentType: "application/json",
                         headers: {
+                            Accept: "application/json",
                             Authorization: `Bearer ${jwtToken}`, // Use the stored JWT token
                         },
                         data: JSON.stringify({ userId }),
@@ -160,9 +166,10 @@
 
                     $.ajax({
                         type: "POST",
-                        url: `${apiUrl}/otp/verify/`,
+                        url: `${apiUrl}/otp-verify/`,
                         contentType: "application/json",
                         headers: {
+                            Accept: "application/json",
                             Authorization: `Bearer ${jwtToken}`, // Use the stored JWT token
                         },
                         data: JSON.stringify({ userId, otp }),

@@ -10,7 +10,7 @@ class CucaUser(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_2fa_enabled = models.BooleanField(null=False, blank=False)
-    otp_secret = models.CharField(max_length=16, blank=True, null=True)
+    otp_secret = models.CharField(max_length=32, blank=True, null=True)
 
     # Explicitly define user_permissions with a unique related_name
     user_permissions = models.ManyToManyField(
