@@ -3,12 +3,16 @@ from django.http import JsonResponse
 from .models import *
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.core import serializers
 
 def get_current_datetime(request):
     current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return JsonResponse({'current_datetime': current_datetime})
 
-def get_games(request):
+def get_games(request): #change logic to commented stuf; handle null statusID
+    status = request.statusID
+    #game_data = tGames.objects.select_related('tournament', 'statusID').filter(statusID=status)
+    #game_data = serializers.serialize('json', game_data)
     games_data = [
         {
             'id': game.id,
@@ -16,10 +20,12 @@ def get_games(request):
             'user1': game.user1,
             'user2': game.user2,
             'winner': game.winner,
+            'statusID': game.statusID.statusID,  # Accessing the status of the related tauxStatus
+            'status': game.statusID.status,
             'is_tournament': game.istournament,
             'tournament_id': game.tournament.id if game.tournament else None
         }
-        for game in Games.objects.select_related('tournament').all()
+        for game in tGames.objects.select_related('tournament', 'statusID').filter(statusID=status)  # Make sure statusID and tournament are retrieved with the game
     ]
     return JsonResponse({'games': games_data}, safe=False)
 
@@ -50,7 +56,7 @@ def post_create_game(request):
             tournament_id = game_data.get('tournamentid')
             is_tournament = True if tournament_id else False
 
-            game = Games.objects.create(
+            game = tGames.objects.create(
                 user1=user1_id,
                 user2=user2_id,
                 winner=winner_id,
@@ -99,7 +105,7 @@ def post_create_tournament(request):
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 @csrf_exempt
-def post_update_game(request):
+def post_update_game(request): #update statusID acording to user2 and winner vars
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
