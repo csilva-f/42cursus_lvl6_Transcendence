@@ -30,6 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data['created_at'] = datetime.now()
         validated_data['updated_at'] = datetime.now()
         validated_data['is_active'] = True
+        validated_data['is_2fa_enabled'] = False
         user = CucaUser(**validated_data)
         user.set_password(validated_data['password'])
         user.save()
