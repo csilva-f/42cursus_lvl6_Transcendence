@@ -11,6 +11,7 @@ const botImages = [
 ];
 
 function showErrorToast(APIurl, error, langData) {
+    console.log("showErrorToast()");
     fetch("/templates/Components/ErrorToast.html")
         .then((response) => {
             if (!response.ok) {
@@ -26,8 +27,33 @@ function showErrorToast(APIurl, error, langData) {
             const toastShow = bootstrap.Toast.getOrCreateInstance(errorToast)
             const errorMsg = newToast.querySelector('#errorMsg')
             const urlAPIElement = newToast.querySelector('#urlAPI')
-            errorMsg.textContent = error;
+            if (error == null)
+                errorMsg.textContent = "Unknown Error";
+            else  
+                errorMsg.textContent = error;
             urlAPIElement.textContent = APIurl;
+            bodyElement.appendChild(newToast);
+            updateContent(langData);
+            toastShow.show()
+        })
+}
+
+function showSuccessToast(langData) {
+    fetch("/templates/Components/SuccessToast.html")
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok " + response.statusText);
+            }
+            return response.text();
+        })
+        .then((data) => {
+            const bodyElement = document.getElementById("body");
+            const newToast = document.createElement("div");
+            newToast.innerHTML = data;
+            const successToast = newToast.querySelector('#successToast')
+            const toastShow = bootstrap.Toast.getOrCreateInstance(successToast)
+            const successMsg = newToast.querySelector('#successMsg')
+            successMsg.textContent = langData.gamecreated;
             bodyElement.appendChild(newToast);
             updateContent(langData);
             toastShow.show()
@@ -37,6 +63,9 @@ function showErrorToast(APIurl, error, langData) {
 function activateInput(elementID) {
     const formElement = document.getElementById(elementID);
     formElement.disabled = !formElement.disabled;
+    if (elementID == "passwordInput")
+        formElement.required = !formElement.required;
+
 }
 
 function activateGameForm(typeForm) {
@@ -45,8 +74,7 @@ function activateGameForm(typeForm) {
     if (formElement) {
         formElement.classList.remove('d-none');
         selectForm.classList.add('d-none');
-        document.getElementById('createGameLi').classList.remove('disabled-content');
-        document.getElementById('createGameLi').classList.add('enabled-content');
+        document.getElementById('goBackLi').classList.remove('d-none');
     }
 }
 
@@ -54,8 +82,7 @@ function resetModal() {
     document.getElementById('localForm').classList.add('d-none');
     document.getElementById('remoteForm').classList.add('d-none');
     document.getElementById('selectForm').classList.remove('d-none');
-    document.getElementById('createGameLi').classList.remove('enabled-content');
-    document.getElementById('createGameLi').classList.add('disabled-content');
+    document.getElementById('goBackLi').classList.add('d-none');
 
     const localInputs = document.querySelectorAll('#localForm input[type="text"]');
     localInputs.forEach(input => {
@@ -66,13 +93,13 @@ function resetModal() {
         input.value = '';
     });
 
-    const checkbox = document.getElementById('flexCheckDefault');
+    const checkbox = document.getElementById('checkboxPassword');
     checkbox.checked = false;
 
     const passwordInput = document.getElementById('passwordInput');
     passwordInput.disabled = true;
+    passwordInput.required = false;
 }
-
 
 function GamesTournamentsMatches(elementID) {
     const searchingLi = document.getElementById('searchingLi');

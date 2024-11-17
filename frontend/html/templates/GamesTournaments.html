@@ -133,61 +133,86 @@
         </ul>
       </div>
       <!-- End Select Game Type -->
-       <!-- Local Create Form -->
+      <!-- Local Create Form -->
       <div class="modal-body d-none" id="localForm">
-        <form class="row g-3 needs-validation p-3 mb-3" novalidate>
-          <div class="input-group mb-3 mt-3">
+        <form class="row g-3 needs-validation p-3" novalidate>
+          <!-- P1 Nickname -->
+          <div class="input-group has-validation mt-3">
             <span class="input-group-text" id="basic-addon1" style="margin-top: 10px;">
               <i class="fa-solid fa-user fa-lg" style="color: blue;"></i>
             </span>
-            <input type="text" class="form-control" placeholder="Player1 Nickname(traduzir)"
-              aria-label="Username" aria-describedby="basic-addon1" style="margin-top: 10px;">
+            <input type="text" class="form-control" id="P1NickInput" placeholder="Player1 Nickname(traduzir)"
+              aria-describedby="inputGroupPrepend" style="margin-top: 10px;" required>
+            <div class="invalid-feedback" data-i18n="p1NickError">
+            </div>
           </div>
-          <div class="input-group mb-3 mt-3">
+          <!-- P2 Nickname -->
+          <div class="input-group has-validation mb-3">
             <span class="input-group-text" id="basic-addon1">
               <i class="fa-solid fa-user fa-lg" style="color: red;"></i>
             </span>
-            <input type="text" class="form-control" placeholder="Player2 Nickname(traduzir)"
-              aria-label="Username" aria-describedby="basic-addon1">
+            <input type="text" class="form-control" id="P2NickInput" placeholder="Player2 Nickname(traduzir)"
+              aria-describedby="inputGroupPrepend" required>
+            <div class="invalid-feedback" data-i18n="p2NickError">
+            </div>
+          </div>
+          <!-- Submit Button -->
+          <div class="d-grid gap-2 d-flex justify-content-end">
+            <button class="pop-hover-xs btn modalActionsLi"
+              style="background-color: black; color: white; font-weight: bold;" type="submit"
+              data-i18n="create"></button>
           </div>
         </form>
       </div>
       <!-- End Local Create Form -->
       <!-- Remote Create Form -->
       <div class="modal-body d-none" id="remoteForm">
-        <form class="row g-3 needs-validation p-3 mb-3" novalidate>
-          <div class="form-check d-flex align-items-center">
+        <form id="remoteFormID" class="row g-3 needs-validation p-3" novalidate>
+          <!-- CheckBox Allow Password -->
+          <div class="form-check d-flex align-items-center no-validate">
             <input class="form-check-input border border-black bigger-checkbox m-0 p-0 me-2" type="checkbox" value=""
-              id="flexCheckDefault" onclick="activateInput('passwordInput')">
-            <label class="form-check-label h5 m-0" for="flexCheckDefault" style="font-weight: bold;"
+              id="checkboxPassword" onclick="activateInput('passwordInput')">
+            <label class="form-check-label h5 m-0" for="checkboxPassword" style="font-weight: bold;"
               data-i18n="passwordProtected">
             </label>
           </div>
-          <div class="input-group mb-3 mt-4">
+          <!-- Password -->
+          <div class="input-group has-validation mb-3 mt-4">
             <span class="input-group-text" id="basic-addon1" style="margin-top: 20px;">
               <i class="fa-solid fa-key fa-lg"></i>
             </span>
             <input id="passwordInput" type="text" class="form-control" placeholder="Password(traduzir)"
-              aria-label="Username" aria-describedby="basic-addon1" style="margin-top: 20px;" disabled>
+              aria-describedby="basic-addon1" style="margin-top: 20px;" disabled>
+            <div class="invalid-feedback" data-i18n="passwordError">
+            </div>
+          </div>
+          <!-- Submit Button -->
+          <div class="d-grid gap-2 d-flex justify-content-end">
+            <button class="pop-hover-xs btn modalActionsLi"
+              style="background-color: black; color: white; font-weight: bold;"
+              data-i18n="create" id="remoteFormButton"></button>
           </div>
         </form>
       </div>
       <!-- End Remote Create Form -->
+      <!-- Form Actions -->
       <div class="modal-footer">
         <ul class="nav nav-pills" style="height: 2.5rem">
-          <li
-            class="pop-hover-xs modalActionsLi nav-item border border-2 border-black rounded-3 me-2 d-flex align-items-center"
-            data-bs-dismiss="modal" onclick="resetModal()">
-            <i class="fa-solid fa-xmark fa-2xl ms-2" style="color: black"></i>
-            <p class="h6 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="close"></p>
+          <li id="goBackLi"
+            class="pop-hover-xs modalActionsLi nav-item border border-2 border-black rounded-3 me-2 d-flex align-items-center bg-black d-none"
+            onclick="resetModal()">
+            <i class="fa-solid fa-arrow-left fa-l ms-2" style="color: white"></i>
+            <p class="h6 m-0 ms-2 d-none d-xl-block" style="font-weight: bold; color: white" data-i18n="back"></p>
           </li>
-          <li id="createGameLi"
-            class="pop-hover-xs modalActionsLi disabled-content nav-item border border-2 border-black rounded-3 ms-2 d-flex align-items-center bg-black">
-            <i class="fa-solid fa-check fa-xl ms-2" style="color: white"></i>
-            <p class="h6 m-0 ms-2 d-none d-xl-block" style="font-weight: bold; color: white" data-i18n="create"></p>
+          <li
+            class="pop-hover-xs modalActionsLi nav-item border border-2 border-black rounded-3 ms-2 me-3 d-flex align-items-center"
+            data-bs-dismiss="modal" onclick="resetModal()">
+            <i class="fa-solid fa-xmark fa-xl ms-2" style="color: black"></i>
+            <p class="h6 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="close"></p>
           </li>
         </ul>
       </div>
+      <!-- End Form Actions -->
     </div>
   </div>
 </div>

@@ -25,6 +25,10 @@
     }
 }
 
+.form-check-input.is-valid ~ .form-check-label, .was-validated .form-check-input:valid ~ .form-check-label {
+    color: black !important;
+  }
+
 .rotate {
     animation: rotate 0.5s linear forwards;
 }
@@ -39,18 +43,35 @@
     }
 }
 
-.form-check-input:checked {
-    background-color: black !important;
-    border: 0;
+/* General customization for checked and active states */
+.form-check-input:checked,
+.form-check-input:active,
+.form-control:focus,
+.btn:focus,
+.btn:active {
+    border-color: black !important;
+    box-shadow: none !important;
+    outline: none;
 }
 
-.form-check-input:focus,
-.label::after,
-label.form-check-label:focus,
-.form-check-input::after,
-.form-check-input:not(:disabled):not(.disabled):active:focus {
-    color: black;
-    outline: 0;
-    border: 0;
+/* Remove default outline and shadows for focus/active states */
+.form-control:focus,
+.input-group-text:focus,
+input[type="text"]:focus,
+textarea:focus,
+select:focus,
+input[type="checkbox"]:focus,
+input[type="radio"]:focus {
+    outline: none;
+    border-color: black !important;
     box-shadow: none !important;
 }
+
+/* Ensure radios and checkboxes are consistent */
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+    background-color: black !important;
+    border-color: black !important;
+    box-shadow: none !important;
+}
+

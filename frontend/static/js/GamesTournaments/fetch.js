@@ -39,3 +39,31 @@ async function fetchGames(statusID) {
       console.error("There was a problem with the fetch operation:", error);
     });
 }
+
+async function postGame() {
+  const userLang = localStorage.getItem("language") || "en";
+  const langData = await getLanguageData(userLang);
+  const APIurl = `/api/create-game/`;
+  let gameData = {
+    game: {
+      user1: parseInt(document.getElementById('passwordInput').value)
+    }
+  };
+  console.log("gameData: ", gameData);
+  $.ajax({
+    type: "POST",
+    url: APIurl,
+    contentType: "application/json",
+    data: JSON.stringify(gameData),
+    success: function (res) {
+      showSuccessToast(langData);
+      fetchGames(1);
+      resetModal();
+      $('#createModal').modal('hide');
+    },
+    error: function (xhr, status, error) {
+      showErrorToast(APIurl, error, langData);
+      resetModal();
+    }    
+  });
+}

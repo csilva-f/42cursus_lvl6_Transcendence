@@ -10,6 +10,7 @@ function updateContent(langData) {
 function setLanguagePreference(lang) {
     localStorage.setItem('language', lang);
     location.reload();
+    const actualLanguage = lang;
 }
 
 //Function to get the language json file
