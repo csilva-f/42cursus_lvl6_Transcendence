@@ -22,6 +22,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-@www2r)nc-li_empd8(e()gc592l7wau$zn%y#2*ej)u^xb*(0'
 
+#BACKEND URL's
+BACKEND_TOURNAMENTS_URL = 'http://backend:8002/backend/tournaments/'
+BACKEND_CREATE_TOURNAMENT_URL = 'http://backend:8002/backend/create_tournament/'
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 

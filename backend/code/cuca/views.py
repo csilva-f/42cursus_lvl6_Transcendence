@@ -14,10 +14,8 @@ def get_current_datetime(request):
     current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return JsonResponse({'current_datetime': current_datetime})
 
-class backendView(APIView):
-    permission_classes = [AllowAny]
-    def get(self, request): #change logic to commented stuf; handle null statusID
-        status_id = request.query_params.get('statusID', None)
+def get_games(request): #change logic to commented stuf; handle null statusID
+        status_id = request.GET.get('statusID')
         if not status_id:
             games_data = [
                 {
@@ -33,16 +31,13 @@ class backendView(APIView):
                 }
                 for game in tGames.objects.select_related('tournament', 'statusID')  # Make sure statusID and tournament are retrieved with the game
             ]
-            return Response({'games': games_data}, status=status.HTTP_200_OK)
+            return JsonResponse({"games": games_data}, status=200)
         try:
             status_id = int(status_id)
         except ValueError:
-            return Response({'error': 'Invalid status value.'}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({"error": "Invalid status value."}, status=400)
         if status_id > 3 or status_id < 1:
-            return Response({'error': 'Invalid status.'}, status=status.HTTP_400_BAD_REQUEST)
-        #game_data = tGames.objects.select_related('tournament', 'statusID').filter(statusID=status)
-        #game_data = serializers.serialize('json', game_data)
-
+            return JsonResponse({"error": "Invalid status."}, status=400)
         games_data = [
             {
                 'id': game.id,
@@ -57,19 +52,39 @@ class backendView(APIView):
             }
             for game in tGames.objects.select_related('tournament', 'statusID').filter(statusID=status_id)  # Make sure statusID and tournament are retrieved with the game
         ]
-        return Response({'games': games_data}, status=status.HTTP_200_OK)
+        return JsonResponse({"games": games_data}, status=200)
 
+#validar os filtros (se tiver filtro com key que nao existe - dar erro)
 def get_tournaments(request):
+    # Get filter parameters from request if provided
+    tournament_id = request.GET.get('tournamentID')
+    status = request.GET.get('statusID')
+    name = request.GET.get('name')
+
+    # Build queryset based on filters
+    tournaments = tTournaments.objects.all()
+
+    if tournament_id:
+        tournaments = tournaments.filter(tournament=tournament_id)
+    if status:
+        tournaments = tournaments.filter(status=status)
+    if name:
+        tournaments = tournaments.filter(name__icontains=name)
+
+    # Create JSON-serializable data
     tournaments_data = [
         {
-            'id': tournament.id,
-            'init_date': tournament.init_date.strftime("%Y-%m-%d"),
-            'end_date': tournament.end_date.strftime("%Y-%m-%d"),
-            'winner': tournament.winner,
-            'is_active': tournament.is_active
+            'tournament': tournament.tournament,
+            'name': tournament.name,
+            'beginDate': tournament.beginDate.strftime("%Y-%m-%d"),
+            'endDate': tournament.endDate.strftime("%Y-%m-%d"),
+            'winnerUser': tournament.winnerUser,
+            'statusID': tournament.status.statusID, 
+            'status': tournament.status.status,  # assuming status has an id
         }
-        for tournament in Tournaments.objects.all()
+        for tournament in tournaments
     ]
+    
     return JsonResponse({'tournaments': tournaments_data}, safe=False)
 
 @csrf_exempt  # Remove this decorator for production to enforce CSRF protection
@@ -100,17 +115,32 @@ def post_create_game(request):
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
+#validar torneios com status 1 ou 2 com nomes iguais
+#substituir random_stuff pelo randomizer (que tem que validar os nomes against torneios com status 1 ou 2)
 @csrf_exempt
 def post_create_tournament(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            tourn_data = data.get('tournament')
-            init = tourn_data.get('init_date')
-            end = tourn_data.get('end_date')
-            if not init or not end:
+            init_str = data.get('beginDate')
+            end_str = data.get('endDate')
+            save_name = data.get('name')
+            if save_name is None: #validates missing key
+                save_name = "random_stuff"
+            if not save_name:  #validates empty value
+                return JsonResponse({"error": "name can't be empty"}, status=400)
+            created = data.get('createdByUser')
+            creation = date.today()
+            if not init_str or init_str is None or not end_str or end_str is None: #validates missing key and empty value
                 return JsonResponse({"error": "init and end dates are required"}, status=400)
-            if init >= end:
+            try:
+                init = datetime.strptime(init_str, "%Y-%m-%d").date()
+                end = datetime.strptime(end_str, "%Y-%m-%d").date()
+            except ValueError: 
+                return JsonResponse({"error": "Date is wrongly formatted. Use YYYY-MM-DD."}, status=400)
+            if init < date.today() or end < date.today():
+                return JsonResponse({"error": "begin and end dates must be present or future"}, status=400)
+            if init > end:
                 return JsonResponse({"error": "init date must be prior to end date"}, status=400)
             elif init == end:
                 now = datetime.now()
@@ -118,16 +148,14 @@ def post_create_tournament(request):
                 time_left = end_of_day - now
                 if time_left < timedelta(hours = 2):
                     return JsonResponse({"error": "There's not enough time to host a tournament today"}, status=400)
-            winner = tourn_data.get('winner')
-            isactive = tourn_data.get('is_active')
-
-            tournament = Tournaments.objects.create(
-                init_date=init,
-                end_date=end,
-                winner=winner,
-                is_active=isactive
+            tournament = tTournaments.objects.create(
+                name = save_name,
+                beginDate=init,
+                endDate=end,
+                creationTS = creation,
+                createdByUser = created
             )
-            return JsonResponse({"message": "Tournament created successfully", "tournament_id": tournament.id}, status=201)
+            return JsonResponse({"message": "Tournament created successfully", "tournament_id": tournament.tournament}, status=201)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
         except Exception as e:

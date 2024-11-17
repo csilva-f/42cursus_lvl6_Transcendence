@@ -3,31 +3,6 @@ from django.core.validators import MinValueValidator
 from datetime import timedelta, date, datetime
 from django.contrib.auth.forms import UserCreationForm
 
-# Create your models here.
-class Tournaments(models.Model): #change is_active para status #create status table
-    id = models.AutoField(primary_key=True)
-    init_date = models.DateField()
-    end_date = models.DateField()
-    winner = models.IntegerField(null=True, blank=True)
-    is_active = models.BooleanField(default=False)
-
-    def save(self, *args, **kwargs):
-        if isinstance(self.init_date, str):
-            self.init_date = datetime.strptime(self.init_date, '%Y-%m-%d').date()
-        if isinstance(self.end_date, str):
-            self.end_date = datetime.strptime(self.end_date, '%Y-%m-%d').date()
-
-        current_date = date.today()
-        if self.init_date <= current_date and self.end_date >= current_date:
-            self.is_active = True
-        else:
-            self.is_active = False
-
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f"Tournament {self.id} starting on {self.init_date} until {self.end_date}"
-
 class tauxStatus(models.Model):
 
     statusID = models.AutoField(primary_key=True)
@@ -35,6 +10,20 @@ class tauxStatus(models.Model):
 
     def __str__(self):
         return f"Status {self.statusID} is {self.status}"
+    
+# Create your models here.
+class tTournaments(models.Model): #change is_active para status #create status table
+    tournament = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    beginDate = models.DateField()
+    endDate = models.DateField()
+    creationTS = models.DateField()
+    createdByUser = models.IntegerField(null=True, blank=True) #Vai ser uma ForeignKey para tUsersExtension
+    winnerUser = models.IntegerField(null=True, blank=True) #Vai ser uma ForeignKey para tUsersExtension
+    status = models.ForeignKey(tauxStatus, on_delete=models.PROTECT, null=False, default=1)
+
+    def __str__(self):
+        return f"Tournament {self.id} starting on {self.beginDate} until {self.endDate}"
 
 class tGames(models.Model): #resultado do jogo
 
@@ -44,7 +33,7 @@ class tGames(models.Model): #resultado do jogo
     user2 = models.IntegerField(null=True, blank=True)
     winner = models.IntegerField(null=True, blank=True)
     istournament = models.BooleanField(default=False)
-    tournament = models.ForeignKey(Tournaments, on_delete=models.SET_NULL, null=True, blank=True)
+    tournament = models.ForeignKey(tTournaments, on_delete=models.SET_NULL, null=True, blank=True)
     statusID = models.ForeignKey(tauxStatus, on_delete=models.PROTECT, null=False, default=1) 
 
     def __str__(self):
