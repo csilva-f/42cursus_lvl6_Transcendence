@@ -39,14 +39,15 @@ class SendOTPView(generics.GenericAPIView):
         otp = totp.now()
         print(f'Generated OTP for user {user.email}: {otp}')
 
-        # Send OTP via email
-        # send_mail(
-        #     'Your OTP Code',
-        #     f'Your OTP code is {otp}',
-        #     'from@example.com',
-        #     [user.email],
-        #     fail_silently=False,
-        # )
+        #Send OTP via email
+
+        send_mail(
+            'Your OTP Code',
+            f'Your OTP code is {otp}',
+            'noreply@cucabeludo.pt',
+            [user.email],
+            fail_silently=False,
+        )
 
         return Response({'message': 'OTP sent to your email.'}, status=status.HTTP_200_OK)
 

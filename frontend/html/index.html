@@ -8,16 +8,48 @@
     </head>
     <body>
         <h1>2FA Demo</h1>
-
+        <div>
+            <h2>SignUp</h2>
+            <form id="signup-form">
+                <input
+                    type="text"
+                    id="register-username"
+                    placeholder="email"
+                    required
+                />
+                <input
+                    type="password"
+                    id="register-password"
+                    placeholder="Password"
+                    required
+                />
+                <input
+                    type="password"
+                    id="retyped-password"
+                    placeholder="retype password"
+                    required
+                />
+                <input
+                    type="text"
+                    id="register-firstname"
+                    placeholder="first name"
+                    required
+                />
+                <input
+                    type="text"
+                    id="register-lastname"
+                    placeholder="last name"
+                    required
+                />
+                <input type="text" id="phone" placeholder="phone" />
+                <button type="submit">SignUp</button>
+            </form>
+            <p id="signup-message" aria-live="polite"></p>
+        </div>
         <div>
             <h2>Login</h2>
             <form id="login-form">
-                <input
-                    type="text"
-                    id="username"
-                    placeholder="Username"
-                    required
-                />
+                <input type="text" id="username" placeholder="email" required />
                 <input
                     type="password"
                     id="password"
@@ -79,8 +111,8 @@
             const apiUrl = "/authapi"; // Use the Nginx route for API requests
             let jwtToken = ""; // Variable to store the JWT token
 
-            // Login function
             $(document).ready(function () {
+                // Login function
                 $("#login-form").on("submit", function (e) {
                     e.preventDefault();
                     const email = $("#username").val();
@@ -103,6 +135,42 @@
                             const data = xhr.responseJSON;
                             $("#login-message").text(
                                 data.error || "Login failed.",
+                            );
+                        },
+                    });
+                });
+
+                // Signup function
+                $("#signup-form").on("submit", function (e) {
+                    e.preventDefault();
+                    const email = $("#register-username").val();
+                    const password = $("#register-password").val();
+                    const retyped = $("#retyped-password").val();
+                    const first_name = $("#register-firstname").val();
+                    const last_name = $("#register-lastname").val();
+                    const phone = $("#phone").val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: `${apiUrl}/register/`, // Adjust the endpoint as needed
+                        contentType: "application/json",
+                        headers: { Accept: "application/json" },
+                        data: JSON.stringify({
+                            email,
+                            password,
+                            first_name,
+                            last_name,
+                            phone,
+                        }),
+                        success: function (data) {
+                            $("#signup-message").text(
+                                "Signup successful! Validate your email",
+                            );
+                        },
+                        error: function (xhr) {
+                            const data = xhr.responseJSON;
+                            $("#signup-message").text(
+                                data.error || "register failed.",
                             );
                         },
                     });
