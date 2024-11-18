@@ -1,3 +1,4 @@
+//? GET - /api/get-games/?statusID=
 async function fetchGames(statusID) {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
@@ -40,6 +41,7 @@ async function fetchGames(statusID) {
     });
 }
 
+//? POST - /api/create-game/
 async function postGame() {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
@@ -66,4 +68,9 @@ async function postGame() {
       resetModal();
     }    
   });
+}
+
+//? UPDATE - 
+async function enterGame(gameID) {
+  console.log(gameID);
 }

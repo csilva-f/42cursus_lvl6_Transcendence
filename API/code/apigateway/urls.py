@@ -9,4 +9,7 @@ urlpatterns = [
     path('create-game/', PostAddGame.as_view(), name='create-game'),
     path('create-tournament/', PostAddTournament.as_view(), name='create-tournament'),
     path('update-game/', PostUpdateGame.as_view(), name='update-game'),
+    path('create-userextension/', PostAddUserExtension.as_view(), name='create-userextension'),
+    path('get-genders/', GetGenders.as_view(), name='get-genders'),
+    path('get-userextensions/', GetUserExtensions.as_view(), name='get-userextensions'),
 ]
