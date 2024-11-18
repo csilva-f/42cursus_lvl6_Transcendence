@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@www2r)nc-li_empd8(e()gc592l7wau$zn%y#2*ej)u^xb*(0
 #BACKEND URL's
 BACKEND_TOURNAMENTS_URL = 'http://backend:8002/backend/tournaments/'
 BACKEND_CREATE_TOURNAMENT_URL = 'http://backend:8002/backend/create_tournament/'
-
+BACKEND_GAMES_URL = 'http://backend:8002/backend/games/'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
