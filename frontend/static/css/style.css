@@ -32,6 +32,8 @@
 
 .iconActive {
     background-color: #7C64F6;
+    pointer-events: none;
+    cursor: not-allowed;
 }
 
 .iconActive .nav-link {

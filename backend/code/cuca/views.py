@@ -59,8 +59,8 @@ class backendView(APIView):
         return Response({'games': games_data}, status=status.HTTP_200_OK)
 
 def get_tournaments(request):
-    tournament_id = request.GET.get('id')
-    status = request.GET.get('status')
+    tournament_id = request.GET.get('tournamentID')
+    status = request.GET.get('statusID')
     name = request.GET.get('name')
 
     tournaments = tTournaments.objects.all()
@@ -176,10 +176,12 @@ def post_update_game(request): #update statusID acording to user2 and winner var
 
             if winner_id is not None:
                 game.winner = winner_id
-                status_label = "Finished"
+                status_label = "finished"
+                # status_label = "Finished"
             else:
                 game.user2 = user2_id
-                status_label = "Happening"
+                status_label = "happening"
+                # status_label = "Happening"
             if status_label:
                 try:
                     status = tauxStatus.objects.get(status=status_label)

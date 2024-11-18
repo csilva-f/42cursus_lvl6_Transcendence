@@ -61,9 +61,13 @@ class GetTournaments(APIView):
     permission_classes = [AllowAny]  # Adjust permissions as needed
 
     def get(self, request):
+        # backend_url = settings.BACKEND_TOURNAMENTS_URL
         backend_url = 'http://backend:8002/backend/tournaments/'
+        # Forward query parameters
+        query_params = request.GET.urlencode()
+        url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
         try:
-            backend_response = requests.get(backend_url)
+            backend_response = requests.get(url_with_params)
             backend_response.raise_for_status()
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)

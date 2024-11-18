@@ -29,7 +29,7 @@ function showErrorToast(APIurl, error, langData) {
             const urlAPIElement = newToast.querySelector('#urlAPI')
             if (error == null)
                 errorMsg.textContent = "Unknown Error";
-            else  
+            else
                 errorMsg.textContent = error;
             urlAPIElement.textContent = APIurl;
             bodyElement.appendChild(newToast);
@@ -102,6 +102,7 @@ function resetModal() {
 }
 
 function GamesTournamentsMatches(elementID) {
+    const searchElement = document.getElementById('loadGamesIcon');
     const searchingLi = document.getElementById('searchingLi');
     const happeningLi = document.getElementById('happeningLi');
     const finishedLi = document.getElementById('finishedLi');
@@ -109,17 +110,45 @@ function GamesTournamentsMatches(elementID) {
         disableIcon(happeningLi);
         disableIcon(finishedLi);
         activateIcon(searchingLi);
-        fetchGames(1);
+        if (searchElement.classList.contains('iconActive'))
+            fetchGames(1);
+        else
+            fetchTournaments(1);
     } else if (happeningIDCheck.includes(elementID)) {
         disableIcon(searchingLi);
         disableIcon(finishedLi);
         activateIcon(happeningLi);
-        fetchGames(2);
+        if (searchElement.classList.contains('iconActive'))
+            fetchGames(2);
+        else
+            fetchTournaments(2);
     } else if (finishedIDCheck.includes(elementID)) {
         disableIcon(searchingLi);
         disableIcon(happeningLi);
         activateIcon(finishedLi);
-        fetchGames(3);
+        if (searchElement.classList.contains('iconActive'))
+            fetchGames(3);
+        else
+            fetchTournaments(3);
+    }
+}
+
+function GamesTournamentsSelect(elementID) {
+    const element = document.getElementById(elementID);
+    if (elementID == "loadTournamentsIcon") {
+        const otherElement = document.getElementById('loadGamesIcon');
+        otherElement.classList.remove('iconActive');
+        disableIcon(otherElement);
+        activateIcon(element);
+        GamesTournamentsMatches('searchingLi');
+        fetchTournaments(1);
+    } else if (elementID == "loadGamesIcon") {
+        const otherElement = document.getElementById('loadTournamentsIcon');
+        otherElement.classList.remove('iconActive');
+        disableIcon(otherElement);
+        activateIcon(element);
+        GamesTournamentsMatches('searchingLi');
+        fetchGames(1);
     }
 }
 
@@ -128,15 +157,22 @@ function setRandomImage(imgElement) {
     imgElement.src = botImages[randomIndex];
 }
 
-function insertInfo(newCard, element) {
-    const enterBtn = newCard.querySelector("#enterLi");
+function insertInfo(newCard, element, statusID) {
     const user1Level = newCard.querySelector("#user1Level");
     const user1Nick = newCard.querySelector("#user1Nick");
     const user2Img = newCard.querySelector("#user2Img");
     const user2LvlLabel = newCard.querySelector("#user2LvlLabel");
     const user2Level = newCard.querySelector("#user2Level");
     const user2Nick = newCard.querySelector("#user2Nick");
-    enterBtn.setAttribute("data-id", element.id);
+    const enterBtn = newCard.querySelector("#enterLi");
+    switch (statusID) {
+        case 1:
+            enterBtn.setAttribute("data-id", element.id);
+            break;
+        case 2:
+            enterBtn.classList.remove('d-none');
+            break;
+    }
     user1Level.textContent = element.user1;
     user1Nick.textContent = "{Nickname}";
     if (element.user2 == null) {

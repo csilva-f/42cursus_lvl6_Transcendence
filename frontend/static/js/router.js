@@ -36,14 +36,7 @@ const routes = {
   },
 };
 
-const gameIDCheck = [
-  "searchingLi", "searchingID", "searchingIcon",
-  "happeningLi", "happeningID", "happeningIcon",
-  "finishedLi", "finishedID", "finishedIcon"
-];
-
 const bigScreenLocation = ["/login", "/pong"];
-
 
 const route = (event) => {
   event = event || window.event;
@@ -173,8 +166,7 @@ document.addEventListener("click", (e) => {
   if (target.matches("nav a")) {
     e.preventDefault();
     route();
-  } else if (gameIDCheck.includes(target.id))
-    GamesTournamentsMatches(target.id);
+  }
 });
 
 
