@@ -106,7 +106,7 @@ async function fetchTournaments(statusID) {
   setTimeout(() => {
     reloadIcon.classList.remove("rotate");
   }, 250);
-  fetch("/templates/Components/GameCard.html")
+  fetch("/templates/Components/TournamentCard.html")
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok " + response.statusText);
@@ -120,13 +120,13 @@ async function fetchTournaments(statusID) {
         url: APIurl,
         success: function (res) {
           const divElement = document.getElementById("gamesContent");
+          const newCard = document.createElement("div");
           gamesContent.innerHTML = "";
-          res.games.forEach((element) => {
-            const newCard = document.createElement("div");
-            newCard.innerHTML = data;
-            insertInfo(newCard, element, statusID);
-            divElement.appendChild(newCard);
-          });
+          newCard.innerHTML = data;
+          divElement.appendChild(newCard);
+          //res.games.forEach((element) => {
+            //insertInfo(newCard, element, statusID);
+          //});
           updateContent(langData);
         },
         error: function (xhr, status, error) {
