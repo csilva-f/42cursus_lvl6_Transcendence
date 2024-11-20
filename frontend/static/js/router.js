@@ -82,6 +82,7 @@ async function changeActive(location) {
     document.getElementById("gamesIcon"),
     document.getElementById("statsIcon"),
     document.getElementById("socialIcon"),
+    document.getElementById("aboutUsIcon")
   ];
   const headerElement = document.getElementById("mainMsg");
   const userLang = localStorage.getItem("language") || "en";

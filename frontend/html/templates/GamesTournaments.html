@@ -28,7 +28,13 @@
                   <li
                     class="pop-hover-s menuLi nav-item border border-2 border-black rounded-3 d-flex align-items-center justify-content-center shadow-sm"
                     style="width: 3rem; cursor: pointer; background-color: #94F9A5;" data-bs-toggle="modal"
-                    data-bs-target="#createModal">
+                    data-bs-target="#createModal" id="createGameBtn">
+                    <i class="fa-solid fa-plus fa-xl" style="color: black"></i>
+                  </li>
+                  <li
+                    class="pop-hover-s d-none menuLi nav-item border border-2 border-black rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+                    style="width: 3rem; cursor: pointer; background-color: #94F9A5;" data-bs-toggle="modal"
+                    data-bs-target="#createTournamentModal" id="createTournamentBtn">
                     <i class="fa-solid fa-plus fa-xl" style="color: black"></i>
                   </li>
                 </ul>
@@ -99,7 +105,7 @@
   </div>
 </div>
 
-<!-- CREATE MODAL -->
+<!-- CREATE GAME MODAL -->
 <div class="modal fade" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
   aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -172,12 +178,12 @@
           <div class="form-check d-flex align-items-center no-validate">
             <input class="form-check-input border border-black bigger-checkbox m-0 p-0 me-2" type="checkbox" value=""
               id="checkboxPassword" onclick="activateInput('passwordInput')">
-            <label class="form-check-label h5 m-0" for="checkboxPassword" style="font-weight: bold;"
+            <label class="form-check-label h6 m-0" for="checkboxPassword" style="font-weight: bold;"
               data-i18n="passwordProtected">
             </label>
           </div>
           <!-- Password -->
-          <div class="input-group has-validation mb-3 mt-4">
+          <div class="input-group has-validation mb-3 mt-0 pt-0">
             <span class="input-group-text" id="basic-addon1" style="margin-top: 20px;">
               <i class="fa-solid fa-key fa-lg"></i>
             </span>
@@ -189,8 +195,8 @@
           <!-- Submit Button -->
           <div class="d-grid gap-2 d-flex justify-content-end">
             <button class="pop-hover-xs btn modalActionsLi"
-              style="background-color: black; color: white; font-weight: bold;"
-              data-i18n="create" id="remoteFormButton"></button>
+              style="background-color: black; color: white; font-weight: bold;" data-i18n="create"
+              id="remoteFormButton"></button>
           </div>
         </form>
       </div>
@@ -216,4 +222,86 @@
     </div>
   </div>
 </div>
-<!-- END CREATE MODAL -->
+<!-- END CREATE GAME MODAL -->
+
+<!-- CREATE TOURNAMENT MODAL -->
+<div class="modal fade" id="createTournamentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="min-height: 22rem;">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel"><strong data-i18n="createTournamentModal"></strong></h1>
+      </div>
+      <!-- Tournament Form -->
+      <div class="modal-body" id="remoteForm">
+        <form id="tournamentFormID" class="row g-3 needs-validation p-3" novalidate>
+          <!-- Name -->
+          <div class="input-group mb-3 mt-0 pt-0">
+            <span class="input-group-text" id="basic-addon1" style="margin-top: 20px;">
+              <i class="fa-solid fa-signature fa-lg"></i>
+            </span>
+            <input id="nameTournamentInput" type="text" class="form-control" placeholder="Nome torneio(traduzir)"
+              aria-describedby="basic-addon1" style="margin-top: 20px;">
+          </div>
+          <!-- End Name -->
+          <div class="row mx-2 px-0">
+            <div class="col ps-0">
+              <label for="beginDateInput" class="form-label mb-0" data-i18n="beginDateForm"></label>
+              <div class="input-group mb-1 mt-0 pt-0">
+                <input id="beginDateInput" type="date" class="form-control mt-0" aria-describedby="basic-addon1"
+                  style="margin-top: 20px;" data-date-format="dd-mm-yyyy">
+              </div>
+            </div>
+            <div class="col pe-0 me-3">
+              <label for="endDateInput" class="form-label mb-0" data-i18n="endDateForm"></label>
+              <div class="input-group mb-1 mt-0 pt-0">
+                <input id="endDateInput" type="date" class="form-control mt-0" aria-describedby="basic-addon1"
+                  style="margin-top: 20px;" data-date-format="dd-mm-yyyy">
+              </div>
+            </div>
+          </div>
+          <!-- CheckBox Allow Password -->
+          <div class="form-check d-flex align-items-center no-validate ms-2 ps-0">
+            <input class="form-check-input border border-black bigger-checkbox m-0 p-0 me-2" type="checkbox" value=""
+              id="checkboxPassword" onclick="activateInput('passwordTournamentInput')">
+            <label class="form-check-label h6 m-0" for="checkboxPassword" style="font-weight: bold;"
+              data-i18n="passwordProtected">
+            </label>
+          </div>
+          <!-- End CheckBox Allow Password -->
+          <!-- Password -->
+          <div class="input-group has-validation mb-3 mt-0 pt-0">
+            <span class="input-group-text" id="basic-addon1" style="margin-top: 20px;">
+              <i class="fa-solid fa-key fa-lg"></i>
+            </span>
+            <input id="passwordTournamentInput" type="text" class="form-control" placeholder="Password(traduzir)"
+              aria-describedby="basic-addon1" style="margin-top: 20px;" disabled>
+            <div class="invalid-feedback" data-i18n="passwordError">
+            </div>
+          </div>
+          <!-- End Password -->
+          <!-- Submit Button -->
+          <div class="d-grid gap-2 d-flex justify-content-end">
+            <button class="pop-hover-xs btn modalActionsLi"
+              style="background-color: black; color: white; font-weight: bold;" data-i18n="create"
+              id="remoteFormButton"></button>
+          </div>
+        </form>
+      </div>
+      <!-- End Tournament Form -->
+      <!-- Form Actions -->
+      <div class="modal-footer">
+        <ul class="nav nav-pills" style="height: 2.5rem">
+          <li
+            class="pop-hover-xs modalActionsLi nav-item border border-2 border-black rounded-3 ms-2 me-3 d-flex align-items-center"
+            data-bs-dismiss="modal" onclick="resetModal()">
+            <i class="fa-solid fa-xmark fa-xl ms-2" style="color: black"></i>
+            <p class="h6 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="close"></p>
+          </li>
+        </ul>
+      </div>
+      <!-- End Form Actions -->
+    </div>
+  </div>
+</div>
+<!-- END CREATE TOURNAMENT MODAL -->

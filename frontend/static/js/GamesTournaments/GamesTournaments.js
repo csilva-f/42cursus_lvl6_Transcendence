@@ -142,6 +142,8 @@ function GamesTournamentsSelect(elementID) {
         activateIcon(element);
         GamesTournamentsMatches('searchingLi');
         fetchTournaments(1);
+        document.getElementById('createTournamentBtn').classList.remove('d-none');
+        document.getElementById('createGameBtn').classList.add('d-none');
     } else if (elementID == "loadGamesIcon") {
         const otherElement = document.getElementById('loadTournamentsIcon');
         otherElement.classList.remove('iconActive');
@@ -149,6 +151,8 @@ function GamesTournamentsSelect(elementID) {
         activateIcon(element);
         GamesTournamentsMatches('searchingLi');
         fetchGames(1);
+        document.getElementById('createGameBtn').classList.remove('d-none');
+        document.getElementById('createTournamentBtn').classList.add('d-none');
     }
 }
 

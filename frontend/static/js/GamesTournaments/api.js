@@ -22,7 +22,7 @@ async function fetchGames(statusID) {
         url: APIurl,
         success: function (res) {
           const divElement = document.getElementById("gamesContent");
-          gamesContent.innerHTML = "";
+          divElement.innerHTML = "";
           res.games.forEach((element) => {
             const newCard = document.createElement("div");
             newCard.innerHTML = data;
@@ -120,13 +120,14 @@ async function fetchTournaments(statusID) {
         url: APIurl,
         success: function (res) {
           const divElement = document.getElementById("gamesContent");
-          const newCard = document.createElement("div");
-          gamesContent.innerHTML = "";
-          newCard.innerHTML = data;
-          divElement.appendChild(newCard);
-          //res.games.forEach((element) => {
+          divElement.innerHTML = "";
+          console.log(res);
+          res.tournaments.forEach((element) => {
+            const newCard = document.createElement("div");
+            newCard.innerHTML = data;
             //insertInfo(newCard, element, statusID);
-          //});
+            divElement.appendChild(newCard);
+          });
           updateContent(langData);
         },
         error: function (xhr, status, error) {
