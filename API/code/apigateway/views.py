@@ -118,4 +118,55 @@ class PostUpdateGame(APIView):
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
-            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)  
+            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class PostAddUserExtension(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        backend_url = 'http://backend:8002/backend/create_userextension/'
+        user_data = request.data.get('user')
+        try:
+            backend_response = requests.post(backend_url, json=request.data)
+            backend_response.raise_for_status()
+            user_data = backend_response.json()
+            return Response(user_data, status=backend_response.status_code)
+        except requests.exceptions.HTTPError as http_err:
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except requests.exceptions.RequestException as req_err:
+            return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except ValueError as json_err:
+            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GetGenders(APIView):
+    permission_classes = [AllowAny]  # Adjust permissions as needed
+
+    def get(self, request):
+        backend_url = 'http://backend:8002/backend/genders/'
+        try:
+            backend_response = requests.get(backend_url)
+            backend_response.raise_for_status()
+            data = backend_response.json()
+            return Response(data, status=status.HTTP_200_OK)
+        except requests.exceptions.HTTPError as http_err:
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except requests.exceptions.RequestException as req_err:
+            return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except ValueError as json_err:
+            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GetUserExtensions(APIView):
+    permission_classes = [AllowAny]  # Adjust permissions as needed
+
+    def get(self, request):
+        backend_url = 'http://backend:8002/backend/get_userextensions/'
+        try:
+            backend_response = requests.get(backend_url)
+            backend_response.raise_for_status()
+            data = backend_response.json()
+            return Response(data, status=status.HTTP_200_OK)
+        except requests.exceptions.HTTPError as http_err:
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except requests.exceptions.RequestException as req_err:
+            return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except ValueError as json_err:
+            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

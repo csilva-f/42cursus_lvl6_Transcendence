@@ -8,4 +8,7 @@ urlpatterns = [
     path('create_game/', post_create_game, name='post_create_game'),
     path('create_tournament/', post_create_tournament, name='post_create_tournament'),
     path('update_game/', post_update_game, name='post_update_game'),
+    path('create_userextension/', post_create_userextension, name='post_create_userextension'),
+    path('genders/', get_genders, name='get_genders'),
+    path('get_userextensions/', get_userextensions, name='get_userextensions'),
 ]

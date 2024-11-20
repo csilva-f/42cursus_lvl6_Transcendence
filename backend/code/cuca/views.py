@@ -248,8 +248,16 @@ def post_update_game(request): #update statusID acording to user2 and winner var
 
             if winner_id is not None:
                 game.winner = winner_id
+                status_label = "Finished"
             else:
                 game.user2 = user2_id
+                status_label = "Happening"
+            if status_label:
+                try:
+                    status = tauxStatus.objects.get(status=status_label)
+                    game.statusID = status
+                except tauxStatus.DoesNotExist:
+                    return JsonResponse({"error": f"Status '{status_label}' not found"}, status=404)
             game.save()
             return JsonResponse({"message": "Game updated successfully", "game_id": game.game}, status=201)
         except json.JSONDecodeError:
@@ -258,11 +266,67 @@ def post_update_game(request): #update statusID acording to user2 and winner var
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
+@csrf_exempt
+def post_create_userextension(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            
+            user_id = data.get('id')
+            user_birthdate = data.get('birthdate')
+            gender_id = data.get('genderid')
+            user_avatar = data.get('avatar')
+
+            if not user_id or not user_birthdate or not gender_id:
+                return JsonResponse({"error": "Missing required fields: id, birthdate, genderid"}, status=400)
+
+            try:
+                gender = tauxGender.objects.get(gender=gender_id)
+            except tauxGender.DoesNotExist:
+                return JsonResponse({"error": f"Gender with id {gender_id} does not exist"}, status=404)
+
+            # Create the UserExtension object
+            userext = tUserExtension.objects.create(
+                user=user_id,
+                birthdate=user_birthdate,
+                gender=gender,
+                avatar=user_avatar
+            )
+
+            return JsonResponse({"message": "User extension created successfully", "user_id": userext.user}, status=201)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON data"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    # If method is not POST, return 405 Method Not Allowed
+    return JsonResponse({"error": "Invalid request method"}, status=405)
 
 
+def get_genders(request):
+    gender_data = [
+        {
+            'id': gender.gender,
+            'label': gender.label
+        }
+        for gender in tauxGender.objects.all()
+    ]
+    return JsonResponse({'genders': gender_data}, safe=False)
 
-
-
-
-
-
+def get_userextensions(request):
+    userext_data = [
+        {
+            'id': userext.user,
+            'birthdate': userext.birthdate.strftime("%Y-%m-%d"),
+            'gender': userext.gender.label,
+            'level': userext.ulevel,
+            'avatar': userext.avatar,
+            'victories': userext.victories,
+            'totalGamesPlayed': userext.totalGamesPlayed,
+            'tVictories': userext.tVictories
+        }
+        for userext in tUserExtension.objects.all()
+    ]
+    
+    return JsonResponse({'users': userext_data}, safe=False)

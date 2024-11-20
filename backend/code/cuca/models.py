@@ -10,8 +10,27 @@ class tauxStatus(models.Model):
 
     def __str__(self):
         return f"Status {self.statusID} is {self.status}"
-    
-# Create your models here.
+
+class tauxGender(models.Model):
+    gender = models.AutoField(primary_key=True)
+    label = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"Gender {self.gender} is {self.label}"
+
+class tUserExtension(models.Model):
+    user = models.IntegerField(null=False)
+    birthdate = models.DateField()
+    ulevel = models.IntegerField(null=True, blank=True, default=0)
+    gender = models.ForeignKey(tauxGender, on_delete=models.PROTECT, null=False)
+    avatar = models.CharField(max_length=1000, null=True, blank=True)
+    victories = models.IntegerField(null=True, blank=True, default=0)
+    totalGamesPlayed = models.IntegerField(null=True, blank=True, default=0)
+    tVictories = models.IntegerField(null=True, blank=True, default=0)
+
+    def __str__(self):
+        return f"UserExtension {self.user}"
+
 class tTournaments(models.Model): #change is_active para status #create status table
     tournament = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
@@ -22,7 +41,7 @@ class tTournaments(models.Model): #change is_active para status #create status t
     winnerUser = models.IntegerField(null=True, blank=True) #Vai ser uma ForeignKey para tUsersExtension
     status = models.ForeignKey(tauxStatus, on_delete=models.PROTECT, null=False, default=1)
 
-    def __str__(self):
+    def _str_(self):
         return f"Tournament {self.id} starting on {self.beginDate} until {self.endDate}"
 
 class tGames(models.Model): #resultado do jogo
@@ -37,3 +56,11 @@ class tGames(models.Model): #resultado do jogo
 
     def __str__(self):
         return f"Game {self.id} between {self.user1} and {self.user2} on {self.date}"
+
+class  tTournamentUsers(models.Model):
+    tournament = models.ForeignKey(tTournaments, on_delete=models.PROTECT, null=False)
+    user = models.ForeignKey(tUserExtension, on_delete=models.PROTECT, null=False)
+    creationTS = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"User {self.user} in Tournament {self.tournament} on {self.creationTS}"
