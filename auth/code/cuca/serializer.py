@@ -1,6 +1,7 @@
 #from django.contrib.auth.models import User
 from .models import CucaUser
 from rest_framework import serializers
+from rest_framework.serializers import CharField
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
 from datetime import datetime
@@ -39,3 +40,17 @@ class UserSerializer(serializers.ModelSerializer):
 
 class OTPSerializer(serializers.Serializer):
     otp = serializers.CharField(max_length=6)
+
+
+class RecoverPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    password = CharField(required=True, min_length=8)
+    confirm_password = CharField(required=True, min_length=8)
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['confirm_password']:
+            raise ValidationError("Passwords do not match.")
+        return attrs

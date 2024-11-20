@@ -1,5 +1,6 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.core.mail import send_mail
 import pyotp
@@ -70,3 +71,14 @@ class VerifyOTPView(generics.GenericAPIView):
             return Response({'message': 'OTP verified successfully.'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid OTP.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetOtpStatus(APIView):
+    serializer_class = UserIdSerializer
+    permission_classes = [AllowAny]
+    def get(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user_id = serializer.validated_data['userId']
+        user = CucaUser.objects.get(id=user_id)
+        return Response({'is_2fa_enabled': user.is_2fa_enabled}, status=status.HTTP_200_OK)
