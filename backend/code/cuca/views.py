@@ -3,32 +3,88 @@ from django.http import JsonResponse
 from .models import *
 import json
 from django.views.decorators.csrf import csrf_exempt
-from django.core import serializers
-from rest_framework.response import Response
-from rest_framework import status, generics
-from rest_framework.permissions import IsAuthenticated,AllowAny
-from rest_framework.views import APIView
-
+from django.core.exceptions import ValidationError
 
 def get_current_datetime(request):
     current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return JsonResponse({'current_datetime': current_datetime})
 
+ALLOWED_FILTERS_TOURNAMENT = {'tournamentID', 'statusID', 'name', 'winnerID'}
+
+ALLOWED_FILTERS_GAMES = {'statusID', 'gameID', 'user1ID', 'user2ID', 'winnerID', 'tournamentID'}
+
+def validate_filters_tournament(request):
+    extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_TOURNAMENT
+    if extra_keys:
+        raise ValidationError(f"Invalid parameter(s): {', '.join(extra_keys)}")
+    
+    
+def validate_filters_games(request):
+    extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_GAMES
+    if extra_keys:
+        raise ValidationError(f"Invalid parameter(s): {', '.join(extra_keys)}")
+
+def validate_status(status):
+    try:
+        status_id = int(status)
+    except ValueError:
+        raise ValidationError("Status must be an integer.")
+    if not 1 <= status_id <= 3:
+        raise ValidationError("Status must be between 1 and 3.")
+    return status_id
+
+def validate_id(id):
+    if id == "null":
+        return(-1)
+    if not id.isdigit():
+        raise ValidationError("Tournament ID must be a number.")
+    return int(id)
+
+def validate_name(name):
+    if len(name) > 255: 
+        raise ValidationError("Name must not exceed 255 characters.")
+    return name
+
 @csrf_exempt 
 def get_games(request):
-    status = request.GET.get('statusID')
+    try:
+        validate_filters_games(request)
 
-    games = tGames.objects.all()
+        game_id = request.GET.get('gameID')
+        status_id = request.GET.get('statusID')
+        user1_id = request.GET.get('user1ID')
+        user2_id = request.GET.get('user2ID')
+        winner_id = request.GET.get('winnerID')
+        tournament_id = request.GET.get('tournamentID')
 
-    if status:
-        try:
-            status_id = int(status)
-        except ValueError:
-            return JsonResponse({"error": "Invalid status value."}, status=400)
-        if status_id > 3 or status_id < 1:
-            return JsonResponse({"error": "Invalid status."}, status=400)
-        games = games.filter(status=status)
+        if game_id == "" or status_id == "" or winner_id == "" or tournament_id == "":
+            return JsonResponse({"error": "Filter can't be empty."}, status=400)
+        
+        games = tGames.objects.all()
+        if game_id:
+            game_id = validate_id(game_id)
+            games = games.filter(game=game_id)
+        if status_id:
+            status_id = validate_status(status_id)
+            games = games.filter(status__statusID=status_id)
+        if winner_id:
+            winner_id = validate_id(winner_id)
+            games = games.filter(winnerUser=winner_id)
+        if user1_id:
+            user1_id = validate_id(user1_id)
+            games = games.filter(user1=user1_id)
+        if user2_id:
+            user2_id = validate_id(user2_id)
+            games = games.filter(user2=user2_id)
+        if tournament_id:
+            tournament_id = validate_id(tournament_id)
+            if tournament_id == -1:
+                games = games.filter(tournament__tournament__isnull=True)
+            else:
+                games = games.filter(tournament__tournament=tournament_id)
 
+    except ValidationError as e:
+        return JsonResponse({"error": str(e)}, status=400)
     games_data = [
         {
             'gameID': game.game,
@@ -47,24 +103,33 @@ def get_games(request):
 #validar os filtros (se tiver filtro com key que nao existe - dar erro)
 @csrf_exempt 
 def get_tournaments(request):
-    tournament_id = request.GET.get('tournamentID')
-    status = request.GET.get('statusID')
-    name = request.GET.get('name')
+    try:
+        validate_filters_tournament(request)
 
-    tournaments = tTournaments.objects.all()
+        tournament_id = request.GET.get('tournamentID')
+        status_id = request.GET.get('statusID')
+        name = request.GET.get('name')
+        winner_id = request.GET.get('winnerID')
 
-    if tournament_id:
-        tournaments = tournaments.filter(tournament=tournament_id)
-    if status:
-        try:
-            status_id = int(status)
-        except ValueError:
-            return JsonResponse({"error": "Invalid status value."}, status=400)
-        if status_id > 3 or status_id < 1:
-            return JsonResponse({"error": "Invalid status."}, status=400)
-        tournaments = tournaments.filter(status=status)
-    if name:
-        tournaments = tournaments.filter(name__icontains=name)
+        if name == "" or status_id == "" or winner_id == "" or tournament_id == "":
+            return JsonResponse({"error": "Filter can't be empty."}, status=400)
+        tournaments = tTournaments.objects.all()
+
+        if tournament_id:
+            tournament_id = validate_id(tournament_id)
+            tournaments = tournaments.filter(tournament=tournament_id)
+        if status_id:
+            status_id = validate_status(status_id)
+            tournaments = tournaments.filter(status__statusID=status_id)
+        if name:
+            name = validate_name(name)
+            tournaments = tournaments.filter(name=name)
+        if winner_id:
+            winner_id = validate_id(winner_id)
+            tournaments = tournaments.filter(winnerUser=winner_id)
+
+    except ValidationError as e:
+        return JsonResponse({"error": str(e)}, status=400)
 
     tournaments_data = [
         {

@@ -37,5 +37,3 @@ class tGames(models.Model): #resultado do jogo
 
     def __str__(self):
         return f"Game {self.id} between {self.user1} and {self.user2} on {self.date}"
-
-    
