@@ -244,22 +244,28 @@
               aria-describedby="basic-addon1" style="margin-top: 20px;">
           </div>
           <!-- End Name -->
+          <!-- Begin/End Date -->
           <div class="row mx-2 px-0">
             <div class="col ps-0">
               <label for="beginDateInput" class="form-label mb-0" data-i18n="beginDateForm"></label>
-              <div class="input-group mb-1 mt-0 pt-0">
+              <div class="input-group mb-1 mt-0 pt-0 has-validation">
                 <input id="beginDateInput" type="date" class="form-control mt-0" aria-describedby="basic-addon1"
-                  style="margin-top: 20px;" data-date-format="dd-mm-yyyy">
+                  style="margin-top: 20px;" data-date-format="dd-mm-yyyy" required>
+                <div class="invalid-feedback" data-i18n="beginDateError">
+                </div>
               </div>
             </div>
             <div class="col pe-0 me-3">
               <label for="endDateInput" class="form-label mb-0" data-i18n="endDateForm"></label>
-              <div class="input-group mb-1 mt-0 pt-0">
+              <div class="input-group mb-1 mt-0 pt-0 has-validation">
                 <input id="endDateInput" type="date" class="form-control mt-0" aria-describedby="basic-addon1"
-                  style="margin-top: 20px;" data-date-format="dd-mm-yyyy">
+                  style="margin-top: 20px;" data-date-format="dd-mm-yyyy" required>
+                <div class="invalid-feedback" data-i18n="endDateError">
+                </div>
               </div>
             </div>
           </div>
+          <!-- End Begin/End Date -->
           <!-- CheckBox Allow Password -->
           <div class="form-check d-flex align-items-center no-validate ms-2 ps-0">
             <input class="form-check-input border border-black bigger-checkbox m-0 p-0 me-2" type="checkbox" value=""

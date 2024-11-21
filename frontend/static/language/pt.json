@@ -5,6 +5,7 @@
     "pong": "Jogo do Pong",
     "statistics": "Estatísticas",
     "socialhub": "Centro de Utilizadores",
+    "aboutUs": "Sobre nós",
     "en": "Inglês",
     "pt": "Português",
     "fr": "Francês",
@@ -31,7 +32,10 @@
     "p1NickError": "Insira o nickname do Jogador 1",
     "p2NickError": "Insira o nickname do Jogador 2",
     "passwordError": "Insira Password do Jogo",
+    "beginDateError": "Insira data de ínicio",
+    "endDateError": "Insira data de termino",
     "gamecreated": "Jogo criado com sucesso",
+    "tournamentcreated": "Torneio criado com sucesso",
     "global": "Global",
     "friends": "Amigos"
 }

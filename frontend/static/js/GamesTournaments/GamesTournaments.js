@@ -38,7 +38,7 @@ function showErrorToast(APIurl, error, langData) {
         })
 }
 
-function showSuccessToast(langData) {
+function showSuccessToast(langData, type) {
     fetch("/templates/Components/SuccessToast.html")
         .then((response) => {
             if (!response.ok) {
@@ -53,7 +53,7 @@ function showSuccessToast(langData) {
             const successToast = newToast.querySelector('#successToast')
             const toastShow = bootstrap.Toast.getOrCreateInstance(successToast)
             const successMsg = newToast.querySelector('#successMsg')
-            successMsg.textContent = langData.gamecreated;
+            successMsg.textContent = type;
             bodyElement.appendChild(newToast);
             updateContent(langData);
             toastShow.show()

@@ -15,24 +15,6 @@ function spankShinChan() {
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
-$(document).ready(function () {
-    $("#learnMoreBtn").on("click", function () {
-        $.ajax({
-            type: "GET",
-            url: "/api/get-datetime/", // adjust the URL according to your Django app's URL configuration
-            success: function (data) {
-                console.log(data.current_datetime);
-                const pElement = document.getElementById("datetime");
-                pElement.innerText = data.current_datetime;
-            },
-            error: function (xhr, status, error) {
-                console.log("Error:", error);
-                // update your HTML with an error message
-            },
-        });
-    });
-});
-
 function testClick() {
     console.log("miku dayo");
 }
@@ -54,6 +36,8 @@ function getForms() {
                 console.log("Form is valid: ", form);
                 if (form.id == "remoteFormID")
                     postGame();
+                else if (form.id == "tournamentFormID")
+                    postTournament();
                 event.preventDefault();
             }
             form.classList.add('was-validated');

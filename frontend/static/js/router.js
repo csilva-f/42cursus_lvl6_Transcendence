@@ -34,6 +34,11 @@ const routes = {
     title: "Social",
     descripton: "This is the Social Hub Page",
   },
+  "/about": {
+    template: "/templates/AboutUs.html",
+    title: "AboutUs",
+    descripton: "This is the AboutUs Page",
+  }
 };
 
 const bigScreenLocation = ["/login", "/pong"];
@@ -82,7 +87,6 @@ async function changeActive(location) {
     document.getElementById("gamesIcon"),
     document.getElementById("statsIcon"),
     document.getElementById("socialIcon"),
-    document.getElementById("aboutUsIcon")
   ];
   const headerElement = document.getElementById("mainMsg");
   const userLang = localStorage.getItem("language") || "en";
@@ -121,6 +125,16 @@ async function changeActive(location) {
           : disableIcon(element);
       });
       headerElement.setAttribute("data-i18n", "socialhub");
+      updateContent(langData);
+      document.getElementById("subMsg").style.display = "none";
+      break;
+    case "/about":
+      iconsElements.forEach((element) => {
+        element.id == "aboutUsIcon"
+          ? activateIcon(element)
+          : disableIcon(element);
+      });
+      headerElement.setAttribute("data-i18n", "aboutUs");
       updateContent(langData);
       document.getElementById("subMsg").style.display = "none";
       break;

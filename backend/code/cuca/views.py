@@ -123,7 +123,7 @@ def post_create_tournament(request):
             tourn_data = data.get('tournament')
             init = tourn_data.get('beginDate')
             end = tourn_data.get('endDate')
-            save_name = data.get('name')
+            save_name = tourn_data.get('name')
             if not save_name:
                 save_name = "random_stuff"
             created = data.get('createdByUser')

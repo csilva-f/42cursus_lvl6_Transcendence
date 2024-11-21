@@ -59,7 +59,7 @@ async function postGame() {
     contentType: "application/json",
     data: JSON.stringify(gameData),
     success: function (res) {
-      showSuccessToast(langData);
+      showSuccessToast(langData, langData.gamecreated);
       fetchGames(1);
       resetModal();
       $('#createModal').modal('hide');
@@ -140,3 +140,36 @@ async function fetchTournaments(statusID) {
       console.error("There was a problem with the fetch operation:", error);
     });
 }
+
+//TODO resetTournamentModal
+//? POST - /api/create-tournament/
+async function postTournament() {
+  const userLang = localStorage.getItem("language") || "en";
+  const langData = await getLanguageData(userLang);
+  const APIurl = `/api/create-tournament/`;
+  let tournamentData = {
+    tournament: {
+      name: document.getElementById('nameTournamentInput').value,
+      beginDate: document.getElementById('beginDateInput').value,
+      endDate: document.getElementById('endDateInput').value,
+    }
+  };
+  console.log("tournamentData: ", tournamentData);
+  $.ajax({
+    type: "POST",
+    url: APIurl,
+    contentType: "application/json",
+    data: JSON.stringify(tournamentData),
+    success: function (res) {
+      showSuccessToast(langData, langData.tournamentcreated);
+      fetchTournaments(1);
+      resetModal();
+      $('#createTournamentModal').modal('hide');
+    },
+    error: function (xhr, status, error) {
+      showErrorToast(APIurl, error, langData);
+      resetModal();
+    }    
+  });
+}
+

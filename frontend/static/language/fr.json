@@ -5,6 +5,7 @@
     "pong": "Pong Game FR",
     "statistics": "Statistiques",
     "socialhub": "Communautaire",
+    "aboutUs": "About Us FR",
     "en": "Anglais",
     "pt": "Portugais",
     "fr": "Français",
@@ -31,7 +32,10 @@
     "p1NickError": "Please insert Player 1 Nickname FR",
     "p2NickError": "Please insert Player 2 Nickname FR",
     "passwordError": "Please insert Password FR",
+    "beginDateError": "Please insert begin date FR",
+    "endDateError": "Please insert end date FR",
     "gamecreated": "Game created successfully FR",
+    "tournamentcreated": "Torneio criado com sucesso FR",
     "global": "Global FR",
     "friends": "Friends FR"
 }
