@@ -48,9 +48,25 @@ class RecoverPasswordSerializer(serializers.Serializer):
 
 class ResetPasswordSerializer(serializers.Serializer):
     password = CharField(required=True, min_length=8)
-    confirm_password = CharField(required=True, min_length=8)
+    confirm_password = CharField(required=True, validators=[validate_password])
 
     def validate(self, attrs):
         if attrs['password'] != attrs['confirm_password']:
             raise ValidationError("Passwords do not match.")
+        return attrs
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True, validators=[validate_password])
+    confirm_new_password = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        user = self.context['request'].user
+        if not user.check_password(attrs['old_password']):
+            raise serializers.ValidationError({'old_password': 'Incorrect old password.'})
+
+        if attrs['new_password'] != attrs['confirm_new_password']:
+            raise serializers.ValidationError({'confirm_new_password': 'New passwords do not match.'})
+
         return attrs

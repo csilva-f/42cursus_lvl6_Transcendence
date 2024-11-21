@@ -46,7 +46,8 @@ class SendOTPView(generics.GenericAPIView):
             'Your OTP Code',
             f'Your OTP code is {otp}',
             'noreply@cucabeludo.pt',
-            [user.email],
+            #[user.email],
+            ['bcamarinha92@gmail.com'],
             fail_silently=False,
         )
 
@@ -71,7 +72,6 @@ class VerifyOTPView(generics.GenericAPIView):
             return Response({'message': 'OTP verified successfully.'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid OTP.'}, status=status.HTTP_400_BAD_REQUEST)
-
 
 class GetOtpStatus(APIView):
     serializer_class = UserIdSerializer
