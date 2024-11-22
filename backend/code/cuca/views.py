@@ -314,6 +314,16 @@ def get_genders(request):
     ]
     return JsonResponse({'genders': gender_data}, safe=False)
 
+def get_status(request):
+    status_data = [
+        {
+            'id': status.statusID,
+            'label': status.status
+        }
+        for status in tauxStatus.objects.all()
+    ]
+    return JsonResponse({'status': status_data}, safe=False)
+
 def get_userextensions(request):
     userext_data = [
         {

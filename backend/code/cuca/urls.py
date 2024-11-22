@@ -11,4 +11,5 @@ urlpatterns = [
     path('create_userextension/', post_create_userextension, name='post_create_userextension'),
     path('genders/', get_genders, name='get_genders'),
     path('get_userextensions/', get_userextensions, name='get_userextensions'),
+    path('status/', get_status, name='get_status'),
 ]
