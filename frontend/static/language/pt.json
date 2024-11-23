@@ -36,6 +36,7 @@
     "endDateError": "Insira data de termino",
     "gamecreated": "Jogo criado com sucesso",
     "tournamentcreated": "Torneio criado com sucesso",
+    "gameEntered": "Jogo iniciado com sucesso",
     "global": "Global",
     "friends": "Amigos"
 }

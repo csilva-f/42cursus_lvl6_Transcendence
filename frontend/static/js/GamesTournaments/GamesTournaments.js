@@ -12,7 +12,7 @@ const botImages = [
 
 function showErrorToast(APIurl, error, langData) {
     console.log("showErrorToast()");
-    fetch("/templates/Components/ErrorToast.html")
+    fetch("/templates/Components/ToastError.html")
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Network response was not ok " + response.statusText);
@@ -39,7 +39,7 @@ function showErrorToast(APIurl, error, langData) {
 }
 
 function showSuccessToast(langData, type) {
-    fetch("/templates/Components/SuccessToast.html")
+    fetch("/templates/Components/ToastSuccess.html")
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Network response was not ok " + response.statusText);
@@ -174,7 +174,7 @@ function insertInfo(newCard, element, statusID) {
             enterBtn.setAttribute("data-id", element.id);
             break;
         case 2:
-            enterBtn.classList.remove('d-none');
+            enterBtn.classList.add('d-none');
             break;
     }
     user1Level.textContent = element.user1;

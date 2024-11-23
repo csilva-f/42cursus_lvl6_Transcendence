@@ -36,6 +36,7 @@
     "endDateError": "Please insert end date",
     "gamecreated": "Game created successfully",
     "tournamentcreated": "Tournament created successfully",
+    "gameEntered": "Game entered successfully",
     "global": "Global",
     "friends": "Friends"
 }

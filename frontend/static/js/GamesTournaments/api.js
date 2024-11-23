@@ -8,7 +8,7 @@ async function fetchGames(statusID) {
   setTimeout(() => {
     reloadIcon.classList.remove("rotate");
   }, 250);
-  fetch("/templates/Components/GameCard.html")
+  fetch("/templates/Components/CardGame.html")
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok " + response.statusText);
@@ -67,18 +67,19 @@ async function postGame() {
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
       resetModal();
-    }    
+    }
   });
 }
 
+//TODO getUserID
 //? POST - /api/update-game/
 async function enterGame(gameID) {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/update-game/`;
   let gameData = {
-      id: gameID,
-      user: 3
+    id: gameID,
+    user: 6543
   };
   console.log("gameData: ", gameData);
   $.ajax({
@@ -87,12 +88,16 @@ async function enterGame(gameID) {
     contentType: "application/json",
     data: JSON.stringify(gameData),
     success: function (res) {
+      showSuccessToast(langData, langData.gameEntered);
       fetchGames(1);
+      const enterLi = document.getElementById('enterLi');
+      window.history.pushState({}, "", enterLi.getAttribute("href"));
+      locationHandler("content");
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
       resetModal();
-    }    
+    }
   });
 }
 
@@ -106,7 +111,7 @@ async function fetchTournaments(statusID) {
   setTimeout(() => {
     reloadIcon.classList.remove("rotate");
   }, 250);
-  fetch("/templates/Components/TournamentCard.html")
+  fetch("/templates/Components/CardTournament.html")
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok " + response.statusText);
@@ -169,7 +174,7 @@ async function postTournament() {
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
       resetModal();
-    }    
+    }
   });
 }
 
