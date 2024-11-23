@@ -9,7 +9,7 @@ class tauxStatus(models.Model):
     status = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.status
+        return f"Status {self.statusID} is {self.status}"
 
 class tauxGender(models.Model):
     gender = models.AutoField(primary_key=True)
@@ -44,15 +44,15 @@ class tTournaments(models.Model): #change is_active para status #create status t
     def _str_(self):
         return f"Tournament {self.id} starting on {self.beginDate} until {self.endDate}"
 
-class tGames(models.Model):
-    id = models.AutoField(primary_key=True)
-    date = models.DateTimeField(auto_now_add=True)
+class tGames(models.Model): #resultado do jogo
+
+    game = models.AutoField(primary_key=True)
+    creationTS = models.DateTimeField(auto_now_add=True)
     user1 = models.IntegerField() 
     user2 = models.IntegerField(null=True, blank=True)
-    winner = models.IntegerField(null=True, blank=True)
-    istournament = models.BooleanField(default=False)
+    winnerUser = models.IntegerField(null=True, blank=True)
     tournament = models.ForeignKey(tTournaments, on_delete=models.SET_NULL, null=True, blank=True)
-    statusID = models.ForeignKey(tauxStatus, on_delete=models.PROTECT, null=False, default=1) 
+    status = models.ForeignKey(tauxStatus, on_delete=models.PROTECT, null=False, default=1) 
 
     def __str__(self):
         return f"Game {self.id} between {self.user1} and {self.user2} on {self.date}"

@@ -2,51 +2,18 @@ import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated,AllowAny
-
-class GetDateTime(APIView):
-    permission_classes = [AllowAny]  # Adjust permissions as needed
-
-    def get(self, request):
-        backend_url = 'http://backend:8002/backend/current_datetime/'
-        try:
-            backend_response = requests.get(backend_url)
-            backend_response.raise_for_status()
-            data = backend_response.json()
-            return Response(data, status=status.HTTP_200_OK)
-        except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        except requests.exceptions.RequestException as req_err:
-            return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        except ValueError as json_err:
-            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-class PostMyName(APIView):
-    permission_classes = [AllowAny]  # Adjust permissions as needed
-
-    def post(self, request):
-        name = request.data.get('name')
-        if (name == "rita"):
-            return Response("True", status=status.HTTP_200_OK)
-        else:
-            return Response("False", status=status.HTTP_200_OK)
+from rest_framework.permissions import AllowAny
+from django.conf import settings
         
 class GetGames(APIView):
     permission_classes = [AllowAny]  # Adjust permissions as needed
 
     def get(self, request):
-        # Extract statusID from query parameters
-        statusID = request.query_params.get('statusID', None)
-
-        # Check if statusID is provided, if not return an error response
-        if not statusID:
-            backend_url = 'http://backend:8002/backend/games/'
-        else:
-        # Construct the backend URL, passing the statusID as a query parameter
-            backend_url = f'http://backend:8002/backend/games/?statusID={statusID}'
-        
+        backend_url = settings.BACKEND_GAMES_URL
+        query_params = request.GET.urlencode()
+        url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
         try:
-            backend_response = requests.get(backend_url)
+            backend_response = requests.get(url_with_params)
             backend_response.raise_for_status()
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
@@ -61,9 +28,7 @@ class GetTournaments(APIView):
     permission_classes = [AllowAny]  # Adjust permissions as needed
 
     def get(self, request):
-        # backend_url = settings.BACKEND_TOURNAMENTS_URL
-        backend_url = 'http://backend:8002/backend/tournaments/'
-        # Forward query parameters
+        backend_url = settings.BACKEND_TOURNAMENTS_URL
         query_params = request.GET.urlencode()
         url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
         try:
@@ -81,7 +46,6 @@ class GetTournaments(APIView):
 class PostAddGame(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
-        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         backend_url = 'http://backend:8002/backend/create_game/'
         game_data = request.data.get('game')
         try:
@@ -99,13 +63,12 @@ class PostAddGame(APIView):
 class PostAddTournament(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
-        backend_url = 'http://backend:8002/backend/create_tournament/'
-        tourn_data = request.data.get('tournament')
+        backend_url = settings.BACKEND_CREATE_TOURNAMENT_URL
         try:
             backend_response = requests.post(backend_url, json=request.data)
             backend_response.raise_for_status()
-            tourn_data = backend_response.json()
-            return Response(tourn_data, status=backend_response.status_code)
+            data = backend_response.json()
+            return Response(data, status=backend_response.status_code)
         except requests.exceptions.HTTPError as http_err:
             return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except requests.exceptions.RequestException as req_err:
@@ -152,6 +115,23 @@ class GetGenders(APIView):
 
     def get(self, request):
         backend_url = 'http://backend:8002/backend/genders/'
+        try:
+            backend_response = requests.get(backend_url)
+            backend_response.raise_for_status()
+            data = backend_response.json()
+            return Response(data, status=status.HTTP_200_OK)
+        except requests.exceptions.HTTPError as http_err:
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except requests.exceptions.RequestException as req_err:
+            return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except ValueError as json_err:
+            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GetStatus(APIView):
+    permission_classes = [AllowAny]  # Adjust permissions as needed
+
+    def get(self, request):
+        backend_url = 'http://backend:8002/backend/status/'
         try:
             backend_response = requests.get(backend_url)
             backend_response.raise_for_status()
