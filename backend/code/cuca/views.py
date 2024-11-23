@@ -151,7 +151,7 @@ def post_create_game(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            user1_id = data.get('user1')
+            user1_id = data.get('user1ID')
             if not user1_id:
                 return JsonResponse({"error": "User1 ID is required"}, status=400)
             tournament_id = data.get('tournamentid')
@@ -231,34 +231,31 @@ def post_update_game(request): #update statusID acording to user2 and winner var
             winner_id = data.get('winnerUserID')
             status = data.get('statusID')
             if status is not None:
-                try:
-                    status_id = int(status)
-                except ValueError:
-                    return JsonResponse({"error": "Invalid status value."}, status=400)
-                if status_id > 3 or status_id < 1:
-                    return JsonResponse({"error": "Invalid status."}, status=400)
-                if status_id < 1 or status_id > 3:
-                    return JsonResponse({"error": "status ID value must be a valid number between 1 and 3"}, status=400)
+                status = validate_status(status)
+                if status == 3:
+                    game.status_id = status
+                    game.save()
+                    return JsonResponse({"message": "Game updated successfully, forced finished was performed", "game_id": game.game}, status=201)
+                return JsonResponse({"error": "Override status only allowed for finished"}, status=400)
             if not user2_id and not winner_id:
                 return JsonResponse({"error": "User2 ID or Winner are required for update"}, status=400)
             if user2_id is not None and user2_id == game.user1:
                 return JsonResponse({"error": "User2 must be different from User1"}, status=400)
             if winner_id is not None and winner_id not in [game.user1, game.user2]:
                 return JsonResponse({"error": "Winner must be either User1 or User2"}, status=400)
-
             if winner_id is not None:
-                game.winner = winner_id
-                status_label = "Finished"
+                game.winnerUser = winner_id
+                game.status_id = 3
             else:
                 game.user2 = user2_id
-                status_label = "Happening"
-            if status_label:
-                try:
-                    status = tauxStatus.objects.get(status=status_label)
-                    game.statusID = status
-                except tauxStatus.DoesNotExist:
-                    return JsonResponse({"error": f"Status '{status_label}' not found"}, status=404)
+                game.status_id = 2
             game.save()
+            # if status_label:
+            #     try:
+            #         status = tauxStatus.objects.get(status=status_label)
+            #         game.statusID = status
+            #     except tauxStatus.DoesNotExist:
+            #         return JsonResponse({"error": f"Status '{status_label}' not found"}, status=404)
             return JsonResponse({"message": "Game updated successfully", "game_id": game.game}, status=201)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
