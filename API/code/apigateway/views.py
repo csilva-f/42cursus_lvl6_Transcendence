@@ -4,33 +4,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from django.conf import settings
-
-class GetDateTime(APIView):
-    permission_classes = [AllowAny]  # Adjust permissions as needed
-
-    def get(self, request):
-        backend_url = 'http://backend:8002/backend/current_datetime/'
-        try:
-            backend_response = requests.get(backend_url)
-            backend_response.raise_for_status()
-            data = backend_response.json()
-            return Response(data, status=status.HTTP_200_OK)
-        except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_400_BAD_REQUEST)
-        except requests.exceptions.RequestException as req_err:
-            return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_400_BAD_REQUEST)
-        except ValueError as json_err:
-            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_400_BAD_REQUEST)
-
-class PostMyName(APIView):
-    permission_classes = [AllowAny]  # Adjust permissions as needed
-
-    def post(self, request):
-        name = request.data.get('name')
-        if (name == "rita"):
-            return Response("True", status=status.HTTP_200_OK)
-        else:
-            return Response("False", status=status.HTTP_200_OK)
         
 class GetGames(APIView):
     permission_classes = [AllowAny]  # Adjust permissions as needed

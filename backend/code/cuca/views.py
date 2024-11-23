@@ -5,10 +5,6 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 
-def get_current_datetime(request):
-    current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    return JsonResponse({'current_datetime': current_datetime})
-
 ALLOWED_FILTERS_TOURNAMENT = {'tournamentID', 'statusID', 'name', 'winnerID'}
 
 ALLOWED_FILTERS_GAMES = {'statusID', 'gameID', 'user1ID', 'user2ID', 'winnerID', 'tournamentID'}
