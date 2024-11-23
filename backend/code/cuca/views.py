@@ -3,64 +3,10 @@ from django.http import JsonResponse
 from .models import *
 import json
 from django.views.decorators.csrf import csrf_exempt
-<<<<<<< HEAD
-from django.core import serializers
-from rest_framework.response import Response
-from rest_framework import status, generics
-from rest_framework.permissions import IsAuthenticated,AllowAny
-from rest_framework.views import APIView
-=======
 from django.core.exceptions import ValidationError
->>>>>>> origin/mergeCarolERita
 
 ALLOWED_FILTERS_TOURNAMENT = {'tournamentID', 'statusID', 'name', 'winnerID'}
 
-<<<<<<< HEAD
-class backendView(APIView):
-    permission_classes = [AllowAny]
-    def get(self, request): #change logic to commented stuf; handle null statusID
-        status_id = request.query_params.get('statusID', None)
-        if not status_id:
-            games_data = [
-                {
-                    'id': game.id,
-                    'date': game.date.strftime("%Y-%m-%d %H:%M:%S"),
-                    'user1': game.user1,
-                    'user2': game.user2,
-                    'winner': game.winner,
-                    'statusID': game.statusID.statusID,  # Accessing the status of the related tauxStatus
-                    'status': game.statusID.status,
-                    'is_tournament': game.istournament,
-                    'tournament_id': game.tournament.id if game.tournament else None
-                }
-                for game in tGames.objects.select_related('tournament', 'statusID')  # Make sure statusID and tournament are retrieved with the game
-            ]
-            return Response({'games': games_data}, status=status.HTTP_200_OK)
-        try:
-            status_id = int(status_id)
-        except ValueError:
-            return Response({'error': 'Invalid status value.'}, status=status.HTTP_400_BAD_REQUEST)
-        if status_id > 3 or status_id < 1:
-            return Response({'error': 'Invalid status.'}, status=status.HTTP_400_BAD_REQUEST)
-        #game_data = tGames.objects.select_related('tournament', 'statusID').filter(statusID=status)
-        #game_data = serializers.serialize('json', game_data)
-
-        games_data = [
-            {
-                'id': game.id,
-                'date': game.date.strftime("%Y-%m-%d %H:%M:%S"),
-                'user1': game.user1,
-                'user2': game.user2,
-                'winner': game.winner,
-                'statusID': game.statusID.statusID,
-                'status': game.statusID.status,
-                'is_tournament': game.istournament,
-                'tournament_id': game.tournament.id if game.tournament else None
-            }
-            for game in tGames.objects.select_related('tournament', 'statusID').filter(statusID=status_id)  # Make sure statusID and tournament are retrieved with the game
-        ]
-        return Response({'games': games_data}, status=status.HTTP_200_OK)
-=======
 ALLOWED_FILTERS_GAMES = {'statusID', 'gameID', 'user1ID', 'user2ID', 'winnerID', 'tournamentID'}
 
 def validate_filters_tournament(request):
@@ -149,19 +95,12 @@ def get_games(request):
         for game in games
     ]
     return JsonResponse({"games": games_data}, status=200)
->>>>>>> origin/mergeCarolERita
 
 #validar os filtros (se tiver filtro com key que nao existe - dar erro)
 @csrf_exempt 
 def get_tournaments(request):
-<<<<<<< HEAD
-    tournament_id = request.GET.get('tournamentID')
-    status = request.GET.get('statusID')
-    name = request.GET.get('name')
-=======
     try:
         validate_filters_tournament(request)
->>>>>>> origin/mergeCarolERita
 
         tournament_id = request.GET.get('tournamentID')
         status_id = request.GET.get('statusID')
@@ -232,18 +171,10 @@ def post_create_tournament(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-<<<<<<< HEAD
-            tourn_data = data.get('tournament')
-            init = tourn_data.get('beginDate')
-            end = tourn_data.get('endDate')
-            save_name = tourn_data.get('name')
-            if not save_name:
-=======
             init_str = data.get('beginDate')
             end_str = data.get('endDate')
             save_name = data.get('name')
             if save_name is None: #validates missing key
->>>>>>> origin/mergeCarolERita
                 save_name = "random_stuff"
             if not save_name:  #validates empty value
                 return JsonResponse({"error": "name can't be empty"}, status=400)
