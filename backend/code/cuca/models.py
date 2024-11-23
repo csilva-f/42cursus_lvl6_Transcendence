@@ -4,7 +4,6 @@ from datetime import timedelta, date, datetime
 from django.contrib.auth.forms import UserCreationForm
 
 class tauxStatus(models.Model):
-
     statusID = models.AutoField(primary_key=True)
     status = models.CharField(max_length=255)
 

@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="/static/css/font.css">
 </head>
 
-<body style="background-color: #F2F2F2; font-family: 'Poppins';">
+<body style="background-color: #F2F2F2; font-family: 'Poppins';" id="body">
     <div class="container-fluid shadow-sm">
         <div class="row d-flex flex-nowrap" style="height: 7rem;">
             <div class="col-auto d-flex align-items-center justify-content-center"
@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    <div class="h-100 w-100" id="loginContent"></div>
+    <div class="h-100 w-100" id="allContent"></div>
     
     <nav class="container-fluid" id="sidebar">
         <div class="row">
@@ -77,14 +77,14 @@
                             style="width: 3rem; height: 3rem;">
                             <a href="/statistics"
                                 class="nav-link fa-solid fa-chart-simple fa-xl d-flex align-items-center justify-content-center"
-                                style="height: 100%; color: black;"></a>
+                                style="height: 100%; color: black;">
                             </a>
                         </li>
                         <li class="pop-hover nav-item border border-2 border-black rounded-3 my-2" id="socialIcon"
                             style="width: 3rem; height: 3rem;">
                             <a href="/social" id="learnMoreBtn"
                                 class="nav-link fa-solid fa-globe fa-xl d-flex align-items-center justify-content-center"
-                                style="height: 100%; color: black;"></a>
+                                style="height: 100%; color: black;">
                             </a>
                         </li>
                     </ul>
@@ -121,7 +121,7 @@
     <script type="text/javascript" src="/static/js/router.js"></script>
     <script type="text/javascript" src="/static/js/index.js"></script>
     <script type="text/javascript" src="/static/js/GamesTournaments/GamesTournaments.js"></script>
-    <script type="text/javascript" src="/static/js/GamesTournaments/fetch.js"></script>
+    <script type="text/javascript" src="/static/js/GamesTournaments/api.js"></script>
 </body>
 
 </html>

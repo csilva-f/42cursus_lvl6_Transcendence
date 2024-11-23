@@ -14,6 +14,11 @@ const routes = {
     title: "Login",
     descripton: "This is the Login Page",
   },
+  "/pong": {
+    template: "/templates/Game.html",
+    title: "Pong",
+    descripton: "This is the Pong Page",
+  },
   "/games": {
     template: "/templates/GamesTournaments.html",
     title: "Games and Tournaments",
@@ -29,13 +34,14 @@ const routes = {
     title: "Social",
     descripton: "This is the Social Hub Page",
   },
+  "/about": {
+    template: "/templates/AboutUs.html",
+    title: "AboutUs",
+    descripton: "This is the AboutUs Page",
+  }
 };
 
-const gameIDCheck = [
-  "searchingLi", "searchingID", "searchingIcon",
-  "happeningLi", "happeningID", "happeningIcon",
-  "finishedLi", "finishedID", "finishedIcon"
-];
+const bigScreenLocation = ["/login", "/pong"];
 
 const route = (event) => {
   event = event || window.event;
@@ -57,13 +63,17 @@ function disableIcon(element) {
   element.classList.add("iconInactive");
 }
 
-async function changeToLogin() {
+async function changeToBig(location) {
   const headerElement = document.getElementById("mainMsg");
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
-  const mainDiv = document.getElementById("loginContent");
+  const mainDiv = document.getElementById("allContent");
 
-  headerElement.setAttribute("data-i18n", "login");
+  if (location == "/login")
+    headerElement.setAttribute("data-i18n", "login");
+  else if (location == "/pong")
+    headerElement.setAttribute("data-i18n", "pong");
+
   updateContent(langData);
   document.getElementById("subMsg").style.display = "none";
   document.getElementById("content").style.display = "none";
@@ -96,6 +106,7 @@ async function changeActive(location) {
       const iconStatusElement = document.getElementById('searchingLi');
       activateIcon(iconStatusElement);
       fetchGames(1);
+      getForms();
       break;
     case "/statistics":
       iconsElements.forEach((element) => {
@@ -117,6 +128,16 @@ async function changeActive(location) {
       updateContent(langData);
       document.getElementById("subMsg").style.display = "none";
       break;
+    case "/about":
+      iconsElements.forEach((element) => {
+        element.id == "aboutUsIcon"
+          ? activateIcon(element)
+          : disableIcon(element);
+      });
+      headerElement.setAttribute("data-i18n", "aboutUs");
+      updateContent(langData);
+      document.getElementById("subMsg").style.display = "none";
+      break;
     default:
       iconsElements.forEach((element) => {
         element.id == "homepageIcon"
@@ -134,17 +155,16 @@ const locationHandler = async (elementID) => {
   let location = window.location.pathname;
   if (location.length == 0) location = "/";
   console.log("location: ", location);
-  //if (elementID == "content" && location == "/games/games") location = "/games";
   const route = routes[location] || routes["404"];
   console.log(route);
   const html = await fetch(route.template).then((response) => response.text());
   document.title = route.title;
-  if (location == "/login") {
-    document.getElementById("loginContent").innerHTML = html;
-    changeToLogin();
+  if (bigScreenLocation.includes(location)) {
+    document.getElementById("allContent").innerHTML = html;
+    changeToBig(location);
     document
       .querySelector('meta[name="description"]')
-      .setAttribute("loginContent", route.descripton);
+      .setAttribute("allContent", route.descripton);
   }
   else {
     document.getElementById(elementID).innerHTML = html;
@@ -157,12 +177,11 @@ const locationHandler = async (elementID) => {
 
 document.addEventListener("click", (e) => {
   const { target } = e;
-  console.log("Target: ", target);
+  //console.log("Target: ", target);
   if (target.matches("nav a")) {
     e.preventDefault();
     route();
-  } else if (gameIDCheck.includes(target.id))
-    GamesTournamentsMatches(target.id);
+  }
 });
 
 
