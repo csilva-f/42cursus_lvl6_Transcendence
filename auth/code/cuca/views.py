@@ -18,22 +18,26 @@ class UserCreate(generics.CreateAPIView):
     serializer_class = UserSerializer
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        token = default_token_generator.make_token(user)
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        validation_link  = request.headers['Origin'] + '/authapi/validate-email/validate-email/' + uid + '/' + token
-        print('build_absolute_uri: ',validation_link)
-        send_mail(
-            'Your Activation Link',
-            f'Your account activation link is \n\n {validation_link}',
-            'noreply@cucabeludo.pt',
-            #[user.email],
-            ['bcamarinha92@gmail.com'],
-            fail_silently=False,
-        )
-        print(validation_link)
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            user = serializer.save()
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            validation_link  = request.headers['Origin'] + '/authapi/validate-email/validate-email/' + uid + '/' + token
+            print('build_absolute_uri: ',validation_link)
+            send_mail(
+                'Your Activation Link',
+                f'Your account activation link is \n\n {validation_link}',
+                'noreply@cucabeludo.pt',
+                #[user.email],
+                ['bcamarinha92@gmail.com'],
+                fail_silently=False,
+            )
+            print(validation_link)
+        except serializers.ValidationError as e:
+            print('error: ', e.detail)
+            return Response({'error': e.detail}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class ValidateEmailView(generics.GenericAPIView):
