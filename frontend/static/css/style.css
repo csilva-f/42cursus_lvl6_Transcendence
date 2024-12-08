@@ -1,6 +1,4 @@
-/* Header */
-
-/* Sidebar */
+/* Animation */
 .pop-hover {
     transition: transform .3s;
 }
@@ -24,45 +22,7 @@
 .pop-hover-xs:hover {
     transform: scale(1.05);
 }
-
-
-.noBorder {
-    border: none !important;
-}
-
-.iconActive {
-    background-color: #7C64F6;
-    pointer-events: none;
-    cursor: not-allowed;
-}
-
-.iconActive .nav-link {
-    color: white !important;
-}
-
-.iconActive i {
-    color: white !important;
-}
-
-.iconActive p {
-    color: white !important;
-}
-
-.iconInactive {
-    background-color: white;
-}
-
-.iconInactive .nav-link {
-    color: #a594f9 !important;
-}
-
-.iconInactive i {
-    color: #a594f9 !important;
-}
-
-.iconInactive p {
-    color: black !important;
-}
+/* End Animation */
 
 .loginActive {
     display: block !important;
@@ -105,4 +65,8 @@
     #sidebarBtn {
         display: block !important;
     }
+}
+
+.noBorder {
+    border: none !important;
 }

@@ -1,0 +1,15 @@
+:root {
+    /*? Main Icons */
+    --mainActiveBg: #AC3B61;
+    --mainActiveIcon: white;
+    --mainActiveText: white;
+    --mainInactiveBg: transparent;
+    /* #bab2b5 */
+    --mainInactiveIcon: black;
+    --mainInactiveText: black;
+    /*? Sidebar Icons */
+    --SidebarActiveBg: white;
+    --SidebarActiveIcon: #87709C;
+    --SidebarInactiveBg: transparent;
+    --SidebarInactiveIcon: white;
+}

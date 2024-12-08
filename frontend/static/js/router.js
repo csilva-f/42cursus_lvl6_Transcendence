@@ -53,15 +53,26 @@ const route = (event) => {
   locationHandler("content");
 };
 
+function activateSBIcon(element) {
+  element.classList.remove("iconSBInactive");
+  element.classList.add("iconSBActive");
+}
+
 function activateIcon(element) {
   element.classList.remove("iconInactive");
   element.classList.add("iconActive");
+}
+
+function disableSBIcon(element) {
+  element.classList.remove("iconSBActive");
+  element.classList.add("iconSBInactive");
 }
 
 function disableIcon(element) {
   element.classList.remove("iconActive");
   element.classList.add("iconInactive");
 }
+
 
 async function changeToBig(location) {
   const headerElement = document.getElementById("mainMsg");
@@ -95,8 +106,8 @@ async function changeActive(location) {
     case "/games":
       iconsElements.forEach((element) => {
         element.id == "gamesIcon"
-          ? activateIcon(element)
-          : disableIcon(element);
+          ? activateSBIcon(element)
+          : disableSBIcon(element);
       });
       headerElement.setAttribute("data-i18n", "games&tournaments");
       updateContent(langData);
@@ -111,8 +122,8 @@ async function changeActive(location) {
     case "/statistics":
       iconsElements.forEach((element) => {
         element.id == "statsIcon"
-          ? activateIcon(element)
-          : disableIcon(element);
+          ? activateSBIcon(element)
+          : disableSBIcon(element);
       });
       headerElement.setAttribute("data-i18n", "statistics");
       updateContent(langData);
@@ -121,8 +132,8 @@ async function changeActive(location) {
     case "/social":
       iconsElements.forEach((element) => {
         element.id == "socialIcon"
-          ? activateIcon(element)
-          : disableIcon(element);
+          ? activateSBIcon(element)
+          : disableSBIcon(element);
       });
       headerElement.setAttribute("data-i18n", "socialhub");
       updateContent(langData);
@@ -131,8 +142,8 @@ async function changeActive(location) {
     case "/about":
       iconsElements.forEach((element) => {
         element.id == "aboutUsIcon"
-          ? activateIcon(element)
-          : disableIcon(element);
+          ? activateSBIcon(element)
+          : disableSBIcon(element);
       });
       headerElement.setAttribute("data-i18n", "aboutUs");
       updateContent(langData);
@@ -141,8 +152,8 @@ async function changeActive(location) {
     default:
       iconsElements.forEach((element) => {
         element.id == "homepageIcon"
-          ? activateIcon(element)
-          : disableIcon(element);
+          ? activateSBIcon(element)
+          : disableSBIcon(element);
       });
       headerElement.setAttribute("data-i18n", "welcome");
       updateContent(langData);

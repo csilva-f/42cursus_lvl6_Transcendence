@@ -1,0 +1,63 @@
+/* Main Icons */
+.iconActive {
+    background-color: var(--mainActiveBg);
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.iconActive .nav-link {
+    color: var(--mainActiveIcon) !important;
+}
+
+.iconActive i {
+    color: var(--mainActiveIcon) !important;
+}
+
+.iconActive p {
+    color: var(--mainActiveText) !important;
+}
+
+.iconInactive {
+    background-color: var(--mainInactiveBg);
+}
+
+.iconInactive .nav-link {
+    color: var(--mainInactiveIcon) !important;
+}
+
+.iconInactive i {
+    color: var(--mainInactiveIcon) !important;
+}
+
+.iconInactive p {
+    color: var(--mainInactiveText) !important;
+}
+/* End Main Icons */
+
+/* Sidebar Icons */
+.iconSBActive {
+    background-color: var(--SidebarActiveBg);
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.iconSBActive .nav-link {
+    color: var(--SidebarActiveIcon) !important;
+}
+
+.iconSBActive i {
+    color: var(--SidebarActiveIcon) !important;
+}
+
+.iconSBInactive {
+    background-color: var(--SidebarInactiveBg);
+}
+
+.iconSBInactive .nav-link {
+    color: var(--SidebarInactiveIcon) !important;
+}
+
+.iconSBInactive i {
+    color: var(--SidebarInactiveIcon) !important;
+}
+/* End Sidebar Icons */
