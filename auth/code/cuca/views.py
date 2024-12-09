@@ -26,14 +26,28 @@ class UserCreate(generics.CreateAPIView):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             validation_link  = request.headers['Origin'] + '/authapi/validate-email/validate-email/' + uid + '/' + token
             print('build_absolute_uri: ',validation_link)
-            send_mail(
-                'Your Activation Link',
-                f'Your account activation link is \n\n {validation_link}',
-                'noreply@cucabeludo.pt',
-                #[user.email],
-                ['bcamarinha92@gmail.com'],
-                fail_silently=False,
-            )
+
+            response = requests.post('http://email:8000/send_email/', json={
+                'subject': 'Your Activation Link',
+                'message': f'Your account activation link is \n\n {validation_link}',
+                'from_email': 'noreply@cucabeludo.pt',
+                #[email],
+                'recipient_list': ['bcamarinha92@gmail.com'],
+            })
+
+            if response.status_code == 200:
+                print('Email sent successfully!')
+            else:
+                print('Failed to send email:', response.content)
+
+            # send_mail(
+            #     'Your Activation Link',
+            #     f'Your account activation link is \n\n {validation_link}',
+            #     'noreply@cucabeludo.pt',
+            #     #[user.email],
+            #     ['bcamarinha92@gmail.com'],
+            #     fail_silently=False,
+            # )
             print(validation_link)
         except serializers.ValidationError as e:
             print('error: ', e.detail)
@@ -77,14 +91,27 @@ class RecoverPasswordAPIView(generics.GenericAPIView):
             expires_at=expires_at
         )
         reset_url  = request.headers['Origin'] + '/authapi/register/reset-password/' + uid + '/' + token
-        send_mail(
-            'Password Reset Request',
-            f'Please click the following link to reset your password: {reset_url}',
-            'noreply@cucabeludo.pt',
+
+        response = requests.post('http://email:8000/send_email/', json={
+            'subject': 'Password Reset Request',
+            'message': f'Please click the following link to reset your password: {reset_url}',
+            'from_email': 'noreply@cucabeludo.pt',
             #[email],
-            ['bcamarinha92@gmail.com'],
-            fail_silently=False,
-        )
+            'recipient_list': ['bcamarinha92@gmail.com'],
+        })
+
+        if response.status_code == 200:
+            print('Email sent successfully!')
+        else:
+            print('Failed to send email:', response.content)
+        # send_mail(
+        #     'Password Reset Request',
+        #     f'Please click the following link to reset your password: {reset_url}',
+        #     'noreply@cucabeludo.pt',
+        #     #[email],
+        #     ['bcamarinha92@gmail.com'],
+        #     fail_silently=False,
+        # )
         return Response({'message': 'Password reset instructions have been sent to your email address.'}, status=status.HTTP_200_OK)
 
 class ResetPasswordAPIView(APIView):

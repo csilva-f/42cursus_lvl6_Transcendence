@@ -65,6 +65,34 @@ services:
     networks:
       - backend
 
+  email:
+    container_name: email
+    build: ./email
+    volumes:
+      - ./email/code:/code:rwx
+    ports:
+      - "9005:8000"
+    networks:
+      - backend
+    init: true
+    restart: on-failure
+    env_file:
+      - ./email/.env
+    depends_on:
+      - email-db
+
+  email-db:
+    container_name: email-db
+    build: ./email-db
+    env_file:
+      - ./email-db/.env
+    volumes:
+      - ./email-db/data:/var/lib/postgresql/data:rw
+    networks:
+      - backend
+
+
+
   nginx:
     container_name: nginx
     build: ./nginx

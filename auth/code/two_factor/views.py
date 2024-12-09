@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 import pyotp
 from cuca.models import CucaUser  # Adjust the import based on your project structure
 from .serializer import UserIdSerializer, OTPSerializer
+import requests
 
 class Enable2FAView(generics.GenericAPIView):
     serializer_class = UserIdSerializer
@@ -42,15 +43,25 @@ class SendOTPView(generics.GenericAPIView):
         print(f'Generated OTP for user {user.email}: {otp}')
 
         #Send OTP via email
+        response = requests.post('http://email:8000/send_email/', json={
+            'subject': 'Your OTP Code',
+            'message': f'Your OTP code is {otp}',
+            'from_email': 'noreply@cucabeludo.pt',
+            'recipient_list': ['bcamarinha92@gmail.com'],
+        })
 
-        send_mail(
-            'Your OTP Code',
-            f'Your OTP code is {otp}',
-            'noreply@cucabeludo.pt',
-            #[user.email],
-            ['bcamarinha92@gmail.com'],
-            fail_silently=False,
-        )
+        if response.status_code == 200:
+            print('Email sent successfully!')
+        else:
+            print('Failed to send email:', response.content)
+        # send_mail(
+        #     'Your OTP Code',
+        #     f'Your OTP code is {otp}',
+        #     'noreply@cucabeludo.pt',
+        #     #[user.email],
+        #     ['bcamarinha92@gmail.com'],
+        #     fail_silently=False,
+        # )
 
         return Response({'message': 'OTP sent to your email.'}, status=status.HTTP_200_OK)
 
