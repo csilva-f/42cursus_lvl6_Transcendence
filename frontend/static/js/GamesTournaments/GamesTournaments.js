@@ -65,7 +65,6 @@ function activateInput(elementID) {
     formElement.disabled = !formElement.disabled;
     if (elementID == "passwordInput")
         formElement.required = !formElement.required;
-
 }
 
 function activateGameForm(typeForm) {

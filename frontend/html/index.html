@@ -26,13 +26,17 @@
     <link rel="stylesheet" href="/static/css/font.css">
 </head>
 
-<body style="background-color: #EEE2DC; font-family: 'Poppins';" id="body">
+<body style="background-color: var(--bodyBg); font-family: 'Poppins';" id="body">
+    <!-- Topbar -->
     <div class="container-fluid" style="background-color: transparent;">
         <div class="row d-flex flex-nowrap" style="height: 7rem;">
+            <!-- Icon -->
             <div class="col-auto d-flex align-items-center justify-content-center" style="min-width: 9rem;">
                 <img id="logoImg" src="/static/img/logos/buttLogo.svg" alt="Logo" class="w-75 h-100"
                     style="object-fit: contain; cursor: pointer;" onclick="spankShinChan()">
             </div>
+            <!-- End Icon -->
+            <!-- Text Info -->
             <div class="col-lg-8 col-md col-sm col p-3 d-flex align-items-center" id="mainMsgDiv">
                 <h1 class="display-6 mb-0" style="font-weight: bold;" id="mainMsg" data-i18n="welcome"></h1>
                 <p class="h3 ms-2 mb-0" id="subMsg">{Diogo Souza}</p>
@@ -45,30 +49,47 @@
                     </li>
                 </ul>
             </div>
+            <!-- End Text Info -->
+            <!-- Profile -->
             <div class="col-lg d-none d-lg-block p-3 d-flex align-content-center" id="profileDiv">
-                <!-- PASSAR ISTO DEPOIS PARA COMPONENTE E DAR LOAD QUANDO O LOGIN FOR EFETUADO -->
+                <!--? PASSAR ISTO DEPOIS PARA COMPONENTE E DAR LOAD QUANDO O LOGIN FOR EFETUADO -->
                 <div class="h-100 d-flex flex-row align-items-stretch">
+                    <!-- Notification and Info -->
                     <div class="p-2 w-100 d-flex justify-content-end align-content-end">
+                        <ul class="nav nav-pills justify-content-center me-5 mt-2" style="height: 3rem">
+                            <li class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+                                style="width: 3rem; cursor: pointer; background-color: white;">
+                                <i class="fa-solid fa-bell fa-xl"></i>
+                            </li>
+                        </ul>
                         <ul class="list-unstyled">
-                            <li class="d-flex justify-content-end mb-1" style="font-weight: bold;">{NICKNAME}</li>
+                            <li class="d-flex justify-content-end my-1" style="font-weight: bold;">{NICKNAME}</li>
                             <li>
-                                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25"
-                                    aria-valuemin="0" aria-valuemax="100" style="background-color: white;">
+                                <div class="progress mt-3" role="progressbar" aria-label="Basic example"
+                                    aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"
+                                    style="background-color: white;">
                                     <div class="progress-bar" style="width: 25%; background-color: #AC3B61;"></div>
                                 </div>
                             </li>
                             <li style="font-weight: bold;">Lvl0&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Lvl1</li>
                         </ul>
                     </div>
-                    <div class="p-1 justify-content-end align-content-end">
-                        <img src="/static/img/pfp1.jpeg"
-                            style="object-fit: cover; max-width: 4.5rem; min-width: 4.5rem;"
-                            class="img-fluid w-100 rounded-3" />
+                    <!-- End Notification and Info -->
+                    <!-- Profile Picture -->
+                    <div class="ms-1 justify-content-end align-content-end">
+                        <a href="">
+                            <img src="/static/img/pfp1.jpeg"
+                                style="object-fit: cover; max-width: 5rem; min-width: 5rem;"
+                                class="img-fluid w-100 rounded-3" />
+                        </a>
                     </div>
+                    <!-- End Profile Picture -->
                 </div>
             </div>
+            <!-- End Profile -->
         </div>
     </div>
+    <!-- End Topbar -->
 
     <div class="h-100 w-100" id="allContent"></div>
 
@@ -139,6 +160,8 @@
     <script type="text/javascript" src="/static/js/index.js"></script>
     <script type="text/javascript" src="/static/js/GamesTournaments/GamesTournaments.js"></script>
     <script type="text/javascript" src="/static/js/GamesTournaments/api.js"></script>
+    <script type="text/javascript" src="/static/js/Social/Social.js"></script>
+    <script type="text/javascript" src="/static/js/Social/api.js"></script>
 </body>
 
 </html>
