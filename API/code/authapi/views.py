@@ -6,6 +6,18 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.decorators import action
 
+#PostRegisterViewSet - Register a new user
+# Input Parameters:
+    # email: string
+    # first_name: string
+    # last_name: string
+    # password: string
+    # phone_number: string
+#return in case of success:
+    # email: string
+    # first_name: string
+    # last_name: string
+    # phone_number: string
 
 class PostRegisterViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
@@ -22,6 +34,14 @@ class PostRegisterViewSet(viewsets.ViewSet):
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+#PostAuthViewSet - Authenticate a user
+# Input Parameters:
+    # email: string
+    # password: string
+#return in case of success:
+    # Refresh Token: string
+    # Access Token: string
 
 class PostAuthViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
@@ -40,6 +60,13 @@ class PostAuthViewSet(viewsets.ViewSet):
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+#PostRefreshViewSet - Refresh the access token
+# Input Parameters:
+    # refresh: string
+    # access: string
+#return in case of success:
+    # Refresh Token: string
+    # Access Token: string
 class PostRefreshViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
@@ -57,6 +84,11 @@ class PostRefreshViewSet(viewsets.ViewSet):
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+#EnableOTPViewSet - Enable OTP for a user
+# Input Parameters:
+    # userId: integer
+#return in case of success:
+    # otp_secret: string  <-- to be changed for boolean, or implement QR code authenticator APP
 class EnableOTPViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
@@ -74,6 +106,11 @@ class EnableOTPViewSet(viewsets.ViewSet):
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+#SendOTPViewSet - Send OTP to a user
+# Input Parameters:
+    # userId: integer
+#return in case of success:
+    # message: string
 class SendOTPViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
@@ -91,6 +128,11 @@ class SendOTPViewSet(viewsets.ViewSet):
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+#GetOTPStatusViewSet - Get OTP status for a user
+# Input Parameters:
+    # userId: integer
+#return in case of success:
+    # otp_enabled: boolean
 class GetOTPStatusViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
@@ -108,6 +150,12 @@ class GetOTPStatusViewSet(viewsets.ViewSet):
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+#VerifyOTPViewSet - Verify OTP for a user
+# Input Parameters:
+    # userId: integer
+    # otp: string
+#return in case of success:
+    # message: string
 class VerifyOTPViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
@@ -126,6 +174,8 @@ class VerifyOTPViewSet(viewsets.ViewSet):
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+#VerifyEmailViewSet - Verify Email for a user
+# No Input Parameters
 class VerifyEmailViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
     @action(detail=False, methods=['get'], url_path='validate-email/(?P<uidb64>[^/.]+)/(?P<token>[^/.]+)')

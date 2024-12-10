@@ -12,6 +12,7 @@ from .serializer import UserSerializer, OTPSerializer, RecoverPasswordSerializer
 from django.contrib.auth.models import User
 from .models import CucaUser, PasswordResetToken
 from rest_framework.permissions import IsAuthenticated,AllowAny
+import requests
 
 class UserCreate(generics.CreateAPIView):
     queryset = CucaUser.objects.all()
