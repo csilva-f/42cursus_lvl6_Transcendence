@@ -2,31 +2,121 @@
   <div class="container-fluid h-100">
     <!-- First Row -->
     <div class="row h-50 gap-3">
+      <!-- Welcome and Games -->
       <div class="col-lg-8 col-md-7 col-sm-12 shadow rounded-4" style="background-color: var(--cardBg);">
-        <h3>Content 1</h3>
+        <p class="h1 px-4 pt-2" style="font-weight: bold;">Welcome and Games</p>
       </div>
-      <div class="col shadow rounded-4" style="background-color: var(--cardBg);">
-        <h3>Content 2</h3>
+      <!-- End Welcome and Games -->
+      <!-- Game History -->
+      <div class="col shadow rounded-4 px-0 d-flex flex-column h-100" style="background-color: var(--cardBg);">
+        <p class="h1 px-4 pt-2" style="font-weight: bold;" data-i18n="matchHistory"></p>
+        <div class="px-4 pb-2 overflow-y-scroll noScrollBar">
+          <div class="my-2 rounded-4">
+            <div class="container-fluid rounded-4 d-flex border border-1 border-danger" style="max-height: 6rem; min-height: 6rem;">
+              <div class="d-flex" style="height: 6rem;">
+                <div class="justify-content-center align-content-center" style="max-width: 5rem;">
+                  <img src="/static/img/pfp2.jpg" style="object-fit: cover"
+                    class="img-fluid w-100 rounded-circle shadow ms-2" id="user1Img" />
+                </div>
+                <div class="w-75 h-100 d-flex flex-column justify-content-center ms-4">
+                  <p class="h4 mb-0"><strong>Defeat</strong></p>
+                  <div class="d-flex align-items-center">
+                    <p class="h4 mb-0">Winner</p>
+                    <p class="h5 mb-0 ms-2"><strong>Hatsune Miku</strong></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="my-2 rounded-4">
+            <div class="container-fluid rounded-4 d-flex border border-1 border-success" style="max-height: 6rem; min-height: 6rem;">
+              <div class="d-flex" style="height: 6rem;">
+                <div class="justify-content-center align-content-center" style="max-width: 5rem;">
+                  <img src="/static/img/pfp1.jpeg" style="object-fit: cover"
+                    class="img-fluid w-100 rounded-circle shadow ms-2" id="user1Img" />
+                </div>
+                <div class="w-75 h-100 d-flex flex-column justify-content-center ms-4">
+                  <p class="h4 mb-0"><strong>Winner</strong></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="my-2 rounded-4">
+            <div class="container-fluid rounded-4 d-flex border border-1 border-danger" style="max-height: 6rem; min-height: 6rem;">
+              <div class="d-flex" style="height: 6rem;">
+                <div class="justify-content-center align-content-center" style="max-width: 5rem;">
+                  <img src="/static/img/ado.jpg" style="object-fit: cover"
+                    class="img-fluid w-100 rounded-circle shadow ms-2" id="user1Img" />
+                </div>
+                <div class="w-75 h-100 d-flex flex-column justify-content-center ms-4">
+                  <p class="h4 mb-0"><strong>Defeat</strong></p>
+                  <div class="d-flex align-items-center">
+                    <p class="h4 mb-0">Winner</p>
+                    <p class="h5 mb-0 ms-2"><strong>Ado</strong></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="my-2 rounded-4">
+            <div class="container-fluid rounded-4 d-flex border border-1 border-danger" style="max-height: 6rem; min-height: 6rem;">
+              <div class="d-flex" style="height: 6rem;">
+                <div class="justify-content-center align-content-center" style="max-width: 5rem;">
+                  <img src="/static/img/rin.jpg" style="object-fit: cover"
+                    class="img-fluid w-100 rounded-circle shadow ms-2" id="user1Img" />
+                </div>
+                <div class="w-75 h-100 d-flex flex-column justify-content-center ms-4">
+                  <p class="h4 mb-0"><strong>Defeat</strong></p>
+                  <div class="d-flex align-items-center">
+                    <p class="h4 mb-0">Winner</p>
+                    <p class="h5 mb-0 ms-2"><strong>Kagamine Rin</strong></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="my-2 rounded-4">
+            <div class="container-fluid rounded-4 d-flex border border-1 border-danger" style="max-height: 6rem; min-height: 6rem;">
+              <div class="d-flex" style="height: 6rem;">
+                <div class="justify-content-center align-content-center" style="max-width: 5rem;">
+                  <img src="/static/img/ado.jpg" style="object-fit: cover"
+                    class="img-fluid w-100 rounded-circle shadow ms-2" id="user1Img" />
+                </div>
+                <div class="w-75 h-100 d-flex flex-column justify-content-center ms-4">
+                  <p class="h4 mb-0"><strong>Defeat</strong></p>
+                  <div class="d-flex align-items-center">
+                    <p class="h4 mb-0">Winner</p>
+                    <p class="h5 mb-0 ms-2"><strong>Ado</strong></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+      <!-- End Game History -->
     </div>
     <!-- End First Row -->
     <!-- Second Row -->
     <div class="row h-50 gap-3 pt-3">
+      <!-- Stats and Top Players -->
       <div class="col-lg-8 col-md-7 col-sm-12 shadow rounded-4" style="background-color: var(--cardBg);">
-        <h3>Content 3</h3>
+        <p class="h1 px-4 pt-2" style="font-weight: bold;">Stats and Top Players</p>
+        <p class="h5">Descobrir pk que quando se vai ao perfil fica tudo preto na sidebar</p>
       </div>
+      <!-- End Stats and Top Players -->
       <!-- Friends List -->
       <div class="col shadow rounded-4 px-0 d-flex flex-column h-100" style="background-color: var(--cardBg);">
-        <form class="d-flex px-4 pt-4 pb-2" role="search">
+        <p class="h1 px-4 pt-2" style="font-weight: bold;" data-i18n="friends"></p>
+        <form class="d-flex px-4 pb-2" role="search">
           <input class="form-control rounded-3" type="search" placeholder="Search" aria-label="Search">
           <!--
             <button class="btn btn-outline-success" type="submit">Search</button>
           -->
         </form>
-        <div class="px-4 pb-4 overflow-y-scroll noScrollBar">
+        <div class="px-4 pb-2 overflow-y-scroll noScrollBar">
           <div class="my-2 rounded-4">
-            <div class="container-fluid rounded-4 d-flex"
-              style="max-height: 6rem; min-height: 6rem; background-color: #EEDCDF;">
+            <div class="container-fluid rounded-4 d-flex border border-1" style="max-height: 6rem; min-height: 6rem;">
               <div class="d-flex" style="height: 6rem;">
                 <div class="justify-content-center align-content-center" style="max-width: 5rem;">
                   <img src="/static/img/pfp2.jpg" style="object-fit: cover"
@@ -41,8 +131,7 @@
             </div>
           </div>
           <div class="my-2 rounded-4">
-            <div class="container-fluid rounded-4 d-flex"
-              style="max-height: 6rem; min-height: 6rem; background-color: #EEDCDF;">
+            <div class="container-fluid rounded-4 d-flex border border-1" style="max-height: 6rem; min-height: 6rem;">
               <div class="d-flex" style="height: 6rem;">
                 <div class="justify-content-center align-content-center" style="max-width: 5rem;">
                   <img src="/static/img/rin.jpg" style="object-fit: cover"
@@ -57,8 +146,7 @@
             </div>
           </div>
           <div class="my-2 rounded-4">
-            <div class="container-fluid rounded-4 d-flex"
-              style="max-height: 6rem; min-height: 6rem; background-color: #EEDCDF;">
+            <div class="container-fluid rounded-4 d-flex border border-1" style="max-height: 6rem; min-height: 6rem;">
               <div class="d-flex" style="height: 6rem;">
                 <div class="justify-content-center align-content-center" style="max-width: 5rem;">
                   <img src="/static/img/ado.jpg" style="object-fit: cover"
@@ -73,8 +161,7 @@
             </div>
           </div>
           <div class="my-2 rounded-4">
-            <div class="container-fluid rounded-4 d-flex"
-              style="max-height: 6rem; min-height: 6rem; background-color: #EEDCDF;">
+            <div class="container-fluid rounded-4 d-flex border border-1" style="max-height: 6rem; min-height: 6rem;">
               <div class="d-flex" style="height: 6rem;">
                 <div class="justify-content-center align-content-center" style="max-width: 5rem;">
                   <img src="/static/img/luka.jpg" style="object-fit: cover"

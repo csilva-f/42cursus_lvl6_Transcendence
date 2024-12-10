@@ -38,8 +38,14 @@ const routes = {
     template: "/templates/AboutUs.html",
     title: "AboutUs",
     descripton: "This is the AboutUs Page",
-  }
+  },
+  "/profile": {
+    template: "/templates/Profile.html",
+    title: "Profile",
+    descripton: "This is the Profile Page",
+  },
 };
+
 const bigScreenLocation = ["/login", "/pong"];
 
 const route = (event) => {
@@ -149,7 +155,7 @@ async function changeActive(location) {
       updateContent(langData);
       document.getElementById("subMsg").style.display = "none";
       break;
-    default:
+    case "/":
       iconsElements.forEach((element) => {
         element.id == "homepageIcon"
           ? activateSBIcon(element)
@@ -158,6 +164,22 @@ async function changeActive(location) {
       headerElement.setAttribute("data-i18n", "welcome");
       updateContent(langData);
       document.getElementById("subMsg").style.display = "block";
+      break;
+    case "/profile":
+      iconsElements.forEach((element) => {
+          disableSBIcon(element);
+      });
+      headerElement.setAttribute("data-i18n", "profile");
+      updateContent(langData);
+      document.getElementById("subMsg").style.display = "none";
+      break;
+    default:
+      console.log("default");
+      iconsElements.forEach((element) => {
+          disableSBIcon(element);
+      });
+      updateContent(langData);
+      document.getElementById("subMsg").style.display = "none";
       break;
   }
 }

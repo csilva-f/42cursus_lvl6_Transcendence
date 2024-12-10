@@ -6,6 +6,7 @@
     "statistics": "Estatísticas",
     "socialhub": "Centro de Utilizadores",
     "aboutUs": "Sobre nós",
+    "profile": "Perfil",
     "en": "Inglês",
     "pt": "Português",
     "fr": "Francês",
@@ -38,5 +39,6 @@
     "tournamentcreated": "Torneio criado com sucesso",
     "gameEntered": "Jogo iniciado com sucesso",
     "global": "Global",
-    "friends": "Amigos"
+    "friends": "Amigos",
+    "matchHistory": "Histórico de Partidas"
 }
