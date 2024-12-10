@@ -34,24 +34,14 @@ class UserCreate(generics.CreateAPIView):
                 #[email],
                 'recipient_list': ['bcamarinha92@gmail.com'],
             })
-
             if response.status_code == 200:
                 print('Email sent successfully!')
             else:
                 print('Failed to send email:', response.content)
-
-            # send_mail(
-            #     'Your Activation Link',
-            #     f'Your account activation link is \n\n {validation_link}',
-            #     'noreply@cucabeludo.pt',
-            #     #[user.email],
-            #     ['bcamarinha92@gmail.com'],
-            #     fail_silently=False,
-            # )
             print(validation_link)
         except serializers.ValidationError as e:
-            print('error: ', e.detail)
-            return Response({'error': e.detail}, status=status.HTTP_400_BAD_REQUEST)
+            print('error: ', e.detail['email'][0])
+            return Response(e.detail['email'][0], status=status.HTTP_409_CONFLICT)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class ValidateEmailView(generics.GenericAPIView):
