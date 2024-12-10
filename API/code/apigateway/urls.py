@@ -1,12 +1,14 @@
-# myapp/urls.py
-from django.urls import path, include
-from rest_framework import routers
-from .views import GetDateTimeViewSet,HelloWorldViewSet
-
-router = routers.DefaultRouter()
-router.register(r'current_datetime', GetDateTimeViewSet, basename='current_datetime')
-router.register(r'hello_world', HelloWorldViewSet, basename='hello_world')
+from django.urls import path
+from .views import *
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('get-games/', GetGames.as_view(), name='get-games'),
+    path('get-tournaments/', GetTournaments.as_view(), name='get-tournments'),
+    path('create-game/', PostAddGame.as_view(), name='create-game'),
+    path('create-tournament/', PostAddTournament.as_view(), name='create-tournament'),
+    path('update-game/', PostUpdateGame.as_view(), name='update-game'),
+    path('create-userextension/', PostAddUserExtension.as_view(), name='create-userextension'),
+    path('get-genders/', GetGenders.as_view(), name='get-genders'),
+    path('get-userextensions/', GetUserExtensions.as_view(), name='get-userextensions'),
+    path('get-status/', GetStatus.as_view(), name='get-status'),
 ]

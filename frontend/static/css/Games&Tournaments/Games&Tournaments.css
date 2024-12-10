@@ -1,0 +1,77 @@
+.menuLi {
+    width: 15rem;
+    cursor: pointer;
+}
+
+.modalActionsLi {
+    width: 7rem;
+    cursor: pointer;
+}
+
+.modalLi {
+    width: 9rem;
+    cursor: pointer;
+}
+
+@media (width < 1200px) {
+    .menuLi {
+        width: 3rem;
+        cursor: pointer;
+    }
+
+    .modalActionsLi {
+        width: 3rem;
+        cursor: pointer;
+    }
+}
+
+.form-check-input.is-valid ~ .form-check-label, .was-validated .form-check-input:valid ~ .form-check-label {
+    color: black !important;
+  }
+
+.rotate {
+    animation: rotate 0.5s linear forwards;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* General customization for checked and active states */
+.form-check-input:checked,
+.form-check-input:active,
+.form-control:focus,
+.btn:focus,
+.btn:active {
+    border-color: black !important;
+    box-shadow: none !important;
+    outline: none;
+}
+
+/* Remove default outline and shadows for focus/active states */
+.form-control:focus,
+.input-group-text:focus,
+input[type="text"]:focus,
+textarea:focus,
+select:focus,
+input[type="checkbox"]:focus,
+input[type="radio"]:focus {
+    outline: none;
+    border-color: black !important;
+    box-shadow: none !important;
+}
+
+/* Ensure radios and checkboxes are consistent */
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+    background-color: black !important;
+    border-color: black !important;
+    box-shadow: none !important;
+}
+

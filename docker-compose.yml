@@ -23,6 +23,8 @@ services:
       - ./backend/code:/code:rw
     networks:
       - backend
+    ports:
+      - "9000:8002"
     init: true
     restart: on-failure
     env_file:

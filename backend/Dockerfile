@@ -11,5 +11,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN apk del .build-deps
 # Expose the port
 # Command to run the application
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8002"]
+EXPOSE 8002
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8002"]
 #CMD ["gunicorn", "--bind", "0.0.0.0:8001", "--reload", "ft_transcendence.wsgi:application"]
