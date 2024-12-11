@@ -86,8 +86,10 @@ async function changeToBig(location) {
 
   if (location == "/login")
     headerElement.setAttribute("data-i18n", "login");
-  else if (location == "/pong")
+  else if (location == "/pong") {
     headerElement.setAttribute("data-i18n", "pong");
+    initGame();
+  }
 
   updateContent(langData);
   document.getElementById("subMsg").style.display = "none";
