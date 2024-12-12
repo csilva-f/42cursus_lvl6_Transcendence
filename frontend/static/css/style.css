@@ -108,3 +108,7 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+html {
+    height: 100%;
+}
