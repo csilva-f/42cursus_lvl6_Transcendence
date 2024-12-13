@@ -31,13 +31,16 @@ function getForms() {
                 // If the form is invalid, prevent submission
                 event.preventDefault();
                 event.stopPropagation();
-                console.log("Form is invalid: ", form);
             } else {
                 console.log("Form is valid: ", form);
                 if (form.id == "remoteFormID")
                     postGame();
                 else if (form.id == "tournamentFormID")
                     postTournament();
+                else if (form.id == "login-form")
+                    sendLogin();
+                else if (form.id == "signup-form")
+                    sendSignup();
                 event.preventDefault();
             }
             form.classList.add('was-validated');

@@ -80,8 +80,10 @@ async function changeToBig(location) {
   const langData = await getLanguageData(userLang);
   const mainDiv = document.getElementById("allContent");
 
-  if (location == "/login")
+  if (location == "/login") {
     headerElement.setAttribute("data-i18n", "login");
+    getForms();
+  }
   else if (location == "/pong")
     headerElement.setAttribute("data-i18n", "pong");
 

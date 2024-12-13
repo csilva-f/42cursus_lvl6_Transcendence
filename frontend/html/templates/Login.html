@@ -17,17 +17,17 @@
 				<div class="tab-content" id="loginSignUpTabContent">
 					<!-- Log In -->
 					<div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
-						<form class="mt-3">
+						<form class="mt-3 needs-validation" id="login-form" novalidate>
 							<div class="mb-3">
-								<div class="input-group">
+								<div class="input-group has-validation">
 									<span class="input-group-text"><i class="fas fa-envelope" style="color: #874efe;"></i></span>
-									<input type="email" class="form-control" id="loginEmail" placeholder="Email">
+									<input type="email" class="form-control" id="loginEmail" placeholder="Email" required>
 								</div>
 							</div>
 							<div class="mb-3">
-								<div class="input-group">
+								<div class="input-group has-validation">
 									<span class="input-group-text"><i class="fa-solid fa-lock" style="color: #874efe;"></i></span>
-									<input type="password" class="form-control" id="loginPassword" placeholder="Password">
+									<input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
 								</div>
 							</div>
 							<button type="submit" class="btn" style="background-color: var(--bs-purple); color: white; width: 100%;">Log In</button>
@@ -36,31 +36,43 @@
 
 					<!-- Sign Up -->
 					<div class="tab-pane fade" id="signup" role="tabpanel" aria-labelledby="signup-tab">
-						<form class="mt-3">
-							<div class="mb-3">
-								<div class="input-group">
-									<span class="input-group-text"><i class="fa-solid fa-user" style="color: #874efe;"></i></span>
-									<input type="text" class="form-control" id="signupUsername" placeholder="Username">
-								</div>
-							</div>
+						<form class="mt-3 needs-validation" id="signup-form" novalidate>
 							<div class="mb-3">
 								<div class="input-group">
 									<span class="input-group-text"><i class="fas fa-envelope" style="color: #874efe;"></i></span>
-									<input type="email" class="form-control" id="loginEmail" placeholder="Email">
+									<input type="email" class="form-control" id="signupEmail" placeholder="Email" required>
 								</div>
 							</div>
 							<div class="mb-3">
 								<div class="input-group">
 									<span class="input-group-text"><i class="fa-solid fa-lock" style="color: #874efe;"></i></span>
-									<input type="password" class="form-control" id="loginPassword" placeholder="Password">
+									<input type="password" class="form-control" id="signupPassword" placeholder="Password" required>
 								</div>
 							</div>
 							<div class="mb-3">
 								<div class="input-group">
 									<span class="input-group-text"><i class="fa-solid fa-lock" style="color: #874efe;"></i></span>
-									<input type="password" class="form-control" id="loginPassword" placeholder="Confirm password">
+									<input type="password" class="form-control" id="signupPassword2" placeholder="Confirm password" required>
 								</div>
 							</div>
+							<div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa-solid fa-user" style="color: #874efe;"></i></span>
+                                    <input type="text" class="form-control" id="signupFirstname" placeholder="First name" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa-solid fa-user" style="color: #874efe;"></i></span>
+                                    <input type="text" class="form-control" id="signupLastname" placeholder="Last name" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa-solid fa-phone" style="color: #874efe;"></i></span>
+                                    <input type="text" class="form-control" id="signupPhone" placeholder="Phone">
+                                </div>
+                            </div>
 							<button type="submit" class="btn" style="background-color: var(--bs-purple); color: white; width: 100%;">Sign up</button>
 						</form>
 					</div>
