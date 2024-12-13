@@ -21,7 +21,6 @@ async function fetchGames(statusID) {
         type: "GET",
         url: APIurl,
         success: function (res) {
-          console.table(res);
           const divElement = document.getElementById("gamesContent");
           divElement.innerHTML = "";
           res.games.forEach((element) => {
@@ -68,6 +67,27 @@ async function postGame() {
       resetModal();
     }
   });
+}
+
+//? POST - Local Game Creation
+async function postLocalGame() {
+  const userLang = localStorage.getItem("language") || "en";
+  const langData = await getLanguageData(userLang);
+  const APIurl = `/api/create-game/`;
+  let gameData = {
+    P1: document.getElementById('P1NickInput').value,
+    P1Color: document.getElementById('P1ColorInput').value,
+    P2: document.getElementById('P2NickInput').value,
+    P2Color: document.getElementById('P2ColorInput').value
+  };
+  console.log("gameData: ", gameData);
+  showSuccessToast(langData, langData.gameEntered);
+  resetModal();
+  $('#createModal').modal('hide');
+  const enterLi = document.getElementById('enterLi');
+  window.history.pushState({}, "", enterLi.getAttribute("href"));
+  locationHandler("content");
+  localStorage.setItem("gameData", JSON.stringify(gameData));
 }
 
 //TODO getUserID

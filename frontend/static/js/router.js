@@ -191,7 +191,6 @@ const locationHandler = async (elementID) => {
   if (location.length == 0) location = "/";
   console.log("location: ", location);
   const route = routes[location] || routes["404"];
-  console.log(route);
   const html = await fetch(route.template).then((response) => response.text());
   document.title = route.title;
   if (bigScreenLocation.includes(location)) {

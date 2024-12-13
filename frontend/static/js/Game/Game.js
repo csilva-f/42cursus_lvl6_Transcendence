@@ -71,6 +71,8 @@ function initGame() {
     /* Main Initializations */
     const canvas = document.getElementById("pongGameCanvas");
     const ctx = canvas.getContext('2d');
+    const gameData = JSON.parse(localStorage.getItem('gameData')) || [];
+    var objects;
 
     const rootStyle = getComputedStyle(document.documentElement);
     const remToPixels = parseFloat(rootStyle.fontSize);
@@ -79,11 +81,25 @@ function initGame() {
     canvas.width = window.innerWidth - (50 * remToPixels);
     canvas.height = window.innerHeight - (20 * remToPixels);
     
-    const objects = [
-        new Ball(canvas.width / 2, canvas.height / 2, 10, 10, 15),
-        new Paddle(1, 20, 150, "#AC3B61", 30, canvas.height / 2, 10),
-        new Paddle(2, 20, 150, "#87709C", canvas.width - 50, canvas.height / 2, 10)
-    ];
+    if (!gameData.length) {
+        objects = [
+            new Ball(canvas.width / 2, canvas.height / 2, 10, 10, 15),
+            new Paddle(1, 20, 150, "#AC3B61", 30, canvas.height / 2, 10),
+            new Paddle(2, 20, 150, "#87709C", canvas.width - 50, canvas.height / 2, 10)
+        ];
+        document.getElementById("leftPlayerName").innerHTML = "Shin";
+        document.getElementById("rightPlayerName").innerHTML = "Chan";
+    } else {
+        console.log(gameData);
+        objects = [
+            new Ball(canvas.width / 2, canvas.height / 2, 10, 10, 15),
+            new Paddle(1, 20, 150, gameData.P1Color, 30, canvas.height / 2, 10),
+            new Paddle(2, 20, 150, gameData.P2Color, canvas.width - 50, canvas.height / 2, 10)
+        ];
+        document.getElementById("leftPlayerName").innerHTML = gameData.P1;
+        document.getElementById("rightPlayerName").innerHTML = gameData.P2;
+        localStorage.removeItem("gameData"); 
+    }
     //* objects[0]: Ball
     //* objects[1]: PaddleLeft
     //* objects[2]: PaddleRight
