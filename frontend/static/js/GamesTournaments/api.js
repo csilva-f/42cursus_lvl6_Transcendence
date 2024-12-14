@@ -88,7 +88,7 @@ async function postLocalGame() {
   resetModal();
   $('#createModal').modal('hide');
   const enterLi = document.getElementById('enterLi');
-  window.history.pushState({}, "", enterLi.getAttribute("href"));
+  //window.history.pushState({}, "", enterLi.getAttribute("href"));
   locationHandler("content");
   localStorage.setItem("gameData", JSON.stringify(gameData));
 }
