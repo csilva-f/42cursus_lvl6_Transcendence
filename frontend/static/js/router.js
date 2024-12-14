@@ -40,7 +40,6 @@ const routes = {
     descripton: "This is the AboutUs Page",
   }
 };
-
 const bigScreenLocation = ["/login", "/pong"];
 
 const route = (event) => {
@@ -72,7 +71,6 @@ function disableIcon(element) {
   element.classList.remove("iconActive");
   element.classList.add("iconInactive");
 }
-
 
 async function changeToBig(location) {
   const headerElement = document.getElementById("mainMsg");
@@ -140,6 +138,8 @@ async function changeActive(location) {
       headerElement.setAttribute("data-i18n", "socialhub");
       updateContent(langData);
       document.getElementById("subMsg").style.display = "none";
+      const UserElement = document.getElementById("loadGlobalUsers");
+      activateIcon(UserElement);
       break;
     case "/about":
       iconsElements.forEach((element) => {
