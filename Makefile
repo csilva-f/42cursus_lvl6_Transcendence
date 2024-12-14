@@ -33,6 +33,8 @@ migrate:
 	@docker compose exec backend python manage.py makemigrations
 	@docker compose exec backend python manage.py migrate
 
+	@$(MAKE) populate
+
 	@echo "Applying migrations to the authentication database..."
 	@echo "Waiting for the database to be up..."
 	@while ! docker inspect -f '{{.State.Health.Status}}' $(AUTH_DB_CONTAINER_NAME) | grep -q "healthy"; do \
@@ -55,6 +57,10 @@ migrate:
 	@docker compose exec email python manage.py makemigrations
 	@docker compose exec email python manage.py migrate
 
+populate:
+	@echo "Populating static tables..."
+	@docker compose exec backend-db sh -c "/tools/populateStatic.sh"
+
 clean:down
 	@echo "Cleaning up stopped containers and networks..."
 	@docker compose -p $(NAME) down
@@ -67,5 +73,10 @@ fclean: clean
 mail_deamon:
 	@echo "Starting mail deamon..."
 	@docker compose run -d email python manage.py mail_deamon
+
+destroy: fclean
+	@rm -rf "./backend-db/data" -R
+	@rm -rf "./auth-db/data" -R
+	@rm -rf "./email-db/data" -R
 
 re: fclean all

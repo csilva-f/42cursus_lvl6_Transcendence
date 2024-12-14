@@ -156,6 +156,7 @@ def post_create_game(request):
             
             # Validação de user1ID
             user1_id = data.get('user1ID')
+            print(user1_id)
             if not user1_id:
                 return JsonResponse({"error": "User1 ID is required"}, status=400)
 
@@ -164,8 +165,6 @@ def post_create_game(request):
                 return JsonResponse({"error": f"User1 ID {user1_id} does not exist in tUserExtension"}, status=404)
 
             tournament_id = data.get('tournamentid')
-            if not tournament_id:
-                return JsonResponse({"error": "Tournament ID is required"}, status=400)
 
             # Criar jogo
             game = tGames.objects.create(
