@@ -142,27 +142,45 @@ def get_tournaments(request):
     
     return JsonResponse({'tournaments': tournaments_data}, safe=False)
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from datetime import date
+from .models import tGames, tUserExtension  # Certifique-se de importar os modelos corretos
+
 @csrf_exempt  # Remove this decorator for production to enforce CSRF protection
 def post_create_game(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+            
+            # Validação de user1ID
             user1_id = data.get('user1ID')
             if not user1_id:
                 return JsonResponse({"error": "User1 ID is required"}, status=400)
-            tournament_id = data.get('tournamentid')
-            creation_ts = date.today()
 
+            # Verificar se o user1ID existe em tUserExtension
+            if not tUserExtension.objects.filter(user=user1_id).exists():
+                return JsonResponse({"error": f"User1 ID {user1_id} does not exist in tUserExtension"}, status=404)
+
+            tournament_id = data.get('tournamentid')
+            if not tournament_id:
+                return JsonResponse({"error": "Tournament ID is required"}, status=400)
+
+            # Criar jogo
             game = tGames.objects.create(
                 user1=user1_id,
                 tournament=tournament_id
             )
             return JsonResponse({"message": "Game created successfully", "game_id": game.game}, status=201)
+
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
+    
     return JsonResponse({"error": "Invalid request method"}, status=405)
+
 
 #validar torneios com status 1 ou 2 com nomes iguais
 #substituir random_stuff pelo randomizer (que tem que validar os nomes against torneios com status 1 ou 2)
