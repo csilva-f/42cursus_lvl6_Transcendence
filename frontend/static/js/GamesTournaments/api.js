@@ -20,6 +20,8 @@ async function fetchGames(statusID) {
       $.ajax({
         type: "GET",
         url: APIurl,
+        contentType: "application/json",
+        headers: { Accept: "application/json" },
         success: function (res) {
           console.table(res);
           const divElement = document.getElementById("gamesContent");
@@ -56,6 +58,7 @@ async function postGame() {
     type: "POST",
     url: APIurl,
     contentType: "application/json",
+    headers: { Accept: "application/json" },
     data: JSON.stringify(gameData),
     success: function (res) {
       showSuccessToast(langData, langData.gamecreated);
@@ -85,6 +88,7 @@ async function enterGame(gameID) {
     type: "POST",
     url: APIurl,
     contentType: "application/json",
+    headers: { Accept: "application/json" },
     data: JSON.stringify(gameData),
     success: function (res) {
       showSuccessToast(langData, langData.gameEntered);
@@ -122,6 +126,7 @@ async function fetchTournaments(statusID) {
       $.ajax({
         type: "GET",
         url: APIurl,
+        headers: { Accept: "application/json" },
         success: function (res) {
           const divElement = document.getElementById("gamesContent");
           divElement.innerHTML = "";
@@ -161,6 +166,7 @@ async function postTournament() {
     type: "POST",
     url: APIurl,
     contentType: "application/json",
+    headers: { Accept: "application/json" },
     data: JSON.stringify(tournamentData),
     success: function (res) {
       showSuccessToast(langData, langData.tournamentcreated);
@@ -174,4 +180,3 @@ async function postTournament() {
     }
   });
 }
-
