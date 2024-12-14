@@ -77,7 +77,7 @@
                     <!-- End Notification and Info -->
                     <!-- Profile Picture -->
                     <div class="ms-1 justify-content-end align-content-end">
-                        <a href="">
+                        <a href="/profile" id="profilePicElement" onclick="goToProfile()">
                             <img src="/static/img/pfp1.jpeg"
                                 style="object-fit: cover; max-width: 5rem; min-width: 5rem;"
                                 class="img-fluid w-100 rounded-3" />
@@ -91,7 +91,7 @@
     </div>
     <!-- End Topbar -->
 
-    <div class="h-100 w-100" id="allContent"></div>
+    <div class="container-fluid h-100 w-100" id="allContent"></div>
 
     <nav class="container-fluid" id="sidebar">
         <div class="row">
@@ -162,6 +162,9 @@
     <script type="text/javascript" src="/static/js/GamesTournaments/api.js"></script>
     <script type="text/javascript" src="/static/js/Social/Social.js"></script>
     <script type="text/javascript" src="/static/js/Social/api.js"></script>
+    <script type="text/javascript" src="/static/js/Game/Game.js"></script>
+    <script type="text/javascript" src="/static/js/Game/api.js"></script>
+    <script type="text/javascript" src="/static/js/Game/classes.js"></script>
     <script type="text/javascript" src="/static/js/Login/api.js"></script>
 </body>
 

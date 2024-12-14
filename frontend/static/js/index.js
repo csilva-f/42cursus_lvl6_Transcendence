@@ -19,6 +19,12 @@ function testClick() {
     console.log("miku dayo");
 }
 
+function goToProfile() {
+    const profilePicElement = document.getElementById('profilePicElement');
+    window.history.pushState({}, "", profilePicElement.getAttribute("href"));
+    locationHandler("content");
+}
+
 function getForms() {
     'use strict';
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
@@ -35,6 +41,8 @@ function getForms() {
                 console.log("Form is valid: ", form);
                 if (form.id == "remoteFormID")
                     postGame();
+                else if (form.id == "localFormID")
+                    postLocalGame();
                 else if (form.id == "tournamentFormID")
                     postTournament();
                 else if (form.id == "login-form")

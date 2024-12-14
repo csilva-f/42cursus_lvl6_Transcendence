@@ -38,8 +38,14 @@ const routes = {
     template: "/templates/AboutUs.html",
     title: "AboutUs",
     descripton: "This is the AboutUs Page",
-  }
+  },
+  "/profile": {
+    template: "/templates/Profile.html",
+    title: "Profile",
+    descripton: "This is the Profile Page",
+  },
 };
+
 const bigScreenLocation = ["/login", "/pong"];
 
 const route = (event) => {
@@ -84,6 +90,8 @@ async function changeToBig(location) {
   }
   else if (location == "/pong")
     headerElement.setAttribute("data-i18n", "pong");
+    initGame();
+  }
 
   updateContent(langData);
   document.getElementById("subMsg").style.display = "none";
@@ -151,7 +159,7 @@ async function changeActive(location) {
       updateContent(langData);
       document.getElementById("subMsg").style.display = "none";
       break;
-    default:
+    case "/":
       iconsElements.forEach((element) => {
         element.id == "homepageIcon"
           ? activateSBIcon(element)
@@ -161,6 +169,22 @@ async function changeActive(location) {
       updateContent(langData);
       document.getElementById("subMsg").style.display = "block";
       break;
+    case "/profile":
+      iconsElements.forEach((element) => {
+          disableSBIcon(element);
+      });
+      headerElement.setAttribute("data-i18n", "profile");
+      updateContent(langData);
+      document.getElementById("subMsg").style.display = "none";
+      break;
+    default:
+      console.log("default");
+      iconsElements.forEach((element) => {
+          disableSBIcon(element);
+      });
+      updateContent(langData);
+      document.getElementById("subMsg").style.display = "none";
+      break;
   }
 }
 
@@ -169,7 +193,6 @@ const locationHandler = async (elementID) => {
   if (location.length == 0) location = "/";
   console.log("location: ", location);
   const route = routes[location] || routes["404"];
-  console.log(route);
   const html = await fetch(route.template).then((response) => response.text());
   document.title = route.title;
   if (bigScreenLocation.includes(location)) {

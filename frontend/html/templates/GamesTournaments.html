@@ -7,14 +7,12 @@
             <div class="col-lg-10 col-md-10 col-10">
               <div class="d-flex gap-2 h-100">
                 <ul class="nav nav-pills" style="height: 3rem">
-                  <li
-                    class="pop-hover-s menuLi nav-item rounded-3 me-2 d-flex align-items-center iconInactive"
+                  <li class="pop-hover-s menuLi nav-item rounded-3 me-2 d-flex align-items-center iconInactive"
                     id="loadGamesIcon" onclick="GamesTournamentsSelect(this.id)">
                     <i class="fa-solid fa-gamepad fa-xl ms-2"></i>
                     <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="games"></p>
                   </li>
-                  <li
-                    class="pop-hover-s menuLi nav-item rounded-3 ms-2 d-flex align-items-center iconInactive"
+                  <li class="pop-hover-s menuLi nav-item rounded-3 ms-2 d-flex align-items-center iconInactive"
                     id="loadTournamentsIcon" onclick="GamesTournamentsSelect(this.id)">
                     <i class="fa-solid fa-trophy fa-xl ms-2"></i>
                     <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="tournaments"></p>
@@ -27,14 +25,14 @@
                 <ul class="nav nav-pills" style="height: 3rem">
                   <li
                     class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-                    style="width: 3rem; cursor: pointer;" data-bs-toggle="modal"
-                    data-bs-target="#createModal" id="createGameBtn">
+                    style="width: 3rem; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#createModal"
+                    id="createGameBtn">
                     <i class="fa-solid fa-plus fa-xl" style="color: black;"></i>
                   </li>
                   <li
                     class="pop-hover-s d-none menuLi nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-                    style="width: 3rem; cursor: pointer;" data-bs-toggle="modal"
-                    data-bs-target="#createTournamentModal" id="createTournamentBtn">
+                    style="width: 3rem; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#createTournamentModal"
+                    id="createTournamentBtn">
                     <i class="fa-solid fa-plus fa-xl" style="color: black;"></i>
                   </li>
                 </ul>
@@ -55,11 +53,9 @@
                   <div class="col-lg-10 col-md-10 col-10">
                     <div class="d-flex gap-2 h-100">
                       <ul class="nav nav-pills" style="height: 3rem">
-                        <li
-                          class="pop-hover-s menuLi nav-item rounded-3 me-2 d-flex align-items-center iconInactive"
+                        <li class="pop-hover-s menuLi nav-item rounded-3 me-2 d-flex align-items-center iconInactive"
                           id="searchingLi" onclick="GamesTournamentsMatches(this.id)">
-                          <i class="fa-solid fa-tower-broadcast fa-xl ms-2" id="searchingIcon"
-                          ></i>
+                          <i class="fa-solid fa-tower-broadcast fa-xl ms-2" id="searchingIcon"></i>
                           <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="searching"
                             id="searchingID"></p>
                         </li>
@@ -70,8 +66,7 @@
                           <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="happening"
                             id="happeningID"></p>
                         </li>
-                        <li
-                          class="pop-hover-s menuLi nav-item rounded-3 ms-2 d-flex align-items-center iconInactive"
+                        <li class="pop-hover-s menuLi nav-item rounded-3 ms-2 d-flex align-items-center iconInactive"
                           id="finishedLi" onclick="GamesTournamentsMatches(this.id)">
                           <i class="fa-solid fa-hourglass-end fa-xl ms-2" id="finishedIcon"></i>
                           <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="finished"
@@ -114,10 +109,11 @@
         <h1 class="modal-title fs-5" id="staticBackdropLabel"><strong data-i18n="createModal"></strong></h1>
       </div>
       <!-- Select Game Type -->
-      <div class="modal-body d-flex justify-content-center align-items-center" id="selectForm">
-        <ul class="nav nav-pills justify-content-center gap-5" style="height: 9rem" id="createGameOptions">
-          <li class="pop-hover-s modalLi nav-item border border-2 border-black rounded-3 d-flex align-items-center"
-            onclick="activateGameForm('localForm')">
+      <div class="modal-body d-flex align-items-center" id="selectForm">
+        <ul class="nav nav-pills justify-content-center gap-5 h-100" style="min-height: 12rem; width: 100%;"
+          id="createGameOptions">
+          <li class="pop-hover-xs modalLi nav-item rounded-4 shadow d-flex align-items-center"
+            onclick="activateGameForm('localForm')" style="width: 12rem;">
             <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
               <div class="d-flex align-items-center justify-content-center my-3">
                 <i class="fa-solid fa-user-group fa-2xl" style="color: black"></i>
@@ -126,8 +122,8 @@
                 style="font-weight: bold; text-align: center;" data-i18n="local"></p>
             </div>
           </li>
-          <li class="pop-hover-s modalLi nav-item border border-2 border-black rounded-3 d-flex align-items-center"
-            onclick="activateGameForm('remoteForm')">
+          <li class="pop-hover-xs modalLi nav-item rounded-4 shadow d-flex align-items-center"
+            onclick="activateGameForm('remoteForm')" style="width: 12rem;">
             <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
               <div class="d-flex align-items-center justify-content-center my-3">
                 <i class="fa-solid fa-computer fa-2xl" style="color: black"></i>
@@ -141,11 +137,12 @@
       <!-- End Select Game Type -->
       <!-- Local Create Form -->
       <div class="modal-body d-none" id="localForm">
-        <form class="row g-3 needs-validation p-3" novalidate>
+        <form class="row g-3 needs-validation p-3" id="localFormID" novalidate>
           <!-- P1 Nickname -->
           <div class="input-group has-validation mt-3">
             <span class="input-group-text" id="basic-addon1" style="margin-top: 10px;">
-              <i class="fa-solid fa-user fa-lg" style="color: blue;"></i>
+              <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
+                type="color" class="form-control-color p-0 m-0" id="P1ColorInput" value="#AC3B61">
             </span>
             <input type="text" class="form-control" id="P1NickInput" placeholder="Player1 Nickname(traduzir)"
               aria-describedby="inputGroupPrepend" style="margin-top: 10px;" required>
@@ -155,7 +152,8 @@
           <!-- P2 Nickname -->
           <div class="input-group has-validation mb-3">
             <span class="input-group-text" id="basic-addon1">
-              <i class="fa-solid fa-user fa-lg" style="color: red;"></i>
+              <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
+                type="color" class="form-control-color p-0 m-0" id="P2ColorInput" value="#3BAC86">
             </span>
             <input type="text" class="form-control" id="P2NickInput" placeholder="Player2 Nickname(traduzir)"
               aria-describedby="inputGroupPrepend" required>
