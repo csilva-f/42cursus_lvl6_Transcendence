@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>2FA Demo</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <h1>2FA Demo</h1>
+        <div>
+            <h2>SignUp</h2>
+            <form id="signup-form">
+                <input
+                    type="text"
+                    id="register-username"
+                    placeholder="email"
+                    required
+                />
+                <input
+                    type="password"
+                    id="register-password"
+                    placeholder="Password"
+                    required
+                />
+                <input
+                    type="password"
+                    id="retyped-password"
+                    placeholder="retype password"
+                    required
+                />
+                <input
+                    type="text"
+                    id="register-firstname"
+                    placeholder="first name"
+                    required
+                />
+                <input
+                    type="text"
+                    id="register-lastname"
+                    placeholder="last name"
+                    required
+                />
+                <input type="text" id="phone" placeholder="phone" />
+                <button type="submit">SignUp</button>
+            </form>
+            <p id="signup-message" aria-live="polite"></p>
+        </div>
+        <div>
+            <h2>Login</h2>
+            <form id="login-form">
+                <input type="text" id="username" placeholder="email" required />
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Password"
+                    required
+                />
+                <button type="submit">Login</button>
+            </form>
+            <p id="login-message" aria-live="polite"></p>
+        </div>
+
+        <div>
+            <h2>Enable 2FA</h2>
+            <form id="enable-2fa-form">
+                <input
+                    type="text"
+                    id="enable-userId"
+                    placeholder="User ID"
+                    required
+                />
+                <button type="submit">Enable 2FA</button>
+            </form>
+            <p id="enable-2fa-message" aria-live="polite"></p>
+        </div>
+
+        <div>
+            <h2>Send OTP</h2>
+            <form id="send-otp-form">
+                <input
+                    type="text"
+                    id="send-userId"
+                    placeholder="User ID"
+                    required
+                />
+                <button type="submit">Send OTP</button>
+            </form>
+            <p id="send-otp-message" aria-live="polite"></p>
+        </div>
+
+        <div>
+            <h2>Verify OTP</h2>
+            <form id="verify-otp-form">
+                <input
+                    type="text"
+                    id="verify-userId"
+                    placeholder="User ID"
+                    required
+                />
+                <input type="text" id="otp" placeholder="OTP" required />
+                <button type="submit">Verify OTP</button>
+            </form>
+            <p id="verify-otp-message" aria-live="polite"></p>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- Include jQuery -->
+
+        <script>
+            const apiUrl = "/authapi"; // Use the Nginx route for API requests
+            let jwtToken = ""; // Variable to store the JWT token
+
+            $(document).ready(function () {
+                // Login function
+                $("#login-form").on("submit", function (e) {
+                    e.preventDefault();
+                    const email = $("#username").val();
+                    const password = $("#password").val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: `${apiUrl}/auth/`, // Adjust the endpoint as needed
+                        contentType: "application/json",
+                        headers: { Accept: "application/json" },
+                        data: JSON.stringify({ email, password }),
+                        success: function (data) {
+                            jwtToken = data.access; // Store the JWT token
+                            if (jwtToken) {
+                                localStorage.setItem("jwt", jwtToken);
+                            }
+                            $("#login-message").text("Login successful!");
+                        },
+                        error: function (xhr) {
+                            const data = xhr.responseJSON;
+                            $("#login-message").text(
+                                data.error || "Login failed.",
+                            );
+                        },
+                    });
+                });
+
+                // Signup function
+                $("#signup-form").on("submit", function (e) {
+                    e.preventDefault();
+                    const email = $("#register-username").val();
+                    const password = $("#register-password").val();
+                    const retyped = $("#retyped-password").val();
+                    const first_name = $("#register-firstname").val();
+                    const last_name = $("#register-lastname").val();
+                    const phone = $("#phone").val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: `${apiUrl}/register/`, // Adjust the endpoint as needed
+                        contentType: "application/json",
+                        headers: { Accept: "application/json" },
+                        data: JSON.stringify({
+                            email,
+                            password,
+                            first_name,
+                            last_name,
+                            phone,
+                        }),
+                        success: function (data) {
+                            $("#signup-message").text(
+                                "Signup successful! Validate your email",
+                            );
+                        },
+                        error: function (xhr) {
+                            const data = xhr.responseJSON;
+                            $("#signup-message").text(
+                                data.error || "register failed.",
+                            );
+                        },
+                    });
+                });
+
+                // Enable 2FA function
+                $("#enable-2fa-form").on("submit", function (e) {
+                    e.preventDefault();
+                    const userId = $("#enable-userId").val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: `${apiUrl}/otp-enable/`,
+                        contentType: "application/json",
+                        headers: {
+                            Accept: "application/json",
+                            Authorization: `Bearer ${jwtToken}`, // Use the stored JWT token
+                        },
+                        data: JSON.stringify({ userId }),
+                        success: function (data) {
+                            $("#enable-2fa-message").text(
+                                data.message || data.otp_secret,
+                            );
+                        },
+                        error: function (xhr) {
+                            const data = xhr.responseJSON;
+                            $("#enable-2fa-message").text(data.error);
+                        },
+                    });
+                });
+
+                // Send OTP function
+                $("#send-otp-form").on("submit", function (e) {
+                    e.preventDefault();
+                    const userId = $("#send-userId").val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: `${apiUrl}/otp-send/`,
+                        contentType: "application/json",
+                        headers: {
+                            Accept: "application/json",
+                            Authorization: `Bearer ${jwtToken}`, // Use the stored JWT token
+                        },
+                        data: JSON.stringify({ userId }),
+                        success: function (data) {
+                            $("#send-otp-message").text(data.message);
+                        },
+                        error: function (xhr) {
+                            const data = xhr.responseJSON;
+                            $("#send-otp-message").text(data.error);
+                        },
+                    });
+                });
+
+                // Verify OTP function
+                $("#verify-otp-form").on("submit", function (e) {
+                    e.preventDefault();
+                    const userId = $("#verify-userId").val();
+                    const otp = $("#otp").val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: `${apiUrl}/otp-verify/`,
+                        contentType: "application/json",
+                        headers: {
+                            Accept: "application/json",
+                            Authorization: `Bearer ${jwtToken}`, // Use the stored JWT token
+                        },
+                        data: JSON.stringify({ userId, otp }),
+                        success: function (data) {
+                            $("#verify-otp-message").text(data.message);
+                        },
+                        error: function (xhr) {
+                            const data = xhr.responseJSON;
+                            $("#verify-otp-message").text(data.error);
+                        },
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>

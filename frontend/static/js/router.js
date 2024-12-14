@@ -38,7 +38,12 @@ const routes = {
     template: "/templates/AboutUs.html",
     title: "AboutUs",
     descripton: "This is the AboutUs Page",
-  }
+  },
+  "/profile": {
+    template: "/templates/Profile.html",
+    title: "Profile",
+    descripton: "This is the Profile Page",
+  },
 };
 
 const bigScreenLocation = ["/login", "/pong"];
@@ -53,9 +58,19 @@ const route = (event) => {
   locationHandler("content");
 };
 
+function activateSBIcon(element) {
+  element.classList.remove("iconSBInactive");
+  element.classList.add("iconSBActive");
+}
+
 function activateIcon(element) {
   element.classList.remove("iconInactive");
   element.classList.add("iconActive");
+}
+
+function disableSBIcon(element) {
+  element.classList.remove("iconSBActive");
+  element.classList.add("iconSBInactive");
 }
 
 function disableIcon(element) {
@@ -69,10 +84,15 @@ async function changeToBig(location) {
   const langData = await getLanguageData(userLang);
   const mainDiv = document.getElementById("allContent");
 
-  if (location == "/login")
+  if (location == "/login") {
     headerElement.setAttribute("data-i18n", "login");
+    getForms();
+  }
   else if (location == "/pong")
+  {
     headerElement.setAttribute("data-i18n", "pong");
+    initGame();
+  }
 
   updateContent(langData);
   document.getElementById("subMsg").style.display = "none";
@@ -95,8 +115,8 @@ async function changeActive(location) {
     case "/games":
       iconsElements.forEach((element) => {
         element.id == "gamesIcon"
-          ? activateIcon(element)
-          : disableIcon(element);
+          ? activateSBIcon(element)
+          : disableSBIcon(element);
       });
       headerElement.setAttribute("data-i18n", "games&tournaments");
       updateContent(langData);
@@ -111,8 +131,8 @@ async function changeActive(location) {
     case "/statistics":
       iconsElements.forEach((element) => {
         element.id == "statsIcon"
-          ? activateIcon(element)
-          : disableIcon(element);
+          ? activateSBIcon(element)
+          : disableSBIcon(element);
       });
       headerElement.setAttribute("data-i18n", "statistics");
       updateContent(langData);
@@ -121,32 +141,50 @@ async function changeActive(location) {
     case "/social":
       iconsElements.forEach((element) => {
         element.id == "socialIcon"
-          ? activateIcon(element)
-          : disableIcon(element);
+          ? activateSBIcon(element)
+          : disableSBIcon(element);
       });
       headerElement.setAttribute("data-i18n", "socialhub");
       updateContent(langData);
       document.getElementById("subMsg").style.display = "none";
+      const UserElement = document.getElementById("loadGlobalUsers");
+      activateIcon(UserElement);
       break;
     case "/about":
       iconsElements.forEach((element) => {
         element.id == "aboutUsIcon"
-          ? activateIcon(element)
-          : disableIcon(element);
+          ? activateSBIcon(element)
+          : disableSBIcon(element);
       });
       headerElement.setAttribute("data-i18n", "aboutUs");
       updateContent(langData);
       document.getElementById("subMsg").style.display = "none";
       break;
-    default:
+    case "/":
       iconsElements.forEach((element) => {
         element.id == "homepageIcon"
-          ? activateIcon(element)
-          : disableIcon(element);
+          ? activateSBIcon(element)
+          : disableSBIcon(element);
       });
       headerElement.setAttribute("data-i18n", "welcome");
       updateContent(langData);
       document.getElementById("subMsg").style.display = "block";
+      break;
+    case "/profile":
+      iconsElements.forEach((element) => {
+          disableSBIcon(element);
+      });
+      headerElement.setAttribute("data-i18n", "profile");
+      updateContent(langData);
+      document.getElementById("subMsg").style.display = "none";
+      break;
+    default:
+      console.log("default");
+      iconsElements.forEach((element) => {
+          disableSBIcon(element);
+      });
+      updateContent(langData);
+      document.getElementById("subMsg").style.display = "none";
       break;
   }
 }
@@ -156,7 +194,6 @@ const locationHandler = async (elementID) => {
   if (location.length == 0) location = "/";
   console.log("location: ", location);
   const route = routes[location] || routes["404"];
-  console.log(route);
   const html = await fetch(route.template).then((response) => response.text());
   document.title = route.title;
   if (bigScreenLocation.includes(location)) {

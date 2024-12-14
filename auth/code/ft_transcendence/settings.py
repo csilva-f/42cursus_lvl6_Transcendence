@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from os import getenv
 from pathlib import Path
 
+#from auth.code import two_factor
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,9 +28,9 @@ SECRET_KEY = 'django-insecure-@www2r)nc-li_empd8(e()gc592l7wau$zn%y#2*ej)u^xb*(0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['backend']
+ALLOWED_HOSTS = ['auth','*']
 
-
+AUTH_USER_MODEL = 'cuca.CucaUser'
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,7 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'mailer',
+    'pyotp',
     'cuca',
+    'two_factor',
+
 ]
 
 MIDDLEWARE = [
@@ -92,7 +100,11 @@ DATABASES = {
     }
 }
 
-
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -119,7 +131,13 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
+USE_I18N = TrueREST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        # ...
+    ],
+    # ...
+}
 
 USE_TZ = True
 
@@ -133,3 +151,14 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+USE_X_FORWARDED_HOST = True
+
+#EMAIL_BACKEND = "mailer.backend.DbBackend"
+#MAILER_EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'webdomain04.dnscpanel.com'
+EMAIL_PORT = 25
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'noreply@cucabeludo.pt'
+EMAIL_HOST_PASSWORD = 'Cuc@3elud0'

@@ -20,8 +20,9 @@ async function fetchGames(statusID) {
       $.ajax({
         type: "GET",
         url: APIurl,
+        contentType: "application/json",
+        headers: { Accept: "application/json" },
         success: function (res) {
-          console.table(res);
           const divElement = document.getElementById("gamesContent");
           divElement.innerHTML = "";
           res.games.forEach((element) => {
@@ -56,6 +57,7 @@ async function postGame() {
     type: "POST",
     url: APIurl,
     contentType: "application/json",
+    headers: { Accept: "application/json" },
     data: JSON.stringify(gameData),
     success: function (res) {
       showSuccessToast(langData, langData.gamecreated);
@@ -68,6 +70,27 @@ async function postGame() {
       resetModal();
     }
   });
+}
+
+//? POST - Local Game Creation
+async function postLocalGame() {
+  const userLang = localStorage.getItem("language") || "en";
+  const langData = await getLanguageData(userLang);
+  const APIurl = `/api/create-game/`;
+  let gameData = {
+    P1: document.getElementById('P1NickInput').value,
+    P1Color: document.getElementById('P1ColorInput').value,
+    P2: document.getElementById('P2NickInput').value,
+    P2Color: document.getElementById('P2ColorInput').value
+  };
+  console.log("gameData: ", gameData);
+  showSuccessToast(langData, langData.gameEntered);
+  resetModal();
+  $('#createModal').modal('hide');
+  const enterLi = document.getElementById('enterLi');
+  window.history.pushState({}, "", enterLi.getAttribute("href"));
+  locationHandler("content");
+  localStorage.setItem("gameData", JSON.stringify(gameData));
 }
 
 //TODO getUserID
@@ -85,6 +108,7 @@ async function enterGame(gameID) {
     type: "POST",
     url: APIurl,
     contentType: "application/json",
+    headers: { Accept: "application/json" },
     data: JSON.stringify(gameData),
     success: function (res) {
       showSuccessToast(langData, langData.gameEntered);
@@ -122,6 +146,7 @@ async function fetchTournaments(statusID) {
       $.ajax({
         type: "GET",
         url: APIurl,
+        headers: { Accept: "application/json" },
         success: function (res) {
           const divElement = document.getElementById("gamesContent");
           divElement.innerHTML = "";
@@ -161,6 +186,7 @@ async function postTournament() {
     type: "POST",
     url: APIurl,
     contentType: "application/json",
+    headers: { Accept: "application/json" },
     data: JSON.stringify(tournamentData),
     success: function (res) {
       showSuccessToast(langData, langData.tournamentcreated);
@@ -174,4 +200,3 @@ async function postTournament() {
     }
   });
 }
-

@@ -1,0 +1,20 @@
+:root {
+    --bodyBg: #EEE2DC;
+    --cardBg: #ffffffc5;
+    /*? Main Icons */
+    --mainActiveBg: #AC3B61;
+    --mainActiveIcon: white;
+    --mainActiveText: white;
+    --mainInactiveBg: transparent;
+    --mainInactiveIcon: black;
+    --mainInactiveText: black;
+    /*? Secondary Icons */
+    --SecondaryBg: #87709C;
+    --SecondaryIcon: white;
+    --SecondaryText: white;
+    /*? Sidebar Icons */
+    --SidebarActiveBg: white;
+    --SidebarActiveIcon: #87709C;
+    --SidebarInactiveBg: transparent;
+    --SidebarInactiveIcon: white;
+}

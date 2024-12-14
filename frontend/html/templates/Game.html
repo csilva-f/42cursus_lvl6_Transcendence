@@ -1,1 +1,39 @@
-<canvas></canvas>
+<div class="container text-center">
+    <div class="row">
+        <!-- Left Player -->
+        <div class="col-6 mb-2 border-end border-3 border-black">
+            <div class="d-flex w-100" style="height: 7rem;">
+                <div class="justify-content-center align-content-center" style="min-width: 6rem; max-width: 6rem;">
+                    <img src="/static/img/pfp1.jpeg" style="object-fit: cover"
+                        class="img-fluid w-100 rounded-circle shadow ms-2" id="user1Img" />
+                </div>
+                <div class="w-75 h-100 d-flex flex-column justify-content-center ms-0">
+                    <p class="h2 ms-4 d-flex align-items-start"><strong id="leftPlayerName"></strong></p>
+                </div>
+                <div class="w-75 h-100 d-flex flex-column justify-content-center align-items-end ms-4">
+                    <p class="h1 ms-4 me-3 d-flex align-items-start"><strong id="playerLeftScore"></strong></p>
+                </div>
+            </div>
+        </div>
+        <!-- End Left Player -->
+        <!-- Right Player -->
+        <div class="col-6 mb-2 border-start border-3 border-black">
+            <div class="d-flex w-100" style="height: 7rem;">
+                <div class="w-75 h-100 d-flex flex-column justify-content-center align-items-start me-4">
+                    <p class="h1 me-4 ms-3 d-flex align-items-end"><strong id="playerRightScore"></strong></p>
+                </div>
+                <div class="w-75 h-100 d-flex flex-column justify-content-center">
+                    <p class="h2 d-flex me-4 justify-content-end"><strong id="rightPlayerName"></strong></p>
+                </div>
+                <div class="justify-content-center align-content-center" style="min-width: 6rem; max-width: 6rem;">
+                    <img src="/static/img/ado.jpg" style="object-fit: cover"
+                        class="img-fluid w-100 rounded-circle shadow me-2" id="user1Img" />
+                </div>
+            </div>
+        </div>
+        <!-- End Right Player -->
+    </div>
+</div>
+<div class="h-100 w-100 d-flex justify-content-center align-itens-center">
+    <canvas class="border border-3 border-black bg-dark" id="pongGameCanvas"></canvas>
+</div>

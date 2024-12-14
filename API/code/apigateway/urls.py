@@ -11,4 +11,6 @@ urlpatterns = [
     path('get-genders/', GetGenders.as_view(), name='get-genders'),
     path('get-userextensions/', GetUserExtensions.as_view(), name='get-userextensions'),
     path('get-status/', GetStatus.as_view(), name='get-status'),
+    path('update-tournament/', PostUpdateTournament.as_view(), name='update-tournament'),
+    path('get-phases/', GetPhases.as_view(), name='get-phases'),
 ]

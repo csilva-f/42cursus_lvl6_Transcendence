@@ -1,3 +1,4 @@
 backend-db/data/
 auth-db/data/
+email-db/data/
 **/__pycache__/

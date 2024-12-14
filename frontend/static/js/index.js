@@ -19,6 +19,12 @@ function testClick() {
     console.log("miku dayo");
 }
 
+function goToProfile() {
+    const profilePicElement = document.getElementById('profilePicElement');
+    window.history.pushState({}, "", profilePicElement.getAttribute("href"));
+    locationHandler("content");
+}
+
 function getForms() {
     'use strict';
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
@@ -31,13 +37,18 @@ function getForms() {
                 // If the form is invalid, prevent submission
                 event.preventDefault();
                 event.stopPropagation();
-                console.log("Form is invalid: ", form);
             } else {
                 console.log("Form is valid: ", form);
                 if (form.id == "remoteFormID")
                     postGame();
+                else if (form.id == "localFormID")
+                    postLocalGame();
                 else if (form.id == "tournamentFormID")
                     postTournament();
+                else if (form.id == "login-form")
+                    sendLogin();
+                else if (form.id == "signup-form")
+                    sendSignup();
                 event.preventDefault();
             }
             form.classList.add('was-validated');
