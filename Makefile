@@ -46,17 +46,6 @@ migrate:
 	@docker compose exec auth python manage.py makemigrations
 	@docker compose exec auth python manage.py migrate
 
-	@echo "Applying migrations to the email queue database..."
-	@echo "Waiting for the database to be up..."
-	@while ! docker inspect -f '{{.State.Health.Status}}' $(EMAIL_DB_CONTAINER_NAME) | grep -q "healthy"; do \
-		echo "Database is not ready yet..."; \
-		sleep 2; \
-	done
-	@echo "Database is up and running! Applying Migrations..."
-	@sleep 5
-	@docker compose exec email python manage.py makemigrations
-	@docker compose exec email python manage.py migrate
-
 populate:
 	@echo "Populating static tables..."
 	@docker compose exec backend-db sh -c "/tools/populateStatic.sh"

@@ -161,8 +161,8 @@ def post_create_game(request):
                 return JsonResponse({"error": "User1 ID is required"}, status=400)
 
             # Verificar se o user1ID existe em tUserExtension
-            if not tUserExtension.objects.filter(user=user1_id).exists():
-                return JsonResponse({"error": f"User1 ID {user1_id} does not exist in tUserExtension"}, status=404)
+            #if not tUserExtension.objects.filter(user=user1_id).exists():
+            #    return JsonResponse({"error": f"User1 ID {user1_id} does not exist in tUserExtension"}, status=404)
 
             tournament_id = data.get('tournamentid')
 

@@ -149,6 +149,7 @@ async function changeActive(location) {
       document.getElementById("subMsg").style.display = "none";
       const UserElement = document.getElementById("loadGlobalUsers");
       activateIcon(UserElement);
+      fetchUsers();
       break;
     case "/about":
       iconsElements.forEach((element) => {

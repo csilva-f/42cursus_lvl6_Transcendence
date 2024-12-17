@@ -71,7 +71,7 @@ function initGame() {
     /* Main Initializations */
     const canvas = document.getElementById("pongGameCanvas");
     const ctx = canvas.getContext('2d');
-    const gameData = JSON.parse(localStorage.getItem('gameData')) || [];
+    const gameData = JSON.parse(localStorage.getItem('gameData'));
     var objects;
 
     const rootStyle = getComputedStyle(document.documentElement);
@@ -81,7 +81,7 @@ function initGame() {
     canvas.width = window.innerWidth - (50 * remToPixels);
     canvas.height = window.innerHeight - (20 * remToPixels);
     
-    if (!gameData.length) {
+    if (gameData == null) {
         objects = [
             new Ball(canvas.width / 2, canvas.height / 2, 10, 10, 15),
             new Paddle(1, 20, 150, "#AC3B61", 30, canvas.height / 2, 10),
@@ -90,7 +90,6 @@ function initGame() {
         document.getElementById("leftPlayerName").innerHTML = "Shin";
         document.getElementById("rightPlayerName").innerHTML = "Chan";
     } else {
-        console.log(gameData);
         objects = [
             new Ball(canvas.width / 2, canvas.height / 2, 10, 10, 15),
             new Paddle(1, 20, 150, gameData.P1Color, 30, canvas.height / 2, 10),

@@ -64,6 +64,24 @@
     #sidebarBtn {
         display: block !important;
     }
+
+    #user1Content {
+        display: none !important;
+    }
+
+    #user2Content {
+        display: none !important;
+    }
+
+    #user1Div {
+        width: 6rem !important;
+        min-width: 6rem !important;
+    }
+
+    #user2Div {
+        width: 6rem !important;
+        min-width: 6rem !important;
+    }
 }
 
 .noBorder {
