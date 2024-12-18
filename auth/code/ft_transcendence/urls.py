@@ -24,4 +24,5 @@ urlpatterns = [
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', include("cuca.urls")),
     path('otp/', include("two_factor.urls")),
+    path('oauth/', include("oauth.urls")),
 ]
