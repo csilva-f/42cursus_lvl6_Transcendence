@@ -1,9 +1,9 @@
 services:
-  api:
-    container_name: api
-    build: ./API
+  backend-api:
+    container_name: backend-api
+    build: ./backend-api
     volumes:
-      - ./API/code:/code:rw
+      - ./backend-api/code:/code:rw
     networks:
       - backend
       - frontend
@@ -12,9 +12,26 @@ services:
     init: true
     restart: on-failure
     env_file:
-      - ./API/.env
+      - ./backend-api/.env
     depends_on:
       - backend
+
+  auth-api:
+    container_name: auth-api
+    build: ./auth-api
+    volumes:
+      - ./auth-api/code:/code:rw
+    networks:
+      - backend
+      - frontend
+    ports:
+      - "5556:8000"
+    init: true
+    restart: on-failure
+    env_file:
+      - ./auth-api/.env
+    depends_on:
+      - auth
 
   backend:
     container_name: backend
@@ -109,7 +126,7 @@ services:
     env_file:
       - ./nginx/.env
     depends_on:
-      - api
+      - backend-api
 
 networks:
   backend:
