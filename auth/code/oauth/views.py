@@ -8,6 +8,7 @@ class OAuthViewSet(viewsets.ViewSet):
 
     def login(self, request):
         redirect_uri = request.headers['Origin'] + '/oauthapi/callback'
+        print(redirect_uri)
         authorization_url = f"{settings.OAUTH2_PROVIDER['AUTHORIZATION_URL']}?client_id={settings.OAUTH2_PROVIDER['CLIENT_ID']}&redirect_uri={redirect_uri}&response_type=code"
         return Response({'url': authorization_url}, status=status.HTTP_200_OK)
 
@@ -18,9 +19,11 @@ class OAuthViewSet(viewsets.ViewSet):
             'grant_type': 'authorization_code',
             'client_id': settings.OAUTH2_PROVIDER['CLIENT_ID'],
             'client_secret': settings.OAUTH2_PROVIDER['CLIENT_SECRET'],
-            'redirect_uri': request.headers['Origin'] + '/oauthapi/callback',
+            #'redirect_uri': request.headers['Origin'] + '/oauthapi/callback',
+            'redirect_uri': 'https://localhost:8000/oauthapi/callback',
             'code': code,
         }
+        print(data)
         response = requests.post(token_url, data=data)
         token_data = response.json()
 

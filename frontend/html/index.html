@@ -121,15 +121,16 @@
                     const password = $("#password").val();
 
                     $.ajax({
-                        type: "GET",
+                        type: "POST",
                         url: `${oauthapiUrl}/login/`, // Adjust the endpoint as needed
                         contentType: "application/json",
                         headers: { Accept: "application/json" },
                         data: JSON.stringify({}),
                         success: function (data) {
-                            jwtToken = data.access; // Store the JWT token
-                            if (jwtToken) {
-                                localStorage.setItem("jwt", jwtToken);
+                            console.log(data);
+                            url = data.url;
+                            if (url) {
+                                window.location.href = url;
                             }
                             $("#login-message").text("Login successful!");
                         },
