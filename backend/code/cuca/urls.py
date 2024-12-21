@@ -13,4 +13,5 @@ urlpatterns = [
     path('status/', get_status, name='get_status'),
     path('update_tournament/', post_update_tournament, name='post_update_tournament'),
     path('phases/', get_phases, name='get_phases'),
+    path('join_tournament/', post_join_tournament, name='post_join_tournament'),
 ]
