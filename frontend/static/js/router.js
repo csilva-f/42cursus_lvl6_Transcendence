@@ -14,6 +14,16 @@ const routes = {
     title: "Login",
     descripton: "This is the Login Page",
   },
+  "/forgotPassword": {
+    template: "/templates/ForgotPassword.html",
+    title: "Forgot Password",
+    descripton: "This is the forgot password Page",
+  },
+  "/mfa": {
+    template: "/templates/MFA.html",
+    title: "Multi-factor authentication",
+    descripton: "This is the MFA Page",
+  },
   "/pong": {
     template: "/templates/Game.html",
     title: "Pong",
@@ -46,7 +56,7 @@ const routes = {
   },
 };
 
-const bigScreenLocation = ["/login", "/pong"];
+const bigScreenLocation = ["/login", "/pong", "/forgotPassword", "/mfa"];
 
 const route = (event) => {
   event = event || window.event;
@@ -86,6 +96,14 @@ async function changeToBig(location) {
 
   if (location == "/login") {
     headerElement.setAttribute("data-i18n", "login");
+    getForms();
+  }
+  else if (location == "/forgotPassword") {
+    headerElement.setAttribute("data-i18n", "forgotPassword");
+    getForms();
+  }
+  else if (location == "/mfa") {
+    headerElement.setAttribute("data-i18n", "mfa");
     getForms();
   }
   else if (location == "/pong")

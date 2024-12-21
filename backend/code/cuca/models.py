@@ -17,10 +17,17 @@ class tauxGender(models.Model):
     def __str__(self):
         return f"Gender {self.gender} is {self.label}"
 
+class tauxPhase(models.Model):
+    phase = models.AutoField(primary_key=True)
+    label = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"Phase {self.phase} is {self.label}"
+    
 class tUserExtension(models.Model):
-    user = models.IntegerField(null=False)
+    user = models.IntegerField(primary_key=True, null=False, unique=True)
     birthdate = models.DateField()
-    ulevel = models.IntegerField(null=True, blank=True, default=0)
+    ulevel = models.FloatField(null=True, blank=True, default=0.0)
     gender = models.ForeignKey(tauxGender, on_delete=models.PROTECT, null=False)
     avatar = models.CharField(max_length=1000, null=True, blank=True)
     victories = models.IntegerField(null=True, blank=True, default=0)
@@ -47,10 +54,12 @@ class tGames(models.Model): #resultado do jogo
 
     game = models.AutoField(primary_key=True)
     creationTS = models.DateTimeField(auto_now_add=True)
-    user1 = models.IntegerField() 
+    user1 = models.IntegerField(null=True, blank=True)
     user2 = models.IntegerField(null=True, blank=True)
+    isLocal = models.BooleanField(default=True)
     winnerUser = models.IntegerField(null=True, blank=True)
     tournament = models.ForeignKey(tTournaments, on_delete=models.SET_NULL, null=True, blank=True)
+    phase = models.ForeignKey(tauxPhase, on_delete=models.PROTECT, null=True, blank=True) 
     status = models.ForeignKey(tauxStatus, on_delete=models.PROTECT, null=False, default=1) 
 
     def __str__(self):
