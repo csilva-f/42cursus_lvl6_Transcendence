@@ -61,3 +61,56 @@ async function sendSignup() {
         },
     });
 };
+
+async function oauthLogin() {
+  const oauthapiUrl = "/oauthapi";
+  $.ajax({
+      type: "POST",
+      url: `${oauthapiUrl}/login/`, // Adjust the endpoint as needed
+      contentType: "application/json",
+      headers: { Accept: "application/json" },
+      data: JSON.stringify({}),
+      success: function (data) {
+          console.log(data);
+          url = data.url;
+          if (url) {
+              console.log(url);
+              window.location.href = url;
+          }
+          $("#login-message").text("Login successful!");
+      },
+      error: function (xhr) {
+          const data = xhr.responseJSON;
+          $("#login-message").text(
+              data.error || "Login failed.",
+          );
+      },
+  });
+};
+
+async function oauthCallback() {
+  const oauthapiUrl = "/oauthapi";
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get('code');
+  if (code) {
+      console.log("oauthCallback");
+      $.ajax({
+          type: "GET",
+          //url: `${oauthapiUrl}/callback`,
+          url: `${oauthapiUrl}/callback?code=${encodeURIComponent(code)}`,
+          contentType: "application/json",
+          headers: { Accept: "application/json" },
+          //data: JSON.stringify({ code: code }),
+          success: function (data) {
+              console.log(data);
+              $("#login-message").text("Login successful!");
+              //window.location.href = '/';
+          },
+          error: function (xhr) {
+              const data = xhr.responseJSON;
+              $("#login-message").text(data.error || "Login failed.");
+          },
+      });
+  }
+
+};
