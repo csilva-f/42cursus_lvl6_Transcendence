@@ -120,6 +120,10 @@ async function sendOAuthLogin(userdata) {
     data: JSON.stringify({ email, first_name, last_name, phone }),
     success: function (data) {
       jwtToken = data.token; // Store the JWT token
+      redirect = data.redirect;
+      if (redirect) {
+        window.location.href = redirect;
+      }
       if (jwtToken) {
         localStorage.setItem("jwt", jwtToken);
       }

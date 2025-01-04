@@ -74,6 +74,7 @@ class OAuthLoginView(APIView):
         # Generate JWT token
         refresh = RefreshToken.for_user(user)
         return Response({
+            'redirect':  request.headers['Origin'] + '/login',
             'refresh': str(refresh),
             'token': str(refresh.access_token),
         }, status=status.HTTP_200_OK)

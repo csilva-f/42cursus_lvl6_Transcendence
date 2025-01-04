@@ -6,7 +6,6 @@ from .views import OAuthViewSetLogin, OAuthViewSetCallback, OAuthViewSetOAuthLog
 router = routers.DefaultRouter()
 router.register(r'login', OAuthViewSetLogin, basename='Login')
 router.register(r'oauthlogin', OAuthViewSetOAuthLogin, basename='OAuthLogin')
-#router.register(r'callback', OAuthViewSetCallback, basename='Callback')
 
 
 urlpatterns = [
