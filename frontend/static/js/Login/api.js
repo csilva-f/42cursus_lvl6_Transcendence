@@ -94,8 +94,7 @@ async function oauthCallback() {
       //data: JSON.stringify({ code: code }),
       success: function (data) {
         console.log(data);
-        email = data.email;
-
+        sendOAuthLogin(data);
         $("#login-message").text("Login successful!");
         //window.location.href = '/';
       },
@@ -107,16 +106,20 @@ async function oauthCallback() {
   }
 }
 
-async function oauthIntegrate(email) {
-  const apiUrl = "/authapi";
+async function sendOAuthLogin(userdata) {
+  const apiUrl = "/oauthapi";
+  const email = userdata.email;
+  const first_name = userdata.first_name;
+  const last_name = userdata.last_name;
+  const phone = userdata.phone;
   $.ajax({
     type: "POST",
-    url: `${apiUrl}/oauthlink/`, // Adjust the endpoint as needed
+    url: `${apiUrl}/oauthlogin/`, // Adjust the endpoint as needed
     contentType: "application/json",
     headers: { Accept: "application/json" },
-    data: JSON.stringify({ email }),
+    data: JSON.stringify({ email, first_name, last_name, phone }),
     success: function (data) {
-      jwtToken = data.access; // Store the JWT token
+      jwtToken = data.token; // Store the JWT token
       if (jwtToken) {
         localStorage.setItem("jwt", jwtToken);
       }

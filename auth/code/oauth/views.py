@@ -1,9 +1,12 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from django.conf import settings
 import requests
 from django.shortcuts import redirect
 from django.http import HttpResponse, HttpResponseRedirect
+from rest_framework_simplejwt.tokens import RefreshToken
+from cuca.models import CucaUser
 
 class OAuthViewSet(viewsets.ViewSet):
 
@@ -45,3 +48,32 @@ class OAuthViewSet(viewsets.ViewSet):
             return Response(user_info, status=status.HTTP_200_OK)
         else:
             return Response(token_data, status=status.HTTP_400_BAD_REQUEST)
+
+
+class OAuthLoginView(APIView):
+    def get(self, request):
+        user_data = request.data
+        print(user_data)
+        email = user_data.get('email')
+        first_name = user_data.get('first_name')
+        last_name = user_data.get('last_name')
+        phone = user_data.get('phone')
+
+        # Check if the user exists, if not create a new user
+        user, created = CucaUser.objects.get_or_create(
+            email=email,
+            defaults={
+                'first_name': first_name,
+                'last_name': last_name,
+                'phone_number': phone,
+                'is_active': True,  # Set to True or based on your logic
+                'is_2fa_enabled': False,  # Default value
+                'username': email,  # Set username to email
+            }
+        )
+        # Generate JWT token
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'refresh': str(refresh),
+            'token': str(refresh.access_token),
+        }, status=status.HTTP_200_OK)

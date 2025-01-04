@@ -1,10 +1,11 @@
 # myapp/urls.py
 from django.urls import path, include
 from rest_framework import routers
-from .views import OAuthViewSetLogin, OAuthViewSetCallback
+from .views import OAuthViewSetLogin, OAuthViewSetCallback, OAuthViewSetOAuthLogin
 
 router = routers.DefaultRouter()
 router.register(r'login', OAuthViewSetLogin, basename='Login')
+router.register(r'oauthlogin', OAuthViewSetOAuthLogin, basename='OAuthLogin')
 #router.register(r'callback', OAuthViewSetCallback, basename='Callback')
 
 
