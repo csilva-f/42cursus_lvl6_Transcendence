@@ -12,6 +12,25 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from os import getenv
 from pathlib import Path
 
+import hvac
+
+def get_vault_secrets(secret_path):
+    # Set Vault address and token
+    vault_addr = getenv('VAULT_ADDR', 'http://vault:8200')  # Adjust if necessary
+    vault_token = getenv('VAULT_TOKEN', 'myroot')  # Use a more secure method in production
+
+    # Create a Vault client
+    client = hvac.Client(url=vault_addr, token=vault_token)
+
+    # Retrieve the secrets
+    try:
+        secret_response = client.secrets.kv.read_secret(path=secret_path)
+        return secret_response['data']
+    except Exception as e:
+        print(f"Error retrieving secrets from Vault: {e}")
+        return {}
+
+
 #from auth.code import two_factor
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -106,12 +125,15 @@ WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
 #     }
 # }
 #
+
+secrets = get_vault_secrets('secret/data/auth-db')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': getenv('POSTGRES_DB', ''),  # Default value if not set
-        'USER': getenv('POSTGRES_USER', ''),
-        'PASSWORD': getenv('POSTGRES_PASSWORD', ''),
+        'NAME': secrets.get('POSTGRES_DB', ''),  # Default value if not set
+        'USER': secrets.get('POSTGRES_USER', ''),
+        'PASSWORD': secrets.get('POSTGRES_PASSWORD', ''),
         'HOST': getenv('DB_HOST', ''),  # 'db' is the service name in docker-compose
         'PORT': getenv('DB_PORT', '5432'),  # Default PostgreSQL port
     }

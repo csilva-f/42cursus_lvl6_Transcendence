@@ -14,6 +14,7 @@ services:
     env_file:
       - ./backend-api/.env
     depends_on:
+      - vault
       - backend
 
   auth-api:
@@ -31,6 +32,7 @@ services:
     env_file:
       - ./auth-api/.env
     depends_on:
+      - vault
       - auth
 
   backend:
@@ -47,6 +49,7 @@ services:
     env_file:
       - ./backend/.env
     depends_on:
+      - vault
       - backend-db
 
   backend-db:
@@ -72,6 +75,7 @@ services:
     env_file:
       - ./auth/.env
     depends_on:
+      - vault
       - auth-db
 
   auth-db:
@@ -98,6 +102,7 @@ services:
     env_file:
       - ./email/.env
     depends_on:
+      - vault
       - email-db
 
   email-db:
@@ -126,7 +131,23 @@ services:
     env_file:
       - ./nginx/.env
     depends_on:
+      - vault
       - backend-api
+
+  vault:
+    container_name: vault
+    build: ./vault
+    volumes:
+      - ./vault/data:/vault/file:rw
+    networks:
+      - backend
+    ports:
+      - "8200:8200"
+    init: true
+    restart: on-failure
+    env_file:
+      - ./vault/.env
+
 
 networks:
   backend:
