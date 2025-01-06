@@ -11,26 +11,14 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 from os import getenv
 from pathlib import Path
+#from .utils import get_vault_secrets
 
 import hvac
+client = hvac.Client(url='http://vault:8200', token='myroot')
 
-def get_vault_secrets(secret_path):
-    # Set Vault address and token
-    vault_addr = getenv('VAULT_ADDR', 'http://vault:8200')  # Adjust if necessary
-    vault_token = getenv('VAULT_TOKEN', 'myroot')  # Use a more secure method in production
-
-    # Create a Vault client
-    client = hvac.Client(url=vault_addr, token=vault_token)
-
-    # Retrieve the secrets
-    try:
-        secret_response = client.secrets.kv.read_secret(path=secret_path)
-        return secret_response['data']
-    except Exception as e:
-        print(f"Error retrieving secrets from Vault: {e}")
-        return {}
-
-
+def get_stripe_key(path):
+    secret = client.secrets.kv.v2.read_secret_version(path=path)
+    return secret['data']['data']
 #from auth.code import two_factor
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -126,7 +114,7 @@ WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
 # }
 #
 
-secrets = get_vault_secrets('secret/data/auth-db')
+secrets = get_stripe_key('/auth/db')
 
 DATABASES = {
     'default': {

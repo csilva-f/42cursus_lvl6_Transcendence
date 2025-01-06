@@ -1,13 +1,12 @@
 #!/bin/sh
 
 # Start Vault in the background
-vault server -dev -dev-root-token-id=myroot &
-
+vault server -dev -dev-root-token-id=myroot -dev-listen-address=0.0.0.0:8200 &
 # Wait for Vault to start
 sleep 5
 
 # Set the VAULT_ADDR environment variable to use HTTP
-export VAULT_ADDR="http://127.0.0.1:8200"
+export VAULT_ADDR="http://0.0.0.0:8200"
 
 # Initialize Vault if it is not already initialized
 if ! vault status | grep -q 'Initialized'; then
