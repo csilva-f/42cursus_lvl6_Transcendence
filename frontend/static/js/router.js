@@ -59,9 +59,14 @@ const routes = {
     title: "Profile",
     descripton: "This is the Profile Page",
   },
+  "/callback": {
+    template: "/templates/Callback.html",
+    title: "Profile",
+    descripton: "OAuth2 callback",
+  },
 };
 
-const bigScreenLocation = ["/login", "/pong", "/forgotPassword", "/mfa", "/resendCode"];
+const bigScreenLocation = ["/login", "/pong", "/callback", "/forgotPassword", "/mfa", "/resendCode"];
 
 const route = (event) => {
   event = event || window.event;
@@ -115,6 +120,11 @@ async function changeToBig(location) {
   {
     headerElement.setAttribute("data-i18n", "pong");
     initGame();
+  }
+  else if (location == "/callback")
+  {
+    headerElement.setAttribute("data-i18n", "pong");
+    oauthCallback();
   }
 
   updateContent(langData);

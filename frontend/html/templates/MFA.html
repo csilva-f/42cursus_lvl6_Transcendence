@@ -16,7 +16,7 @@
 							<input type="text" class="form-control otp-field" maxlength="1" id="otp6" autocomplete="off">
 						</div>
 					</div>
-					<button type="submit" class="btn" style="background-color: #AC3B61; color: white; width: 100%;">Verify account</button>
+					<button type="submit" onclick="" class="btn" style="background-color: #AC3B61; color: white; width: 100%;">Verify account</button>
 				</form>
 				<p id="mfa-message"></p>
 				<div class="text-center mt-3">
@@ -27,6 +27,7 @@
 	</div>
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
+			console.log("entra aqui pf");
 			const fields = Array.from(document.querySelectorAll('.otp-field'));
 		
 			fields.forEach((field) => {

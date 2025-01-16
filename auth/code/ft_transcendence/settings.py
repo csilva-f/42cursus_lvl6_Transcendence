@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'pyotp',
     'cuca',
     'two_factor',
+    'oauth2_provider',
+    'oauth',
 
 ]
 
@@ -56,7 +58,22 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'oauth2_provider.middleware.OAuth2TokenMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'oauth2_provider.backends.OAuth2Backend',
+)
+
+OAUTH2_PROVIDER = {
+    'CLIENT_ID': 'u-s4t2ud-9ec7e1b569c511d464a5fde0f161abb7de05399c1ba6b45dcc7619f42c1bfff0',
+    'CLIENT_SECRET': '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',
+    'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
+    'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
+    'USER_INFO_URL': 'https://api.intra.42.fr/v2/me',
+}
+
 
 ROOT_URLCONF = 'ft_transcendence.urls'
 
@@ -162,3 +179,8 @@ EMAIL_PORT = 25
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'noreply@cucabeludo.pt'
 EMAIL_HOST_PASSWORD = 'Cuc@3elud0'
+
+
+SIMPLE_JWT = {
+	"SIGNING_KEY" : SECRET_KEY,
+}

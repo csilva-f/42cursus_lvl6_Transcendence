@@ -21,4 +21,5 @@ from rest_framework import routers, serializers, viewsets
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('authapi/', include('authapi.urls')),
+    path('oauthapi/', include('oauthapi.urls')),
 ]

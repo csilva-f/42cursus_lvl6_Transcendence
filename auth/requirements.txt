@@ -6,3 +6,4 @@ djangorestframework==3.15.2
 djangorestframework-simplejwt
 pyotp
 requests
+django-oauth-toolkit
