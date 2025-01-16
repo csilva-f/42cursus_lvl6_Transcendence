@@ -20,11 +20,57 @@
 				</form>
 				<p id="mfa-message"></p>
 				<div class="text-center mt-3">
-                    <p style="color: #000;">Didn't receive code? <a href="#" id="resendEmail" style="color: #AC3B61; text-decoration: none;">Resend</a></p>
-                </div>
+					<p style="color: #000;">Didn't receive code? <a href="resendCode" id="resendEmail" style="color: #AC3B61; text-decoration: none;">Resend</a></p>
+				</div>
 			</div>
 		</div>
 	</div>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const fields = Array.from(document.querySelectorAll('.otp-field'));
+		
+			fields.forEach((field) => {
+				field.addEventListener('input', function () {
+					const nextField = document.getElementById(`otp${parseInt(field.id.replace('otp', '')) + 1}`);
+					if (field.value && nextField) {
+						nextField.focus();
+					}
+				});
+		
+				field.addEventListener('keydown', function (e) {
+					const currentId = parseInt(field.id.replace('otp', ''));
+					const prevField = document.getElementById(`otp${currentId - 1}`);
+					const nextField = document.getElementById(`otp${currentId + 1}`);
+		
+					if (e.key === 'Backspace' && !field.value && prevField) {
+						prevField.focus();
+					} else if (e.key === 'ArrowRight' && nextField) {
+						nextField.focus();
+					} else if (e.key === 'ArrowLeft' && prevField) {
+						prevField.focus();
+					}
+				});
+		
+				field.addEventListener('paste', function (e) {
+					e.preventDefault();
+					const pasteData = e.clipboardData.getData('text').split('');
+					let currentId = parseInt(field.id.replace('otp', ''));
+		
+					pasteData.forEach((char) => {
+						const targetField = document.getElementById(`otp${currentId}`);
+						if (targetField) {
+							targetField.value = char;
+							currentId++;
+						}
+					});
+					const lastField = document.getElementById(`otp${currentId - 1}`);
+					if (lastField) {
+						lastField.focus();
+					}
+				});
+			});
+		});
+	</script>
 </div>
 
 <style>
@@ -38,30 +84,12 @@
 		border: 1px solid #ccc;
 		box-sizing: border-box;
 	}
-
 	.otp-field:focus {
 		outline: none;
 		border-color: #AC3B61;
 	}
-
 	.input-group {
 		display: flex;
 		justify-content: center;
 	}
 </style>
-
-<!-- <script> nao funciona!
-	document.querySelectorAll('.otp-field').forEach((field, index, fields) => {
-	field.addEventListener('input', function() {
-		if (field.value.length === 1 && index < fields.length - 1) {
-			fields[index + 1].focus();
-		}
-		if (field.value.length === 0 && index > 0) {
-			fields[index - 1].focus();
-		}
-	});
-});
-</script> -->
-
-<!-- Fazer saltar para o input seguinte conforme vou preenchendo, ir para o anterior ou proximo se eu tentar transitar nos campos pelo keyword,
-apagar se o bloco e o anterior se eu continuar pressionando o delete -->

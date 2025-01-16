@@ -24,6 +24,11 @@ const routes = {
     title: "Multi-factor authentication",
     descripton: "This is the MFA Page",
   },
+  "/resendCode": {
+    template: "/templates/ResendCode.html",
+    title: "Resend code",
+    descripton: "This is the resend code page",
+  },
   "/pong": {
     template: "/templates/Game.html",
     title: "Pong",
@@ -56,7 +61,7 @@ const routes = {
   },
 };
 
-const bigScreenLocation = ["/login", "/pong", "/forgotPassword", "/mfa"];
+const bigScreenLocation = ["/login", "/pong", "/forgotPassword", "/mfa", "/resendCode"];
 
 const route = (event) => {
   event = event || window.event;

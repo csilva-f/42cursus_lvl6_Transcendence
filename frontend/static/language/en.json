@@ -42,5 +42,6 @@
     "friends": "Friends",
     "matchHistory": "Match History",
 	"forgotPassword": "Recover password",
-	"mfa": "Multi-factor authentication"
+	"mfa": "Multi-factor authentication",
+	"resendCode": "Resend Code"
 }

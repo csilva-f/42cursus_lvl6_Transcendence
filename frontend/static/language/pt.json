@@ -42,5 +42,6 @@
     "friends": "Amigos",
     "matchHistory": "Histórico de Partidas",
 	"forgotPassword": "Recuperar palavra passe",
-	"mfa": "Autenticação Multifator"
+	"mfa": "Autenticação Multifator",
+	"resendCode": "Reenviar código"
 }
