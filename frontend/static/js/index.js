@@ -65,10 +65,16 @@ function getForms() {
 
 async function checkLogin() {
 	var token = localStorage.getItem("jwt");
-	console.log(token);
-	if (token != null)
+	const loginButton = document.getElementById('loginButton');
+	if (token != null) {
+		loginButton.classList.remove("fa-right-from-bracket");
+		loginButton.classList.add("fa-right-to-bracket");
 		localStorage.removeItem("jwt");
-	else
+	}
+	else {
 		window.history.pushState({}, "", "/login");
+		loginButton.classList.remove("fa-right-to-bracket");
+		loginButton.classList.add("fa-right-from-bracket");
+	}
 	locationHandler("allcontent");
   }
