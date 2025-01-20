@@ -43,6 +43,8 @@ class Paddle {
     getHalfHeight() { return this.paddleHeight / 2; }
     getCenterWidth() { return this.paddleX + this.getHalfWidth(); }
     getCenterHeight() { return this.paddleY + this.getHalfHeight(); }
+    setPaddleX(paddleX) { this.paddleX = paddleX; }
+    setPaddleY(paddleY) { this.paddleY = paddleY; }
     update() {
         if (this.paddleSide == 2) {
             if (keyPressed[KEY_ARROWUP])

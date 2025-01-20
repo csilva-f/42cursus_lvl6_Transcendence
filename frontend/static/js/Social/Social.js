@@ -12,3 +12,11 @@ function GlobalFriendsSelect(elementID) {
         activateIcon(element);
     }
 }
+
+function insertUserInfo(newCard, userName, usersImg) {
+    const userImg = newCard.querySelector("#userImg");
+    const userNick = newCard.querySelector("#userNick");
+    userNick.textContent = userName;
+    userImg.src = usersImg;
+
+} 

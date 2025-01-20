@@ -3,6 +3,9 @@ const KEY_ARROWDOWN = 40;
 const KEY_W = 87;
 const KEY_S = 83;
 const keyPressed = [];
+const maxSpeed = 10;
+const maxScore = 5;
+var stopGame = false;
 window.addEventListener('keydown', function (e) {
     keyPressed[e.keyCode] = true;
 })
@@ -27,12 +30,20 @@ function incScore(canvas, objects) {
     if (objects[0].ballX <= -objects[0].ballRadius){
         objects[2].paddleScore += 1;
         document.getElementById("playerRightScore").innerHTML = objects[2].paddleScore;
-        respawnBall(canvas, objects);
+        if(objects[2].paddleScore < maxScore){
+            respawnBall(canvas, objects);
+        }
+        else
+            stopGame = true;
     }
     if (objects[0].ballX >= canvas.width + objects[0].ballRadius){
         objects[1].paddleScore += 1;
         document.getElementById("playerLeftScore").innerHTML = objects[1].paddleScore;
-        respawnBall(canvas, objects);
+        if(objects[1].paddleScore < maxScore){
+            respawnBall(canvas, objects);
+        }
+        else
+            stopGame = true;
     }
 }
 
@@ -52,17 +63,26 @@ function gameDraw(ctx, objects) {
     });
 }
 
+function resize(canvas){
+    const rootStyle = getComputedStyle(document.documentElement);
+    const remToPixels = parseFloat(rootStyle.fontSize);
+    const marginWidth = window.innerWidth * 0.3;
+    const marginHeight = window.innerHeight * 0.4;
+
+    canvas.width = window.innerWidth - marginWidth;
+    canvas.height = window.innerHeight - marginHeight;
+}
+
 function gameLoop(canvas, ctx, objects) {
     window.onresize = function() {
-        //otimizar isto e depois tambem dar update nas posicoes dos paddles e da bola
-        const rootStyle = getComputedStyle(document.documentElement);
-        const remToPixels = parseFloat(rootStyle.fontSize);
-        canvas.width = window.innerWidth - (50 * remToPixels);
-        canvas.height = window.innerHeight - (20 * remToPixels);
+        resize(canvas);
+        objects[1].setPaddleX(30);
+        objects[2].setPaddleX(canvas.width - 50);
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     window.requestAnimationFrame(() => gameLoop(canvas, ctx, objects));
-
+    
+    if (stopGame) return;
     gameUpdate(canvas, objects);
     gameDraw(ctx, objects);
 }
@@ -71,30 +91,24 @@ function initGame() {
     /* Main Initializations */
     const canvas = document.getElementById("pongGameCanvas");
     const ctx = canvas.getContext('2d');
-    const gameData = JSON.parse(localStorage.getItem('gameData')) || [];
+    const gameData = JSON.parse(localStorage.getItem('gameData'));
     var objects;
 
-    const rootStyle = getComputedStyle(document.documentElement);
-    const remToPixels = parseFloat(rootStyle.fontSize);
-    
-    //TODO Entender pk que a width esta errada
-    canvas.width = window.innerWidth - (50 * remToPixels);
-    canvas.height = window.innerHeight - (20 * remToPixels);
-    
-    if (!gameData.length) {
+    resize(canvas);
+
+    if (gameData == null) {
         objects = [
-            new Ball(canvas.width / 2, canvas.height / 2, 10, 10, 15),
-            new Paddle(1, 20, 150, "#AC3B61", 30, canvas.height / 2, 10),
-            new Paddle(2, 20, 150, "#87709C", canvas.width - 50, canvas.height / 2, 10)
+            new Ball(canvas.width / 2, canvas.height / 2, 5, 5, 15),
+            new Paddle(1, 20, 150, "#AC3B61", 30, (canvas.height / 2) - 75, 10),
+            new Paddle(2, 20, 150, "#87709C", canvas.width - 50, (canvas.height / 2) - 75 , 10)
         ];
         document.getElementById("leftPlayerName").innerHTML = "Shin";
         document.getElementById("rightPlayerName").innerHTML = "Chan";
     } else {
-        console.log(gameData);
         objects = [
-            new Ball(canvas.width / 2, canvas.height / 2, 10, 10, 15),
-            new Paddle(1, 20, 150, gameData.P1Color, 30, canvas.height / 2, 10),
-            new Paddle(2, 20, 150, gameData.P2Color, canvas.width - 50, canvas.height / 2, 10)
+            new Ball(canvas.width / 2, canvas.height / 2, 10, 20, 15),
+            new Paddle(1, 20, 150, gameData.P1Color, 30, (canvas.height / 2) - 75, 10),
+            new Paddle(2, 20, 150, gameData.P2Color, canvas.width - 50, (canvas.height / 2) - 75, 10)
         ];
         document.getElementById("leftPlayerName").innerHTML = gameData.P1;
         document.getElementById("rightPlayerName").innerHTML = gameData.P2;
