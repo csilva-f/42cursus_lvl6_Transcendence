@@ -1,23 +1,22 @@
+
 <div class="container mt-5">
 	<div class="row justify-content-center">
 		<div class="col-md-4">
 			<p class="h4 text-center" style="font-weight: bold; color: #000;">Check your e-mail to get the code</p>
 			<p class="h7 text-center" style="color: #000;">We sent a six-character code to your e-mail.</p>
 			<div class="tab-pane fade show active" id="mfa" role="tabpanel" aria-labelledby="mfa-tab">
-				<!-- <form class="mt-3 needs-validation" id="mfa-form" novalidate> -->
-
 				<form class="mt-3" id="mfa-form">
 					<div class="mb-3">
 						<div class="input-group">
-							<input type="text" onclick="" class="form-control otp-field" maxlength="1" id="otp1" autocomplete="off" autofocus>
-							<input type="text" onclick="" class="form-control otp-field" maxlength="1" id="otp2" autocomplete="off">
-							<input type="text" onclick="" class="form-control otp-field" maxlength="1" id="otp3" autocomplete="off">
-							<input type="text" onclick="" class="form-control otp-field" maxlength="1" id="otp4" autocomplete="off">
-							<input type="text" onclick="" class="form-control otp-field" maxlength="1" id="otp5" autocomplete="off">
-							<input type="text" onclick="" class="form-control otp-field" maxlength="1" id="otp6" autocomplete="off">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp1" autocomplete="off" autofocus oninput="handleOTPInput(this)">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp2" autocomplete="off" oninput="handleOTPInput(this)">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp3" autocomplete="off" oninput="handleOTPInput(this)">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp4" autocomplete="off" oninput="handleOTPInput(this)">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp5" autocomplete="off" oninput="handleOTPInput(this)">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp6" autocomplete="off" oninput="handleOTPInput(this)">
 						</div>
 					</div>
-					<button type="submit" onclick="" class="btn" style="background-color: #AC3B61; color: white; width: 100%;">Verify account</button>
+					<button type="button" class="btn" style="background-color: #AC3B61; color: white; width: 100%;" onclick="">Verify account</button>
 				</form>
 				<p id="mfa-message"></p>
 				<div class="text-center mt-3">
@@ -27,51 +26,6 @@
 		</div>
 	</div>
 </div>
-
-<!-- <script>
-	document.addEventListener('DOMContentLoaded', function () {
-
-	function getOTPString() {
-		return fields.map(field => field.value).join('');
-	}
-	console.log(getOTPString());
-	const fields = Array.from(document.querySelectorAll('.otp-field'));
-	
-	fields.forEach((field) => {
-		field.addEventListener('input', function () {
-			const nextField = document.getElementById(`otp${parseInt(field.id.replace('otp', '')) + 1}`);
-			if (field.value && nextField) nextField.focus();
-		});
-		
-		field.addEventListener('keydown', function (e) {
-			const currentId = parseInt(field.id.replace('otp', ''));
-			const prevField = document.getElementById(`otp${currentId - 1}`);
-			const nextField = document.getElementById(`otp${currentId + 1}`);
-			
-			if (e.key === 'Backspace' && !field.value && prevField) prevField.focus();
-			else if (e.key === 'ArrowRight' && nextField) nextField.focus();
-			else if (e.key === 'ArrowLeft' && prevField) prevField.focus();
-		});
-		
-		field.addEventListener('paste', function (e) {
-			e.preventDefault();
-			const pasteData = e.clipboardData.getData('text').split('');
-			let currentId = parseInt(field.id.replace('otp', ''));
-			
-			pasteData.forEach((char) => {
-				const targetField = document.getElementById(`otp${currentId}`);
-				if (targetField) {
-					targetField.value = char;
-					currentId++;
-				}
-			});
-			const lastField = document.getElementById(`otp${currentId - 1}`);
-			if (lastField) lastField.focus();
-		});
-	});
-}); -->
-
-</script>
 
 <style>
 	.otp-field {
