@@ -11,6 +11,6 @@ def send_email(request):
     recipient_list = request.data.get('recipient_list')
 
     # Send the email using django-mailer
-    send_mail(subject, message, from_email, recipient_list)
+    # send_mail(subject, message, from_email, recipient_list)
 
     return Response({'status': 'Email sent'}, status=status.HTTP_200_OK)

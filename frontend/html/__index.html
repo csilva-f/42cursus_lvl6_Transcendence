@@ -103,16 +103,48 @@
             </form>
             <p id="verify-otp-message" aria-live="polite"></p>
         </div>
-
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <h1>Login with 42 School</h1>
+            <button id="login-button">Login</button>
         <!-- Include jQuery -->
-
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-            const apiUrl = "/authapi"; // Use the Nginx route for API requests
+            const apiUrl = "/authapi";
+            const oauthapiUrl = "/oauthapi"; // Use the Nginx route for API requests
             let jwtToken = ""; // Variable to store the JWT token
 
             $(document).ready(function () {
+
                 // Login function
+                $("#login-button").on("click", function (e){
+                    e.preventDefault();
+                    const email = $("#username").val();
+                    const password = $("#password").val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: `${oauthapiUrl}/login/`, // Adjust the endpoint as needed
+                        contentType: "application/json",
+                        headers: { Accept: "application/json" },
+                        data: JSON.stringify({}),
+                        success: function (data) {
+                            console.log(data);
+                            url = data.url;
+                            if (url) {
+                                console.log(url);
+                                window.location.href = url;
+                            }
+                            $("#login-message").text("Login successful!");
+                        },
+                        error: function (xhr) {
+                            const data = xhr.responseJSON;
+                            $("#login-message").text(
+                                data.error || "Login failed.",
+                            );
+                        },
+                    });
+                });
+
+
                 $("#login-form").on("submit", function (e) {
                     e.preventDefault();
                     const email = $("#username").val();

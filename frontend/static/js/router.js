@@ -14,6 +14,26 @@ const routes = {
     title: "Login",
     descripton: "This is the Login Page",
   },
+  "/forgotPassword": {
+    template: "/templates/ForgotPassword.html",
+    title: "Forgot Password",
+    descripton: "This is the forgot password Page",
+  },
+  "/mfa": {
+    template: "/templates/MFA.html",
+    title: "Multi-factor authentication",
+    descripton: "This is the MFA Page",
+  },
+  "/resendCode": {
+    template: "/templates/ResendCode.html",
+    title: "Resend code",
+    descripton: "This is the resend code page",
+  },
+  "/resetPassword": {
+    template: "/templates/ResetPassword.html",
+    title: "Reset Password",
+    descripton: "This is the reset password page",
+  },
   "/pong": {
     template: "/templates/Game.html",
     title: "Pong",
@@ -44,9 +64,22 @@ const routes = {
     title: "Profile",
     descripton: "This is the Profile Page",
   },
+  "/callback": {
+    template: "/templates/Login.html",
+    title: "Profile",
+    descripton: "OAuth2 callback",
+  },
 };
 
-const bigScreenLocation = ["/login", "/pong"];
+const bigScreenLocation = [
+  "/login",
+  "/pong",
+  "/callback",
+  "/forgotPassword",
+  "/mfa",
+  "/resendCode",
+  "/resetPassword",
+];
 
 const route = (event) => {
   event = event || window.event;
@@ -87,11 +120,21 @@ async function changeToBig(location) {
   if (location == "/login") {
     headerElement.setAttribute("data-i18n", "login");
     getForms();
-  }
-  else if (location == "/pong")
-  {
+  } else if (location == "/forgotPassword") {
+    headerElement.setAttribute("data-i18n", "forgotPassword");
+    getForms();
+  } else if (location == "/mfa") {
+    headerElement.setAttribute("data-i18n", "mfa");
+    getForms();
+  } else if (location == "/resetPassword") {
+    headerElement.setAttribute("data-i18n", "resetPassword");
+    getForms();
+  } else if (location == "/pong") {
     headerElement.setAttribute("data-i18n", "pong");
     initGame();
+  } else if (location == "/callback") {
+    headerElement.setAttribute("data-i18n", "pong");
+    oauthCallback();
   }
 
   updateContent(langData);
@@ -123,7 +166,7 @@ async function changeActive(location) {
       document.getElementById("subMsg").style.display = "none";
       const iconElement = document.getElementById("loadGamesIcon");
       activateIcon(iconElement);
-      const iconStatusElement = document.getElementById('searchingLi');
+      const iconStatusElement = document.getElementById("searchingLi");
       activateIcon(iconStatusElement);
       fetchGames(1);
       getForms();
@@ -173,7 +216,7 @@ async function changeActive(location) {
       break;
     case "/profile":
       iconsElements.forEach((element) => {
-          disableSBIcon(element);
+        disableSBIcon(element);
       });
       headerElement.setAttribute("data-i18n", "profile");
       updateContent(langData);
@@ -182,7 +225,7 @@ async function changeActive(location) {
     default:
       console.log("default");
       iconsElements.forEach((element) => {
-          disableSBIcon(element);
+        disableSBIcon(element);
       });
       updateContent(langData);
       document.getElementById("subMsg").style.display = "none";
@@ -203,8 +246,7 @@ const locationHandler = async (elementID) => {
     document
       .querySelector('meta[name="description"]')
       .setAttribute("allContent", route.descripton);
-  }
-  else {
+  } else {
     document.getElementById(elementID).innerHTML = html;
     document
       .querySelector('meta[name="description"]')
@@ -221,7 +263,6 @@ document.addEventListener("click", (e) => {
     route();
   }
 });
-
 
 window.onpopstate = locationHandler;
 window.route = route;

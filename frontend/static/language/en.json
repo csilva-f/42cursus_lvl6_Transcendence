@@ -1,5 +1,5 @@
 {
-    "login": "Login",
+    "login": "Welcome to Cuca Beludo",
     "welcome": "Welcome,",
     "games&tournaments": "Games and Tournaments",
     "pong": "Pong Game",
@@ -40,5 +40,9 @@
     "gameEntered": "Game entered successfully",
     "global": "Global",
     "friends": "Friends",
-    "matchHistory": "Match History"
+    "matchHistory": "Match History",
+	"forgotPassword": "",
+	"mfa": "",
+	"resendCode": "",
+	"resetPassword": ""
 }

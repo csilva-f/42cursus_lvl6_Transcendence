@@ -37,6 +37,7 @@ function getForms() {
                 // If the form is invalid, prevent submission
                 event.preventDefault();
                 event.stopPropagation();
+				console.log("form invalid")
             } else {
                 console.log("Form is valid: ", form);
                 if (form.id == "remoteFormID")
@@ -49,6 +50,12 @@ function getForms() {
                     sendLogin();
                 else if (form.id == "signup-form")
                     sendSignup();
+				else if (form.id == "forgotPwd-form")
+                    forgotPwd();
+				// else if (form.id == "resendCode-form")
+				// 	sendCode();
+				// else if (form.id == "resetPwd-form")
+				// 	resetPwd();
                 event.preventDefault();
             }
             form.classList.add('was-validated');

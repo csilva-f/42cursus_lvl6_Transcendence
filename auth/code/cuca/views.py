@@ -27,7 +27,7 @@ class UserCreate(generics.CreateAPIView):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             validation_link  = request.headers['Origin'] + '/authapi/validate-email/validate-email/' + uid + '/' + token
             print('build_absolute_uri: ',validation_link)
-
+            print(user)
             response = requests.post('http://email:8000/send_email/', json={
                 'subject': 'Your Activation Link',
                 'message': f'Your account activation link is \n\n {validation_link}',
@@ -88,7 +88,7 @@ class RecoverPasswordAPIView(generics.GenericAPIView):
             'message': f'Please click the following link to reset your password: {reset_url}',
             'from_email': 'noreply@cucabeludo.pt',
             #[email],
-            'recipient_list': ['bcamarinha92@gmail.com'],
+            'recipient_list': [email],
         })
 
         if response.status_code == 200:
