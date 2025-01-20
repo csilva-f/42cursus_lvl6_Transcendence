@@ -1,3 +1,5 @@
+const maxSpeed = 10;
+
 class Ball {
     constructor(ballX, ballY, ballVelocityX, ballVelocityY, ballRadius) {
         this.ballX = ballX;
@@ -72,7 +74,24 @@ class Paddle {
         let dX = Math.abs(ball.ballX - this.getCenterWidth());
         let dY = Math.abs(ball.ballY - this.getCenterHeight());
 
-        if (dX <= (ball.ballRadius + this.getHalfWidth()) && dY <= (ball.ballRadius + this.getHalfHeight()))
-            ball.ballVelocityX *= -1;
+        if (dX <= (ball.ballRadius + this.getHalfWidth()) && dY <= (ball.ballRadius + this.getHalfHeight())) {
+            // Reverse horizontal velocity
+            if (ball.ballVelocityX < maxSpeed)
+                ball.ballVelocityX *= -1.08;
+            else
+                ball.ballVelocityX *= -1;
+
+            // Adjust the ball's position to prevent sticking
+            if (dX > this.getHalfWidth()) {
+                ball.ballX = (ball.ballX < this.getCenterWidth()) 
+                    ? this.getCenterWidth() - this.getHalfWidth() - ball.ballRadius
+                    : this.getCenterWidth() + this.getHalfWidth() + ball.ballRadius;
+            }
+            if (dY > this.getHalfHeight()) {
+                ball.ballY = (ball.ballY < this.getCenterHeight()) 
+                    ? this.getCenterHeight() - this.getHalfHeight() - ball.ballRadius
+                    : this.getCenterHeight() + this.getHalfHeight() + ball.ballRadius;
+            }
+        }
     }
 }

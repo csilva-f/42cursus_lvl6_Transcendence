@@ -3,9 +3,12 @@ const KEY_ARROWDOWN = 40;
 const KEY_W = 87;
 const KEY_S = 83;
 const keyPressed = [];
-const maxSpeed = 10;
 const maxScore = 5;
 var stopGame = false;
+const ballVelocityX = 5;
+const ballVelocityY = 5;
+const ballRadius = 15;
+
 window.addEventListener('keydown', function (e) {
     keyPressed[e.keyCode] = true;
 })
@@ -22,7 +25,10 @@ function respawnBall(canvas, objects) {
         objects[0].ballX = canvas.width / 2;
         objects[0].ballY = (Math.random() * (canvas.height - 200)) + 100;
     }
-    objects[0].ballVelocityX *= -1;
+    if(objects[0].ballVelocityX < 0)
+        objects[0].ballVelocityX = ballVelocityX;
+    else
+        objects[0].ballVelocityX = -ballVelocityX;
     objects[0].ballVelocityY *= -1;
 }
 
@@ -98,7 +104,7 @@ function initGame() {
 
     if (gameData == null) {
         objects = [
-            new Ball(canvas.width / 2, canvas.height / 2, 5, 5, 15),
+            new Ball(canvas.width / 2, canvas.height / 2, ballVelocityX, ballVelocityY, ballRadius),
             new Paddle(1, 20, 150, "#AC3B61", 30, (canvas.height / 2) - 75, 10),
             new Paddle(2, 20, 150, "#87709C", canvas.width - 50, (canvas.height / 2) - 75 , 10)
         ];
@@ -106,7 +112,7 @@ function initGame() {
         document.getElementById("rightPlayerName").innerHTML = "Chan";
     } else {
         objects = [
-            new Ball(canvas.width / 2, canvas.height / 2, 10, 20, 15),
+            new Ball(canvas.width / 2, canvas.height / 2, ballVelocityX, ballVelocityY, ballRadius),
             new Paddle(1, 20, 150, gameData.P1Color, 30, (canvas.height / 2) - 75, 10),
             new Paddle(2, 20, 150, gameData.P2Color, canvas.width - 50, (canvas.height / 2) - 75, 10)
         ];
