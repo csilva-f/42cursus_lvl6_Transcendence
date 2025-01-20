@@ -10,6 +10,8 @@ ALLOWED_FILTERS_TOURNAMENT = {'tournamentID', 'statusID', 'name', 'winnerID'}
 
 ALLOWED_FILTERS_GAMES = {'statusID', 'gameID', 'user1ID', 'user2ID', 'winnerID', 'tournamentID'}
 
+ALLOWED_FILTERS_UEXT = {'userID'}
+
 def validate_filters_tournament(request):
     extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_TOURNAMENT
     if extra_keys:
@@ -18,6 +20,11 @@ def validate_filters_tournament(request):
     
 def validate_filters_games(request):
     extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_GAMES
+    if extra_keys:
+        raise ValidationError(f"Invalid parameter(s): {', '.join(extra_keys)}")
+
+def validate_filters_uext(request):
+    extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_UEXT
     if extra_keys:
         raise ValidationError(f"Invalid parameter(s): {', '.join(extra_keys)}")
 
@@ -34,7 +41,7 @@ def validate_id(id):
     if id == "null":
         return(-1)
     if not id.isdigit():
-        raise ValidationError("Tournament ID must be a number.")
+        raise ValidationError("ID must be a number.")
     return int(id)
 
 def validate_name(name):
@@ -310,6 +317,45 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 else:
                     tUserExtension.objects.filter(user=game.user1).update(ulevel=models.F('ulevel') + 0.05)
                     tUserExtension.objects.filter(user=game.user2).update(ulevel=models.F('ulevel') + 0.2)
+                
+                if game.tournament and game.phase:
+                    if game.phase.phase in [1, 2]:
+                        next_phase_id = game.phase.phase + 1
+                        next_game = tGames.objects.filter(tournament_id=game.tournament.tournament, phase_id=next_phase_id).filter(
+                            models.Q(user1__isnull=True) | models.Q(user2__isnull=True)
+                            ).first()
+                        if not next_game:
+                            return JsonResponse({"error": "No game found with available spot in the next phase."}, status=400)
+                        if next_game.user1 is None:
+                            next_game.user1 = winner_id
+                        elif next_game.user2 is None:
+                            next_game.user2 = winner_id
+                            next_game.status = tauxStatus.objects.get(statusID=2)
+                        next_game.save()
+                    elif game.phase.phase == 3:
+                        tournament = game.tournament
+                        if tournament:
+                            tournament.status = tauxStatus.objects.get(statusID=3)
+                            tournament.winnerUser = winner_id
+                            tournament.save()
+                        tUserExtension.objects.filter(user=winner_id).update(
+                            tVictories=models.F('tVictories') + 1,
+                            ulevel=models.F('ulevel') + 0.5
+                        )
+                        participating_users = tGames.objects.filter(
+                            tournament=game.tournament
+                        ).values_list('user1', 'user2', flat=False)
+
+                        user_ids = set()
+                        for user1, user2 in participating_users:
+                            if user1 and user1 not in user_ids:
+                                user_ids.add(user1)
+                            if user2 and user2 not in user_ids:
+                                user_ids.add(user2)
+                        user_ids.discard(winner_id)
+                        tUserExtension.objects.filter(user__in=user_ids).update(
+                            ulevel=models.F('ulevel') + 0.1
+                        )
             else:
                 game.user2 = user2_id
                 game.status_id = 2
@@ -390,6 +436,19 @@ def get_phases(request):
     return JsonResponse({'phases': phases_data}, safe=False)
 
 def get_userextensions(request):
+    try:
+        validate_filters_uext(request)
+        user_id = request.GET.get('userID')
+        if user_id == "":
+            return JsonResponse({"error": "Filter can't be empty."}, status=400)
+        uextensions = tUserExtension.objects.all()
+
+        if user_id:
+            user_id = validate_id(user_id)
+            uextensions = uextensions.filter(user=user_id)
+
+    except ValidationError as e:
+        return JsonResponse({"error": str(e)}, status=400)
     userext_data = [
         {
             'id': userext.user,
@@ -401,10 +460,10 @@ def get_userextensions(request):
             'totalGamesPlayed': userext.totalGamesPlayed,
             'tVictories': userext.tVictories
         }
-        for userext in tUserExtension.objects.all()
+        for userext in uextensions
     ]
     
-    return JsonResponse({'users': userext_data}, safe=False)
+    return JsonResponse({'users': userext_data}, safe=False, status=200)
 
 @csrf_exempt
 def post_update_tournament(request): #update statusID acording to user2 and winner vars
@@ -464,7 +523,7 @@ def post_update_tournament(request): #update statusID acording to user2 and winn
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 @csrf_exempt
-def post_join_tournament(request): #user joins an active tournament
+def post_join_tournament(request):  # user joins an active tournament
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -481,25 +540,42 @@ def post_join_tournament(request): #user joins an active tournament
             if not user_id:
                 return JsonResponse({"error": "User is required to join"}, status=400)
             if user_id is not None:
-                if user_id is not tUserExtension.objects.filter(user=user_id).exists():
+                print(user_id)
+                if not tUserExtension.objects.filter(user=user_id).exists():
+                    print("aqui")
                     return JsonResponse({"error": f"User ID {user_id} does not exist in tUserExtension"}, status=404)
-                phase1_users = tGames.objects.filter(tournament=tourn, phase__id=1).values_list('user1', 'user2', flat=True)
-                if user_id in phase1_users:
+                
+                # Corrigir `values_list` para buscar user1 e user2
+                phase1_users = tGames.objects.filter(tournament_id=tourn.tournament, phase_id=1).values_list('user1', 'user2')
+                all_users = set()
+                for user1, user2 in phase1_users:
+                    if user1:
+                        all_users.add(user1)
+                    if user2:
+                        all_users.add(user2)
+                if user_id in all_users:
                     return JsonResponse({"error": f"User ID {user_id} already belongs to the tournament."}, status=400)
             
-            open_game = tGames.objects.filter(tournament=tourn, phase__id=1).filter(models.Q(user1__isnull=True) | models.Q(user2__isnull=True)).first()
+            open_game = tGames.objects.filter(tournament_id=tourn.tournament, phase_id=1).filter(
+                models.Q(user1__isnull=True) | models.Q(user2__isnull=True)
+            ).first()
             if not open_game:
                 return JsonResponse({"error": "The tournament is full and cannot accept new players."}, status=400)
             if open_game.user1 is None:
                 open_game.user1 = user_id
             elif open_game.user2 is None:
                 open_game.user2 = user_id
-                open_game.status = 2
+                open_game.status = tauxStatus.objects.get(statusID=2)
             open_game.save()
 
-            full_games = tGames.objects.filter(ournament=tourn, phase__id=1, user1__isnull=False, user2__isnull=False)
+            full_games = tGames.objects.filter(
+                tournament_id=tourn.tournament,
+                phase_id=1,
+                user1__isnull=False,
+                user2__isnull=False
+            )
             if full_games.exists():
-                tourn.status = 2
+                tourn.status = tauxStatus.objects.get(statusID=2)
                 tourn.save()
             return JsonResponse({"message": f"User ID {user_id} joined to tournament ID {tourn_id} successfully"}, status=201)
         except json.JSONDecodeError:

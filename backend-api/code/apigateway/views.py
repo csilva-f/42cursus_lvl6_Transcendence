@@ -14,12 +14,12 @@ class GetGames(APIView):
         query_params = request.GET.urlencode()
         url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
         try:
-            backend_response = requests.get(url_with_params, headers=request.headers)
+            backend_response = requests.get(url_with_params)
             backend_response.raise_for_status()
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -33,12 +33,12 @@ class GetTournaments(APIView):
         query_params = request.GET.urlencode()
         url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
         try:
-            backend_response = requests.get(url_with_params, headers=request.headers)
+            backend_response = requests.get(url_with_params)
             backend_response.raise_for_status()
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -50,12 +50,12 @@ class PostAddGame(APIView):
         backend_url = 'http://backend:8002/backend/create_game/'
         game_data = request.data.get('game')
         try:
-            backend_response = requests.post(backend_url, json=request.data, headers=request.headers)
+            backend_response = requests.post(backend_url, json=request.data)
             backend_response.raise_for_status()
             game_data = backend_response.json()
             return Response(game_data, status=backend_response.status_code)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -66,12 +66,12 @@ class PostAddTournament(APIView):
     def post(self, request):
         backend_url = settings.BACKEND_CREATE_TOURNAMENT_URL
         try:
-            backend_response = requests.post(backend_url, json=request.data, headers=request.headers)
+            backend_response = requests.post(backend_url, json=request.data)
             backend_response.raise_for_status()
             data = backend_response.json()
             return Response(data, status=backend_response.status_code)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -83,12 +83,12 @@ class PostUpdateGame(APIView):
         backend_url = 'http://backend:8002/backend/update_game/'
         game_data = request.data.get('game')
         try:
-            backend_response = requests.post(backend_url, json=request.data, headers=request.headers)
+            backend_response = requests.post(backend_url, json=request.data)
             backend_response.raise_for_status()
             game_data = backend_response.json()
             return Response(game_data, status=backend_response.status_code)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -100,12 +100,12 @@ class PostAddUserExtension(APIView):
         backend_url = 'http://backend:8002/backend/create_userextension/'
         user_data = request.data.get('user')
         try:
-            backend_response = requests.post(backend_url, json=request.data, headers=request.headers)
+            backend_response = requests.post(backend_url, json=request.data)
             backend_response.raise_for_status()
             user_data = backend_response.json()
             return Response(user_data, status=backend_response.status_code)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -117,12 +117,12 @@ class GetGenders(APIView):
     def get(self, request):
         backend_url = 'http://backend:8002/backend/genders/'
         try:
-            backend_response = requests.get(backend_url, headers=request.headers)
+            backend_response = requests.get(backend_url)
             backend_response.raise_for_status()
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -139,12 +139,12 @@ class GetStatus(APIView):
     def get(self, request):
         backend_url = 'http://backend:8002/backend/status/'
         try:
-            backend_response = requests.get(backend_url, headers=request.headers)
+            backend_response = requests.get(backend_url)
             backend_response.raise_for_status()
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -154,14 +154,16 @@ class GetUserExtensions(APIView):
     permission_classes = [AllowAny]  # Adjust permissions as needed
 
     def get(self, request):
-        backend_url = 'http://backend:8002/backend/get_userextensions/'
+        backend_url = settings.BACKEND_UEXT_URL
+        query_params = request.GET.urlencode()
+        url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
         try:
-            backend_response = requests.get(backend_url, headers=request.headers)
+            backend_response = requests.get(url_with_params)
             backend_response.raise_for_status()
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -173,12 +175,12 @@ class PostUpdateTournament(APIView):
         backend_url = 'http://backend:8002/backend/update_tournament/'
         tourn_data = request.data.get('tournament')
         try:
-            backend_response = requests.post(backend_url, json=request.data, headers=request.headers)
+            backend_response = requests.post(backend_url, json=request.data)
             backend_response.raise_for_status()
             tourn_data = backend_response.json()
             return Response(tourn_data, status=backend_response.status_code)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -190,13 +192,30 @@ class GetPhases(APIView):
     def get(self, request):
         backend_url = 'http://backend:8002/backend/phases/'
         try:
-            backend_response = requests.get(backend_url, headers=request.headers)
+            backend_response = requests.get(backend_url)
             backend_response.raise_for_status()
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
-            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)        
+            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)    
+
+class PostJoinTournament(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        backend_url = 'http://backend:8002/backend/join_tournament/'
+        tourn_data = request.data.get('tournament')
+        try:
+            backend_response = requests.post(backend_url, json=request.data)
+            backend_response.raise_for_status()
+            tourn_data = backend_response.json()
+            return Response(tourn_data, status=backend_response.status_code)
+        except requests.exceptions.HTTPError as http_err:
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except requests.exceptions.RequestException as req_err:
+            return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except ValueError as json_err:
+            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)    
