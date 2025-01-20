@@ -50,7 +50,8 @@ async function postGame() {
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/create-game/`;
   let gameData = {
-    user1ID: parseInt(document.getElementById('passwordInput').value)
+    user1ID: parseInt(document.getElementById('passwordInput').value),
+    islocal: false
   };
   console.log("gameData: ", gameData);
   $.ajax({
@@ -180,6 +181,7 @@ async function postTournament() {
       name: document.getElementById('nameTournamentInput').value,
       beginDate: document.getElementById('beginDateInput').value,
       endDate: document.getElementById('endDateInput').value,
+      createdByUser: 1
   };
   console.log("tournamentData: ", tournamentData);
   $.ajax({
