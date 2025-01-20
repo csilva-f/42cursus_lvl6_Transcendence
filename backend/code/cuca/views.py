@@ -10,6 +10,8 @@ ALLOWED_FILTERS_TOURNAMENT = {'tournamentID', 'statusID', 'name', 'winnerID'}
 
 ALLOWED_FILTERS_GAMES = {'statusID', 'gameID', 'user1ID', 'user2ID', 'winnerID', 'tournamentID'}
 
+ALLOWED_FILTERS_UEXT = {'userID'}
+
 def validate_filters_tournament(request):
     extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_TOURNAMENT
     if extra_keys:
@@ -18,6 +20,11 @@ def validate_filters_tournament(request):
     
 def validate_filters_games(request):
     extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_GAMES
+    if extra_keys:
+        raise ValidationError(f"Invalid parameter(s): {', '.join(extra_keys)}")
+
+def validate_filters_uext(request):
+    extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_UEXT
     if extra_keys:
         raise ValidationError(f"Invalid parameter(s): {', '.join(extra_keys)}")
 
@@ -34,7 +41,7 @@ def validate_id(id):
     if id == "null":
         return(-1)
     if not id.isdigit():
-        raise ValidationError("Tournament ID must be a number.")
+        raise ValidationError("ID must be a number.")
     return int(id)
 
 def validate_name(name):
@@ -429,6 +436,19 @@ def get_phases(request):
     return JsonResponse({'phases': phases_data}, safe=False)
 
 def get_userextensions(request):
+    try:
+        validate_filters_uext(request)
+        user_id = request.GET.get('userID')
+        if user_id == "":
+            return JsonResponse({"error": "Filter can't be empty."}, status=400)
+        uextensions = tUserExtension.objects.all()
+
+        if user_id:
+            user_id = validate_id(user_id)
+            uextensions = uextensions.filter(user=user_id)
+
+    except ValidationError as e:
+        return JsonResponse({"error": str(e)}, status=400)
     userext_data = [
         {
             'id': userext.user,
@@ -440,10 +460,10 @@ def get_userextensions(request):
             'totalGamesPlayed': userext.totalGamesPlayed,
             'tVictories': userext.tVictories
         }
-        for userext in tUserExtension.objects.all()
+        for userext in uextensions
     ]
     
-    return JsonResponse({'users': userext_data}, safe=False)
+    return JsonResponse({'users': userext_data}, safe=False, status=200)
 
 @csrf_exempt
 def post_update_tournament(request): #update statusID acording to user2 and winner vars
