@@ -62,3 +62,13 @@ function getForms() {
         }, false);
     });
 }
+
+async function checkLogin() {
+	var token = localStorage.getItem("jwt");
+	console.log(token);
+	if (token != null)
+		localStorage.removeItem("jwt");
+	else
+		window.history.pushState({}, "", "/login");
+	locationHandler("allcontent");
+  }
