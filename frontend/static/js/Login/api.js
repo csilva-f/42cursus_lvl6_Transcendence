@@ -4,64 +4,56 @@ async function sendLogin() {
   const password = $("#loginPassword").val();
   const apiUrl = "/authapi";
   $.ajax({
-	  type: "POST",
-	  url: `${apiUrl}/auth/`, // Adjust the endpoint as needed
-	  contentType: "application/json",
-	  headers: { Accept: "application/json" },
-	  data: JSON.stringify({ email, password }),
-	  success: function (data) {
-		
-		  jwtToken = data.access; // Store the JWT token
-		  var opt_status = OTP_check_enable(jwtToken);
-		  console.log(opt_status);
-		  console.log("aqui");
-		  if (opt_status==true)
-		  {
-			OTP_send_email(jwtToken)
-			window.location.href = '/mfa';
-		  }	
-		  else{
-			if (jwtToken) {
-				  localStorage.setItem("jwt", jwtToken);
-			}
-			window.location.href = '/';
-		  }
-		  $("#login-message").text("Login successful!");
-		  
-	  },
-	  error: function (xhr) {
-		  const data = xhr.responseJSON;
-		  $("#login-message").text(
-			  data.error || "Login failed.",
-		  );
-	  },
-	});
-};
+    type: "POST",
+    url: `${apiUrl}/auth/`, // Adjust the endpoint as needed
+    contentType: "application/json",
+    headers: { Accept: "application/json" },
+    data: JSON.stringify({ email, password }),
+    success: async function (data) {
+      jwtToken = data.access; // Store the JWT token
+      const opt_status = await OTP_check_enable(jwtToken);
+      console.log(opt_status);
+      console.log("aqui");
+      if (opt_status == true) {
+        OTP_send_email(jwtToken);
+        window.location.href = "/mfa";
+      } else {
+        if (jwtToken) {
+          localStorage.setItem("jwt", jwtToken);
+        }
+        window.location.href = "/";
+      }
+      $("#login-message").text("Login successful!");
+    },
+    error: function (xhr) {
+      const data = xhr.responseJSON;
+      $("#login-message").text(data.error || "Login failed.");
+    },
+  });
+}
 
 async function forgotPwd() {
-	// Forgot Password function
+  // Forgot Password function
   const email = $("#ForgotPwdEmail").val();
   const apiUrl = "/authapi";
   $.ajax({
-	  type: "POST",
-	  url: `${apiUrl}/recover-password/`,
-	  contentType: "application/json",
-	  headers: { Accept: "application/json" },
-	  data: JSON.stringify({ email}),
-	  success: function (data) {
-		element = document.getElementById("forgotPwd-message");
-		element.classList.remove("invalid-feedback");
-		element.textContent = "E-mail send successfully";
-		//element.classList.add("valid-feedback");
-	  },
-	  error: function (xhr) {
-		  const data = xhr.responseJSON;
-		  $("#forgotPwd-message").text(
-			  data.error || "forgotPwd failed.",
-		  );
-	  },
-	});
-};
+    type: "POST",
+    url: `${apiUrl}/recover-password/`,
+    contentType: "application/json",
+    headers: { Accept: "application/json" },
+    data: JSON.stringify({ email }),
+    success: function (data) {
+      element = document.getElementById("forgotPwd-message");
+      element.classList.remove("invalid-feedback");
+      element.textContent = "E-mail send successfully";
+      //element.classList.add("valid-feedback");
+    },
+    error: function (xhr) {
+      const data = xhr.responseJSON;
+      $("#forgotPwd-message").text(data.error || "forgotPwd failed.");
+    },
+  });
+}
 
 async function sendSignup() {
   // Login function
@@ -74,49 +66,48 @@ async function sendSignup() {
   const phone = $("#signupPhone").val();
   const apiUrl = "/authapi";
   $.ajax({
-	type: "POST",
-	url: `${apiUrl}/register/`, // Adjust the endpoint as needed
-	contentType: "application/json",
-	headers: { Accept: "application/json" },
-	data: JSON.stringify({
-	  email,
-	  password,
-	  first_name,
-	  last_name,
-	  phone,
-	}),
-	success: function (data) {
-
-	  $("#signup-message").text("Signup successful! Validate your email");
-	},
-	error: function (xhr) {
-	  const data = xhr.responseJSON;
-	  $("#signup-message").text(data.error || "register failed.");
-	},
+    type: "POST",
+    url: `${apiUrl}/register/`, // Adjust the endpoint as needed
+    contentType: "application/json",
+    headers: { Accept: "application/json" },
+    data: JSON.stringify({
+      email,
+      password,
+      first_name,
+      last_name,
+      phone,
+    }),
+    success: function (data) {
+      $("#signup-message").text("Signup successful! Validate your email");
+    },
+    error: function (xhr) {
+      const data = xhr.responseJSON;
+      $("#signup-message").text(data.error || "register failed.");
+    },
   });
 }
 
 async function oauthLogin() {
   const oauthapiUrl = "/oauthapi";
   $.ajax({
-	type: "POST",
-	url: `${oauthapiUrl}/login/`, // Adjust the endpoint as needed
-	contentType: "application/json",
-	headers: { Accept: "application/json" },
-	data: JSON.stringify({}),
-	success: function (data) {
-	  console.log(data);
-	  url = data.url;
-	  if (url) {
-		console.log(url);
-		window.location.href = url;
-	  }
-	  $("#login-message").text("Login successful!");
-	},
-	error: function (xhr) {
-	  const data = xhr.responseJSON;
-	  $("#login-message").text(data.error || "Login failed.");
-	},
+    type: "POST",
+    url: `${oauthapiUrl}/login/`, // Adjust the endpoint as needed
+    contentType: "application/json",
+    headers: { Accept: "application/json" },
+    data: JSON.stringify({}),
+    success: function (data) {
+      console.log(data);
+      url = data.url;
+      if (url) {
+        console.log(url);
+        window.location.href = url;
+      }
+      $("#login-message").text("Login successful!");
+    },
+    error: function (xhr) {
+      const data = xhr.responseJSON;
+      $("#login-message").text(data.error || "Login failed.");
+    },
   });
 }
 
@@ -125,25 +116,25 @@ async function oauthCallback() {
   const urlParams = new URLSearchParams(window.location.search);
   const code = urlParams.get("code");
   if (code) {
-	console.log("oauthCallback");
-	$.ajax({
-	  type: "GET",
-	  //url: `${oauthapiUrl}/callback`,
-	  url: `${oauthapiUrl}/callback?code=${encodeURIComponent(code)}`,
-	  contentType: "application/json",
-	  headers: { Accept: "application/json" },
-	  //data: JSON.stringify({ code: code }),
-	  success: function (data) {
-		console.log(data);
-		sendOAuthLogin(data);
-		$("#login-message").text("Login successful!");
-		//window.location.href = '/';
-	  },
-	  error: function (xhr) {
-		const data = xhr.responseJSON;
-		$("#login-message").text(data.error || "Login failed.");
-	  },
-	});
+    console.log("oauthCallback");
+    $.ajax({
+      type: "GET",
+      //url: `${oauthapiUrl}/callback`,
+      url: `${oauthapiUrl}/callback?code=${encodeURIComponent(code)}`,
+      contentType: "application/json",
+      headers: { Accept: "application/json" },
+      //data: JSON.stringify({ code: code }),
+      success: function (data) {
+        console.log(data);
+        sendOAuthLogin(data);
+        $("#login-message").text("Login successful!");
+        //window.location.href = '/';
+      },
+      error: function (xhr) {
+        const data = xhr.responseJSON;
+        $("#login-message").text(data.error || "Login failed.");
+      },
+    });
   }
 }
 
@@ -154,72 +145,73 @@ async function sendOAuthLogin(userdata) {
   const last_name = userdata.last_name;
   const phone = userdata.phone;
   $.ajax({
-	type: "POST",
-	url: `${apiUrl}/oauthlogin/`, // Adjust the endpoint as needed
-	contentType: "application/json",
-	headers: { Accept: "application/json" },
-	data: JSON.stringify({ email, first_name, last_name, phone }),
-	success: function (data) {
-	  jwtToken = data.token; // Store the JWT token
-	  redirect = data.redirect;
-	  if (redirect) {
-		window.location.href = redirect;
-	  }
-	  if (jwtToken) {
-		localStorage.setItem("jwt", jwtToken);
-	  }
-	  $("#login-message").text("Login successful!");
-	},
-	error: function (xhr) {
-	  const data = xhr.responseJSON;
-	  $("#login-message").text(data.error || "Login failed.");
-	},
+    type: "POST",
+    url: `${apiUrl}/oauthlogin/`, // Adjust the endpoint as needed
+    contentType: "application/json",
+    headers: { Accept: "application/json" },
+    data: JSON.stringify({ email, first_name, last_name, phone }),
+    success: function (data) {
+      jwtToken = data.token; // Store the JWT token
+      redirect = data.redirect;
+      if (redirect) {
+        window.location.href = redirect;
+      }
+      if (jwtToken) {
+        localStorage.setItem("jwt", jwtToken);
+      }
+      $("#login-message").text("Login successful!");
+    },
+    error: function (xhr) {
+      const data = xhr.responseJSON;
+      $("#login-message").text(data.error || "Login failed.");
+    },
   });
 }
 
 async function OTP_check_enable(jwtToken) {
-	const apiUrl = "/authapi";
-	$.ajax({
-	  type: "POST",
-	  url: `${apiUrl}/otp-status/`, // Adjust the endpoint as needed
-	  contentType: "application/json",
-	  headers: { Accept: "application/json" },
-	  data: JSON.stringify({jwtToken}),
-	  success: function (data) {
-		console.log(data);
-		var status = data.otp_enabled;
-		if (status == 1)
-		{
-		  return await (true);
-		}
-		else{
-			return await (false);
-		}
-	  },
-	  error: function (xhr) {
-		const data = xhr.responseJSON;
-		$("#login-message").text(data.error || "Login failed.");
-	  },
-	});
-  }
+  const apiUrl = "/authapi";
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: `${apiUrl}/otp-status/`, // Adjust the endpoint as needed
+      contentType: "application/json",
+      headers: { Accept: "application/json" },
+      data: JSON.stringify({ jwtToken }),
+      success: function (data) {
+        console.log(data);
+        var status = data.otp_enabled;
+        if (status == 1) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      },
+      error: function (xhr) {
+        const data = xhr.responseJSON;
+        $("#login-message").text(data.error || "Login failed.");
+        reject(data.error || "Login failed.");
+      },
+    });
+  });
+}
 
-  async function OTP_send_email(jwtToken) {
-	const apiUrl = "/authapi";
-	$.ajax({
-	  type: "POST",
-	  url: `${apiUrl}/otp-send/`, // Adjust the endpoint as needed
-	  contentType: "application/json",
-	  headers: { Accept: "application/json" },
-	  data: JSON.stringify({jwtToken}),
-	  success: function (data) {
-		console.log("sucess");
-	  },
-	  error: function (xhr) {
-		const data = xhr.responseJSON;
-		$("#login-message").text(data.error || "Login failed.");
-	  },
-	});
-  }
+async function OTP_send_email(jwtToken) {
+  const apiUrl = "/authapi";
+  $.ajax({
+    type: "POST",
+    url: `${apiUrl}/otp-send/`, // Adjust the endpoint as needed
+    contentType: "application/json",
+    headers: { Accept: "application/json" },
+    data: JSON.stringify({ jwtToken }),
+    success: function (data) {
+      console.log("sucess");
+    },
+    error: function (xhr) {
+      const data = xhr.responseJSON;
+      $("#login-message").text(data.error || "Login failed.");
+    },
+  });
+}
 
   function handleOTPInput(field) {
 	const currentId = parseInt(field.id.replace('otp', ''));
