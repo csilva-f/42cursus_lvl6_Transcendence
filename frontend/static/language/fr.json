@@ -41,8 +41,8 @@
     "global": "Global FR",
     "friends": "Friends FR",
     "matchHistory": "Match History FR",
-	"forgotPassword": "Recover password FR",
-	"mfa": "Multi-factor authentication FR",
-	"resendCode": "Resend Code"
-
+	"forgotPassword": "",
+	"mfa": "",
+	"resendCode": "",
+	"resetPassword": ""
 }

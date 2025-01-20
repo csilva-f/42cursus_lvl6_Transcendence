@@ -41,7 +41,8 @@
     "global": "Global",
     "friends": "Amigos",
     "matchHistory": "Histórico de Partidas",
-	"forgotPassword": "Recuperar palavra passe",
-	"mfa": "Autenticação Multifator",
-	"resendCode": "Reenviar código"
+	"forgotPassword": "",
+	"mfa": "",
+	"resendCode": "",
+	"resetPassword": ""
 }

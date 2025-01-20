@@ -54,6 +54,8 @@ function getForms() {
                     forgotPwd();
 				// else if (form.id == "resendCode-form")
 				// 	sendCode();
+				// else if (form.id == "resetPwd-form")
+				// 	resetPwd();
                 event.preventDefault();
             }
             form.classList.add('was-validated');
