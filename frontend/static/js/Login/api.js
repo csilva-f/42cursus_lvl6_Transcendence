@@ -213,35 +213,41 @@ async function OTP_send_email(jwtToken) {
   });
 }
 
-  function handleOTPInput(field) {
-	const currentId = parseInt(field.id.replace('otp', ''));
-	const nextField = document.getElementById(`otp${currentId + 1}`);
-	const prevField = document.getElementById(`otp${currentId - 1}`);
+function handleOTPInput(field) {
+  const currentId = parseInt(field.id.replace("otp", ""));
+  const nextField = document.getElementById(`otp${currentId + 1}`);
+  const prevField = document.getElementById(`otp${currentId - 1}`);
 
-	if (field.value && nextField)
-		nextField.focus();
+  if (field.value && nextField) nextField.focus();
 
-	field.addEventListener('keydown', function (e) {
-		if (e.key === 'Backspace' && !field.value && prevField)
-			prevField.focus();
-	});
+  field.addEventListener("keydown", function (e) {
+    if (e.key === "Backspace" && !field.value && prevField) prevField.focus();
+  });
 
-	field.addEventListener('paste', function (e) {
-		e.preventDefault();
-		const pasteData = e.clipboardData.getData('text').split('');
-		let currentId = parseInt(field.id.replace('otp', ''));
+  field.addEventListener("paste", function (e) {
+    e.preventDefault();
+    const pasteData = e.clipboardData.getData("text").split("");
+    let currentId = parseInt(field.id.replace("otp", ""));
 
-		pasteData.forEach((char) => {
-			const targetField = document.getElementById(`otp${currentId}`);
-			if (targetField) {
-				targetField.value = char;
-				currentId++;
-			}
-		});
+    pasteData.forEach((char) => {
+      const targetField = document.getElementById(`otp${currentId}`);
+      if (targetField) {
+        targetField.value = char;
+        currentId++;
+      }
+    });
 
-		const lastField = document.getElementById(`otp${currentId - 1}`);
-		if (lastField)
-			lastField.focus();
-	});
+    const lastField = document.getElementById(`otp${currentId - 1}`);
+    if (lastField) lastField.focus();
+  });
 }
 
+async function validateEmail() {
+  const oauthapiUrl = "/authapi";
+  const urlParams = new URLSearchParams(window.location.search);
+  const uid = urlParams.get("uid");
+  const token = urlParams.get("token");
+  console.log("teste");
+  console.log(uid);
+  console.log(token);
+}
