@@ -14,6 +14,7 @@ from .models import CucaUser, PasswordResetToken
 from rest_framework.permissions import IsAuthenticated,AllowAny
 import requests
 
+
 class UserCreate(generics.CreateAPIView):
     queryset = CucaUser.objects.all()
     serializer_class = UserSerializer
@@ -48,11 +49,12 @@ class UserCreate(generics.CreateAPIView):
 
 class ValidateEmailView(generics.GenericAPIView):
     permission_classes = [AllowAny]
-    def get(self, request, uidb64, token):
+    def get(self, request):
         try:
-            uid = force_str(urlsafe_base64_decode(uidb64))
+            data=request.data
+            uid = force_str(urlsafe_base64_decode(data['uid']))
             user = CucaUser.objects.get(pk=uid)
-            if default_token_generator.check_token(user, token):
+            if default_token_generator.check_token(user, data['token']):
                 user.is_active = True  # Activate the user
                 user.save()
                 return Response({'message': 'Email validated successfully!'}, status=status.HTTP_200_OK)

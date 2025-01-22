@@ -247,7 +247,19 @@ async function validateEmail() {
   const urlParams = new URLSearchParams(window.location.search);
   const uid = urlParams.get("uid");
   const token = urlParams.get("token");
-  console.log("teste");
-  console.log(uid);
-  console.log(token);
+  const apiUrl = "/authapi";
+  $.ajax({
+    type: "POST",
+    url: `${apiUrl}/validate-email/`, // Adjust the endpoint as needed
+    contentType: "application/json",
+    headers: { Accept: "application/json" },
+    data: JSON.stringify({ uid, token }),
+    success: function (data) {
+      console.log("email validated successfully");
+    },
+    error: function (xhr) {
+      const data = xhr.responseJSON;
+      console.log("email validated successfully");
+    },
+  });
 }

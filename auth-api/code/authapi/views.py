@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.decorators import action
 
+
 #PostRegisterViewSet - Register a new user
 # Input Parameters:
     # email: string
@@ -178,9 +179,8 @@ class VerifyOTPViewSet(viewsets.ViewSet):
 # No Input Parameters
 class VerifyEmailViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
-    @action(detail=False, methods=['get'], url_path='validate-email/(?P<uidb64>[^/.]+)/(?P<token>[^/.]+)')
-    def validate_email(self, request, uidb64, token):
-        backend_url = f'http://auth:8000/register/validate-email/{uidb64}/{token}/'
+    def create(self, request):
+        backend_url = f'http://auth:8000/register/validate-email/'
         try:
             backend_response = requests.get(backend_url, json=request.data)
             backend_response.raise_for_status()
