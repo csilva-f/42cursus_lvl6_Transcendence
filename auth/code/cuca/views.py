@@ -84,8 +84,8 @@ class RecoverPasswordAPIView(generics.GenericAPIView):
             token=token,
             expires_at=expires_at
         )
-        reset_url  = request.headers['Origin'] + '/authapi/register/reset-password/' + uid + '/' + token
-
+        reset_url  = request.headers['Origin'] + '/resetPassword?uid=' + uid + '&token=' + token
+        print(reset_url)
         response = requests.post('http://email:8000/send_email/', json={
             'subject': 'Password Reset Request',
             'message': f'Please click the following link to reset your password: {reset_url}',
@@ -111,15 +111,15 @@ class RecoverPasswordAPIView(generics.GenericAPIView):
 class ResetPasswordAPIView(APIView):
     serializer_class = ResetPasswordSerializer
 
-    def post(self, request, uidb64, token):
+    def get(self, request):
         try:
-            user_id = force_str(urlsafe_base64_decode(uidb64))
-            print(user_id)
+            data=request.data
+            user_id = force_str(urlsafe_base64_decode(data['uid']))
             user = CucaUser.objects.get(id=user_id)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             return Response({'error': 'Invalid user ID or token.'}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            password_reset_token = PasswordResetToken.objects.get(user=user, token=token)
+            password_reset_token = PasswordResetToken.objects.get(user=user, token=data['token'])
             if password_reset_token.expires_at < timezone.now():
                 return Response({'error': 'Password reset token has expired.'}, status=status.HTTP_400_BAD_REQUEST)
         except PasswordResetToken.DoesNotExist:

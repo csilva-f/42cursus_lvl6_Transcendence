@@ -180,7 +180,7 @@ class VerifyOTPViewSet(viewsets.ViewSet):
 class VerifyEmailViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
     def create(self, request):
-        backend_url = f'http://auth:8000/register/validate-email/'
+        backend_url = 'http://auth:8000/register/validate-email/'
         try:
             backend_response = requests.get(backend_url, json=request.data)
             backend_response.raise_for_status()
@@ -195,9 +195,8 @@ class VerifyEmailViewSet(viewsets.ViewSet):
 
 class ResetPasswordViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
-    @action(detail=False, methods=['get'], url_path='reset-password/(?P<uidb64>[^/.]+)/(?P<token>[^/.]+)')
-    def reset_password(self, request, uidb64, token):
-        backend_url = f'http://auth:8000/reset-password/reset-password/{uidb64}/{token}/'
+    def create(self, request):
+        backend_url = 'http://auth:8000/register/reset-password/'
         try:
             backend_response = requests.get(backend_url, json=request.data)
             backend_response.raise_for_status()

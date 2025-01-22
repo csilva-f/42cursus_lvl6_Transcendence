@@ -243,7 +243,6 @@ function handleOTPInput(field) {
 }
 
 async function validateEmail() {
-  const oauthapiUrl = "/authapi";
   const urlParams = new URLSearchParams(window.location.search);
   const uid = urlParams.get("uid");
   const token = urlParams.get("token");
@@ -259,7 +258,31 @@ async function validateEmail() {
     },
     error: function (xhr) {
       const data = xhr.responseJSON;
-      console.log("email validated successfully");
+      console.log("email failed validation");
+    },
+  });
+}
+
+async function resetPassword() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const uid = urlParams.get("uid");
+  const token = urlParams.get("token");
+  const password = $("#newPassword").val();
+  const confirm_password = $("#confirmPassword").val();
+  const apiUrl = "/authapi";
+  $.ajax({
+    type: "POST",
+    url: `${apiUrl}/reset-password/`, // Adjust the endpoint as needed
+    contentType: "application/json",
+    headers: { Accept: "application/json" },
+    data: JSON.stringify({ uid, token, password, confirm_password }),
+    success: function (data) {
+      //renderizar aqui o form de reset password
+      console.log("Token validated successfully");
+    },
+    error: function (xhr) {
+      const data = xhr.responseJSON;
+      console.log("token failed validation");
     },
   });
 }

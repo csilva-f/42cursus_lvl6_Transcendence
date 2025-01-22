@@ -134,6 +134,7 @@ async function changeToBig(location) {
     getForms();
   } else if (location == "/resetPassword") {
     headerElement.setAttribute("data-i18n", "resetPassword");
+    console.log("resetPassword");
     getForms();
   } else if (location == "/pong") {
     headerElement.setAttribute("data-i18n", "pong");
