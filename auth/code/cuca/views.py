@@ -142,3 +142,21 @@ class ChangePasswordAPIView(APIView):
         user.set_password(serializer.validated_data['new_password'])
         user.save()
         return Response({'message': 'Password changed successfully.'}, status=status.HTTP_200_OK)
+
+class ValidateTokenView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        #token = request.data["jwtToken"]
+        token = request.headers['Authorization'].split(' ')[1]
+        print(token)
+        try:
+            # Decode the token (use the same secret key used for signing)
+            payload = jwt.decode(token,'django-insecure-@www2r)nc-li_empd8(e()gc592l7wau$zn%y#2*ej)u^xb*(0',algorithms=['HS256'])
+            print(payload)
+            user_id = payload['user_id']  # Adjust based on your token payload
+            return Response({'user': user}, status=status.HTTP_200_OK)
+        except jwt.ExpiredSignatureError:
+            return Response({'error': 'Token has expired'}, status=status.HTTP_401_UNAUTHORIZED)
+        except jwt.InvalidTokenError:
+            return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)

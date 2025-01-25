@@ -2,7 +2,7 @@
 from django.urls import path, include
 from rest_framework import routers
 from .views import PostRegisterViewSet,PostAuthViewSet, PostRefreshViewSet, EnableOTPViewSet, SendOTPViewSet, VerifyOTPViewSet,VerifyEmailViewSet, \
-    RecoverPasswordViewSet, ResetPasswordViewSet, GetOTPStatusViewSet
+    RecoverPasswordViewSet, ResetPasswordViewSet, GetOTPStatusViewSet,ValidateTokenViewSet
 
 router = routers.DefaultRouter()
 router.register(r'register', PostRegisterViewSet, basename='Register')
@@ -15,6 +15,7 @@ router.register(r'otp-status', GetOTPStatusViewSet, basename='otp-status')
 router.register(r'validate-email', VerifyEmailViewSet, basename='verify_email')
 router.register(r'recover-password', RecoverPasswordViewSet, basename='recover-password')
 router.register(r'reset-password', ResetPasswordViewSet, basename='reset-password')
+router.register(r'validate-token', ValidateTokenViewSet, basename='validate-token')
 
 
 urlpatterns = [
