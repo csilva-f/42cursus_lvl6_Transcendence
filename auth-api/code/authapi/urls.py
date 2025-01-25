@@ -15,9 +15,10 @@ router.register(r'otp-status', GetOTPStatusViewSet, basename='otp-status')
 router.register(r'validate-email', VerifyEmailViewSet, basename='verify_email')
 router.register(r'recover-password', RecoverPasswordViewSet, basename='recover-password')
 router.register(r'reset-password', ResetPasswordViewSet, basename='reset-password')
-router.register(r'validate-token', ValidateTokenViewSet, basename='validate-token')
+#router.register(r'validate-token', ValidateTokenViewSet, basename='validate-token')
 
 
 urlpatterns = [
     path('', include(router.urls)),
+     path('validate-token/', ValidateTokenViewSet.as_view({'get': 'validate_token'}), name='validate-token'),
 ]

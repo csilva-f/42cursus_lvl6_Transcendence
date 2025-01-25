@@ -235,7 +235,8 @@ class RecoverPasswordViewSet(viewsets.ViewSet):
 
 class ValidateTokenViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
-    def create(self, request):
+    @action(detail=False, methods=['get'], url_path='validate-token')
+    def validate_token(self, request):
         backend_url = 'http://auth:8000/register/validate-token/'
         try:
             backend_response = requests.get(backend_url, json=request.data, headers=request.headers)

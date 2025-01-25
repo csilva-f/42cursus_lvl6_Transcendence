@@ -13,6 +13,7 @@ from django.contrib.auth.models import User
 from .models import CucaUser, PasswordResetToken
 from rest_framework.permissions import IsAuthenticated,AllowAny
 import requests
+import jwt
 
 
 class UserCreate(generics.CreateAPIView):
@@ -147,9 +148,8 @@ class ValidateTokenView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        #token = request.data["jwtToken"]
+        print
         token = request.headers['Authorization'].split(' ')[1]
-        print(token)
         try:
             # Decode the token (use the same secret key used for signing)
             payload = jwt.decode(token,'django-insecure-@www2r)nc-li_empd8(e()gc592l7wau$zn%y#2*ej)u^xb*(0',algorithms=['HS256'])

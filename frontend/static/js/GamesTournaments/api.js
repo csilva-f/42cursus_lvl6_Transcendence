@@ -21,7 +21,10 @@ async function fetchGames(statusID) {
         type: "GET",
         url: APIurl,
         contentType: "application/json",
-        headers: { Accept: "application/json" },
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`
+        },
         success: function (res) {
           const divElement = document.getElementById("gamesContent");
           divElement.innerHTML = "";
