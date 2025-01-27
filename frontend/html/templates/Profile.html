@@ -1,12 +1,12 @@
 <div class="h-100">
 	<div class="container-fluid h-100">
-		<div class="row h-100 gap-3">
+	<div class="row h-100 gap-5">
 
-		<div class="h-100 col-sm-12 shadow rounded-4" style="background-color: var(--cardBg);">
-			<div class="row h-100">
+			<div class="h-100 col-sm-12 shadow rounded-4" style="background-color: var(--cardBg);">
+			  <div class="row h-100">
 			  
 				<!-- user profile -->
-				<div class="col-lg-3 col-md-5 col-sm-12 shadow rounded-4 ms-5" style="background-color: #EED7DF; z-index: 2;">
+				<div class="col-lg-4 col-md-6 col-sm-12 shadow rounded-4 ms-4" style="background-color: #EED7DF; z-index: 2; height: 600px; width: 400px; margin-top: 18px;">
 				  <div class="p-4 position-relative">
 					<div class="text-center mb-4">
 					  <label for="avatar" class="d-block">
@@ -18,20 +18,25 @@
 					  </label>
 					  <input type="file" id="avatar" class="d-none" accept="image/*">
 					</div>
+					
 					<div id="profileData" class="mt-4"> 
 					  <p class="h5 m-0 ms-3 fw-bold text-center mb-3" id="fullNameText">Mya e Lili</p>
+	  
 					  <div class="progress mt-3" role="progressbar" aria-label="Basic example"
 						   aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: 10px;">
 						<div class="progress-bar" style="width: 25%; background-color: #AC3B61;"></div>
 					  </div>
+	  
 					  <ul style="display: flex; justify-content: space-between; font-weight: bold; list-style-type: none; padding: 0; margin: 0; color: black;">
 						<li>Lvl0</li>
 						<li>Lvl1</li>
 					  </ul>
+					  
 					  <div class="p-3 mt-4" style="background-color: #d59db0; border-radius: 8px;">
 						<p class="text-start"><strong>Phone number:</strong> <span id="phoneNumberText">+351 123 456 789</span></p>
 						<p class="text-start"><strong>Birthday:</strong> <span id="birthdayText">2015-02-12</span></p>
 						<p class="text-start"><strong>Gender:</strong> <span id="genderText">Female</span></p>
+	  
 						<div class="d-flex justify-content-end mt-3">
 						  <button id="editButton" class="btn" style="background-color: #AC3B61; color: white;" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit</button>
 						</div>
@@ -41,12 +46,13 @@
 				</div>
 	  
 				<!-- game statistics -->
-				<div class="col-lg-7 col-md-5 col-sm-12 shadow rounded-4 ms-5" style="background-color: #EED7DF; z-index: 2;">
+				<div class="col-lg-7 col-md-7 col-sm-12 shadow rounded-4 ms-4" style="background-color: #EED7DF; z-index: 2; height: 600px; width: 870px; margin-top: 18px;">
 				  <div class="p-4">
 					<p class="h1" style="font-weight: bold;">Game statistics</p>
 					<p class="h4">test</p>  
 				  </div>
 				</div>
+	  
 			  </div>
 			</div>
 		  </div>
@@ -129,4 +135,5 @@
 		}
 	  </style>
 	  
-	  <!-- get_userextensions(request) -->
+
+ <!-- get_userextensions(request) -->
