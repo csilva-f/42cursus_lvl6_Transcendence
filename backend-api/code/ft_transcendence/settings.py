@@ -38,6 +38,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -75,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
+ASGI_APPLICATION = 'ft_transcendence.asgi.application'
 
 
 # Database
@@ -151,4 +152,13 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
         'rest_framework.renderers.JSONRenderer',
     ]
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],  # O Redis deve estar configurado no Docker
+        },
+    },
 }
