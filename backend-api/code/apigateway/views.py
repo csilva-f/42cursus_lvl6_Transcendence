@@ -218,4 +218,21 @@ class PostJoinTournament(APIView):
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
-            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)    
+            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class PostUpdateUserExtension(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        backend_url = 'http://backend:8002/backend/update_userextension/'
+        uext_data = request.data.get('userextension')
+        try:
+            backend_response = requests.post(backend_url, json=request.data)
+            backend_response.raise_for_status()
+            uext_data = backend_response.json()
+            return Response(uext_data, status=backend_response.status_code)
+        except requests.exceptions.HTTPError as http_err:
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except requests.exceptions.RequestException as req_err:
+            return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except ValueError as json_err:
+            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

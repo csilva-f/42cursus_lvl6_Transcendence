@@ -374,24 +374,32 @@ def post_create_userextension(request):
             data = json.loads(request.body)
             
             user_id = data.get('id')
+            user_nick = data.get('nickname')
             user_birthdate = data.get('birthdate')
             gender_id = data.get('genderid')
             user_avatar = data.get('avatar')
+            user_bio = data.get('bio')
 
             if not user_id or not user_birthdate or not gender_id:
-                return JsonResponse({"error": "Missing required fields: id, birthdate, genderid"}, status=400)
+                return JsonResponse({"error": "Missing at least one of the required fields: id, birthdate, genderid"}, status=400)
             if tUserExtension.objects.filter(user=user_id).exists():
                 return JsonResponse({"error": f"User ID {user_id} already exists"}, status=400)
             try:
                 gender = tauxGender.objects.get(gender=gender_id)
             except tauxGender.DoesNotExist:
                 return JsonResponse({"error": f"Gender with id {gender_id} does not exist"}, status=404)
-
+            if user_nick and len(user_nick) > 20:
+                return JsonResponse({"error": "Nickname cannot exceed 20 characters"}, status=400)
+            if user_nick and tUserExtension.objects.filter(nick=user_nick).exists():
+                return JsonResponse({"error": f"Nickname '{user_nick}' is already in use"}, status=400)
+            
             userext = tUserExtension.objects.create(
                 user=user_id,
+                nick=user_nick,
                 birthdate=user_birthdate,
                 gender=gender,
-                avatar=user_avatar
+                avatar=user_avatar,
+                bio=user_bio
             )
 
             return JsonResponse({"message": "User extension created successfully", "user_id": userext.user}, status=201)
@@ -452,10 +460,12 @@ def get_userextensions(request):
     userext_data = [
         {
             'id': userext.user,
+            'nick': userext.nick,
             'birthdate': userext.birthdate.strftime("%Y-%m-%d"),
             'gender': userext.gender.label,
             'level': userext.ulevel,
             'avatar': userext.avatar,
+            'bio': userext.bio,
             'victories': userext.victories,
             'totalGamesPlayed': userext.totalGamesPlayed,
             'tVictories': userext.tVictories
@@ -578,6 +588,58 @@ def post_join_tournament(request):  # user joins an active tournament
                 tourn.status = tauxStatus.objects.get(statusID=2)
                 tourn.save()
             return JsonResponse({"message": f"User ID {user_id} joined to tournament ID {tourn_id} successfully"}, status=201)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON data"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    return JsonResponse({"error": "Invalid request method"}, status=405)
+
+@csrf_exempt
+def post_update_userextension(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            uext_id = data.get('userID')  # Certifica-te de usar o mesmo nome de campo
+            if not uext_id:
+                return JsonResponse({"error": "User ID is required for update"}, status=400)
+            try:
+                uext = tUserExtension.objects.get(user=uext_id)
+            except tUserExtension.DoesNotExist:
+                return JsonResponse({"error": "User not found"}, status=404)
+            birthdate = data.get('birthdate')
+            gender_id = data.get('genderid')
+            avatar = data.get('avatar')
+            bio = data.get('bio')
+            unick = data.get('nickname')
+            if gender_id:
+                try:
+                    gender = tauxGender.objects.get(id=gender_id)
+                    uext.gender = gender
+                except tauxGender.DoesNotExist:
+                    return JsonResponse({"error": f"Gender with id {gender_id} does not exist"}, status=404)
+            if unick:
+                if len(unick) > 20:
+                    return JsonResponse({"error": "Nickname cannot exceed 20 characters"}, status=400)
+                if tUserExtension.objects.filter(nick=unick).exists():
+                    return JsonResponse({"error": f"Nickname '{unick}' is already in use"}, status=400)
+            if not any([
+                birthdate and birthdate != uext.birthdate,
+                gender_id and gender_id != (uext.gender.id if uext.gender else None),
+                bio and bio != uext.bio,
+                avatar and avatar != uext.avatar,
+                unick and unick != uext.nick
+            ]):
+                return JsonResponse({"error": "No changes to the user information were performed"}, status=400)
+            if birthdate:
+                uext.birthdate = birthdate
+            if avatar:
+                uext.avatar = avatar
+            if bio:
+                uext.bio = bio
+            if unick:
+                uext.nick = unick
+            uext.save()
+            return JsonResponse({"message": "User information updated successfully", "user_id": uext.user}, status=200)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
         except Exception as e:
