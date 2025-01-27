@@ -67,14 +67,18 @@ async function checkLogin() {
 	var token = localStorage.getItem("jwt");
 	const loginButton = document.getElementById('loginButton');
 	if (token != null) {
-		loginButton.classList.remove("fa-right-from-bracket");
-		loginButton.classList.add("fa-right-to-bracket");
-		localStorage.removeItem("jwt");
+        const   confirmLogout = window.confirm("Are you sure?");
+        if (confirmLogout) {
+            loginButton.classList.remove("fa-right-from-bracket");
+            loginButton.classList.add("fa-right-to-bracket");
+            localStorage.removeItem("jwt");
+        }
 	}
 	else {
+        console.log("entra ola");
 		window.history.pushState({}, "", "/login");
 		loginButton.classList.remove("fa-right-to-bracket");
 		loginButton.classList.add("fa-right-from-bracket");
+        locationHandler("allcontent");
 	}
-	locationHandler("allcontent");
   }

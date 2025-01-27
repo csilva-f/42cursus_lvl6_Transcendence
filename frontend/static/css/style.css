@@ -134,6 +134,7 @@ html {
 	height: 100%;
 }
 
+ /* LOgin page */
 #loginSignUpTab .nav-item .nav-link.active {
 	background-color: #AC3B61 !important;
 	border-color: #AC3B61 !important;

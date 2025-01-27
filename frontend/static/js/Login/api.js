@@ -22,9 +22,9 @@ async function sendLogin() {
 		  localStorage.setItem("jwt", jwtToken);
 		}
 		window.location.href = "/";
-		// const loginButton = document.getElementById('loginButton');
-		// loginButton.classList.remove("fa-right-from-bracket");
-		// loginButton.classList.add("fa-right-to-bracket");
+		const loginButton = document.getElementById('loginButton');
+		loginButton.classList.remove("fa-right-from-bracket");
+		loginButton.classList.add("fa-right-to-bracket");
 	  }
 	  $("#login-message").text("Login successful!");
 	},
