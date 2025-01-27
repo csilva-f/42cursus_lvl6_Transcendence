@@ -67,7 +67,7 @@ async function checkLogin() {
 	var token = localStorage.getItem("jwt");
 	const loginButton = document.getElementById('loginButton');
 	if (token != null) {
-        const   confirmLogout = window.confirm("Are you sure?");
+        const   confirmLogout = window.confirm("Are you sure you want to log out?");
         if (confirmLogout) {
             loginButton.classList.remove("fa-right-from-bracket");
             loginButton.classList.add("fa-right-to-bracket");
@@ -75,10 +75,10 @@ async function checkLogin() {
         }
 	}
 	else {
-        console.log("entra ola");
 		window.history.pushState({}, "", "/login");
 		loginButton.classList.remove("fa-right-to-bracket");
 		loginButton.classList.add("fa-right-from-bracket");
         locationHandler("allcontent");
 	}
   }
+
