@@ -87,17 +87,6 @@ function resetModal() {
     localInputs.forEach(input => {
         input.value = '';
     });
-    const remoteInputs = document.querySelectorAll('#remoteForm input[type="text"]');
-    remoteInputs.forEach(input => {
-        input.value = '';
-    });
-
-    const checkbox = document.getElementById('checkboxPassword');
-    checkbox.checked = false;
-
-    const passwordInput = document.getElementById('passwordInput');
-    passwordInput.disabled = true;
-    passwordInput.required = false;
 }
 
 function GamesTournamentsMatches(elementID) {

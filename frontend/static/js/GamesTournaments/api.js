@@ -50,7 +50,7 @@ async function postGame() {
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/create-game/`;
   let gameData = {
-    user1ID: parseInt(document.getElementById('passwordInput').value),
+    user1ID: 1,
     islocal: false
   };
   console.log("gameData: ", gameData);

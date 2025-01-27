@@ -13,8 +13,9 @@
     --SecondaryIcon: white;
     --SecondaryText: white;
     /*? Sidebar Icons */
+    --SidebarBg: #AC3B61;
     --SidebarActiveBg: white;
-    --SidebarActiveIcon: #d17a97;
+    --SidebarActiveIcon: #AC3B61;
     --SidebarInactiveBg: transparent;
     --SidebarInactiveIcon: white;
 }

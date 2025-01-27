@@ -21,22 +21,22 @@ async function fetchUsers() {
         for (let i = 0; i < 8; i++) {
             const newCard = document.createElement("div");
             newCard.innerHTML = data;
-            insertUserInfo(newCard, users[i], usersImg[i]);
+            insertUserInfo2(newCard, users[i], usersImg[i]);
             divElement.appendChild(newCard);
         }
-        //const APIurl = `/api/get-games/?statusID=${statusID}`
-        /*$.ajax({
+        const APIurl = `/api/get-userextensions/`
+        $.ajax({
           type: "GET",
           url: APIurl,
           contentType: "application/json",
           headers: { Accept: "application/json" },
           success: function (res) {
-            const divElement = document.getElementById("gamesContent");
-            divElement.innerHTML = "";
-            res.games.forEach((element) => {
+            //const divElement = document.getElementById("usersContent");
+            //divElement.innerHTML = "";
+            res.users.forEach((element) => {
               const newCard = document.createElement("div");
               newCard.innerHTML = data;
-              insertInfo(newCard, element, statusID);
+              insertUserInfo(newCard, element);
               divElement.appendChild(newCard);
             });
             updateContent(langData);
@@ -45,7 +45,7 @@ async function fetchUsers() {
             console.error("Error Thrown:", error);
             showErrorToast(APIurl, error, langData);
           },
-        });*/
+        });
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);

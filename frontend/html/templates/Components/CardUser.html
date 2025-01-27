@@ -1,7 +1,7 @@
 <div class="my-2 rounded-4 fadeIn" id="gameCard">
     <div class="container-fluid rounded-4 d-flex"
         style="max-height: 6rem; min-height: 6rem; background-color: #EEDCDF;">
-        <div class="d-flex" style="width: 30rem; min-width: 30rem; height: 6rem;">
+        <div class="d-flex" style="width: 25rem; min-width: 25rem; height: 6rem;">
             <div class="justify-content-center align-content-center" style="width: 5rem;">
                 <img src="/static/img/pfp1.jpeg" style="object-fit: cover"
                     class="img-fluid w-100 rounded-circle shadow ms-2" id="userImg" />
@@ -9,9 +9,31 @@
             <div class="w-75 h-100 d-flex flex-column justify-content-center ms-4">
                 <div class="d-flex align-items-center">
                     <p class="h4 mb-0">Lvl</p>
-                    <p class="h5 mb-0 ms-1">1000</p>
+                    <p class="h5 mb-0 ms-1" id="userLvl"></p>
                 </div>
-                <p class="h4 mb-0"><strong id="userNick"></strong></p>
+                <div class="d-flex align-items-center">
+                    <p class="h4 mb-0"><strong id="userNick"></strong></p>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center align-items-center ms-4"
+        style="width: 2rem; min-width: 2rem; height: 6rem;">
+            <p class="h1 mb-0">|</p>
+        </div>
+        <div class="d-flex" style="width: 10rem; min-width: 10rem; height: 6rem;">
+            <div class="w-100 h-100 d-flex flex-column justify-content-center ms-2">
+                <div class="d-flex align-items-center">
+                    <i class="fa-solid fa-medal fa-lg"></i>
+                    <div class="ms-2">
+                        <p class="h4 mb-0" style="width: 40px; text-align: left;" id="userGamesWon"></p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="fa-solid fa-trophy fa-lg"></i>
+                    <div class="ms-1">
+                        <p class="ms-1 h4 mb-0" style="width: 40px; text-align: left;" id="userTournamentsWon"></p>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="container-fluid">
