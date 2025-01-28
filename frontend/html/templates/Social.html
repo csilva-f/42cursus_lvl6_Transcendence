@@ -1,7 +1,7 @@
 <div class="h-100">
   <div class="container-fluid h-100 d-flex flex-column">
     <div class="row" style="min-height: 5rem">
-      <div class="col-sm-12 shadow rounded-4 d-flex align-items-center w-100" style="background-color: var(--cardBg);">
+      <div class="col-sm-12 shadow rounded-4 d-flex align-items-center w-100" style="background-color: var(--layoutBg);">
         <nav class="container-fluid">
           <div class="row">
             <div class="col-lg-10 col-md-10 col-10">
@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="row pt-3" style="height: calc(100% - 5rem);">
-      <div class="col-sm-12 shadow rounded-4 h-100" style="background-color: var(--cardBg);">
+      <div class="col-sm-12 shadow rounded-4 h-100" style="background-color: var(--layoutBg);">
         <div class="container-fluid h-100 d-flex flex-column">
           <div class="row" style="height: 5rem">
             <div class="col-sm-12 d-flex align-items-center w-100"
@@ -35,7 +35,7 @@
                   <div class="col-lg-10 col-md-10 col-10">
                     <div class="d-flex gap-2 h-100">
                       <form class="d-flex" role="search" style="width: 31rem;">
-                        <input class="form-control rounded-3" type="search" placeholder="Search" aria-label="Search">
+                        <input class="form-control rounded-3" id="userSearchInput" onkeyup="searchUser()" type="search" placeholder="Search for Users" aria-label="Search">
                         <!--
                           <button class="btn btn-outline-success" type="submit">Search</button>
                         -->

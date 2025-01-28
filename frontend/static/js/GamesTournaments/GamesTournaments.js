@@ -79,12 +79,16 @@ function activateGameForm(typeForm) {
 
 function resetModal() {
     document.getElementById('localForm').classList.add('d-none');
-    document.getElementById('remoteForm').classList.add('d-none');
+    //document.getElementById('remoteForm').classList.add('d-none');
     document.getElementById('selectForm').classList.remove('d-none');
     document.getElementById('goBackLi').classList.add('d-none');
 
     const localInputs = document.querySelectorAll('#localForm input[type="text"]');
     localInputs.forEach(input => {
+        input.value = '';
+    });
+    const remoteInputs = document.querySelectorAll('#remoteForm input[type="text"]');
+    remoteInputs.forEach(input => {
         input.value = '';
     });
 }
@@ -94,10 +98,12 @@ function GamesTournamentsMatches(elementID) {
     const searchingLi = document.getElementById('searchingLi');
     const happeningLi = document.getElementById('happeningLi');
     const finishedLi = document.getElementById('finishedLi');
+    const reloadBtn = document.getElementById('reloadBtn');
     if (searchingIDCheck.includes(elementID)) {
         disableIcon(happeningLi);
         disableIcon(finishedLi);
         activateIcon(searchingLi);
+        reloadBtn.setAttribute("data-id", 1);
         if (searchElement.classList.contains('iconActive'))
             fetchGames(1);
         else
@@ -106,6 +112,7 @@ function GamesTournamentsMatches(elementID) {
         disableIcon(searchingLi);
         disableIcon(finishedLi);
         activateIcon(happeningLi);
+        reloadBtn.setAttribute("data-id", 2);
         if (searchElement.classList.contains('iconActive'))
             fetchGames(2);
         else
@@ -114,6 +121,7 @@ function GamesTournamentsMatches(elementID) {
         disableIcon(searchingLi);
         disableIcon(happeningLi);
         activateIcon(finishedLi);
+        reloadBtn.setAttribute("data-id", 3);
         if (searchElement.classList.contains('iconActive'))
             fetchGames(3);
         else
@@ -175,4 +183,12 @@ function insertInfo(newCard, element, statusID) {
         user2Level.textContent = element.user2ID;
         user2Nick.textContent = "{Nickname2}";
     }
+}
+
+function reloadInformation(statusID) {
+    const loadGamesIcon = document.getElementById('loadGamesIcon');
+    if (loadGamesIcon.classList.contains('iconActive'))
+        fetchGames(statusID);
+    else
+        fetchTournaments(statusID);
 }

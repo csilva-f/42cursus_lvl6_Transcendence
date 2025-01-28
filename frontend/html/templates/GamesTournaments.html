@@ -1,7 +1,7 @@
 <div class="h-100">
   <div class="container-fluid h-100 d-flex flex-column">
     <div class="row" style="min-height: 5rem;">
-      <div class="col-sm-12 shadow rounded-4 d-flex align-items-center w-100" style="background-color: var(--cardBg);">
+      <div class="col-sm-12 shadow rounded-4 d-flex align-items-center w-100" style="background-color: var(--layoutBg);">
         <nav class="container-fluid">
           <div class="row">
             <div class="col-lg-10 col-md-10 col-10">
@@ -43,7 +43,7 @@
       </div>
     </div>
     <div class="row pt-3" style="height: calc(100% - 5rem)">
-      <div class="col-sm-12 shadow rounded-4 h-100" style="background-color: var(--cardBg);">
+      <div class="col-sm-12 shadow rounded-4 h-100" style="background-color: var(--layoutBg);">
         <div class="container-fluid h-100 d-flex flex-column">
           <div class="row" style="height: 5rem">
             <div class="col-sm-12 d-flex align-items-center w-100"
@@ -80,8 +80,8 @@
                       <ul class="nav nav-pills" style="height: 3rem">
                         <li
                           class="pop-hover-s nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-                          style="cursor: pointer; width: 3rem">
-                          <i class="fa-solid fa-rotate fa-xl" style="color: black" id="reloadIcon"></i>
+                          style="cursor: pointer; width: 3rem" id="reloadBtn" onclick="reloadInformation(this.dataset.id)">
+                          <i class="fa-solid fa-rotate fa-xl" style="color: black" id="reloadIcon" ></i>
                         </li>
                       </ul>
                     </div>

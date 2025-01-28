@@ -1,3 +1,4 @@
+const users = ["Kaoruko Waguri", "Hatsune Miku", "Marin Kitagawa", "Shinomiya Shouko", "Ado", "Nagisa Kubo", "Mai Sakurajima", "Yamada Anna"];
 async function fetchUsers() {
     const userLang = localStorage.getItem("language") || "en";
     const langData = await getLanguageData(userLang);
@@ -14,7 +15,6 @@ async function fetchUsers() {
         return response.text();
       })
       .then((data) => {
-        const users = ["Kaoruko Waguri", "Hatsune Miku", "Marin Kitagawa", "Shinomiya Shouko", "Ado", "Nagisa Kubo", "Mai Sakurajima", "Yamada Anna"];
         const usersImg = ["/static/img/pfp1.jpeg", "/static/img/pfp2.jpg", "/static/img/marin.jpg", "/static/img/shouko.jpg", "/static/img/ado.jpg", "/static/img/kubo.jpg", "/static/img/mai.jpg", "/static/img/yamada.jpg"];
         const divElement = document.getElementById("usersContent");
         divElement.innerHTML = "";
@@ -34,6 +34,7 @@ async function fetchUsers() {
             //const divElement = document.getElementById("usersContent");
             //divElement.innerHTML = "";
             res.users.forEach((element) => {
+              users.push(element.birthdate)
               const newCard = document.createElement("div");
               newCard.innerHTML = data;
               insertUserInfo(newCard, element);

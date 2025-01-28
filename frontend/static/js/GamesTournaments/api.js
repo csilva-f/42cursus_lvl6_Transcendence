@@ -102,7 +102,7 @@ async function enterGame(gameID) {
   const APIurl = `/api/update-game/`;
   let gameData = {
     gameID: gameID,
-    user2ID: 6543
+    user2ID: 2
   };
   console.log("gameData: ", gameData);
   $.ajax({

@@ -35,3 +35,26 @@ function insertUserInfo(newCard, user) {
     userTournamentsWon.textContent = user.tVictories;
 
 }
+
+function searchUser() {
+    // Declare variables
+    var  filter, ul, li, a, i, txtValue;
+    const userSearchInput = document.getElementById('userSearchInput');
+    var filter = userSearchInput.value.toUpperCase();
+    const usersContent = document.getElementById("usersContent");
+    console.log(usersContent)
+    var userCards = usersContent.getElementsById('userCard');
+    console.log(userCards)
+    return;
+  
+    // Loop through all list items, and hide those who don't match the search query
+    for (i = 0; i < li.length; i++) {
+      a = li[i].getElementsByTagName("a")[0];
+      txtValue = a.textContent || a.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        li[i].style.display = "";
+      } else {
+        li[i].style.display = "none";
+      }
+    }
+  }

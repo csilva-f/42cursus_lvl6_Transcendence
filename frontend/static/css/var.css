@@ -1,21 +1,26 @@
 :root {
-    --bodyBg: #EEE2DC;
-    --cardBg: #ffffffc5;
-    /*? Main Icons */
-    --mainActiveBg: #AC3B61;
+    --bodyBg: #d89d994D;    
+    --layoutBg: #ffffffc5;
+    --cardBg: #d469614D;
+    --primary: #ac3b61cc;
+    --secondary: #de94ad;
+    /*? Main Components */
+    --mainActiveBg: var(--primary);
     --mainActiveIcon: white;
     --mainActiveText: white;
     --mainInactiveBg: transparent;
     --mainInactiveIcon: black;
     --mainInactiveText: black;
-    /*? Secondary Icons */
-    --SecondaryBg: #87709C;
-    --SecondaryIcon: white;
-    --SecondaryText: white;
-    /*? Sidebar Icons */
-    --SidebarBg: #AC3B61;
-    --SidebarActiveBg: white;
-    --SidebarActiveIcon: #AC3B61;
-    --SidebarInactiveBg: transparent;
-    --SidebarInactiveIcon: white;
+    /*? Secondary Components */
+    --secondaryBg: var(--secondary);
+    --secondaryIcon: white;
+    --secondaryText: white;
+    /*? Sidebar Components */
+    --sidebarBg: var(--primary);
+    --sidebarActiveBg: white;
+    --sidebarActiveIcon: var(--primary);
+    --sidebarInactiveBg: transparent;
+    --sidebarInactiveIcon: white;
+    /*? Other Components */
+    --progressLevelBg: var(--primary)
 }
