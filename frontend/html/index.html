@@ -9,10 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link rel="icon" type="image/x-icon" href="/static/img/favicon.png">
     <!-- Own CSS -->
-    <link rel="stylesheet" href="/static/css/var.css" />
-    <link rel="stylesheet" href="/static/css/style.css" />
-    <link rel="stylesheet" href="/static/css/icons.css" />
-    <link rel="stylesheet" href="/static/css/Games&Tournaments/Games&Tournaments.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/var.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/icons.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/Games&Tournaments/Games&Tournaments.css"/>
     <script src="/static/js/jquery-3.7.1.min.js"></script>
     <!-- Bootstrap Imports -->
     <script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.8"></script>
@@ -90,9 +90,10 @@
         </div>
     </div>
     <!-- End Topbar -->
-
+    <!-- All Content -->
     <div class="container-fluid h-100 w-100" id="allContent"></div>
-
+    <!-- End All Content -->
+    <!-- Sidebar and Content -->
     <nav class="container-fluid" id="sidebar">
         <div class="row">
             <div class="col-sm-auto d-none d-lg-block sticky-top rounded-4 my-3 ms-2 shadow"
@@ -104,31 +105,38 @@
                             style="width: 3rem; height: 3rem;">
                             <a href="/"
                                 class="nav-link fas fa-home fa-xl d-flex align-items-center justify-content-center"
-                                style="height: 100%; color: black;">
+                                style="height: 100%; color: white">
                             </a>
                         </li>
                         <li class="pop-hover nav-item rounded-3 my-2" id="gamesIcon" style="width: 3rem; height: 3rem;">
                             <a href="/games"
                                 class="nav-link fa-solid fa-trophy fa-xl d-flex align-items-center justify-content-center"
-                                style="height: 100%; color: black;">
+                                style="height: 100%; color: white">
                             </a>
                         </li>
                         <li class="pop-hover nav-item rounded-3 my-2" id="statsIcon" style="width: 3rem; height: 3rem;">
                             <a href="/statistics"
                                 class="nav-link fa-solid fa-chart-simple fa-xl d-flex align-items-center justify-content-center"
-                                style="height: 100%; color: black;">
+                                style="height: 100%; color: white">
                             </a>
                         </li>
                         <li class="pop-hover nav-item rounded-3 my-2" id="socialIcon"
                             style="width: 3rem; height: 3rem;">
                             <a href="/social" id="learnMoreBtn"
                                 class="nav-link fa-solid fa-globe fa-xl d-flex align-items-center justify-content-center"
-                                style="height: 100%; color: black;">
+                                style="height: 100%; color: white">
+                            </a>
+                        </li>
+                        <li class="pop-hover nav-item rounded-3 my-2" id="creditsIcon"
+                            style="width: 3rem; height: 3rem;">
+                            <a href="/aboutUs" id="creditsBtn"
+                                class="nav-link fa-solid fa-circle-info fa-xl d-flex align-items-center justify-content-center"
+                                style="height: 100%; color: white">
                             </a>
                         </li>
                     </ul>
                     <div class="btn-group dropup-center dropup mb-3" role="group">
-                        <button type="button" class="btn fa-solid fa-language fa-xl noBorder" style="color: black;"
+                        <button type="button" class="btn fa-solid fa-language fa-2xl noBorder" style="color: white;"
                             data-bs-toggle="dropdown" aria-expanded="false">
                         </button>
                         <ul class="dropdown-menu">
@@ -141,13 +149,13 @@
                         </ul>
                     </div>
                 </div>
-                <div class="d-flex flex-sm-column flex-row flex-nowrap align-items-end sticky-top h-2">
+                <div class="d-flex flex-sm-column flex-row flex-nowrap align-items-end h-2">
                     <ul
                         class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-end align-items-end">
                         <li class="pop-hover nav-item rounded-3 my-2" onclick="checkLogin()" style="width: 3rem; height: 3rem;">
                             <a href="/"
                                 class="nav-link fas fa-right-from-bracket fa-xl d-flex align-items-center justify-content-center"
-                                style="height: 100%; color: white;">
+                                style="height: 100%; color: white">
                             </a>
                         </li>
                     </ul>
@@ -156,6 +164,7 @@
             <div class="col-sm p-3" id="content" style="height: calc(100vh - 7rem);"></div>
         </div>
     </nav>
+    <!-- End Sidebar and Content -->
     <script type="text/javascript" src="/static/js/router.js"></script>
     <script type="text/javascript" src="/static/js/index.js"></script>
     <script type="text/javascript" src="/static/js/GamesTournaments/GamesTournaments.js"></script>

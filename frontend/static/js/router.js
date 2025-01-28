@@ -54,7 +54,7 @@ const routes = {
     title: "Social",
     descripton: "This is the Social Hub Page",
   },
-  "/about": {
+  "/aboutUs": {
     template: "/templates/AboutUs.html",
     title: "AboutUs",
     descripton: "This is the AboutUs Page",
@@ -150,6 +150,7 @@ async function changeActive(location) {
     document.getElementById("gamesIcon"),
     document.getElementById("statsIcon"),
     document.getElementById("socialIcon"),
+    document.getElementById("creditsIcon"),
   ];
   const headerElement = document.getElementById("mainMsg");
   const userLang = localStorage.getItem("language") || "en";
@@ -194,9 +195,9 @@ async function changeActive(location) {
       activateIcon(UserElement);
       fetchUsers();
       break;
-    case "/about":
+    case "/aboutUs":
       iconsElements.forEach((element) => {
-        element.id == "aboutUsIcon"
+        element.id == "creditsIcon"
           ? activateSBIcon(element)
           : disableSBIcon(element);
       });
