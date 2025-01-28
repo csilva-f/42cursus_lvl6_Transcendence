@@ -15,4 +15,5 @@ urlpatterns = [
     path('phases/', get_phases, name='get_phases'),
     path('join_tournament/', post_join_tournament, name='post_join_tournament'),
     path('update_userextension/', post_update_userextension, name='update_userextension'),
+    path('get_userstatistics/', get_userstatistics, name='get_userstatistics'),
 ]

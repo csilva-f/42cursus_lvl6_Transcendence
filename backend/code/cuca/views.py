@@ -645,3 +645,30 @@ def post_update_userextension(request):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method"}, status=405)
+
+def get_userstatistics(request):
+    try:
+        validate_filters_uext(request)
+        user_id = request.GET.get('userID')
+        if user_id == "":
+            return JsonResponse({"error": "Filter can't be empty."}, status=400)
+        uextensions = tUserExtension.objects.all()
+
+        if user_id:
+            user_id = validate_id(user_id)
+            uextensions = uextensions.filter(user=user_id)
+
+    except ValidationError as e:
+        return JsonResponse({"error": str(e)}, status=400)
+    userext_data = [
+        {
+            'GameVictories': userext.victories,
+            'GameLosses': (userext.totalGamesPlayed - userext.victories),
+            'TotalGamesPlayed': userext.totalGamesPlayed,
+            'TournamentVictories': userext.tVictories,
+            'TotalTournamentsPlayed': userext.tVictories
+        }
+        for userext in uextensions
+    ]
+    
+    return JsonResponse({'users': userext_data}, safe=False, status=200)

@@ -236,3 +236,22 @@ class PostUpdateUserExtension(APIView):
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GetUserStatistics(APIView):
+    permission_classes = [AllowAny]  # Adjust permissions as needed
+
+    def get(self, request):
+        backend_url = settings.BACKEND_USTAT_URL
+        query_params = request.GET.urlencode()
+        url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
+        try:
+            backend_response = requests.get(url_with_params)
+            backend_response.raise_for_status()
+            data = backend_response.json()
+            return Response(data, status=status.HTTP_200_OK)
+        except requests.exceptions.HTTPError as http_err:
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except requests.exceptions.RequestException as req_err:
+            return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except ValueError as json_err:
+            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
