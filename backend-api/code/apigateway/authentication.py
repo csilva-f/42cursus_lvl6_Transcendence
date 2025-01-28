@@ -1,32 +1,23 @@
 # authentication.py
-
 import requests
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.exceptions import AuthenticationFailed
+from apigateway.models import CustomUser
 
 class CustomJWTAuthentication(JWTAuthentication):
     def authenticate(self, request):
         # Call the default method to get the token
         raw_token = request.headers['Authorization']
-        #auth = super().authenticate(request)
-        #print ("a")
-        #if auth is None:
-        #    return None  # No token provided or invalid
-
-        # Extract the token
-        #raw_token = auth[1]
-        print(raw_token)
         if not raw_token:
             return None
-        # Make a request to the authentication service to validate the token
         response = requests.get('http://auth-api:8000/authapi/validate-token/', headers={
-            'Authorization': f'Bearer {raw_token}'
+            'Authorization': f'{raw_token}',
+            'content-type': 'application/json',
+            'Accept': 'application/json',
         })
-
-        if response.status_code != 200:
-            raise AuthenticationFailed('Invalid token')
-
+        if response.status_code not in (200,201):
+            raise AuthenticationFailed('Invalid tokennnnnn')
         # If the token is valid, return the user and token
-        user = response.json().get('user')
-        print(user)
-        return (user, raw_token)
+        user = response.json().get('data')
+        user_instance = CustomUser(user_id=user.get('user_id'), username=user.get('username'))
+        return (user_instance,raw_token)

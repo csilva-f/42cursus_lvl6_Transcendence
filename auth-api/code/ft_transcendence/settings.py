@@ -31,8 +31,7 @@ BACKEND_GAMES_URL = 'http://backend:8002/backend/games/'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['auth-api']
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 

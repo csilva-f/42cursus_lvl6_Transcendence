@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.decorators import action
+from wsgiref import headers
 
 
 #PostRegisterViewSet - Register a new user
@@ -239,10 +240,15 @@ class ValidateTokenViewSet(viewsets.ViewSet):
     def validate_token(self, request):
         backend_url = 'http://auth:8000/register/validate-token/'
         try:
-            backend_response = requests.get(backend_url, json=request.data, headers=request.headers)
+            headers1 = {
+                'Content-Type': 'application/json',
+                'Authorization': request.headers['Authorization'],
+                'Accept': 'application/json',
+            }
+            backend_response = requests.get(backend_url, json=request.data, headers=headers1)
             backend_response.raise_for_status()
             data = backend_response.json()
-            return Response(data, status=status.HTTP_201_CREATED)
+            return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
             return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:

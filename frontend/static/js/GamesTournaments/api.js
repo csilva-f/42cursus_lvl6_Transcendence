@@ -16,14 +16,14 @@ async function fetchGames(statusID) {
       return response.text();
     })
     .then((data) => {
-      const APIurl = `/api/get-games/?statusID=${statusID}`
+      const APIurl = `/api/get-games/?statusID=${statusID}`;
       $.ajax({
         type: "GET",
         url: APIurl,
+        Accept: "application/json",
         contentType: "application/json",
         headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
         },
         success: function (res) {
           const divElement = document.getElementById("gamesContent");
@@ -53,8 +53,8 @@ async function postGame() {
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/create-game/`;
   let gameData = {
-    user1ID: parseInt(document.getElementById('passwordInput').value),
-    islocal: false
+    user1ID: parseInt(document.getElementById("passwordInput").value),
+    islocal: false,
   };
   console.log("gameData: ", gameData);
   $.ajax({
@@ -67,12 +67,12 @@ async function postGame() {
       showSuccessToast(langData, langData.gamecreated);
       fetchGames(1);
       resetModal();
-      $('#createModal').modal('hide');
+      $("#createModal").modal("hide");
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
       resetModal();
-    }
+    },
   });
 }
 
@@ -82,16 +82,16 @@ async function postLocalGame() {
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/create-game/`;
   let gameData = {
-    P1: document.getElementById('P1NickInput').value,
-    P1Color: document.getElementById('P1ColorInput').value,
-    P2: document.getElementById('P2NickInput').value,
-    P2Color: document.getElementById('P2ColorInput').value
+    P1: document.getElementById("P1NickInput").value,
+    P1Color: document.getElementById("P1ColorInput").value,
+    P2: document.getElementById("P2NickInput").value,
+    P2Color: document.getElementById("P2ColorInput").value,
   };
   console.log("gameData: ", gameData);
   showSuccessToast(langData, langData.gameEntered);
   resetModal();
-  $('#createModal').modal('hide');
-  const enterLi = document.getElementById('enterLi');
+  $("#createModal").modal("hide");
+  const enterLi = document.getElementById("enterLi");
   window.history.pushState({}, "", enterLi.getAttribute("href"));
   locationHandler("content");
   localStorage.setItem("gameData", JSON.stringify(gameData));
@@ -105,7 +105,7 @@ async function enterGame(gameID) {
   const APIurl = `/api/update-game/`;
   let gameData = {
     gameID: gameID,
-    user2ID: 6543
+    user2ID: 6543,
   };
   console.log("gameData: ", gameData);
   $.ajax({
@@ -117,14 +117,14 @@ async function enterGame(gameID) {
     success: function (res) {
       showSuccessToast(langData, langData.gameEntered);
       fetchGames(1);
-      const enterLi = document.getElementById('enterLi');
+      const enterLi = document.getElementById("enterLi");
       window.history.pushState({}, "", enterLi.getAttribute("href"));
       locationHandler("content");
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
       resetModal();
-    }
+    },
   });
 }
 
@@ -146,7 +146,7 @@ async function fetchTournaments(statusID) {
       return response.text();
     })
     .then((data) => {
-      const APIurl = `/api/get-tournaments/?statusID=${statusID}`
+      const APIurl = `/api/get-tournaments/?statusID=${statusID}`;
       $.ajax({
         type: "GET",
         url: APIurl,
@@ -181,10 +181,10 @@ async function postTournament() {
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/create-tournament/`;
   let tournamentData = {
-      name: document.getElementById('nameTournamentInput').value,
-      beginDate: document.getElementById('beginDateInput').value,
-      endDate: document.getElementById('endDateInput').value,
-      createdByUser: 1
+    name: document.getElementById("nameTournamentInput").value,
+    beginDate: document.getElementById("beginDateInput").value,
+    endDate: document.getElementById("endDateInput").value,
+    createdByUser: 1,
   };
   console.log("tournamentData: ", tournamentData);
   $.ajax({
@@ -197,11 +197,11 @@ async function postTournament() {
       showSuccessToast(langData, langData.tournamentcreated);
       fetchTournaments(1);
       resetModal();
-      $('#createTournamentModal').modal('hide');
+      $("#createTournamentModal").modal("hide");
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
       resetModal();
-    }
+    },
   });
 }

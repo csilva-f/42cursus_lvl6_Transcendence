@@ -14,6 +14,7 @@ from .models import CucaUser, PasswordResetToken
 from rest_framework.permissions import IsAuthenticated,AllowAny
 import requests
 import jwt
+import json
 
 
 class UserCreate(generics.CreateAPIView):
@@ -148,14 +149,14 @@ class ValidateTokenView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        print
         token = request.headers['Authorization'].split(' ')[1]
+        print (request.headers)
         try:
-            # Decode the token (use the same secret key used for signing)
             payload = jwt.decode(token,'django-insecure-@www2r)nc-li_empd8(e()gc592l7wau$zn%y#2*ej)u^xb*(0',algorithms=['HS256'])
             print(payload)
-            user_id = payload['user_id']  # Adjust based on your token payload
-            return Response({'user': user}, status=status.HTTP_200_OK)
+            user = CucaUser.objects.get(id=payload['user_id'])
+            data = {'user_id': user.id, 'username': user.username}
+            return Response({'data': data}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError:
             return Response({'error': 'Token has expired'}, status=status.HTTP_401_UNAUTHORIZED)
         except jwt.InvalidTokenError:
