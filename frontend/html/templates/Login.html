@@ -13,7 +13,7 @@
 				<li class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center iconInactive" role="presentation" style="flex: 1;">
 					<button class="nav-link d-flex align-items-center gap-2" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button" role="tab" aria-controls="signup" aria-selected="false" style="min-height:46px; font-weight: bold; color: #000; padding-left: 50px; padding-right: 50px;">
 					<i class="fa-solid fa-user-plus fa-xl"></i>
-					<span class="d-none d-xl-block">coco</span>
+					<span class="d-none d-xl-block">Sign up</span>
 					</button>
 				</li>
 			</ul>
@@ -51,42 +51,47 @@
 				</div>
 
 				<!-- Sign Up -->
+				 <!-- https://codepen.io/nj_codes/pen/wRLzGX -->
 				<div class="tab-pane fade" id="signup" role="tabpanel" aria-labelledby="signup-tab">
 					<form class="mt-3 needs-validation" id="signup-form" novalidate>
 						<div class="mb-3">
 							<div class="input-group">
 								<span class="input-group-text"><i class="fa-solid fa-user" style="color: #AC3B61;"></i></span>
-								<input type="text" class="form-control" id="signupFirstname" placeholder="First name">
+								<input type="text" class="form-control" id="signupFirstname" required placeholder="First name">
 							</div>
 						</div>
 						<div class="mb-3">
 							<div class="input-group">
 								<span class="input-group-text"><i class="fa-solid fa-user" style="color: #AC3B61;"></i></span>
-								<input type="text" class="form-control" id="signupLastname" placeholder="Last name">
+								<input type="text" class="form-control" id="signupLastname" required placeholder="Last name">
 							</div>
 						</div>
 						<div class="mb-3">
-							<div class="input-group">
+							<div class="input-group has-validation">
 								<span class="input-group-text"><i class="fas fa-envelope" style="color: #AC3B61;"></i></span>
-								<input type="email" class="form-control" id="signupEmail" placeholder="Email">
+								<input type="email" class="form-control" id="signupEmail" required placeholder="Email">
+								<div class="invalid-feedback" id="emailInvalid">
+								</div>							
 							</div>
 						</div>
 						<div class="mb-3">
 							<div class="input-group">
 								<span class="input-group-text"><i class="fa-solid fa-lock" style="color: #AC3B61;"></i></span>
-								<input type="password" class="form-control" id="signupPassword" placeholder="Password">
+								<input type="password" class="form-control" id="signupPassword" required placeholder="Password">
+								<div class="invalid-feedback" id="passwordInvalid">
+								</div>	
 							</div>
 						</div>
 						<div class="mb-3">
 							<div class="input-group">
 								<span class="input-group-text"><i class="fa-solid fa-lock" style="color: #AC3B61;"></i></span>
-								<input type="password" class="form-control" id="signupPassword2" placeholder="Retype password">
+								<input type="password" class="form-control" id="signupPassword2" required placeholder="Retype password">
 							</div>
 						</div>
 						<div class="mb-3">
 							<div class="input-group">
 								<span class="input-group-text"><i class="fas fa-phone" style="color: #AC3B61;"></i></span>
-								<input type="tel" class="form-control" id="signupPhone" placeholder="Phone number">
+								<input type="tel" class="form-control" id="signupPhone" required placeholder="Phone number">
 							</div>
 						</div>
 						<button type="submit" class="btn" style="background-color: #AC3B61; color: white; width: 100%;">Sign up</button>

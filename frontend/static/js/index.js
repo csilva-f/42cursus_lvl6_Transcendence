@@ -33,6 +33,7 @@ function getForms() {
     // Loop over them and prevent submission
     Array.from(forms).forEach(form => {
         form.addEventListener('submit', event => {
+            form.classList.remove('was-validated');
             if (!form.checkValidity()) {
                 // If the form is invalid, prevent submission
                 event.preventDefault();
@@ -49,7 +50,7 @@ function getForms() {
                 else if (form.id == "login-form")
                     sendLogin();
                 else if (form.id == "signup-form")
-                    sendSignup();
+                    sendSignup(form);
 				else if (form.id == "forgotPwd-form")
                     forgotPwd();
 				// else if (form.id == "resendCode-form")

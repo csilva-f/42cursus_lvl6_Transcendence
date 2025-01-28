@@ -38,6 +38,7 @@
     "gamecreated": "Game created successfully",
     "tournamentcreated": "Tournament created successfully",
     "gameEntered": "Game entered successfully",
+    "signUpSuccess": "User registered successfully, please check your email",
     "global": "Global",
     "friends": "Friends",
     "matchHistory": "Match History",

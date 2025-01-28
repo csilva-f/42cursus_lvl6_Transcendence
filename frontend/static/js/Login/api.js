@@ -58,8 +58,10 @@ async function forgotPwd() {
   });
 }
 
-async function sendSignup() {
+async function sendSignup(form) {
   // Login function
+  const userLang = localStorage.getItem("language") || "en";
+  const langData = await getLanguageData(userLang);
   console.log("sendSignup");
   const email = $("#signupEmail").val();
   const password = $("#signupPassword").val();
@@ -67,10 +69,10 @@ async function sendSignup() {
   const first_name = $("#signupFirstname").val();
   const last_name = $("#signupLastname").val();
   const phone = $("#signupPhone").val();
-  const apiUrl = "/authapi";
+  const apiUrl = "/authapi/register/";
   $.ajax({
 	type: "POST",
-	url: `${apiUrl}/register/`, // Adjust the endpoint as needed
+	url: apiUrl, // Adjust the endpoint as needed
 	contentType: "application/json",
 	headers: { Accept: "application/json" },
 	data: JSON.stringify({
@@ -82,12 +84,46 @@ async function sendSignup() {
 	}),
 	success: function (data) {
 	  $("#signup-message").text("Signup successful! Validate your email");
+      showSuccessToast(langData, langData.signUpSuccess);
+	  return true;
 	},
-	error: function (xhr) {
-	  const data = xhr.responseJSON;
-	  $("#signup-message").text(data.error || "register failed.");
-	},
+	error: function (xhr, error) {
+		const data = xhr.responseJSON;
+		const errorMsg = data.error.match(/"(.*?)"/);
+		$("#signup-message").text(data.error || "register failed.");
+		
+		const emailInput = document.getElementById('signupEmail');
+		const passwordInput = document.getElementById('signupPassword');
+		const emailInvalid = document.getElementById('emailInvalid');
+		const passwordInvalid = document.getElementById('passwordInvalid');
+	
+		emailInvalid.textContent = '';
+		passwordInvalid.textContent = '';
+		emailInput.setCustomValidity('');
+		passwordInput.setCustomValidity('');
+	
+		if (data.error.includes("email")) {
+			emailInvalid.textContent = errorMsg[1];
+			emailInput.setCustomValidity(errorMsg[1]);
+			emailInput.classList.add('is-invalid');
+		} else if (data.error.includes("password")) {
+			passwordInvalid.textContent = errorMsg[1];
+			passwordInput.setCustomValidity(errorMsg[1]);
+			passwordInput.classList.add('is-invalid');
+		}
+		return false;
+	},	
   });
+  form.querySelectorAll('input').forEach(input => {
+	input.addEventListener('input', () => {
+		input.setCustomValidity(''); // Redefine a validade
+		input.classList.remove('is-invalid'); // Remove a classe de erro
+		const invalidFeedback = input.nextElementSibling;
+		if (invalidFeedback) {
+			invalidFeedback.textContent = ''; // Limpa a mensagem de erro
+		}
+	});
+});
 }
 
 async function oauthLogin() {
