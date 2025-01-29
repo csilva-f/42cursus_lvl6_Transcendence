@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'rest_framework',
     'cuca',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -68,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
+WSGI_APPLICATION = 'ft_transcendence.wsgi.application' #acho que nao precisa
 ASGI_APPLICATION = 'ft_transcendence.asgi.application'
 
 # Database
