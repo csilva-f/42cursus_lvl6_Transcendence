@@ -26,14 +26,32 @@ saveButton.addEventListener('click', () => {
 avatar.addEventListener('change', (event) => {
   const file = event.target.files[0];
   if (file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      avatarPreview.src = reader.result;
-    };
-    reader.readAsDataURL(file);
+	const reader = new FileReader();
+	reader.onload = () => {
+	  avatarPreview.src = reader.result;
+	};
+	reader.readAsDataURL(file);
   }
 });
 
 avatarPreview.addEventListener('click', () => {
   avatar.click();
+});
+
+// nao funciona ainda 
+function updateGenderIcon(genderSelect, genderIcon) {
+	switch (genderSelect.value) {
+		case 'male':
+			genderIcon.className = 'fa-solid fa-mars';
+			break;
+		case 'female':
+			genderIcon.className = 'fa-solid fa-venus';
+			break;
+		case 'other':
+			genderIcon.className = 'fa-solid fa-genderless';
+	}
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+	updateGenderIcon(document.getElementById('gender'), document.getElementById('gender-icon').querySelector('i'));
 });

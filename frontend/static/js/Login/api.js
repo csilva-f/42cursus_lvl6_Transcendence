@@ -84,7 +84,7 @@ async function sendSignup(form) {
 	}),
 	success: function (data) {
 	  $("#signup-message").text("Signup successful! Validate your email");
-      showSuccessToast(langData, langData.signUpSuccess);
+	  showSuccessToast(langData, langData.signUpSuccess);
 	  return true;
 	},
 	error: function (xhr, error) {
@@ -207,6 +207,7 @@ async function sendOAuthLogin(userdata) {
   });
 }
 
+// MFA
 async function OTP_check_enable(jwtToken) {
   const apiUrl = "/authapi";
   return new Promise((resolve, reject) => {
@@ -292,4 +293,51 @@ function verifyAccount() {
 			code += field.value;
 	}
 	console.log('Code:', code);
+}
+
+// Password validate
+function passwordVisibility(passwordFieldId, toggleIconId) {
+	const passwordInput = document.getElementById(passwordFieldId);
+	const passwordIcon = document.getElementById(toggleIconId).querySelector('i');
+
+	if (passwordInput.type === "password") {
+		passwordInput.type = "text";
+		passwordIcon.classList.remove("fa-eye-slash");
+		passwordIcon.classList.add("fa-eye");
+	} else {
+		passwordInput.type = "password";
+		passwordIcon.classList.remove("fa-eye");
+		passwordIcon.classList.add("fa-eye-slash");
+	}
+}
+
+function validateNewPassword(passwordId, validationId, iconId) {
+	const password = document.getElementById(passwordId);
+	const validationMessage = document.getElementById(validationId);
+	const icon = document.getElementById(iconId);
+  
+	validationMessage.classList.remove('d-none');
+  
+	if (password.value.length >= 8) {
+		validationMessage.classList.add('d-none');
+	} else {
+		icon.className = 'fa-solid fa-xmark';
+		icon.style.color = '#ff2600';
+	}
+}
+  
+function validatePasswordsMatch(passwordId1, passwordId2, validationId, iconId) {
+	const password1 = document.getElementById(passwordId1);
+	const password2 = document.getElementById(passwordId2);
+	const validationMessage = document.getElementById(validationId);
+	const icon = document.getElementById(iconId);
+  
+	validationMessage.classList.remove('d-none');
+  
+	if (password1.value === password2.value && password1.value.length >= 8) {
+		validationMessage.classList.add('d-none');
+	} else {
+		icon.className = 'fa-solid fa-xmark';
+		 icon.style.color = '#ff2600';
+	}
 }
