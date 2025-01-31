@@ -341,3 +341,23 @@ function validatePasswordsMatch(passwordId1, passwordId2, validationId, iconId) 
 		 icon.style.color = '#ff2600';
 	}
 }
+
+// change icon gender
+function updateGenderIcon() {
+	let genderSelect = document.getElementById("gender");
+	let genderIcon = document.getElementById('gender-icon').querySelector('i');
+
+	if (!genderSelect || !genderIcon) return;
+
+	switch (genderSelect.value) {
+		case 'male':
+			genderIcon.className = 'fa-solid fa-mars';
+			break;
+		case 'female':
+			genderIcon.className = 'fa-solid fa-venus';
+			break;
+		case 'other':
+			genderIcon.className = 'fa-solid fa-genderless';
+			break;
+	}
+}
