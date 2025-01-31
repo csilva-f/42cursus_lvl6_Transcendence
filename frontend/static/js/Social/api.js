@@ -20,6 +20,7 @@ async function fetchUsers() {
         divElement.innerHTML = "";
         for (let i = 0; i < 8; i++) {
             const newCard = document.createElement("div");
+            newCard.id = "cardUserContent"
             newCard.innerHTML = data;
             insertUserInfo2(newCard, users[i], usersImg[i]);
             divElement.appendChild(newCard);
@@ -36,6 +37,7 @@ async function fetchUsers() {
             res.users.forEach((element) => {
               users.push(element.birthdate)
               const newCard = document.createElement("div");
+              newCard.id = "cardUserContent"
               newCard.innerHTML = data;
               insertUserInfo(newCard, element);
               divElement.appendChild(newCard);

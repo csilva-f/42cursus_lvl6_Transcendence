@@ -5,6 +5,14 @@
     cursor: not-allowed;
 }
 
+.iconMainPage i {
+    color: var(--mainActiveIcon) !important;
+}
+
+.iconMainPage p {
+    color: var(--mainActiveText) !important;
+}
+
 .iconActive .nav-link {
     color: var(--mainActiveIcon) !important;
 }

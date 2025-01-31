@@ -98,12 +98,10 @@ function GamesTournamentsMatches(elementID) {
     const searchingLi = document.getElementById('searchingLi');
     const happeningLi = document.getElementById('happeningLi');
     const finishedLi = document.getElementById('finishedLi');
-    const reloadBtn = document.getElementById('reloadBtn');
     if (searchingIDCheck.includes(elementID)) {
         disableIcon(happeningLi);
         disableIcon(finishedLi);
         activateIcon(searchingLi);
-        reloadBtn.setAttribute("data-id", 1);
         if (searchElement.classList.contains('iconActive'))
             fetchGames(1);
         else
@@ -112,7 +110,6 @@ function GamesTournamentsMatches(elementID) {
         disableIcon(searchingLi);
         disableIcon(finishedLi);
         activateIcon(happeningLi);
-        reloadBtn.setAttribute("data-id", 2);
         if (searchElement.classList.contains('iconActive'))
             fetchGames(2);
         else
@@ -121,7 +118,6 @@ function GamesTournamentsMatches(elementID) {
         disableIcon(searchingLi);
         disableIcon(happeningLi);
         activateIcon(finishedLi);
-        reloadBtn.setAttribute("data-id", 3);
         if (searchElement.classList.contains('iconActive'))
             fetchGames(3);
         else

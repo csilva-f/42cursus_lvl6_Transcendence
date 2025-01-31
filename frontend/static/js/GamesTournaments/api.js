@@ -4,6 +4,8 @@ async function fetchGames(statusID) {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
   const reloadIcon = document.getElementById("reloadIcon");
+  const reloadBtn = document.getElementById('reloadBtn');
+  reloadBtn.setAttribute("data-id", statusID);
   reloadIcon.classList.add("rotate");
   setTimeout(() => {
     reloadIcon.classList.remove("rotate");

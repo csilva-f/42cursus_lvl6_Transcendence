@@ -4,6 +4,11 @@ const routes = {
     title: "404",
     descripton: "Page not found",
   },
+  "/mainPage": {
+    template: "/mainPage.html",
+    title: "Main Page",
+    descripton: "This is the Main Page",
+  },
   "/": {
     template: "/templates/Home.html",
     title: "Home",
@@ -72,6 +77,7 @@ const routes = {
 };
 
 const bigScreenLocation = [
+  "/mainPage",
   "/login",
   "/pong",
   "/callback",
@@ -84,12 +90,17 @@ const bigScreenLocation = [
 const route = (event) => {
   event = event || window.event;
   event.preventDefault();
-  console.log(event);
-  console.log(event.target);
-  console.log(event.target.href);
-  window.history.pushState({}, "", event.target.href);
-  locationHandler("content");
+
+  const targetUrl = new URL(event.target.href, window.location.origin);
+
+  if (targetUrl.origin === window.location.origin) {
+    window.history.pushState({}, "", targetUrl.pathname);
+    locationHandler("content");
+  } else {
+    window.open(targetUrl.href, "_blank");
+  }
 };
+
 
 function activateSBIcon(element) {
   element.classList.remove("iconSBInactive");
@@ -117,7 +128,10 @@ async function changeToBig(location) {
   const langData = await getLanguageData(userLang);
   const mainDiv = document.getElementById("allContent");
 
-  if (location == "/login") {
+  if (location == "/mainPage") {
+    headerElement.setAttribute("data-i18n", "noContent");
+  }
+  else if (location == "/login") {
     headerElement.setAttribute("data-i18n", "login");
     getForms();
   } else if (location == "/forgotPassword") {
@@ -258,13 +272,13 @@ const locationHandler = async (elementID) => {
 
 document.addEventListener("click", (e) => {
   const { target } = e;
-  //console.log("Target: ", target);
+
   if (target.matches("nav a")) {
     e.preventDefault();
-    route();
-  }
-});
+    route(e);
+}});
 
-window.onpopstate = locationHandler;
+
+window.onpopstate = () => locationHandler("content");
 window.route = route;
 locationHandler("content");

@@ -1,3 +1,11 @@
+.mainPageLi {
+    width: 20rem;
+    cursor: pointer;
+    background-color: var(--primary);
+    display: flex;
+    justify-content: center;
+}
+
 .menuLi {
     width: 15rem;
     cursor: pointer;

@@ -34,11 +34,8 @@
                 <div class="row">
                   <div class="col-lg-10 col-md-10 col-10">
                     <div class="d-flex gap-2 h-100">
-                      <form class="d-flex" role="search" style="width: 31rem;">
+                      <form class="d-flex" role="search" style="width: 31rem;" onsubmit="event.preventDefault();">
                         <input class="form-control rounded-3" id="userSearchInput" onkeyup="searchUser()" type="search" placeholder="Search for Users" aria-label="Search">
-                        <!--
-                          <button class="btn btn-outline-success" type="submit">Search</button>
-                        -->
                       </form>
                     </div>
                   </div>
@@ -48,7 +45,7 @@
                         <li
                           class="pop-hover-s nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
                           style="cursor: pointer; width: 3rem">
-                          <i class="fa-solid fa-rotate fa-xl" style="color: black" id="reloadIcon"></i>
+                          <i class="fa-solid fa-rotate fa-xl" style="color: black" id="reloadIcon" onclick="fetchUsers()"></i>
                         </li>
                       </ul>
                     </div>
