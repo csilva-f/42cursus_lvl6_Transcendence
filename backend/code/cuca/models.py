@@ -35,6 +35,7 @@ class tUserExtension(models.Model):
     victories = models.IntegerField(null=True, blank=True, default=0)
     totalGamesPlayed = models.IntegerField(null=True, blank=True, default=0)
     tVictories = models.IntegerField(null=True, blank=True, default=0)
+    totalTournPlayed = models.IntegerField(null=True, blank=True, default=0)
 
     def __str__(self):
         return f"UserExtension {self.user}"

@@ -468,7 +468,8 @@ def get_userextensions(request):
             'bio': userext.bio,
             'victories': userext.victories,
             'totalGamesPlayed': userext.totalGamesPlayed,
-            'tVictories': userext.tVictories
+            'tVictories': userext.tVictories,
+            'totalTournPlayed': userext.totalTournPlayed
         }
         for userext in uextensions
     ]
@@ -550,12 +551,9 @@ def post_join_tournament(request):  # user joins an active tournament
             if not user_id:
                 return JsonResponse({"error": "User is required to join"}, status=400)
             if user_id is not None:
-                print(user_id)
                 if not tUserExtension.objects.filter(user=user_id).exists():
-                    print("aqui")
                     return JsonResponse({"error": f"User ID {user_id} does not exist in tUserExtension"}, status=404)
                 
-                # Corrigir `values_list` para buscar user1 e user2
                 phase1_users = tGames.objects.filter(tournament_id=tourn.tournament, phase_id=1).values_list('user1', 'user2')
                 all_users = set()
                 for user1, user2 in phase1_users:
@@ -587,6 +585,9 @@ def post_join_tournament(request):  # user joins an active tournament
             if full_games.exists():
                 tourn.status = tauxStatus.objects.get(statusID=2)
                 tourn.save()
+            tUserExtension.objects.filter(user=user_id).update(
+                totalTournPlayed=models.F('totalTournPlayed') + 1
+            )
             return JsonResponse({"message": f"User ID {user_id} joined to tournament ID {tourn_id} successfully"}, status=201)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
@@ -666,7 +667,8 @@ def get_userstatistics(request):
             'GameLosses': (userext.totalGamesPlayed - userext.victories),
             'TotalGamesPlayed': userext.totalGamesPlayed,
             'TournamentVictories': userext.tVictories,
-            'TotalTournamentsPlayed': userext.tVictories
+            'TournamentLosses': (userext.totalTournPlayed - userext.tVictories),
+            'TotalTournamentsPlayed': userext.totalTournPlayed
         }
         for userext in uextensions
     ]
