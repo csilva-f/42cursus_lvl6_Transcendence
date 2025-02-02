@@ -5,6 +5,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.db.models import Q
 
 ALLOWED_FILTERS_TOURNAMENT = {'tournamentID', 'statusID', 'name', 'winnerID'}
 
@@ -651,6 +652,58 @@ def get_userstatistics(request):
     try:
         validate_filters_uext(request)
         user_id = request.GET.get('userID')
+
+        if user_id == "":
+            return JsonResponse({"error": "Filter can't be empty."}, status=400)
+
+        uextensions = tUserExtension.objects.all()
+        
+        if user_id:
+            user_id = validate_id(user_id)
+            uextensions = uextensions.filter(user=user_id)
+
+    except ValidationError as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+    userext_data = []
+
+    for userext in uextensions:
+        # Status de jogos e torneios que ainda estão em andamento
+        ongoing_statuses = [1, 2]  # Ajusta se os status forem diferentes no teu DB
+
+        # Filtrar jogos em andamento para o utilizador
+        ongoing_games = tGames.objects.filter(
+            Q(user1=userext.user) | Q(user2=userext.user),
+            status__statusID__in=ongoing_statuses
+        ).count()
+
+        # Filtrar torneios em andamento para o utilizador
+        ongoing_tournaments = tTournaments.objects.filter(
+            Q(tgames__user1=userext.user) | Q(tgames__user2=userext.user),
+            status__statusID__in=ongoing_statuses
+        ).distinct().count()
+
+        # Calcular corretamente as derrotas (excluindo jogos e torneios em andamento)
+        game_losses = userext.totalGamesPlayed - ongoing_games - userext.victories
+        tournament_losses = userext.totalTournPlayed - ongoing_tournaments - userext.tVictories
+
+        # Criar o dicionário de estatísticas
+        userext_data.append({
+            'UserID': userext.user,
+            'GameVictories': userext.victories,
+            'GameLosses': max(0, game_losses),  # Evita valores negativos
+            'TotalGamesPlayed': userext.totalGamesPlayed,
+            'TournamentVictories': userext.tVictories,
+            'TournamentLosses': max(0, tournament_losses),  # Evita valores negativos
+            'TotalTournamentsPlayed': userext.totalTournPlayed
+        })
+
+    return JsonResponse({'users': userext_data}, safe=False, status=200)
+
+""" def get_userstatistics(request):
+    try:
+        validate_filters_uext(request)
+        user_id = request.GET.get('userID')
         if user_id == "":
             return JsonResponse({"error": "Filter can't be empty."}, status=400)
         uextensions = tUserExtension.objects.all()
@@ -673,4 +726,4 @@ def get_userstatistics(request):
         for userext in uextensions
     ]
     
-    return JsonResponse({'users': userext_data}, safe=False, status=200)
+    return JsonResponse({'users': userext_data}, safe=False, status=200) """
