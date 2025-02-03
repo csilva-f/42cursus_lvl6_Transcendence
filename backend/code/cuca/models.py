@@ -26,10 +26,12 @@ class tauxPhase(models.Model):
     
 class tUserExtension(models.Model):
     user = models.IntegerField(primary_key=True, null=False, unique=True)
+    nick = models.CharField(max_length=20, null=True, blank=True)
     birthdate = models.DateField()
     ulevel = models.FloatField(null=True, blank=True, default=0.0)
     gender = models.ForeignKey(tauxGender, on_delete=models.PROTECT, null=False)
     avatar = models.CharField(max_length=1000, null=True, blank=True)
+    bio = models.CharField(max_length=2000, null=True, blank=True)
     victories = models.IntegerField(null=True, blank=True, default=0)
     totalGamesPlayed = models.IntegerField(null=True, blank=True, default=0)
     tVictories = models.IntegerField(null=True, blank=True, default=0)

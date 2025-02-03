@@ -28,6 +28,7 @@ BACKEND_TOURNAMENTS_URL = 'http://backend:8002/backend/tournaments/'
 BACKEND_CREATE_TOURNAMENT_URL = 'http://backend:8002/backend/create_tournament/'
 BACKEND_GAMES_URL = 'http://backend:8002/backend/games/'
 BACKEND_UEXT_URL = 'http://backend:8002/backend/get_userextensions/'
+BACKEND_USTAT_URL = 'http://backend:8002/backend/get_userstatistics/'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
