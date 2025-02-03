@@ -17,4 +17,7 @@ urlpatterns = [
     path('update-userextension/', PostUpdateUserExtension.as_view(), name='update-userextension'),
     path('get-userstatistics/', GetUserStatistics.as_view(), name='get-userstatistics'),
     path('accept-gameinvitation/', PostAcceptGameInvit.as_view(), name='accept-gameinvitation'),
+    path('get-userinvitations/', GetUserInvitations.as_view(), name='get-userinvitations'),
+    path('get-usernbrinvitations/', GetUserNbrInvitations.as_view(), name='get-usernbrinvitations'),
+    path('get-usergames/', GetUserGames.as_view(), name='get-usergames'),
 ]

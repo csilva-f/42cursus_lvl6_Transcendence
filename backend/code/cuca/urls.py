@@ -17,4 +17,7 @@ urlpatterns = [
     path('update_userextension/', post_update_userextension, name='update_userextension'),
     path('get_userstatistics/', get_userstatistics, name='get_userstatistics'),
     path('accept_gameinvitation/', post_accept_game_invit, name='accept_gameinvitation'),
+    path('get_userinvitations/', get_gameinvitations, name='get_userinvitations'),
+    path('get_usernbrinvit/', get_nbr_invitations, name='get_usernbrinvit'),
+    path('get_usergames/', get_usergames, name='get_usergames'),
 ]
