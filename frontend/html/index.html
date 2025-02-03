@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="/static/css/style.css"/>
     <link rel="stylesheet" type="text/css" href="/static/css/icons.css"/>
     <link rel="stylesheet" type="text/css" href="/static/css/Games&Tournaments/Games&Tournaments.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/TournamentBracket.css"/>
     <script src="/static/js/jquery-3.7.1.min.js"></script>
     <!-- Bootstrap Imports -->
     <script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.8"></script>
@@ -22,6 +23,9 @@
     <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
     <!-- FontAwesome Imports -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+     <!-- GraphJS Imports -->
+     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Font Imports -->
     <link rel="stylesheet" href="/static/css/font.css">
 </head>
@@ -91,7 +95,7 @@
     </div>
     <!-- End Topbar -->
     <!-- All Content -->
-    <div class="container-fluid h-100 w-100" id="allContent"></div>
+    <div class="container-fluid w-100" id="allContent" style="height: calc(100vh - 7rem);"></div>
     <!-- End All Content -->
     <!-- Sidebar and Content -->
     <nav class="container-fluid" id="sidebar">
@@ -168,7 +172,10 @@
     <script type="text/javascript" src="/static/js/router.js"></script>
     <script type="text/javascript" src="/static/js/index.js"></script>
     <script type="text/javascript" src="/static/js/GamesTournaments/GamesTournaments.js"></script>
+    <script type="text/javascript" src="/static/js/Tournaments/TournamentBracket.js"></script>
     <script type="text/javascript" src="/static/js/GamesTournaments/api.js"></script>
+    <script type="text/javascript" src="/static/js/Statistics/Statistics.js"></script>
+    <script type="text/javascript" src="/static/js/Statistics/api.js"></script>
     <script type="text/javascript" src="/static/js/Social/Social.js"></script>
     <script type="text/javascript" src="/static/js/Social/api.js"></script>
     <script type="text/javascript" src="/static/js/Game/Game.js"></script>

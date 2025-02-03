@@ -5,6 +5,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.db.models import Q
 
 ALLOWED_FILTERS_TOURNAMENT = {'tournamentID', 'statusID', 'name', 'winnerID'}
 
@@ -468,7 +469,8 @@ def get_userextensions(request):
             'bio': userext.bio,
             'victories': userext.victories,
             'totalGamesPlayed': userext.totalGamesPlayed,
-            'tVictories': userext.tVictories
+            'tVictories': userext.tVictories,
+            'totalTournPlayed': userext.totalTournPlayed
         }
         for userext in uextensions
     ]
@@ -550,12 +552,9 @@ def post_join_tournament(request):  # user joins an active tournament
             if not user_id:
                 return JsonResponse({"error": "User is required to join"}, status=400)
             if user_id is not None:
-                print(user_id)
                 if not tUserExtension.objects.filter(user=user_id).exists():
-                    print("aqui")
                     return JsonResponse({"error": f"User ID {user_id} does not exist in tUserExtension"}, status=404)
                 
-                # Corrigir `values_list` para buscar user1 e user2
                 phase1_users = tGames.objects.filter(tournament_id=tourn.tournament, phase_id=1).values_list('user1', 'user2')
                 all_users = set()
                 for user1, user2 in phase1_users:
@@ -587,6 +586,9 @@ def post_join_tournament(request):  # user joins an active tournament
             if full_games.exists():
                 tourn.status = tauxStatus.objects.get(statusID=2)
                 tourn.save()
+            tUserExtension.objects.filter(user=user_id).update(
+                totalTournPlayed=models.F('totalTournPlayed') + 1
+            )
             return JsonResponse({"message": f"User ID {user_id} joined to tournament ID {tourn_id} successfully"}, status=201)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
@@ -650,25 +652,42 @@ def get_userstatistics(request):
     try:
         validate_filters_uext(request)
         user_id = request.GET.get('userID')
+
         if user_id == "":
             return JsonResponse({"error": "Filter can't be empty."}, status=400)
-        uextensions = tUserExtension.objects.all()
 
+        uextensions = tUserExtension.objects.all()
+        
         if user_id:
             user_id = validate_id(user_id)
             uextensions = uextensions.filter(user=user_id)
 
     except ValidationError as e:
         return JsonResponse({"error": str(e)}, status=400)
-    userext_data = [
-        {
+
+    userext_data = []
+
+    for userext in uextensions:
+        ongoing_statuses = [1, 2]
+        ongoing_games = tGames.objects.filter(
+            Q(user1=userext.user) | Q(user2=userext.user),
+            status__statusID__in=ongoing_statuses
+        ).count()
+        ongoing_tournaments = tTournaments.objects.filter(
+            Q(tgames__user1=userext.user) | Q(tgames__user2=userext.user),
+            status__statusID__in=ongoing_statuses
+        ).distinct().count()
+        game_losses = userext.totalGamesPlayed - userext.victories
+        tournament_losses = userext.totalTournPlayed - ongoing_tournaments - userext.tVictories
+
+        userext_data.append({
+            'UserID': userext.user,
             'GameVictories': userext.victories,
-            'GameLosses': (userext.totalGamesPlayed - userext.victories),
+            'GameLosses': max(0, game_losses),
             'TotalGamesPlayed': userext.totalGamesPlayed,
             'TournamentVictories': userext.tVictories,
-            'TotalTournamentsPlayed': userext.tVictories
-        }
-        for userext in uextensions
-    ]
-    
+            'TournamentLosses': max(0, tournament_losses),
+            'TotalTournamentsPlayed': userext.totalTournPlayed
+        })
+
     return JsonResponse({'users': userext_data}, safe=False, status=200)

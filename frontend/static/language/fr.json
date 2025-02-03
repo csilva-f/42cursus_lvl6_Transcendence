@@ -45,5 +45,6 @@
 	"forgotPassword": "",
 	"mfa": "",
 	"resendCode": "",
-	"resetPassword": ""
+	"resetPassword": "",
+    "overall": "overall FR"
 }

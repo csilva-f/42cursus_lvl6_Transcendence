@@ -1,3 +1,5 @@
+let allGames = [];
+
 //* GAMES
 //? GET - /api/get-games/?statusID=
 async function fetchGames(statusID) {
@@ -27,11 +29,14 @@ async function fetchGames(statusID) {
         success: function (res) {
           const divElement = document.getElementById("gamesContent");
           divElement.innerHTML = "";
+          allGames = res.games;
           res.games.forEach((element) => {
-            const newCard = document.createElement("div");
-            newCard.innerHTML = data;
-            insertInfo(newCard, element, statusID);
-            divElement.appendChild(newCard);
+            if (element.tournamentID == null) {
+              const newCard = document.createElement("div");
+              newCard.innerHTML = data;
+              insertInfo(newCard, element, statusID);
+              divElement.appendChild(newCard);
+            }
           });
           updateContent(langData);
         },
@@ -154,10 +159,11 @@ async function fetchTournaments(statusID) {
           const divElement = document.getElementById("gamesContent");
           divElement.innerHTML = "";
           console.log(res);
+          console.log(allGames);
           res.tournaments.forEach((element) => {
             const newCard = document.createElement("div");
             newCard.innerHTML = data;
-            //insertInfo(newCard, element, statusID);
+            insertTournamentInfo(newCard, element, statusID, allGames);
             divElement.appendChild(newCard);
           });
           updateContent(langData);
