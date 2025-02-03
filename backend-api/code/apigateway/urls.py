@@ -16,4 +16,5 @@ urlpatterns = [
     path('join-tournament/', PostJoinTournament.as_view(), name='join-tournament'),
     path('update-userextension/', PostUpdateUserExtension.as_view(), name='update-userextension'),
     path('get-userstatistics/', GetUserStatistics.as_view(), name='get-userstatistics'),
+    path('accept-gameinvitation/', PostAcceptGameInvit.as_view(), name='accept-gameinvitation'),
 ]

@@ -16,4 +16,5 @@ urlpatterns = [
     path('join_tournament/', post_join_tournament, name='post_join_tournament'),
     path('update_userextension/', post_update_userextension, name='update_userextension'),
     path('get_userstatistics/', get_userstatistics, name='get_userstatistics'),
+    path('accept_gameinvitation/', post_accept_game_invit, name='accept_gameinvitation'),
 ]
