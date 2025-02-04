@@ -53,13 +53,15 @@ class tTournaments(models.Model): #change is_active para status #create status t
     def _str_(self):
         return f"Tournament {self.id} starting on {self.beginDate} until {self.endDate}"
 
-class tGames(models.Model): #resultado do jogo
+class tGames(models.Model):
 
     game = models.AutoField(primary_key=True)
     creationTS = models.DateTimeField(auto_now_add=True)
     user1 = models.IntegerField(null=True, blank=True)
     user2 = models.IntegerField(null=True, blank=True)
     isLocal = models.BooleanField(default=True)
+    isInvitation = models.BooleanField(default=False)
+    isInvitAccepted = models.BooleanField(default=False)
     winnerUser = models.IntegerField(null=True, blank=True)
     tournament = models.ForeignKey(tTournaments, on_delete=models.SET_NULL, null=True, blank=True)
     phase = models.ForeignKey(tauxPhase, on_delete=models.PROTECT, null=True, blank=True) 
