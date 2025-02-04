@@ -29,10 +29,12 @@ function insertUserInfo(newCard, user) {
     const userLvl = newCard.querySelector("#userLvl");
     const userGamesWon = newCard.querySelector("#userGamesWon");
     const userTournamentsWon = newCard.querySelector("#userTournamentsWon");
-    userNick.textContent = user.birthdate;
+    const inviteLi = newCard.querySelector("#inviteLi");
+    userNick.textContent = user.nick;
     userLvl.textContent = user.level;
     userGamesWon.textContent = user.victories;
     userTournamentsWon.textContent = user.tVictories;
+    inviteLi.setAttribute("data-id", user.id);
 
 }
 

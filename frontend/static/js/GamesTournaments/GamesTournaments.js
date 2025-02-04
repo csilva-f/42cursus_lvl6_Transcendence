@@ -192,7 +192,7 @@ function insertTournamentInfo(newCard, element, statusID, allGames) {
     const tournamentPlayers = newCard.querySelector("#tournamentPlayers")
     let playerCount = 0;
     allGames.forEach((game) => {
-        if (game.tournamentID == element.tournamentID) {
+        if ((game.tournamentID == element.tournamentID) && game.phaseID == 1) {
             if (game.user1ID != null)
                 playerCount++;
             if (game.user2ID != null)

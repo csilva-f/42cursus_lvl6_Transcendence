@@ -1,4 +1,5 @@
 let myChart;
+let myChart2;
 
 function StatsSelect(elementID) {
 	const statsEverythingIcon = document.getElementById('statsEverythingIcon');
@@ -54,6 +55,8 @@ function createChart(userStats, option) {
 	const barColors = ["green", "red"];
 	if (myChart)
         myChart.destroy();
+	if (myChart2)
+        myChart2.destroy();
     
     myChart = new Chart("myChart", {
 		type: "doughnut",
@@ -65,4 +68,49 @@ function createChart(userStats, option) {
 			}]
 		},
 	});
+
+	myChart2 = new Chart("myChart2", {
+		type: "bar",
+		data: {
+			labels: ["Matches"],
+			datasets: [
+				{
+					label: "Victories",
+					backgroundColor: barColors[0],
+					data: [yValues[0]]
+				},
+				{
+					label: "Losses",
+					backgroundColor: barColors[1],
+					data: [yValues[1]]
+				}
+			],
+		},
+		options: {
+			indexAxis: 'y',
+			responsive: true,
+			scales: {
+				x: {
+					stacked: false
+				},
+				y: {
+					stacked: false
+				}
+			}
+		}
+	});
+	
+	
+}
+
+function changeChartType() {
+	const chart1 = document.getElementById("myChart")
+	const chart2 = document.getElementById("myChart2")
+	if (chart1.classList.contains('d-none')) {
+		chart1.classList.remove('d-none');
+		chart2.classList.add('d-none');
+	} else {
+		chart2.classList.remove('d-none');
+		chart1.classList.add('d-none');
+	}
 }

@@ -32,10 +32,12 @@ async function fetchGames(statusID) {
           allGames = res.games;
           res.games.forEach((element) => {
             if (element.tournamentID == null) {
-              const newCard = document.createElement("div");
-              newCard.innerHTML = data;
-              insertInfo(newCard, element, statusID);
-              divElement.appendChild(newCard);
+              if (element.isInvitation == false) {
+                const newCard = document.createElement("div");
+                newCard.innerHTML = data;
+                insertInfo(newCard, element, statusID);
+                divElement.appendChild(newCard);
+              }
             }
           });
           updateContent(langData);

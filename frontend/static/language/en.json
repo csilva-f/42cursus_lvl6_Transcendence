@@ -39,6 +39,7 @@
     "gamecreated": "Game created successfully",
     "tournamentcreated": "Tournament created successfully",
     "gameEntered": "Game entered successfully",
+    "gameInvited": "Invitation was successfull, wait for the other user to accept",
     "global": "Global",
     "friends": "Friends",
     "matchHistory": "Match History",

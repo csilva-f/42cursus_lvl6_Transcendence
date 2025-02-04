@@ -245,6 +245,7 @@ async function changeActive(location) {
       headerElement.setAttribute("data-i18n", "welcome");
       updateContent(langData);
       document.getElementById("subMsg").style.display = "block";
+      fetchMatchHistory();
       break;
     case "/profile":
       iconsElements.forEach((element) => {

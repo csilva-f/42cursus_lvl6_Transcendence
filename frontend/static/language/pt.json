@@ -39,6 +39,7 @@
     "gamecreated": "Jogo criado com sucesso",
     "tournamentcreated": "Torneio criado com sucesso",
     "gameEntered": "Jogo iniciado com sucesso",
+    "gameInvited": "Convite enviado com sucesso, esperando confirmacao do outro utilizador",
     "global": "Global",
     "friends": "Amigos",
     "matchHistory": "Histórico de Partidas",
