@@ -27,11 +27,12 @@ function StatsSelect(elementID) {
 function createChart(stats) {
     const xValues = ["Matches Victories", "Matches Lost"];
     console.log(stats)
-    let victories = parseInt(stats[0].GameVictories) + parseInt(stats[0].TournamentVictories);
-    let losses = parseInt(stats[0].GameLosses) + parseInt(stats[0].TournamentLosses);
-    
-    const yValues = [victories, losses];
+    //let victories = parseInt(stats[0].GameVictories) + parseInt(stats[0].TournamentVictories);
+    //let losses = parseInt(stats[0].GameLosses) + parseInt(stats[0].TournamentLosses);
+    //const yValues = [victories, losses];
+    const yValues = [3, 1]
     console.log(yValues)
+    console.log("comentei o load automatico")
     const barColors = ["green", "red"];
     new Chart("myChart", {
         type: "doughnut",
