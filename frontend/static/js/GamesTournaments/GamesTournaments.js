@@ -166,6 +166,9 @@ function insertInfo(newCard, element, statusID) {
         case 2:
             enterBtn.classList.add('d-none');
             break;
+        case 3:
+            enterBtn.classList.add('d-none');
+            break;
     }
     user1Level.textContent = element.user1ID;
     user1Nick.textContent = "{Nickname}";

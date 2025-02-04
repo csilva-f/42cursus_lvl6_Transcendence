@@ -1,3 +1,5 @@
+var userStats = [];
+
 //? GET - /api/get-userstatistics/?userID=
 async function fetchStatistics() {
   const userLang = localStorage.getItem("language") || "en";
@@ -10,9 +12,9 @@ async function fetchStatistics() {
     contentType: "application/json",
     headers: { Accept: "application/json" },
     success: function (res) {
-      console.log(res.users)
-      createChart(res.users);
+      userStats = res.users[0];
       updateContent(langData);
+      createChart(userStats, 1)
     },
     error: function (xhr, status, error) {
       console.error("Error Thrown:", error);
