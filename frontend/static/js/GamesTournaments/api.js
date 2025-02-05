@@ -1,9 +1,13 @@
+let allGames = [];
+
 //* GAMES
 //? GET - /api/get-games/?statusID=
 async function fetchGames(statusID) {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
   const reloadIcon = document.getElementById("reloadIcon");
+  const reloadBtn = document.getElementById('reloadBtn');
+  reloadBtn.setAttribute("data-id", statusID);
   reloadIcon.classList.add("rotate");
   setTimeout(() => {
     reloadIcon.classList.remove("rotate");
@@ -25,11 +29,16 @@ async function fetchGames(statusID) {
         success: function (res) {
           const divElement = document.getElementById("gamesContent");
           divElement.innerHTML = "";
+          allGames = res.games;
           res.games.forEach((element) => {
-            const newCard = document.createElement("div");
-            newCard.innerHTML = data;
-            insertInfo(newCard, element, statusID);
-            divElement.appendChild(newCard);
+            if (element.tournamentID == null) {
+              if (element.isInvitation == false) {
+                const newCard = document.createElement("div");
+                newCard.innerHTML = data;
+                insertInfo(newCard, element, statusID);
+                divElement.appendChild(newCard);
+              }
+            }
           });
           updateContent(langData);
         },
@@ -50,7 +59,7 @@ async function postGame() {
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/create-game/`;
   let gameData = {
-    user1ID: parseInt(document.getElementById('passwordInput').value),
+    user1ID: 1,
     islocal: false
   };
   console.log("gameData: ", gameData);
@@ -102,7 +111,7 @@ async function enterGame(gameID) {
   const APIurl = `/api/update-game/`;
   let gameData = {
     gameID: gameID,
-    user2ID: 6543
+    user2ID: 2
   };
   console.log("gameData: ", gameData);
   $.ajax({
@@ -152,10 +161,11 @@ async function fetchTournaments(statusID) {
           const divElement = document.getElementById("gamesContent");
           divElement.innerHTML = "";
           console.log(res);
+          console.log(allGames);
           res.tournaments.forEach((element) => {
             const newCard = document.createElement("div");
             newCard.innerHTML = data;
-            //insertInfo(newCard, element, statusID);
+            insertTournamentInfo(newCard, element, statusID, allGames);
             divElement.appendChild(newCard);
           });
           updateContent(langData);

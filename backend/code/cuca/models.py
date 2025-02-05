@@ -26,13 +26,16 @@ class tauxPhase(models.Model):
     
 class tUserExtension(models.Model):
     user = models.IntegerField(primary_key=True, null=False, unique=True)
+    nick = models.CharField(max_length=20, null=True, blank=True)
     birthdate = models.DateField()
     ulevel = models.FloatField(null=True, blank=True, default=0.0)
     gender = models.ForeignKey(tauxGender, on_delete=models.PROTECT, null=False)
     avatar = models.CharField(max_length=1000, null=True, blank=True)
+    bio = models.CharField(max_length=2000, null=True, blank=True)
     victories = models.IntegerField(null=True, blank=True, default=0)
     totalGamesPlayed = models.IntegerField(null=True, blank=True, default=0)
     tVictories = models.IntegerField(null=True, blank=True, default=0)
+    totalTournPlayed = models.IntegerField(null=True, blank=True, default=0)
 
     def __str__(self):
         return f"UserExtension {self.user}"
@@ -50,13 +53,15 @@ class tTournaments(models.Model): #change is_active para status #create status t
     def _str_(self):
         return f"Tournament {self.id} starting on {self.beginDate} until {self.endDate}"
 
-class tGames(models.Model): #resultado do jogo
+class tGames(models.Model):
 
     game = models.AutoField(primary_key=True)
     creationTS = models.DateTimeField(auto_now_add=True)
     user1 = models.IntegerField(null=True, blank=True)
     user2 = models.IntegerField(null=True, blank=True)
     isLocal = models.BooleanField(default=True)
+    isInvitation = models.BooleanField(default=False)
+    isInvitAccepted = models.BooleanField(default=False)
     winnerUser = models.IntegerField(null=True, blank=True)
     tournament = models.ForeignKey(tTournaments, on_delete=models.SET_NULL, null=True, blank=True)
     phase = models.ForeignKey(tauxPhase, on_delete=models.PROTECT, null=True, blank=True) 

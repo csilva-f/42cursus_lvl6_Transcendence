@@ -82,7 +82,12 @@ function gameLoop(canvas, ctx, objects) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     window.requestAnimationFrame(() => gameLoop(canvas, ctx, objects));
     
-    if (stopGame) return;
+    if (stopGame) {
+        const finishedGame = document.getElementById('finishedGame')
+        canvas.classList.add('d-none');
+        finishedGame.classList.remove('d-none');
+        return;
+    }
     gameUpdate(canvas, objects);
     gameDraw(ctx, objects);
 }

@@ -1,20 +1,55 @@
 :root {
-    --bodyBg: #EEE2DC;
-    --cardBg: #ffffffc5;
-    /*? Main Icons */
-    --mainActiveBg: #AC3B61;
+    /* 
+        ? Colors (P/S/B/C)
+        * ---------
+        * #ac3b61cc
+        * #de94ad
+        * #d89d994D
+        * #d469614D
+        * ---------
+        * #333D79FF
+        *
+        *
+        * #FAEBEFFF
+        * ---------
+        * #755139FF
+        *
+        * #F2EDD7FF
+        * 
+        * ---------
+        * #8ABAD3FF
+        *
+        * #FCF6F5FF
+        * #EDC2D8FF
+        * ---------
+        * #006989
+        *
+        * #eaebed
+        * #a3bac3
+        * ---------
+    */
+    --bodyBg: #dfcbe34d;    
+    --layoutBg: #ffffffc5;
+    --cardBg: #dfcbe3;
+    --primary: #6e597d;
+    --secondary: #de94ad;
+    /*? Main Components */
+    --mainActiveBg: var(--primary);
     --mainActiveIcon: white;
     --mainActiveText: white;
     --mainInactiveBg: transparent;
     --mainInactiveIcon: black;
     --mainInactiveText: black;
-    /*? Secondary Icons */
-    --SecondaryBg: #87709C;
-    --SecondaryIcon: white;
-    --SecondaryText: white;
-    /*? Sidebar Icons */
-    --SidebarActiveBg: white;
-    --SidebarActiveIcon: #87709C;
-    --SidebarInactiveBg: transparent;
-    --SidebarInactiveIcon: white;
+    /*? Secondary Components */
+    --secondaryBg: var(--secondary);
+    --secondaryIcon: white;
+    --secondaryText: white;
+    /*? Sidebar Components */
+    --sidebarBg: var(--primary);
+    --sidebarActiveBg: white;
+    --sidebarActiveIcon: var(--primary);
+    --sidebarInactiveBg: transparent;
+    --sidebarInactiveIcon: white;
+    /*? Other Components */
+    --progressLevelBg: var(--primary)
 }

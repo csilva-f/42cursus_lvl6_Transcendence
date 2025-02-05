@@ -41,9 +41,7 @@ function getForms() {
 				console.log("form invalid")
             } else {
                 console.log("Form is valid: ", form);
-                if (form.id == "remoteFormID")
-                    postGame();
-                else if (form.id == "localFormID")
+                if (form.id == "localFormID")
                     postLocalGame();
                 else if (form.id == "tournamentFormID")
                     postTournament();

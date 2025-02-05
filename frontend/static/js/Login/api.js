@@ -1,3 +1,4 @@
+
 async function sendLogin() {
   // Login function
   const email = $("#loginEmail").val();

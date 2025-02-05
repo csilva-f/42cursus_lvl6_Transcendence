@@ -4,6 +4,11 @@ const routes = {
     title: "404",
     descripton: "Page not found",
   },
+  "/mainPage": {
+    template: "/mainPage.html",
+    title: "Main Page",
+    descripton: "This is the Main Page",
+  },
   "/": {
     template: "/templates/Home.html",
     title: "Home",
@@ -54,7 +59,7 @@ const routes = {
     title: "Social",
     descripton: "This is the Social Hub Page",
   },
-  "/about": {
+  "/aboutUs": {
     template: "/templates/AboutUs.html",
     title: "AboutUs",
     descripton: "This is the AboutUs Page",
@@ -69,9 +74,15 @@ const routes = {
     title: "Profile",
     descripton: "OAuth2 callback",
   },
+  "/tournament": {
+    template: "/templates/TournamentBracket.html",
+    title: "Tournament",
+    descripton: "Tournament Bracket",
+  },
 };
 
 const bigScreenLocation = [
+  "/mainPage",
   "/login",
   "/pong",
   "/callback",
@@ -79,17 +90,23 @@ const bigScreenLocation = [
   "/mfa",
   "/resendCode",
   "/resetPassword",
+  "/tournament",
 ];
 
 const route = (event) => {
   event = event || window.event;
   event.preventDefault();
-  console.log(event);
-  console.log(event.target);
-  console.log(event.target.href);
-  window.history.pushState({}, "", event.target.href);
-  locationHandler("content");
+
+  const targetUrl = new URL(event.target.href, window.location.origin);
+
+  if (targetUrl.origin === window.location.origin) {
+    window.history.pushState({}, "", targetUrl.pathname);
+    locationHandler("content");
+  } else {
+    window.open(targetUrl.href, "_blank");
+  }
 };
+
 
 function activateSBIcon(element) {
   element.classList.remove("iconSBInactive");
@@ -112,12 +129,21 @@ function disableIcon(element) {
 }
 
 async function changeToBig(location) {
+  const allContent = document.getElementById("allContent")
+  allContent.classList.remove('d-none');
+  allContent.style.cssText += 'height: calc(100vh - 7rem);';
   const headerElement = document.getElementById("mainMsg");
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
   const mainDiv = document.getElementById("allContent");
 
-  if (location == "/login") {
+  if (location == "/mainPage") {
+    headerElement.setAttribute("data-i18n", "noContent");
+  }
+  else if (location == "/tournament") {
+    allContent.style.cssText += 'height: calc(100vh - 7rem); overflow-x: auto;';
+  }
+  else if (location == "/login") {
     headerElement.setAttribute("data-i18n", "login");
     getForms();
   } else if (location == "/forgotPassword") {
@@ -150,10 +176,13 @@ async function changeActive(location) {
     document.getElementById("gamesIcon"),
     document.getElementById("statsIcon"),
     document.getElementById("socialIcon"),
+    document.getElementById("creditsIcon"),
   ];
   const headerElement = document.getElementById("mainMsg");
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
+  const allContent = document.getElementById("allContent")
+  allContent.classList.add('d-none');
   switch (location) {
     case "/games":
       iconsElements.forEach((element) => {
@@ -180,6 +209,9 @@ async function changeActive(location) {
       headerElement.setAttribute("data-i18n", "statistics");
       updateContent(langData);
       document.getElementById("subMsg").style.display = "none";
+      const statsEverythingIcon = document.getElementById("statsEverythingIcon");
+      activateIcon(statsEverythingIcon);
+      fetchStatistics();
       break;
     case "/social":
       iconsElements.forEach((element) => {
@@ -194,9 +226,9 @@ async function changeActive(location) {
       activateIcon(UserElement);
       fetchUsers();
       break;
-    case "/about":
+    case "/aboutUs":
       iconsElements.forEach((element) => {
-        element.id == "aboutUsIcon"
+        element.id == "creditsIcon"
           ? activateSBIcon(element)
           : disableSBIcon(element);
       });
@@ -213,6 +245,7 @@ async function changeActive(location) {
       headerElement.setAttribute("data-i18n", "welcome");
       updateContent(langData);
       document.getElementById("subMsg").style.display = "block";
+      fetchMatchHistory();
       break;
     case "/profile":
       iconsElements.forEach((element) => {
@@ -221,6 +254,9 @@ async function changeActive(location) {
       headerElement.setAttribute("data-i18n", "profile");
       updateContent(langData);
       document.getElementById("subMsg").style.display = "none";
+      const statsEverythingIconProfile = document.getElementById("statsEverythingIcon");
+      activateIcon(statsEverythingIconProfile);
+      fetchStatistics();
       break;
     default:
       console.log("default");
@@ -257,13 +293,13 @@ const locationHandler = async (elementID) => {
 
 document.addEventListener("click", (e) => {
   const { target } = e;
-  //console.log("Target: ", target);
+
   if (target.matches("nav a")) {
     e.preventDefault();
-    route();
-  }
-});
+    route(e);
+}});
 
-window.onpopstate = locationHandler;
+
+window.onpopstate = () => locationHandler("content");
 window.route = route;
 locationHandler("content");

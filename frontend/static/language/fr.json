@@ -1,4 +1,5 @@
 {
+    "noContent": "",
     "login": "Bienvenue à Cuca Beludo",
     "welcome": "Bienvenue,",
     "games&tournaments": "Jeux et Tournois",
@@ -39,11 +40,13 @@
     "tournamentcreated": "Torneio criado com sucesso FR",
     "gameEntered": "Game entered successfully FR",
     "signUpSuccess": "User registered successfully, please check your email FR",
+    "gameInvited": "Invitation was successfull, wait for the other user to accept FR",
     "global": "Global FR",
     "friends": "Friends FR",
     "matchHistory": "Match History FR",
 	"forgotPassword": "",
 	"mfa": "",
 	"resendCode": "",
-	"resetPassword": ""
+	"resetPassword": "",
+    "overall": "overall FR"
 }

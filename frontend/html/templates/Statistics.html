@@ -1,10 +1,57 @@
 <div class="h-100">
-    <div class="container-fluid h-100">
-      <div class="row h-100">
-        <div class="h-100 col-sm-12 shadow rounded-4" style="background-color: var(--cardBg);">
-          teste statistics
+  <div class="container-fluid h-100 d-flex flex-column">
+    <div class="row" style="min-height: 5rem;">
+      <div class="col-sm-12 shadow rounded-4 d-flex align-items-center w-100"
+        style="background-color: var(--layoutBg);">
+        <nav class="container-fluid">
+          <div class="row">
+            <div class="col-lg-10 col-md-10 col-10">
+              <div class="d-flex gap-2 h-100">
+                <ul class="nav nav-pills" style="height: 3rem">
+                  <li class="pop-hover-s menuLi nav-item rounded-3 me-2 d-flex align-items-center iconInactive"
+                    id="statsEverythingIcon" onclick="StatsSelect(this.id)">
+                    <i class="fa-solid fa-medal fa-xl ms-2"></i>
+                    <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="overall"></p>
+                  </li>
+                  <li class="pop-hover-s menuLi nav-item rounded-3 me-2 d-flex align-items-center iconInactive"
+                    id="statsGameIcon" onclick="StatsSelect(this.id)">
+                    <i class="fa-solid fa-gamepad fa-xl ms-2"></i>
+                    <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="games"></p>
+                  </li>
+                  <li class="pop-hover-s menuLi nav-item rounded-3 ms-2 d-flex align-items-center iconInactive"
+                    id="statsTournamentIcon" onclick="StatsSelect(this.id)">
+                    <i class="fa-solid fa-trophy fa-xl ms-2"></i>
+                    <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="tournaments"></p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-2">
+              <div class="d-grid gap-2 d-flex justify-content-end">
+                <ul class="nav nav-pills" style="height: 3rem">
+                  <li
+                    class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+                    style="width: 3rem; cursor: pointer;" id="changeChartType" onclick="changeChartType()">
+                    <i class="fa-solid fa-wrench fa-xl" style="color: black;"></i>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <div class="row pt-3" style="height: calc(100% - 5rem)">
+      <div class="col-sm-12 shadow rounded-4 h-100" style="background-color: var(--layoutBg);">
+        <div class="container-fluid h-100 d-flex flex-column">
+          <div class="row p-2 overflow-y-auto" style="height: 100%; padding-top: 0 !important">
+            <div class="col-sm-12 mt-4 px-0 d-flex justify-content-center align-items-center">
+              <canvas id="myChart" style="max-width: 30rem; max-height: 30rem;"></canvas>
+              <canvas id="myChart2" class="d-none" style="max-width: 30rem; max-height: 30rem;"></canvas>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  
+</div>

@@ -79,7 +79,7 @@ function activateGameForm(typeForm) {
 
 function resetModal() {
     document.getElementById('localForm').classList.add('d-none');
-    document.getElementById('remoteForm').classList.add('d-none');
+    //document.getElementById('remoteForm').classList.add('d-none');
     document.getElementById('selectForm').classList.remove('d-none');
     document.getElementById('goBackLi').classList.add('d-none');
 
@@ -91,13 +91,6 @@ function resetModal() {
     remoteInputs.forEach(input => {
         input.value = '';
     });
-
-    const checkbox = document.getElementById('checkboxPassword');
-    checkbox.checked = false;
-
-    const passwordInput = document.getElementById('passwordInput');
-    passwordInput.disabled = true;
-    passwordInput.required = false;
 }
 
 function GamesTournamentsMatches(elementID) {
@@ -136,7 +129,6 @@ function GamesTournamentsSelect(elementID) {
     const element = document.getElementById(elementID);
     if (elementID == "loadTournamentsIcon") {
         const otherElement = document.getElementById('loadGamesIcon');
-        otherElement.classList.remove('iconActive');
         disableIcon(otherElement);
         activateIcon(element);
         GamesTournamentsMatches('searchingLi');
@@ -145,7 +137,6 @@ function GamesTournamentsSelect(elementID) {
         document.getElementById('createGameBtn').classList.add('d-none');
     } else if (elementID == "loadGamesIcon") {
         const otherElement = document.getElementById('loadTournamentsIcon');
-        otherElement.classList.remove('iconActive');
         disableIcon(otherElement);
         activateIcon(element);
         GamesTournamentsMatches('searchingLi');
@@ -175,6 +166,9 @@ function insertInfo(newCard, element, statusID) {
         case 2:
             enterBtn.classList.add('d-none');
             break;
+        case 3:
+            enterBtn.classList.add('d-none');
+            break;
     }
     user1Level.textContent = element.user1ID;
     user1Nick.textContent = "{Nickname}";
@@ -186,4 +180,32 @@ function insertInfo(newCard, element, statusID) {
         user2Level.textContent = element.user2ID;
         user2Nick.textContent = "{Nickname2}";
     }
+}
+
+function insertTournamentInfo(newCard, element, statusID, allGames) {
+    const tournamentTitle = newCard.querySelector("#tournamentTitle")
+    tournamentTitle.textContent = element.name;
+    const tournamentBeginDate = newCard.querySelector("#tournamentBeginDate")
+    tournamentBeginDate.textContent = element.beginDate;
+    const tournamentEndDate = newCard.querySelector("#tournamentEndDate")
+    tournamentEndDate.textContent = element.endDate;
+    const tournamentPlayers = newCard.querySelector("#tournamentPlayers")
+    let playerCount = 0;
+    allGames.forEach((game) => {
+        if ((game.tournamentID == element.tournamentID) && game.phaseID == 1) {
+            if (game.user1ID != null)
+                playerCount++;
+            if (game.user2ID != null)
+                playerCount++;
+        }
+    })
+    tournamentPlayers.textContent = playerCount;
+}
+
+function reloadInformation(statusID) {
+    const loadGamesIcon = document.getElementById('loadGamesIcon');
+    if (loadGamesIcon.classList.contains('iconActive'))
+        fetchGames(statusID);
+    else
+        fetchTournaments(statusID);
 }
