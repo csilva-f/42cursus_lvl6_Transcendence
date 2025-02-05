@@ -121,16 +121,16 @@
 
 				<div class="row mb-4">
 					<div class="col-md-6">
-					  <label for="gender" class="form-label">Gender</label>
-					  <div class="input-group">
+						<label for="gender" class="form-label">Gender</label>
+						<div class="input-group">
 						<span id="gender-icon" class="input-group-text" style="border: none; background: white;">
-						  <i class="fa-solid fa-neuter" style="color: #AC3B61;"></i> 
+							<i class="" style="color: #AC3B61;" id="icon"></i> 
 						</span>
-						<select class="form-select" id="gender" style="border: none;">
-						  <option value="" selected disabled> Select gender </option>
-						  <option value="male">Male</option>
-						  <option value="female">Female</option>
-						  <option value="other">Other</option>
+						<select class="form-select" id="gender" style="border: none;" onchange="updateIcon()">
+							<option value="" selected disabled> Select gender </option>
+							<option value="male">Male</option>
+							<option value="female">Female</option>
+							<option value="other">Other</option>
 						</select>
 					  </div>
 					</div>
@@ -145,13 +145,13 @@
 
 				<div class="row mb-3">
 					<div class="col-md-12">
-						<label for="twoFactor" class="form-label">Enable two-factor authentication on your account</label>
-						<div class="form-check form-switch">
-							<input class="form-check-input" type="checkbox" id="twoFactor">
-							<label class="form-check-label" for="twoFactor"></label>
-						</div>
+					  <label for="twoFactor" class="form-label">Enable two-factor authentication on your account</label>
+					  <div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="twoFactor" onclick="toggleSwitch(this)">
+						<label class="form-check-label" for="twoFactor"></label>
+					  </div>
 					</div>
-				</div>
+				  </div>								
 
 				<div class="row">
 				  <div class="col-md-6 text-start">
@@ -243,3 +243,4 @@
 		</div>
 	</div>
   </div>
+  

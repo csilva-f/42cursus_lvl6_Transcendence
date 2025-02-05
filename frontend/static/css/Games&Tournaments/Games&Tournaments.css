@@ -70,8 +70,8 @@ input[type="radio"]:focus {
 /* Ensure radios and checkboxes are consistent */
 input[type="checkbox"]:checked,
 input[type="radio"]:checked {
-    background-color: black !important;
-    border-color: black !important;
+    background-color: #AC3B61 !important;
+    border-color: #AC3B61 !important;
     box-shadow: none !important;
 }
 

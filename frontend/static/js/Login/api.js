@@ -342,22 +342,35 @@ function validatePasswordsMatch(passwordId1, passwordId2, validationId, iconId) 
 	}
 }
 
-// change icon gender
-function updateGenderIcon() {
-	let genderSelect = document.getElementById("gender");
-	let genderIcon = document.getElementById('gender-icon').querySelector('i');
-
-	if (!genderSelect || !genderIcon) return;
-
+// change icon gender 
+function updateIcon() {
+	const genderSelect = document.getElementById('gender');
+	const icon = document.getElementById('icon');
+	
 	switch (genderSelect.value) {
-		case 'male':
-			genderIcon.className = 'fa-solid fa-mars';
-			break;
-		case 'female':
-			genderIcon.className = 'fa-solid fa-venus';
-			break;
-		case 'other':
-			genderIcon.className = 'fa-solid fa-genderless';
-			break;
+	  case 'male':
+		icon.className = 'fa-solid fa-mars';
+		break;
+	  case 'female':
+		icon.className = 'fa-solid fa-venus';
+		break;
+	  case 'other':
+		icon.className = 'fa-solid fa-neuter';
+		break;
+	  default:
+		icon.className = '';
 	}
-}
+  }
+
+  function toggleSwitch(checkbox) {
+	const switchLabel = checkbox;
+	console.log(switchLabel);
+	if (checkbox.checked) {
+	  switchLabel.style.backgroundColor = 'green';
+	  switchLabel.style.borderColor = 'green';
+	} else {
+	  switchLabel.style.backgroundColor = '';
+	  switchLabel.style.borderColor = '';
+	}
+  }
+  
