@@ -1,4 +1,78 @@
-<div class="container text-center">
+<div class="container-fluid p-3 w-75 d-flex flex-column" style="height: calc(100vh - 7rem);" id="finishedGame">
+    <div class="row h-100 shadow rounded rounded-4" style="background-color: var(--layoutBg);">
+        <div class="col-5 d-flex justify-content-center">
+            <div class="p-4 position-relative">
+                <div class="text-center mb-4">
+                    <img id="avatarPreview" src="/static/img/pfp1.jpeg" alt="Avatar" class="rounded-circle shadow"
+                        style="width: 150px; height: 150px; object-fit: cover; cursor: pointer; border: 2px solid var(--primary);"
+                        id="user1Img">
+                </div>
+                <div id="playerLeftData" class="mt-4">
+                    <p class="h4 m-0 fw-bold text-center mb-1" id="leftPlayerName"></p>
+                    <p class="h2 m-0 mt-5 fw-bold text-center mb-1" id="playerLeftScore"></p>
+                    <p class="h2 m-0 mt-5 fw-bold text-center mb-1" id="playerLeftBalls">25</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-2 p-0">
+            <div class="row">
+                <div class="col-12" style="margin-top: 15.7rem;">
+                    <p class="h6 fw-bold d-flex justify-content-center">Points</p>
+                    <div class="progress-stacked w-100" style="height: 2rem;">
+                        <div class="progress" role="progressbar" aria-label="Segment one" aria-valuenow="15"
+                            aria-valuemax="100" style="width: 15%; height: 2rem;">
+                            <div class="progress-bar" style="background-color: var(--primary);"></div>
+                        </div>
+                        <div class="progress" role="progressbar" aria-label="Segment two" aria-valuenow="30"
+                            aria-valuemax="100" style="width: 30%; height: 2rem;">
+                            <div class="progress-bar" style="background-color: var(--secondary);"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12" style="margin-top: 1.7rem;">
+                    <p class="h6 fw-bold d-flex justify-content-center">Balls Batidas</p>
+                    <div class="progress-stacked w-100" style="height: 2rem;">
+                        <div class="progress" role="progressbar" aria-label="Segment one" aria-valuenow="15"
+                            aria-valuemax="100" style="width: 15%; height: 2rem;">
+                            <div class="progress-bar" style="background-color: var(--primary);"></div>
+                        </div>
+                        <div class="progress" role="progressbar" aria-label="Segment two" aria-valuenow="30"
+                            aria-valuemax="100" style="width: 30%; height: 2rem;">
+                            <div class="progress-bar" style="background-color: var(--secondary);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="p-4 position-relative h-75">
+                <div class="text-center mb-4">
+                    <img id="avatarPreview" src="/static/img/ado.jpg" alt="Avatar" class="rounded-circle shadow"
+                        style="width: 150px; height: 150px; object-fit: cover; cursor: pointer; border: 2px solid var(--secondary);"
+                        id="user2Img">
+                </div>
+                <div id="playerRightData">
+                    <p class="h4 mt-4 fw-bold text-center mb-1" id="rightPlayerName"></p>
+                    <p class="h2 m-0 mt-5 fw-bold text-center mb-1" id="playerRightScore"></p>
+                    <p class="h2 m-0 mt-5 fw-bold text-center mb-1" id="playerRightBalls">13</p>
+                </div>
+            </div>
+            <div class="h-25 p-4 d-flex justify-content-end align-items-end">
+                <button id="editButton" class="btn d-flex align-items-center me-4"
+                    style="background-color: var(--primary); color: white; border: none; height: 3rem;">
+                    <i class="fa-solid fa-table-tennis-paddle-ball fa-lg me-2"></i>
+                    <span class="d-none d-xl-block" style="font-size: 0.9rem; font-weight: bold;">Play Again</span>
+                </button>
+                <button id="changePasswordButton" class="btn d-flex align-items-center"
+                    style="background-color: var(--primary); color: white; border: none; height: 3rem;">
+                    <i class="fa-solid fa-home fa-lg me-2"></i>
+                    <span class="d-none d-xl-block" style="font-size: 0.9rem; font-weight: bold;">Home</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container text-center d-none">
     <div class="row">
         <!-- Left Player -->
         <div class="col-6 mb-2 border-end border-3 border-black">
@@ -34,6 +108,6 @@
         <!-- End Right Player -->
     </div>
 </div>
-<div class="h-100 w-100 d-flex justify-content-center align-itens-center">
+<div class="d-none h-75 w-100 d-flex justify-content-center align-itens-center">
     <canvas class="border border-3 border-black bg-dark" id="pongGameCanvas"></canvas>
 </div>

@@ -61,27 +61,27 @@
 		display: none !important;
 	}
 
-    #sidebarBtn {
-        display: block !important;
-    }
+	#sidebarBtn {
+		display: block !important;
+	}
 
-    #user1Content {
-        display: none !important;
-    }
+	#user1Content {
+		display: none !important;
+	}
 
-    #user2Content {
-        display: none !important;
-    }
+	#user2Content {
+		display: none !important;
+	}
 
-    #user1Div {
-        width: 6rem !important;
-        min-width: 6rem !important;
-    }
+	#user1Div {
+		width: 6rem !important;
+		min-width: 6rem !important;
+	}
 
-    #user2Div {
-        width: 6rem !important;
-        min-width: 6rem !important;
-    }
+	#user2Div {
+		width: 6rem !important;
+		min-width: 6rem !important;
+	}
 	#sidebarBtn {
 		display: block !important;
 	}
@@ -134,6 +134,7 @@ html {
 	height: 100%;
 }
 
+ /* Login and profile page */
 #loginSignUpTab .nav-item .nav-link.active {
 	background-color: #AC3B61 !important;
 	border-color: #AC3B61 !important;
@@ -143,4 +144,15 @@ html {
 #loginSignUpTab .nav-item .nav-link:hover {
 	background-color: #AC3B61 !important;
 	color: #fff !important;
+}
+
+/* Static images for profile page */
+body.profile-page {
+	background-image: url('/static/img/profile_page/bot1-removebg-preview.svg'), 
+					  url('/static/img/profile_page/bot2-removebg-preview.svg'), 
+					  url('/static/img/profile_page/bot3-removebg-preview.svg');
+	background-repeat: no-repeat, no-repeat, no-repeat;
+	background-position: 10% 20%, 50% 60%, 80% 30%;
+	background-size: 150px, 200px, 180px;
+	background-attachment: fixed;
 }

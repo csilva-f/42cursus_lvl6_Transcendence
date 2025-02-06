@@ -254,6 +254,9 @@ async function changeActive(location) {
       headerElement.setAttribute("data-i18n", "profile");
       updateContent(langData);
       document.getElementById("subMsg").style.display = "none";
+      const statsEverythingIconProfile = document.getElementById("statsEverythingIcon");
+      activateIcon(statsEverythingIconProfile);
+      fetchStatistics();
       break;
     default:
       console.log("default");
