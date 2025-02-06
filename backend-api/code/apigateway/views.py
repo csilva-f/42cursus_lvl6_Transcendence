@@ -3,11 +3,12 @@ from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.conf import settings
-        
+
+
 class GetGames(APIView):
-    permission_classes = [AllowAny]  # Adjust permissions as needed
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         backend_url = settings.BACKEND_GAMES_URL
@@ -26,7 +27,7 @@ class GetGames(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class GetTournaments(APIView):
-    permission_classes = [AllowAny]  # Adjust permissions as needed
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         backend_url = settings.BACKEND_TOURNAMENTS_URL
@@ -43,7 +44,7 @@ class GetTournaments(APIView):
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
 class PostAddGame(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
@@ -60,7 +61,7 @@ class PostAddGame(APIView):
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
 class PostAddTournament(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
@@ -168,7 +169,7 @@ class GetUserExtensions(APIView):
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
 class PostUpdateTournament(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
@@ -185,7 +186,7 @@ class PostUpdateTournament(APIView):
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
 class GetPhases(APIView):
     permission_classes = [AllowAny]
 
@@ -201,7 +202,7 @@ class GetPhases(APIView):
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
-            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)    
+            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PostJoinTournament(APIView):
     permission_classes = [AllowAny]
@@ -217,7 +218,6 @@ class PostJoinTournament(APIView):
             return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PostUpdateUserExtension(APIView):

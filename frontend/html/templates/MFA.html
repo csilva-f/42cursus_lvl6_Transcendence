@@ -1,7 +1,6 @@
-
 <div class="container mt-5">
 	<div class="row justify-content-center">
-		<div class="col-md-4">
+		<div class="p-3 shadow rounded" style="background-color: #e1cad2;; width: 600px;">
 			<p class="h4 text-center" style="font-weight: bold; color: #000;">Check your e-mail to get the code</p>
 			<p class="h7 text-center" style="color: #000;">We sent a six-character code to your e-mail.</p>
 			<div class="tab-pane fade show active" id="mfa" role="tabpanel" aria-labelledby="mfa-tab">
@@ -16,7 +15,7 @@
 							<input type="text" class="form-control otp-field" maxlength="1" id="otp6" autocomplete="off" oninput="handleOTPInput(this)">
 						</div>
 					</div>
-					<button type="button" class="btn" style="background-color: #AC3B61; color: white; width: 100%;" onclick="">Verify account</button>
+					<button type="button" class="btn" style="background-color: #AC3B61; color: white; width: 100%;" onclick="verifyAccount()">Verify account</button>
 				</form>
 				<p id="mfa-message"></p>
 				<div class="text-center mt-3">

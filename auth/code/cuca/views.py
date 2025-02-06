@@ -13,6 +13,9 @@ from django.contrib.auth.models import User
 from .models import CucaUser, PasswordResetToken
 from rest_framework.permissions import IsAuthenticated,AllowAny
 import requests
+import jwt
+import json
+
 
 class UserCreate(generics.CreateAPIView):
     queryset = CucaUser.objects.all()
@@ -25,7 +28,8 @@ class UserCreate(generics.CreateAPIView):
             user = serializer.save()
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            validation_link  = request.headers['Origin'] + '/authapi/validate-email/validate-email/' + uid + '/' + token
+            #validation_link  = request.headers['Origin'] + '/authapi/validate-email/validate-email/' + uid + '/' + token
+            validation_link  = request.headers['Origin'] + '/validate-email?uid=' + uid + '&token=' + token
             print('build_absolute_uri: ',validation_link)
             print(user)
             response = requests.post('http://email:8000/send_email/', json={
@@ -47,11 +51,12 @@ class UserCreate(generics.CreateAPIView):
 
 class ValidateEmailView(generics.GenericAPIView):
     permission_classes = [AllowAny]
-    def get(self, request, uidb64, token):
+    def get(self, request):
         try:
-            uid = force_str(urlsafe_base64_decode(uidb64))
+            data=request.data
+            uid = force_str(urlsafe_base64_decode(data['uid']))
             user = CucaUser.objects.get(pk=uid)
-            if default_token_generator.check_token(user, token):
+            if default_token_generator.check_token(user, data['token']):
                 user.is_active = True  # Activate the user
                 user.save()
                 return Response({'message': 'Email validated successfully!'}, status=status.HTTP_200_OK)
@@ -81,8 +86,8 @@ class RecoverPasswordAPIView(generics.GenericAPIView):
             token=token,
             expires_at=expires_at
         )
-        reset_url  = request.headers['Origin'] + '/authapi/register/reset-password/' + uid + '/' + token
-
+        reset_url  = request.headers['Origin'] + '/resetPassword?uid=' + uid + '&token=' + token
+        print(reset_url)
         response = requests.post('http://email:8000/send_email/', json={
             'subject': 'Password Reset Request',
             'message': f'Please click the following link to reset your password: {reset_url}',
@@ -108,15 +113,15 @@ class RecoverPasswordAPIView(generics.GenericAPIView):
 class ResetPasswordAPIView(APIView):
     serializer_class = ResetPasswordSerializer
 
-    def post(self, request, uidb64, token):
+    def get(self, request):
         try:
-            user_id = force_str(urlsafe_base64_decode(uidb64))
-            print(user_id)
+            data=request.data
+            user_id = force_str(urlsafe_base64_decode(data['uid']))
             user = CucaUser.objects.get(id=user_id)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             return Response({'error': 'Invalid user ID or token.'}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            password_reset_token = PasswordResetToken.objects.get(user=user, token=token)
+            password_reset_token = PasswordResetToken.objects.get(user=user, token=data['token'])
             if password_reset_token.expires_at < timezone.now():
                 return Response({'error': 'Password reset token has expired.'}, status=status.HTTP_400_BAD_REQUEST)
         except PasswordResetToken.DoesNotExist:
@@ -139,3 +144,20 @@ class ChangePasswordAPIView(APIView):
         user.set_password(serializer.validated_data['new_password'])
         user.save()
         return Response({'message': 'Password changed successfully.'}, status=status.HTTP_200_OK)
+
+class ValidateTokenView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        token = request.headers['Authorization'].split(' ')[1]
+        print (request.headers)
+        try:
+            payload = jwt.decode(token,'django-insecure-@www2r)nc-li_empd8(e()gc592l7wau$zn%y#2*ej)u^xb*(0',algorithms=['HS256'])
+            print(payload)
+            user = CucaUser.objects.get(id=payload['user_id'])
+            data = {'user_id': user.id, 'username': user.username}
+            return Response({'data': data}, status=status.HTTP_200_OK)
+        except jwt.ExpiredSignatureError:
+            return Response({'error': 'Token has expired'}, status=status.HTTP_401_UNAUTHORIZED)
+        except jwt.InvalidTokenError:
+            return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)

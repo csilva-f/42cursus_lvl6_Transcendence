@@ -1,96 +1,146 @@
 <div class="container mt-5">
 	<div class="row justify-content-center">
-		<div class="col-md-4">
+		<div class="p-3 shadow rounded" style="background-color: #e1cad2;; width: 600px;">
 	
-			<!-- Navegação de abas para alternar entre Login e Sign Up -->
-			<ul class="nav nav-pills" id="loginSignUpTab" role="tablist" style="display: flex; list-style: none; padding: 0; margin: 0;">
-				<li class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center iconInactive" role="presentation" style="flex: 1;">
-					<button class="nav-link active d-flex align-items-center gap-2" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab" aria-controls="login" aria-selected="true" style="font-weight: bold; color: #000; padding-left: 50px; padding-right: 50px;">
-					<i class="fa-solid fa-sign-in-alt fa-xl"></i>
-					<span>Login</span>
-					</button>
-				</li>
-				<li class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center iconInactive" role="presentation" style="flex: 1;">
-					<button class="nav-link d-flex align-items-center gap-2" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button" role="tab" aria-controls="signup" aria-selected="false" style="font-weight: bold; color: #000; padding-left: 50px; padding-right: 50px;">
-					<i class="fa-solid fa-user-plus fa-xl"></i>
-					<span>Sign Up</span>
-					</button>
-				</li>
-			</ul>
-			<div class="tab-content" id="loginSignUpTabContent">
+				<!-- Login and Sign Up -->
+				<ul class="nav nav-pills" id="loginSignUpTab" role="tablist" style="display: flex; list-style: none; padding: 0; margin: 0;">
+					<li class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center iconInactive" role="presentation" style="flex: 1;">
+						<button class="nav-link active d-flex align-items-center gap-2" id="login-tab" data-bs-toggle="tab" data-bs-target="#login"
+						type="button" role="tab" aria-controls="login" aria-selected="true" style="min-height:46px; font-weight: bold; color: #000; padding-left: 90px; padding-right: 90px;">
+						<i class="fa-solid fa-sign-in-alt fa-xl"></i>
+						<span class="d-none d-xl-block">Login</span>
+						</button>
+					</li>
+					<li class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center iconInactive" role="presentation" style="flex: 1;">
+						<button class="nav-link d-flex align-items-center gap-2" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup"
+						type="button" role="tab" aria-controls="signup" aria-selected="false" style="min-height:46px; font-weight: bold; color: #000; padding-left: 90px; padding-right: 90px;">
+						<i class="fa-solid fa-user-plus fa-xl"></i>
+						<span class="d-none d-xl-block">Sign up</span>
+						</button>
+					</li>
+				</ul>
+				<div class="tab-content" id="loginSignUpTabContent">
 
-				<!-- Login -->
-				<div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
-					<form class="mt-3 needs-validation" id="login-form" novalidate>
-						<div class="mb-3">
-							<div class="input-group">
-								<span class="input-group-text"><i class="fas fa-envelope" style="color: #AC3B61;"></i></span>
-								<input type="email" class="form-control" id="loginEmail" placeholder="Email">
-							</div>
-						</div>
-						<div class="mb-3">
-							<div class="input-group">
-								<span class="input-group-text"><i class="fa-solid fa-lock" style="color: #AC3B61;"></i></span>
-								<input type="password" class="form-control" id="loginPassword" placeholder="Password">
-							</div>
-						</div>
-						<div class="mb-3">
-							<a href="forgotPassword" class="d-block text-end" style="color: #AC3B61; text-decoration: none;">Forgot password?</a>
-						</div>						
-						<div class="mb-3">
-							<button type="button" onclick="oauthLogin();" class="btn btn-light w-100 d-flex align-items-center justify-content-center" id="loginWith42Btn" style="color: #000; border: 1px solid #ccc;">
-								<span class="me-2">Login with</span>
-								<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/42_Logo.svg/1024px-42_Logo.svg.png" alt="42 logo" style="width: 20px; height: 20px;">
-							</button>														
-						</div>
-						<button type="submit" class="btn" style="background-color: #AC3B61; color: white; width: 100%;">Login</button>
+					<!-- Login -->
+					<div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+						<form class="mt-3 needs-validation" id="login-form" novalidate>
 
-					</form>
-					<p id="login-message" class="invalid-feedback">
-					</p>
-				</div>
+							<div class="mb-3">
+								<div class="input-group">
+									<span class="input-group-text" style="border: none; background: white;">
+										<i class="fas fa-envelope" style="color: #AC3B61;"></i></span>
+									<input type="email" class="form-control" id="loginEmail" placeholder="Email" style="border: none;">
+								</div>
+							</div>
 
-				<!-- Sign Up -->
-				<div class="tab-pane fade" id="signup" role="tabpanel" aria-labelledby="signup-tab">
-					<form class="mt-3 needs-validation" id="signup-form" novalidate>
-						<div class="mb-3">
-							<div class="input-group">
-								<span class="input-group-text"><i class="fa-solid fa-user" style="color: #AC3B61;"></i></span>
-								<input type="text" class="form-control" id="signupFirstname" placeholder="First name">
+							<div class="mb-3">
+								<div class="input-group">
+									<span class="input-group-text" style="border: none; background: white;">
+										<i class="fa-solid fa-lock" style="color: #AC3B61;"></i>
+									</span>
+									<input type="password" class="form-control" id="loginPassword" placeholder="Password" required 
+										style="border: none;">
+									<span class="input-group-text" id="togglePassword" style="cursor: pointer; background: white; border: none;"
+										onclick="passwordVisibility(`loginPassword`, `togglePassword`)">
+										<i class="fas fa-eye-slash" style="color: #AC3B61;"></i>
+									</span>
+								</div>
 							</div>
-						</div>
-						<div class="mb-3">
-							<div class="input-group">
-								<span class="input-group-text"><i class="fa-solid fa-user" style="color: #AC3B61;"></i></span>
-								<input type="text" class="form-control" id="signupLastname" placeholder="Last name">
+
+							<div class="mb-3">
+								<a href="forgotPassword" class="d-block text-end" style="color: #AC3B61; text-decoration: none;">Forgot password?</a>
+							</div>						
+							<div class="mb-3">
+								<button type="button" onclick="oauthLogin();" class="btn btn-light w-100 d-flex align-items-center justify-content-center"
+								id="loginWith42Btn" style="color: #000; border: 1px solid #ccc;">
+									<span class="me-2">Login with</span>
+									<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/42_Logo.svg/1024px-42_Logo.svg.png" alt="42 logo" style="width: 20px; height: 20px;">
+								</button>														
 							</div>
-						</div>
-						<div class="mb-3">
-							<div class="input-group">
-								<span class="input-group-text"><i class="fas fa-envelope" style="color: #AC3B61;"></i></span>
-								<input type="email" class="form-control" id="signupEmail" placeholder="Email">
+
+							<button type="submit" class="btn" style="background-color: #AC3B61; color: white; width: 100%;">Login</button>
+
+						</form>
+						<p id="login-message" class="invalid-feedback">
+						</p>
+					</div>
+
+					<!-- Sign Up -->
+					<div class="tab-pane fade" id="signup" role="tabpanel" aria-labelledby="signup-tab">
+						<form class="mt-3 needs-validation" id="signup-form" novalidate>
+
+							<div class="mb-3">
+								<div class="input-group">
+									<span class="input-group-text" style="border: none; background: white;">
+										<i class="fa-solid fa-user" style="color: #AC3B61;"></i></span>
+									<input type="text" class="form-control" id="signupFirstname" required placeholder="First name" style="border: none;">
+								</div>
 							</div>
-						</div>
-						<div class="mb-3">
-							<div class="input-group">
-								<span class="input-group-text"><i class="fa-solid fa-lock" style="color: #AC3B61;"></i></span>
-								<input type="password" class="form-control" id="signupPassword" placeholder="Password">
+
+							<div class="mb-3">
+								<div class="input-group">
+									<span class="input-group-text" style="border: none; background: white;">
+										<i class="fa-solid fa-user" style="color: #AC3B61;"></i></span>
+									<input type="text" class="form-control" id="signupLastname" required placeholder="Last name" style="border:none;">
+								</div>
 							</div>
-						</div>
-						<div class="mb-3">
-							<div class="input-group">
-								<span class="input-group-text"><i class="fa-solid fa-lock" style="color: #AC3B61;"></i></span>
-								<input type="password" class="form-control" id="signupPassword2" placeholder="Retype password">
+
+							<div class="mb-3">
+								<div class="input-group has-validation">
+									<span class="input-group-text" style="border: none; background: white;">
+										<i class="fas fa-envelope" style="color: #AC3B61;"></i></span>
+									<input type="email" class="form-control" id="signupEmail" required placeholder="Email" style="border:none;">
+									<div class="invalid-feedback" id="emailInvalid">
+									</div>							
+								</div>
 							</div>
-						</div>
-						<div class="mb-3">
-							<div class="input-group">
-								<span class="input-group-text"><i class="fas fa-phone" style="color: #AC3B61;"></i></span>
-								<input type="tel" class="form-control" id="signupPhone" placeholder="Phone number">
+
+							<div class="mb-3">
+								<div class="input-group">
+									<span class="input-group-text" style="border: none; background: white;">
+										<i class="fa-solid fa-lock" style="color: #AC3B61;"></i>
+									</span>
+									<input type="password" class="form-control" id="signupPassword" required placeholder="Password" style="border: none;" 
+										oninput="validateNewPassword('signupPassword', 'passwordValidation', 'charCheck')">
+									<span class="input-group-text" id="toggleSignupPassword" style="cursor: pointer; background: white; border: none;"
+										onclick="passwordVisibility('signupPassword', 'toggleSignupPassword')">
+										<i class="fas fa-eye-slash" style="color: #AC3B61;"></i>
+									</span>
+								</div>
+								<small id="passwordValidation" class="form-text text-muted d-none">
+									<i id="charCheck" class="fa-solid fa-xmark" style="color: #ff2600;"></i>
+									Password must be at least 8 characters long
+								</small>
 							</div>
-						</div>
-						<button type="submit" class="btn" style="background-color: #AC3B61; color: white; width: 100%;">Sign up</button>
-					</form>
+							
+							<div class="mb-3">
+								<div class="input-group">
+									<span class="input-group-text" style="border: none; background: white;">
+										<i class="fa-solid fa-lock" style="color: #AC3B61;"></i>
+									</span>
+									<input type="password" class="form-control" id="signupPassword2" required placeholder="Retype password" style="border: none;" 
+										oninput="validatePasswordsMatch('signupPassword', 'signupPassword2', 'confirmValidation', 'matchCheck')">
+									<span class="input-group-text" id="toggleSignupPassword2" style="cursor: pointer; background: white; border: none;"
+										onclick="passwordVisibility('signupPassword2', 'toggleSignupPassword2')">
+										<i class="fas fa-eye-slash" style="color: #AC3B61;"></i>
+									</span>
+								</div>
+								<small id="confirmValidation" class="form-text text-muted d-none">
+									<i id="matchCheck" class="fa-solid fa-xmark" style="color: #ff2600;"></i>
+									Passwords do not match
+								</small>
+							</div>
+							
+							<div class="mb-3">
+								<div class="input-group">
+									<span class="input-group-text" style="border: none; background: white;">
+										<i class="fas fa-phone" style="color: #AC3B61;"></i></span>
+									<input type="tel" class="form-control" id="signupPhone" required placeholder="Phone number" style="border: none;">
+								</div>
+							</div>
+							<button type="submit" class="btn" style="background-color: #AC3B61; color: white; width: 100%;">Sign up</button>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
