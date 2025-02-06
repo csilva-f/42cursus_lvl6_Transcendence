@@ -33,8 +33,10 @@ function incScore(canvas, objects) {
         if(objects[2].paddleScore < maxScore){
             respawnBall(canvas, objects);
         }
-        else
+        else {
             stopGame = true;
+            stopTimer();
+        }
     }
     if (objects[0].ballX >= canvas.width + objects[0].ballRadius){
         objects[1].paddleScore += 1;
@@ -42,8 +44,10 @@ function incScore(canvas, objects) {
         if(objects[1].paddleScore < maxScore){
             respawnBall(canvas, objects);
         }
-        else
+        else {
             stopGame = true;
+            stopTimer();
+        }
     }
 }
 
@@ -80,17 +84,15 @@ function gameLoop(canvas, ctx, objects) {
         objects[2].setPaddleX(canvas.width - 50);
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    window.requestAnimationFrame(() => gameLoop(canvas, ctx, objects));
     
-    if (stopGame) {
-        const finishedGame = document.getElementById('finishedGame')
-        canvas.classList.add('d-none');
-        finishedGame.classList.remove('d-none');
-        return;
-    }
-    gameUpdate(canvas, objects);
-    gameDraw(ctx, objects);
+    if (!stopGame) {
+        window.requestAnimationFrame(() => gameLoop(canvas, ctx, objects));
+        gameUpdate(canvas, objects);
+        gameDraw(ctx, objects);
+    } else
+        showGameStats("Shin", objects[1].paddleScore, objects[1].paddleColisionTimes, "Chan", objects[2].paddleScore, objects[2].paddleColisionTimes);
 }
+
 
 function initGame() {
     /* Main Initializations */
@@ -104,8 +106,8 @@ function initGame() {
     if (gameData == null) {
         objects = [
             new Ball(canvas.width / 2, canvas.height / 2, 5, 5, 15),
-            new Paddle(1, 20, 150, "#AC3B61", 30, (canvas.height / 2) - 75, 10),
-            new Paddle(2, 20, 150, "#87709C", canvas.width - 50, (canvas.height / 2) - 75 , 10)
+            new Paddle(1, 20, 150, "#6e597d", 30, (canvas.height / 2) - 75, 10),
+            new Paddle(2, 20, 150, "#de94ad", canvas.width - 50, (canvas.height / 2) - 75 , 10)
         ];
         document.getElementById("leftPlayerName").innerHTML = "Shin";
         document.getElementById("rightPlayerName").innerHTML = "Chan";
@@ -125,6 +127,6 @@ function initGame() {
 
     document.getElementById("playerLeftScore").innerHTML = objects[1].paddleScore;
     document.getElementById("playerRightScore").innerHTML = objects[2].paddleScore;
-    
+    startTimer();
     gameLoop(canvas, ctx, objects);
 }
