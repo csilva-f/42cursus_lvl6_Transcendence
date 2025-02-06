@@ -256,7 +256,12 @@ async function changeActive(location) {
       document.getElementById("subMsg").style.display = "none";
       const statsEverythingIconProfile = document.getElementById("statsEverythingIcon");
       activateIcon(statsEverythingIconProfile);
+      fetchProfileInfo();
       fetchStatistics();
+        const input = document.querySelector("#phoneNumber");
+        window.intlTelInput(input, {
+            loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
+        });
       break;
     default:
       console.log("default");
