@@ -52,7 +52,7 @@ function createChart(userStats, option) {
 	}
 	yValues = [victories, losses];
 	console.log(yValues)
-	const barColors = ["green", "red"];
+	const barColors = ["#007f4ecc", "#e12729cc"];
 	if (myChart)
         myChart.destroy();
 	if (myChart2)
