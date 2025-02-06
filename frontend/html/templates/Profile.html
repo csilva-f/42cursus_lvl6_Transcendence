@@ -36,9 +36,9 @@
 				  <p class="p-3 text-center mt-3" style="font-style: italic; color: black;" id="bio">Testing testing testing testing testing </p>
   
 				  <div class="p-3 mt-4 shadow rounded-4" style="background-color: var(--cardBg);">
-					<p class="text-start"><strong>Phone number:</strong> <span id="phoneNumberText">+351 123 456 789</span></p>
-					<p class="text-start"><strong>Birthday:</strong> <span id="birthdayText">2015-02-12</span></p>
-					<p class="text-start"><strong>Gender:</strong> <span id="genderText">Female</span></p>
+					<p class="text-start"><strong>Phone number:</strong> <span id="phoneNumberText"></span></p>
+					<p class="text-start"><strong>Birthday:</strong> <span id="birthdayText"></span></p>
+					<p class="text-start"><strong>Gender:</strong> <span id="genderText"></span></p>
 
 					<div class="d-flex justify-content-between mt-3">
 						<button id="editButton" class="btn d-flex align-items-center gap-2" style="background-color: var(--primary); color: white; border: none;" data-bs-toggle="modal" data-bs-target="#editProfileModal">
@@ -155,12 +155,10 @@
 				  <div class="col-md-6">
 					<label for="phoneNumber" class="form-label">Phone number</label>
 					<div class="input-group">
-					  <span class="input-group-text" style="border: none; background: white;">
-						<i class="fas fa-phone" style="color: var(--primary);"></i>
-					  </span>
 					  <input type="tel" class="form-control" id="phoneNumber" style="border: none;" value="+351 123 456 789">
 					</div>
 				  </div>
+
 				  <div class="col-md-6">
 					<label for="birthday" class="form-label">Birthday</label>
 					<div class="input-group">
