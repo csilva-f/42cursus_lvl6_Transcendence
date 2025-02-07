@@ -45,8 +45,8 @@ function showGameStats(leftName, leftScore, leftColision, rightName, rightScore,
 }
 
 function startWinAnimation() {
-    const randomIndex = Math.floor(Math.random() * 2);
-    console.log(randomIndex)
+    const randomIndex = Math.floor(Math.random() * 3);
+    console.log("randomIndex: ", randomIndex)
     switch (randomIndex){
         case 0:
             fireworkAnimation();
