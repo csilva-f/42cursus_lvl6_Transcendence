@@ -6,6 +6,10 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.conf import settings
 
+from django.shortcuts import render
+
+def testWebsocket(request):
+    return render(request, 'testWebsocket.html')
 
 class GetGames(APIView):
     permission_classes = [IsAuthenticated]

@@ -127,6 +127,14 @@ services:
       - ./nginx/.env
     depends_on:
       - backend-api
+  
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
 
 networks:
   backend:

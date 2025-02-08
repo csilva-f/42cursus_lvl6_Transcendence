@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Websocket</title>
+</head>
+<body>
+    <h1>Test Websocket</h1>
+    <script>
+        const socket = new WebSocket('ws://' + window.location.host + '/ws/game/');
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            console.log(data.message);
+        };
+    </script>
+</body>
