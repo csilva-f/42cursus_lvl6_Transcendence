@@ -49,6 +49,22 @@ services:
     depends_on:
       - backend-db
 
+  channels:
+    container_name: channels
+    build: ./channels
+    volumes:
+      - ./channels/code:/code:rw
+    networks:
+      - backend
+    ports:
+      - "9010:8000"
+    init: true
+    restart: on-failure
+    env_file:
+      - ./channels/.env
+    depends_on:
+      - backend
+
   backend-db:
     container_name: backend-db
     build: ./backend-db
@@ -109,8 +125,6 @@ services:
       - ./email-db/data:/var/lib/postgresql/data:rw
     networks:
       - backend
-
-
 
   nginx:
     container_name: nginx
