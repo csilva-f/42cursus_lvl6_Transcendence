@@ -55,7 +55,7 @@ services:
     volumes:
       - ./channels/code:/code:rw
     networks:
-      - backend
+      - frontend
     ports:
       - "9010:8000"
     init: true
@@ -141,7 +141,7 @@ services:
       - ./nginx/.env
     depends_on:
       - backend-api
-  
+
   redis:
     image: redis:alpine
     container_name: redis
