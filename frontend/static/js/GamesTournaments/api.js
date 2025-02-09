@@ -110,7 +110,7 @@ async function postLocalGame() {
 async function postRemoteGame() {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
-  const ws = new WebSocket("wss://localhost:8000/channels/testWebsocket");
+  const ws = new WebSocket("wss://localhost:8000/channels/");
 
   ws.onopen = function () {
     console.log("WebSocket connection established successfully.");

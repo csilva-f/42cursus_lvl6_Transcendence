@@ -148,7 +148,7 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - backend
+      - frontend
 
 networks:
   backend:
