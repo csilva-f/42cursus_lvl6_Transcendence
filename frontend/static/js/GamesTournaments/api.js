@@ -106,6 +106,32 @@ async function postLocalGame() {
   localStorage.setItem("gameData", JSON.stringify(gameData));
 }
 
+//? POST - Remote Game Creation
+async function postRemoteGame() {
+  const userLang = localStorage.getItem("language") || "en";
+  const langData = await getLanguageData(userLang);
+  const ws = new WebSocket("/channels/testWebsocket")
+  ws.onmessage = function(e){
+    console.log(e)
+  }
+  const APIurl = `/api/create-game/`;
+  let gameData = {
+    P1: document.getElementById("P1NickInput").value,
+    P1Color: document.getElementById("P1ColorInput").value,
+    P2: document.getElementById("P2NickInput").value,
+    P2Color: document.getElementById("P2ColorInput").value,
+  };
+  console.log("gameData: ", gameData);
+  showSuccessToast(langData, langData.gameEntered);
+  resetModal();
+  $("#createModal").modal("hide");
+  const enterLi = document.getElementById("enterLi");
+  // window.history.pushState({}, "", "/pong");
+  
+  locationHandler("content");
+  localStorage.setItem("gameData", JSON.stringify(gameData));
+}
+
 //TODO getUserID
 //? POST - /api/update-game/
 async function enterGame(gameID) {
@@ -138,7 +164,7 @@ async function enterGame(gameID) {
 }
 
 //* TOURNAMENTS
-//? GET - /api/get-games/?statusID=
+//? GET - /api/get-tournaments/?statusID=
 async function fetchTournaments(statusID) {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);

@@ -113,7 +113,7 @@
         <ul class="nav nav-pills justify-content-center gap-5 h-100" style="min-height: 12rem; width: 100%;"
           id="createGameOptions">
           <li class="pop-hover-xs modalLi nav-item rounded-4 shadow d-flex align-items-center"
-            onclick="activateGameForm('localForm')" style="width: 12rem;">
+            onclick="activateGameForm('remoteForm')" style="width: 12rem;">
             <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
               <div class="d-flex align-items-center justify-content-center my-3">
                 <i class="fa-solid fa-user-group fa-2xl" style="color: black"></i>
@@ -170,6 +170,38 @@
       </div>
       <!-- End Local Create Form -->
       <!-- Remote Create Form -->
+      <div class="modal-body d-none" id="remoteForm">
+        <form class="row g-3 needs-validation p-3" id="remoteFormID" novalidate>
+          <!-- P1 Nickname -->
+          <div class="input-group has-validation mt-3">
+            <span class="input-group-text" id="basic-addon1R" style="margin-top: 10px;">
+              <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
+                type="color" class="form-control-color p-0 m-0" id="P1ColorInputR" value="#AC3B61">
+            </span>
+            <input type="text" class="form-control" id="P1NickInputR" placeholder="Player1 Nickname(traduzir)"
+              aria-describedby="inputGroupPrepend" style="margin-top: 10px;" required>
+            <div class="invalid-feedback" data-i18n="p1NickError">
+            </div>
+          </div>
+          <!-- P2 Nickname -->
+          <div class="input-group has-validation mb-3">
+            <span class="input-group-text" id="basic-addon1R">
+              <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
+                type="color" class="form-control-color p-0 m-0" id="P2ColorInputR" value="#3BAC86">
+            </span>
+            <input type="text" class="form-control" id="P2NickInputR" placeholder="Player2 Nickname(traduzir)"
+              aria-describedby="inputGroupPrepend" required>
+            <div class="invalid-feedback" data-i18n="p2NickError">
+            </div>
+          </div>
+          <!-- Submit Button -->
+          <div class="d-grid gap-2 d-flex justify-content-end">
+            <button class="pop-hover-xs btn modalActionsLi"
+              style="background-color: black; color: white; font-weight: bold;" type="submit"
+              data-i18n="create"></button>
+          </div>
+        </form>
+      </div>
       <!-- End Remote Create Form -->
       <!-- Form Actions -->
       <div class="modal-footer">

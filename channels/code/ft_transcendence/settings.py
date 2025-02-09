@@ -33,6 +33,8 @@ ALLOWED_HOSTS = ['channels','*']
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,8 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'rest_framework',
     'cuca',
-    'daphne',
-
 ]
 
 MIDDLEWARE = [
@@ -79,8 +79,16 @@ TEMPLATES = [
 ]
 
 ASGI_APPLICATION = 'ft_transcendence.asgi.application'
-WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
+#WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('redis', 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
