@@ -2,34 +2,34 @@
 <html lang="en">
 
 <head>
-	<title></title>
-	<!-- Required meta tags -->
-	<meta name="description" content="">
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-	<link rel="icon" type="image/x-icon" href="/static/img/favicon.png">
-	<!-- Own CSS -->
-	<link rel="stylesheet" type="text/css" href="/static/css/var.css"/>
-	<link rel="stylesheet" type="text/css" href="/static/css/style.css"/>
-	<link rel="stylesheet" type="text/css" href="/static/css/icons.css"/>
-	<link rel="stylesheet" type="text/css" href="/static/css/Games&Tournaments/Games&Tournaments.css"/>
-    <link rel="stylesheet" type="text/css" href="/static/css/TournamentBracket.css"/>
-	<script src="/static/js/jquery-3.7.1.min.js"></script>
-	<!-- Bootstrap Imports -->
-	<script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.8"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.6.12"></script>
-	<script src="/static/js/bootstrap.bundle.min.js"></script>
-	<script type="text/javascript" src="/static/js/language.js"></script>
-	<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
-	<!-- FontAwesome Imports -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-     <!-- GraphJS Imports -->
-     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-     <!-- ParticleJS Imports -->
-     <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
-	<!-- Font Imports -->
-	<link rel="stylesheet" href="/static/css/font.css">
+    <title></title>
+    <!-- Required meta tags -->
+    <meta name="description" content="">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.png">
+    <!-- Own CSS -->
+    <link rel="stylesheet" type="text/css" href="/static/css/var.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/icons.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/Games&Tournaments/Games&Tournaments.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/TournamentBracket.css" />
+    <script src="/static/js/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap Imports -->
+    <script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.6.12"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/static/js/language.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <!-- FontAwesome Imports -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- GraphJS Imports -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- ParticleJS Imports -->
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+    <!-- Font Imports -->
+    <link rel="stylesheet" href="/static/css/font.css">
 </head>
 
 <body style="background-color: var(--bodyBg); font-family: 'Poppins';" id="body">
@@ -62,12 +62,16 @@
                 <div class="h-100 d-flex flex-row align-items-stretch">
                     <!-- Notification and Info -->
                     <div class="p-2 w-100 d-flex justify-content-end align-content-end">
-                        <ul class="nav nav-pills justify-content-center me-5 mt-2" style="height: 3rem">
-                            <li class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-                                style="width: 3rem; cursor: pointer; background-color: white;">
-                                <i class="fa-solid fa-bell fa-xl"></i>
-                            </li>
-                        </ul>
+                        <div class="dropdown-center">
+                            <button class="btn btn-secondary justify-content-center me-5 mt-2 pop-hover-xs"
+                                type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                                aria-expanded="false"
+                                style="background-color: white; color: var(--primary); border: none; height: 3rem; width: 3rem;">
+                                <i class="fa-solid fa-bell fa-xl" id="notificationIcon"></i>
+                            </button>
+                            <ul class="dropdown-menu overflow-y-auto overflow-x-hidden" id="notificationDropdownMenu" style="height: 13rem;">
+                            </ul>
+                        </div>
                         <ul class="list-unstyled">
                             <li class="d-flex justify-content-end my-1" style="font-weight: bold;">{NICKNAME}</li>
                             <li>
@@ -175,6 +179,7 @@
     <!-- End Sidebar and Content -->
     <script type="text/javascript" src="/static/js/router.js"></script>
     <script type="text/javascript" src="/static/js/index.js"></script>
+    <script type="text/javascript" src="/static/js/api.js"></script>
     <script type="text/javascript" src="/static/js/Login/api.js"></script>
     <script type="text/javascript" src="/static/js/Home/Home.js"></script>
     <script type="text/javascript" src="/static/js/Home/api.js"></script>

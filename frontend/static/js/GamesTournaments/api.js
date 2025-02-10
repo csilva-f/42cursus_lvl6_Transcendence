@@ -159,7 +159,9 @@ async function fetchTournaments(statusID) {
       $.ajax({
         type: "GET",
         url: APIurl,
-        headers: { Accept: "application/json" },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
         success: function (res) {
           const divElement = document.getElementById("gamesContent");
           divElement.innerHTML = "";
