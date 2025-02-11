@@ -19,10 +19,14 @@ function testClick() {
     console.log("miku dayo");
 }
 
-function goToProfile() {
-    const profilePicElement = document.getElementById('profilePicElement');
-    window.history.pushState({}, "", profilePicElement.getAttribute("href"));
-    locationHandler("content");
+function goToProfile(userID) {
+    if (userID == null) {
+        const profilePicElement = document.getElementById('profilePicElement');
+        window.history.pushState({}, "", profilePicElement.getAttribute("href"));
+        locationHandler("content");
+    } else {
+        
+    }
 }
 
 function getForms() {
@@ -62,23 +66,10 @@ function getForms() {
     });
 }
 
-async function checkLogin() {
-    var token = localStorage.getItem("jwt");
-    const loginButton = document.getElementById('loginButton');
-    if (token != null) {
-        const confirmLogout = window.confirm("Are you sure you want to log out?");
-        if (confirmLogout) {
-            loginButton.classList.remove("fa-right-from-bracket");
-            loginButton.classList.add("fa-right-to-bracket");
-            localStorage.removeItem("jwt");
-        }
-    }
-    else {
-        window.history.pushState({}, "", "/login");
-        loginButton.classList.remove("fa-right-to-bracket");
-        loginButton.classList.add("fa-right-from-bracket");
-        locationHandler("allcontent");
-    }
+async function logOut() {
+    localStorage.removeItem("jwt");
+    window.history.pushState({}, "", "/mainPage");
+    locationHandler("allcontent");
 }
 
 async function notificationLoad() {

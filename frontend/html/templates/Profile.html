@@ -6,10 +6,10 @@
 				<div class="row h-100">
 
 					<!-- User profile -->
-					<div class="col-4 shadow rounded-4 ms-4 my-4" style="background-color: #dfcbe34d; z-index: 2">
+					<div class="col-4 shadow rounded-4 ms-4 my-4" style="background-color: var(--bodyBg); z-index: 2">
 						<div class="p-4 position-relative">
-							<div class="text-center mb-4">
-								<label for="avatar" class="d-block">
+							<div class="text-center mb-4 d-flex justify-content-center">
+								<label for="avatar" class="d-block" style="width: 150px; height: 150px;">
 									<img id="avatarPreview"
 										src="https://i.pinimg.com/736x/6e/2d/0b/6e2d0b569a96b7ddcd4972753ee87b69.jpg"
 										alt="Avatar" class="rounded-circle shadow"
@@ -65,12 +65,12 @@
 					</div>
 
 					<!-- Game statistics -->
-					<div class="col shadow rounded-4 mx-4 my-4" style="background-color: #dfcbe34d; z-index: 2;">
+					<div class="col shadow rounded-4 mx-4 my-4" style="background-color: var(--bodyBg); z-index: 2;">
 						<div class="h-100 p-4">
 							<div class="container-fluid h-100 d-flex flex-column">
 								<div class="row" style="min-height: 5rem;">
 									<div class="col-sm-12 shadow rounded-4 d-flex align-items-center w-100"
-										style="background-color: #dfcbe3;">
+										style="background-color: var(--cardBg);">
 										<nav class="container-fluid">
 											<div class="row">
 												<div class="col-lg-10 col-md-10 col-10">
@@ -143,9 +143,9 @@
 	<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
 		aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered modal-lg">
-			<div class="modal-content" style="background-color: #f5f1f3">
-				<div class="modal-header" style="background-color: #d0c6ca; justify-content: center;">
-					<h5 class="h5 m-0 fw-bold mb-2" id="editProfile">Edit profile</h5>
+			<div class="modal-content" style="background-color: var(--bodyBg)">
+				<div class="modal-header" style="background-color: var(--primary); justify-content: center;">
+					<h5 class="h5 m-0 fw-bold mb-2" style="color: white" id="editProfile">Edit profile</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
@@ -251,30 +251,71 @@
 </div>
 
 <!-- Two factor pop up -->
-<div class="modal fade" id="twoFactorModal" tabindex="-1"
-aria-labelledby="twoFactorModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered">
-	<div class="modal-content" style="background-color: #f5f1f3">
-		<div class="modal-header"
-			style="background-color: #d0c6ca; justify-content: center;">
-			<h5 class="h5 m-0 fw-bold text-center mb-2">x</h5>
-			<button type="button" class="btn-close" data-bs-dismiss="modal"
-				aria-label="Close"></button>
+<div class="modal fade" id="twoFactorModal" tabindex="-1" aria-labelledby="twoFactorModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content" style="background-color: var(--bodyBg)">
+			<div class="modal-header" style="background-color: var(--primary); justify-content: center;">
+				<h5 class="h5 m-0 fw-bold text-center mb-2" style="color: white">How do you want to protect your
+					account?</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-6 text-center">
+						<button type="button" class="btn btn-secondary"
+							style="background-color: var(--primary); color: white;" id="codeButton"
+							data-bs-toggle="modal" data-bs-target="#codeModal">
+							<i class="fa-solid fa-qrcode me-2" style="color: white;"></i> App
+						</button>
+					</div>
+					<div class="col-md-6 text-center">
+						<button type="button" class="btn" style="background-color: var(--primary); color: white;">
+							<i class="fa-solid fa-envelope me-2" style="color: white;"></i> E-mail
+						</button>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div class="modal-body">
-			<form id="changePasswordForm" class="needs-validation" novalidate>
+	</div>
+</div>
+
+<div class="modal fade" id="codeModal" tabindex="-1" aria-labelledby="codeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-sm">
+		<div class="modal-content" style="background-color: var(--bodyBg)">
+			<div class="modal-header" style="background-color: var(--primary);">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-10 d-flex justify-content-center align-items-center">
+							<h5 class="h6 m-0 fw-bold text-center" style="color: white">Scan the QR Code</h5>
+						</div>
+						<div class="col-2 d-flex justify-content-end align-items-end">
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal-body">
+				<div class="row">
+					<div id="qrcode" style="width:100%; height:100%;"></div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
 </div>
+</div>
+</div>
+
 
 <!-- Change Password pop up -->
 <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel"
 	aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content" style="background-color: #f5f1f3">
-			<div class="modal-header" style="background-color: #d0c6ca; justify-content: center;">
-				<h5 class="h5 m-0 fw-bold text-center mb-2">Change Password</h5>
+		<div class="modal-content" style="background-color: var(--bodyBg)">
+			<div class="modal-header" style="background-color: var(--primary); justify-content: center;">
+				<h5 class="h5 m-0 fw-bold text-center mb-2" style="color: white">Change Password</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -306,7 +347,7 @@ aria-labelledby="twoFactorModalLabel" aria-hidden="true">
 							</span>
 							<input type="password" class="form-control" id="newPasswordChange" style="border: none;"
 								required
-								oninput="validateNewPassword('newPasswordChange', 'passwordValidationChange', 'charCheckChange')">
+								oninput="validateNewPassword('newPasswordChange', 'passwordValidationChange', 'charCheckChange', 'confirmPasswordChange')">
 							<span class="input-group-text" id="toggleNewPasswordChange"
 								style="cursor: pointer; background: white; border: none;"
 								onclick="passwordVisibility('newPasswordChange', 'toggleNewPasswordChange')">

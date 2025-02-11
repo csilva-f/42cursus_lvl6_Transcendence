@@ -23,9 +23,6 @@ async function sendLogin() {
 					localStorage.setItem("jwt", jwtToken);
 				}
 				window.location.href = "/";
-				const loginButton = document.getElementById('loginButton');
-				loginButton.classList.remove("fa-right-from-bracket");
-				loginButton.classList.add("fa-right-to-bracket");
 			}
 			$("#login-message").text("Login successful!");
 		},
@@ -309,13 +306,14 @@ function passwordVisibility(passwordFieldId, toggleIconId) {
 	}
 }
 
-function validateNewPassword(passwordId, validationId, iconId) {
+function validateNewPassword(passwordId, validationId, iconId, confirmPassId) {
 	const password = document.getElementById(passwordId);
 	const validationMessage = document.getElementById(validationId);
 	const icon = document.getElementById(iconId);
+	const confirmPass = document.getElementById(confirmPassId);
 
+	confirmPass.value = '';
 	validationMessage.classList.remove('d-none');
-
 	if (password.value.length >= 8) {
 		validationMessage.classList.add('d-none');
 	} else {
