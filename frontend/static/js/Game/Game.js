@@ -5,7 +5,11 @@ const KEY_S = 83;
 const keyPressed = [];
 const maxSpeed = 10;
 const maxScore = 5;
+const ballVelocity = 5;
+const ballRadius = 15;
 var stopGame = false;
+
+
 window.addEventListener('keydown', function (e) {
     keyPressed[e.keyCode] = true;
 })
@@ -22,8 +26,12 @@ function respawnBall(canvas, objects) {
         objects[0].ballX = canvas.width / 2;
         objects[0].ballY = (Math.random() * (canvas.height - 200)) + 100;
     }
-    objects[0].ballVelocityX *= -1;
+    if(objects[0].ballVelocityX < 0)
+        objects[0].ballVelocityX = ballVelocity;
+    else
+        objects[0].ballVelocityX = -ballVelocity;
     objects[0].ballVelocityY *= -1;
+
 }
 
 function incScore(canvas, objects) {
@@ -105,15 +113,15 @@ function initGame() {
 
     if (gameData == null) {
         objects = [
-            new Ball(canvas.width / 2, canvas.height / 2, 5, 5, 15),
-            new Paddle(1, 20, 150, "#6e597d", 30, (canvas.height / 2) - 75, 10),
-            new Paddle(2, 20, 150, "#de94ad", canvas.width - 50, (canvas.height / 2) - 75 , 10)
+            new Ball(canvas.width / 2, canvas.height / 2, ballVelocity, ballVelocity, ballRadius),
+            new Paddle(1, 20, 150, "#AC3B61", 30, (canvas.height / 2) - 75, 10),
+            new Paddle(2, 20, 150, "#87709C", canvas.width - 50, (canvas.height / 2) - 75 , 10)
         ];
         document.getElementById("leftPlayerName").innerHTML = "Shin";
         document.getElementById("rightPlayerName").innerHTML = "Chan";
     } else {
         objects = [
-            new Ball(canvas.width / 2, canvas.height / 2, 10, 20, 15),
+            new Ball(canvas.width / 2, canvas.height / 2, ballVelocity, ballVelocity, ballRadius),
             new Paddle(1, 20, 150, gameData.P1Color, 30, (canvas.height / 2) - 75, 10),
             new Paddle(2, 20, 150, gameData.P2Color, canvas.width - 50, (canvas.height / 2) - 75, 10)
         ];
