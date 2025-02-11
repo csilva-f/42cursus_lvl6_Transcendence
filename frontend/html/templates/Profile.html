@@ -1,231 +1,262 @@
 <div class="h-100">
 	<div class="container-fluid h-100">
-	  <div class="row h-100 gap-5">
-		
-		<div class="h-100 col-sm-12 shadow rounded-4" style="background-color: var(--layoutBg);">
-		  <div class="row h-100">
+		<div class="row h-100 gap-5">
 
-			<!-- User profile -->
-			<div class="col-4 shadow rounded-4 ms-4 my-4" style="background-color: var(--bodyBg); z-index: 2">
-			  <div class="p-4 position-relative">
-				<div class="text-center mb-4">
-				  <label for="avatar" class="d-block">
-					<img id="avatarPreview" 
-						 src="https://i.pinimg.com/736x/6e/2d/0b/6e2d0b569a96b7ddcd4972753ee87b69.jpg" 
-						 alt="Avatar" 
-						 class="rounded-circle shadow" 
-						 style="width: 150px; height: 150px; object-fit: cover; cursor: pointer; border: 2px solid white;">
-				  </label>
-				  <input type="file" id="avatar" class="d-none" accept="image/*">
-				</div>
-				
-				<div id="profileData" class="mt-4"> 
-				  <p class="h5 m-0 ms-3 fw-bold text-center mb-1" id="fullNameText">João Bacana</p>
-  
-				  <div class="progress mt-2" role="progressbar" aria-label="Basic example"
-					   aria-valuenow="25" aria-valuemin="0" aria-valuemax="90" style="height: 8px;">
-					<div class="progress-bar" style="width: 25%; background-color: var(--primary);"></div>
-				  </div>
-  
-				  <ul style="display: flex; justify-content: space-between; font-weight: bold; list-style-type: none; padding: 0; margin: 0; color: black;">
-					<li>Lvl0</li>
-					<li>Lvl1</li>
-				  </ul>
-  
-				  <!-- Bio -->
-				  <p class="p-3 text-center mt-3" style="font-style: italic; color: black;" id="bio">Testing testing testing testing testing </p>
-  
-				  <div class="p-3 mt-4 shadow rounded-4" style="background-color: var(--cardBg);">
-					<p class="text-start"><strong>Phone number:</strong> <span id="phoneNumberText"></span></p>
-					<p class="text-start"><strong>Birthday:</strong> <span id="birthdayText"></span></p>
-					<p class="text-start"><strong>Gender:</strong> <span id="genderText"></span></p>
+			<div class="h-100 col-sm-12 shadow rounded-4" style="background-color: var(--layoutBg);">
+				<div class="row h-100">
 
-					<div class="d-flex justify-content-between mt-3">
-						<button id="editButton" class="btn d-flex align-items-center gap-2" style="background-color: var(--primary); color: white; border: none;" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-							<i class="fa-solid fa-pen-to-square fa-lg"></i>
-							<span class="d-none d-xl-block" style="font-size: 0.9rem;">Edit</span>
-						</button>
-						
-						<button id="changePasswordButton" class="btn d-flex align-items-center gap-2" style="background-color: var(--primary); color: white; border: none;" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
-							<i class="fa-solid fa-key fa-lg"></i>
-							<span class="d-none d-xl-block" style="font-size: 0.9rem;">Change Password</span>
-						</button>				
-					</div>					
-				  </div>  
+					<!-- User profile -->
+					<div class="col-4 shadow rounded-4 ms-4 my-4" style="background-color: var(--bodyBg); z-index: 2">
+						<div class="p-4 position-relative">
+							<div class="text-center mb-4">
+								<label for="avatar" class="d-block">
+									<img id="avatarPreview"
+										src="https://i.pinimg.com/736x/6e/2d/0b/6e2d0b569a96b7ddcd4972753ee87b69.jpg"
+										alt="Avatar" class="rounded-circle shadow"
+										style="width: 150px; height: 150px; object-fit: cover; cursor: pointer; border: 2px solid white;">
+								</label>
+								<input type="file" id="avatar" class="d-none" accept="image/*">
+							</div>
+
+							<div id="profileData" class="mt-4">
+								<p class="h5 m-0 ms-3 fw-bold text-center mb-1" id="fullNameText">João Bacana</p>
+
+								<div class="progress mt-2" role="progressbar" aria-label="Basic example"
+									aria-valuenow="25" aria-valuemin="0" aria-valuemax="90" style="height: 8px;">
+									<div class="progress-bar" style="width: 25%; background-color: var(--primary);">
+									</div>
+								</div>
+
+								<ul
+									style="display: flex; justify-content: space-between; font-weight: bold; list-style-type: none; padding: 0; margin: 0; color: black;">
+									<li>Lvl0</li>
+									<li>Lvl1</li>
+								</ul>
+
+								<!-- Bio -->
+								<p class="p-3 text-center mt-3" style="font-style: italic; color: black;" id="bio">
+									Testing testing testing testing testing </p>
+
+								<div class="p-3 mt-4 shadow rounded-4" style="background-color: var(--cardBg);">
+									<p class="text-start"><strong>Phone number:</strong> <span
+											id="phoneNumberText"></span></p>
+									<p class="text-start"><strong>Birthday:</strong> <span id="birthdayText"></span></p>
+									<p class="text-start"><strong>Gender:</strong> <span id="genderText"></span></p>
+
+									<div class="d-flex justify-content-between mt-3">
+										<button id="editButton" class="btn d-flex align-items-center gap-2"
+											style="background-color: var(--primary); color: white; border: none;"
+											data-bs-toggle="modal" data-bs-target="#editProfileModal">
+											<i class="fa-solid fa-pen-to-square fa-lg"></i>
+											<span class="d-none d-xl-block" style="font-size: 0.9rem;">Edit</span>
+										</button>
+
+										<button id="changePasswordButton" class="btn d-flex align-items-center gap-2"
+											style="background-color: var(--primary); color: white; border: none;"
+											data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+											<i class="fa-solid fa-key fa-lg"></i>
+											<span class="d-none d-xl-block" style="font-size: 0.9rem;">Change
+												Password</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Game statistics -->
+					<div class="col shadow rounded-4 mx-4 my-4" style="background-color: var(--bodyBg); z-index: 2;">
+						<div class="h-100 p-4">
+							<div class="container-fluid h-100 d-flex flex-column">
+								<div class="row" style="min-height: 5rem;">
+									<div class="col-sm-12 shadow rounded-4 d-flex align-items-center w-100"
+										style="background-color: var(--cardBg);">
+										<nav class="container-fluid">
+											<div class="row">
+												<div class="col-lg-10 col-md-10 col-10">
+													<div class="d-flex gap-2 h-100">
+														<ul class="nav nav-pills" style="height: 3rem">
+															<li class="pop-hover-s menuLi nav-item rounded-3 me-2 d-flex align-items-center iconInactive"
+																id="statsEverythingIcon" onclick="StatsSelect(this.id)">
+																<i class="fa-solid fa-medal fa-xl ms-2"></i>
+																<p class="h5 m-0 ms-2 d-none d-xl-block"
+																	style="font-weight: bold" data-i18n="overall"></p>
+															</li>
+															<li class="pop-hover-s menuLi nav-item rounded-3 me-2 d-flex align-items-center iconInactive"
+																id="statsGameIcon" onclick="StatsSelect(this.id)">
+																<i class="fa-solid fa-gamepad fa-xl ms-2"></i>
+																<p class="h5 m-0 ms-2 d-none d-xl-block"
+																	style="font-weight: bold" data-i18n="games"></p>
+															</li>
+															<li class="pop-hover-s menuLi nav-item rounded-3 ms-2 d-flex align-items-center iconInactive"
+																id="statsTournamentIcon" onclick="StatsSelect(this.id)">
+																<i class="fa-solid fa-trophy fa-xl ms-2"></i>
+																<p class="h5 m-0 ms-2 d-none d-xl-block"
+																	style="font-weight: bold" data-i18n="tournaments">
+																</p>
+															</li>
+														</ul>
+													</div>
+												</div>
+												<div class="col-2">
+													<div class="d-grid gap-2 d-flex justify-content-end">
+														<ul class="nav nav-pills" style="height: 3rem">
+															<li class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+																style="width: 3rem; cursor: pointer;"
+																id="changeChartType" onclick="changeChartType()">
+																<i class="fa-solid fa-wrench fa-xl"
+																	style="color: black;"></i>
+															</li>
+														</ul>
+													</div>
+												</div>
+											</div>
+										</nav>
+									</div>
+								</div>
+								<div class="row pt-3" style="height: calc(100% - 5rem)">
+									<div class="col-sm-12 shadow rounded-4 h-100"
+										style="background-color: var(--cardBg);">
+										<div class="container-fluid h-100 d-flex flex-column">
+											<div class="row p-2 overflow-y-auto"
+												style="height: 100%; padding-top: 0 !important">
+												<div
+													class="col-sm-12 mt-4 px-0 d-flex justify-content-center align-items-center">
+													<canvas id="myChart"
+														style="max-width: 30rem; max-height: 30rem;"></canvas>
+													<canvas id="myChart2" class="d-none"
+														style="max-width: 30rem; max-height: 30rem;"></canvas>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
-			  </div>
 			</div>
-  
-			<!-- Game statistics -->
-			<div class="col shadow rounded-4 mx-4 my-4" style="background-color: var(--bodyBg); z-index: 2;">
-				<div class="h-100 p-4">
-					<div class="container-fluid h-100 d-flex flex-column">
-					  <div class="row" style="min-height: 5rem;">
-						<div class="col-sm-12 shadow rounded-4 d-flex align-items-center w-100"
-						  style="background-color: var(--cardBg);">
-						  <nav class="container-fluid">
-							<div class="row">
-							  <div class="col-lg-10 col-md-10 col-10">
-								<div class="d-flex gap-2 h-100">
-								  <ul class="nav nav-pills" style="height: 3rem">
-									<li class="pop-hover-s menuLi nav-item rounded-3 me-2 d-flex align-items-center iconInactive"
-									  id="statsEverythingIcon" onclick="StatsSelect(this.id)">
-									  <i class="fa-solid fa-medal fa-xl ms-2"></i>
-									  <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="overall"></p>
-									</li>
-									<li class="pop-hover-s menuLi nav-item rounded-3 me-2 d-flex align-items-center iconInactive"
-									  id="statsGameIcon" onclick="StatsSelect(this.id)">
-									  <i class="fa-solid fa-gamepad fa-xl ms-2"></i>
-									  <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="games"></p>
-									</li>
-									<li class="pop-hover-s menuLi nav-item rounded-3 ms-2 d-flex align-items-center iconInactive"
-									  id="statsTournamentIcon" onclick="StatsSelect(this.id)">
-									  <i class="fa-solid fa-trophy fa-xl ms-2"></i>
-									  <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="tournaments"></p>
-									</li>
-								  </ul>
-								</div>
-							  </div>
-							  <div class="col-2">
-								<div class="d-grid gap-2 d-flex justify-content-end">
-								  <ul class="nav nav-pills" style="height: 3rem">
-									<li
-									  class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-									  style="width: 3rem; cursor: pointer;" id="changeChartType" onclick="changeChartType()">
-									  <i class="fa-solid fa-wrench fa-xl" style="color: black;"></i>
-									</li>
-								  </ul>
-								</div>
-							  </div>
-							</div>
-						  </nav>
-						</div>
-					  </div>
-					  <div class="row pt-3" style="height: calc(100% - 5rem)">
-						<div class="col-sm-12 shadow rounded-4 h-100" style="background-color: var(--cardBg);">
-						  <div class="container-fluid h-100 d-flex flex-column">
-							<div class="row p-2 overflow-y-auto" style="height: 100%; padding-top: 0 !important">
-							  <div class="col-sm-12 mt-4 px-0 d-flex justify-content-center align-items-center">
-								<canvas id="myChart" style="max-width: 30rem; max-height: 30rem;"></canvas>
-								<canvas id="myChart2" class="d-none" style="max-width: 30rem; max-height: 30rem;"></canvas>
-							  </div>
-							</div>
-						  </div>
-						</div>
-					  </div>
-				  </div>
-			  </div>
-			</div>
-		  </div>
 		</div>
-	  </div>
 	</div>
-  
+
 	<!-- Pop-up -->
-	<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+	<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
+		aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered modal-lg">
-		  <div class="modal-content" style="background-color: #f5f1f3">
-			<div class="modal-header" style="background-color: #d0c6ca; justify-content: center;">
-			  <h5 class="h5 m-0 fw-bold mb-2" id="editProfile">Edit profile</h5>
-			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			<div class="modal-content" style="background-color: #f5f1f3">
+				<div class="modal-header" style="background-color: #d0c6ca; justify-content: center;">
+					<h5 class="h5 m-0 fw-bold mb-2" id="editProfile">Edit profile</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="editProfileForm">
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<label for="firstName" class="form-label">First name</label>
+								<div class="input-group">
+									<span class="input-group-text" style="border: none; background: white;">
+										<i class="fa-solid fa-user" style="color: var(--primary);"></i>
+									</span>
+									<input type="text" class="form-control" id="firstName" value="João"
+										style="border: none;">
+								</div>
+							</div>
+							<div class="col-md-6">
+								<label for="lastName" class="form-label">Last name</label>
+								<div class="input-group">
+									<span class="input-group-text" style="border: none; background: white;">
+										<i class="fa-solid fa-user" style="color: var(--primary);"></i>
+									</span>
+									<input type="text" class="form-control" id="lastName" value="Bacana"
+										style="border: none;">
+								</div>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<label for="phoneNumber" class="form-label">Phone number</label>
+								<div class="input-group">
+									<input type="tel" class="form-control" id="phoneNumber" style="border: none;"
+										value="+351 123 456 789">
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<label for="birthday" class="form-label">Birthday</label>
+								<div class="input-group">
+									<span class="input-group-text" style="border: none; background: white;">
+										<i class="fa-solid fa-cake-candles" style="color: var(--primary);"></i>
+									</span>
+									<input type="date" class="form-control" id="birthday" style="border: none;"
+										value="2015-02-12">
+								</div>
+							</div>
+						</div>
+
+						<div class="row mb-4">
+							<div class="col-md-6">
+								<label for="gender" class="form-label">Gender</label>
+								<div class="input-group">
+									<span id="gender-icon" class="input-group-text"
+										style="border: none; background: white;">
+										<i class="" style="color: var(--primary);" id="icon"></i>
+									</span>
+									<select class="form-select" id="gender" style="border: none;"
+										onchange="updateIcon()">
+										<option value="" selected disabled> Select gender </option>
+										<option value="male">Male</option>
+										<option value="female">Female</option>
+										<option value="other">Other</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="row mb-4">
+							<div class="col-md-12">
+								<label for="biography" class="form-label">Bio</label>
+								<textarea class="form-control" id="biography"
+									rows="4">Testing testing testing testing testing testing testing testing testing</textarea>
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<div class="col-md-12">
+								<label for="twoFactor" class="form-label">Enable two-factor authentication on your
+									account</label>
+								<div class="form-check form-switch">
+									<input class="form-check-input" type="checkbox" id="twoFactor"
+										onclick="toggleSwitch(this)">
+									<label class="form-check-label" for="twoFactor"></label>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 text-start">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+							</div>
+							<div class="col-md-6 text-end">
+								<button type="button" class="btn"
+									style="background-color: var(--primary); color: white;"
+									id="saveButton">Save</button>
+							</div>
+						</div>
+					</form>
+				</div>
 			</div>
-			<div class="modal-body">
-			  <form id="editProfileForm">
-				<div class="row mb-3">
-				  <div class="col-md-6">
-					<label for="firstName" class="form-label">First name</label>
-					<div class="input-group">
-					  <span class="input-group-text" style="border: none; background: white;">
-						<i class="fa-solid fa-user" style="color: var(--primary);"></i>
-					  </span>
-					  <input type="text" class="form-control" id="firstName" value="João" style="border: none;">
-					</div>
-				  </div>
-				  <div class="col-md-6">
-					<label for="lastName" class="form-label">Last name</label>
-					<div class="input-group">
-					  <span class="input-group-text" style="border: none; background: white;">
-						<i class="fa-solid fa-user" style="color: var(--primary);"></i>
-					  </span>
-					  <input type="text" class="form-control" id="lastName" value="Bacana" style="border: none;">
-					</div>
-				  </div>
-				</div>
-				<div class="row mb-3">
-				  <div class="col-md-6">
-					<label for="phoneNumber" class="form-label">Phone number</label>
-					<div class="input-group">
-					  <input type="tel" class="form-control" id="phoneNumber" style="border: none;" value="+351 123 456 789">
-					</div>
-				  </div>
-
-				  <div class="col-md-6">
-					<label for="birthday" class="form-label">Birthday</label>
-					<div class="input-group">
-					  <span class="input-group-text" style="border: none; background: white;">
-						<i class="fa-solid fa-cake-candles" style="color: var(--primary);"></i>
-					  </span>
-					  <input type="date" class="form-control" id="birthday" style="border: none;" value="2015-02-12">
-					</div>
-				  </div>
-				</div>
-
-				<div class="row mb-4">
-					<div class="col-md-6">
-						<label for="gender" class="form-label">Gender</label>
-						<div class="input-group">
-						<span id="gender-icon" class="input-group-text" style="border: none; background: white;">
-							<i class="" style="color: var(--primary);" id="icon"></i> 
-						</span>
-						<select class="form-select" id="gender" style="border: none;" onchange="updateIcon()">
-							<option value="" selected disabled> Select gender </option>
-							<option value="male">Male</option>
-							<option value="female">Female</option>
-							<option value="other">Other</option>
-						</select>
-					  </div>
-					</div>
-				  </div>
-			
-				<div class="row mb-4">
-				  <div class="col-md-12">
-					<label for="biography" class="form-label">Bio</label>
-					<textarea class="form-control" id="biography" rows="4">Testing testing testing testing testing testing testing testing testing</textarea>
-				  </div>
-				</div>
-
-				<div class="row mb-3">
-					<div class="col-md-12">
-					  <label for="twoFactor" class="form-label">Enable two-factor authentication on your account</label>
-					  <div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" id="twoFactor" onclick="toggleSwitch(this)">
-						<label class="form-check-label" for="twoFactor"></label>
-					  </div>
-					</div>
-				  </div>								
-
-				<div class="row">
-				  <div class="col-md-6 text-start">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				  </div>
-				  <div class="col-md-6 text-end">
-					<button type="button" class="btn" style="background-color: var(--primary); color: white;" id="saveButton">Save</button>
-				  </div>
-				</div>
-			  </form>
-			</div>
-		  </div>
 		</div>
-	  </div>
-			<!-- Change Password pop up -->
-			<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered">
-					<div class="modal-content" style="background-color: #f5f1f3">
-						<div class="modal-header" style="background-color: #d0c6ca; justify-content: center;">
-							<h5 class="h5 m-0 fw-bold text-center mb-2">Change Password</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
+	</div>
+	<!-- Change Password pop up -->
+	<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content" style="background-color: #f5f1f3">
+				<div class="modal-header" style="background-color: #d0c6ca; justify-content: center;">
+					<h5 class="h5 m-0 fw-bold text-center mb-2">Change Password</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
 					<form id="changePasswordForm" class="needs-validation" novalidate>
 
 						<!-- Current Password -->
@@ -235,8 +266,10 @@
 								<span class="input-group-text" style="border: none; background: white;">
 									<i class="fas fa-lock" style="color: var(--primary);"></i>
 								</span>
-								<input type="password" class="form-control" id="currentPassword" style="border: none;" required>
-								<span class="input-group-text" id="toggleCurrentPassword" style="cursor: pointer; background: white; border: none;"
+								<input type="password" class="form-control" id="currentPassword" style="border: none;"
+									required>
+								<span class="input-group-text" id="toggleCurrentPassword"
+									style="cursor: pointer; background: white; border: none;"
 									onclick="passwordVisibility('currentPassword', 'toggleCurrentPassword')">
 									<i class="fas fa-eye-slash" style="color: var(--primary);"></i>
 								</span>
@@ -250,9 +283,11 @@
 								<span class="input-group-text" style="border: none; background: white;">
 									<i class="fas fa-lock" style="color: var(--primary);"></i>
 								</span>
-								<input type="password" class="form-control" id="newPasswordChange" style="border: none;" required
+								<input type="password" class="form-control" id="newPasswordChange" style="border: none;"
+									required
 									oninput="validateNewPassword('newPasswordChange', 'passwordValidationChange', 'charCheckChange')">
-								<span class="input-group-text" id="toggleNewPasswordChange" style="cursor: pointer; background: white; border: none;"
+								<span class="input-group-text" id="toggleNewPasswordChange"
+									style="cursor: pointer; background: white; border: none;"
 									onclick="passwordVisibility('newPasswordChange', 'toggleNewPasswordChange')">
 									<i class="fas fa-eye-slash" style="color: var(--primary);"></i>
 								</span>
@@ -270,9 +305,11 @@
 								<span class="input-group-text" style="border: none; background: white;">
 									<i class="fa-solid fa-lock" style="color: var(--primary);"></i>
 								</span>
-								<input type="password" class="form-control" id="confirmPasswordChange" style="border: none;" required
+								<input type="password" class="form-control" id="confirmPasswordChange"
+									style="border: none;" required
 									oninput="validatePasswordsMatch('newPasswordChange', 'confirmPasswordChange', 'confirmValidationChange', 'matchCheckChange')">
-								<span class="input-group-text" id="toggleConfirmPasswordChange" style="cursor: pointer; background: white; border: none;"
+								<span class="input-group-text" id="toggleConfirmPasswordChange"
+									style="cursor: pointer; background: white; border: none;"
 									onclick="passwordVisibility('confirmPasswordChange', 'toggleConfirmPasswordChange')">
 									<i class="fas fa-eye-slash" style="color: var(--primary);"></i>
 								</span>
@@ -286,12 +323,12 @@
 						<!-- Submit -->
 						<div class="text-end">
 							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-							<button type="submit" class="btn" style="background-color: var(--primary); color: white;">Save</button>
+							<button type="submit" class="btn"
+								style="background-color: var(--primary); color: white;">Save</button>
 						</div>
 					</form>
 				</div>
 			</div>
 		</div>
 	</div>
-  </div>
-  
+</div>

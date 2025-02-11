@@ -32,13 +32,20 @@ async function fetchUserNotificationGame() {
                             currentNotifications.push(element.gameID);
                         }
                     });
+                    const notificationCount = document.getElementById("notificationCount")
+                    if (currentNotifications.length > 0){
+                        notificationCount.classList.remove("d-none");
+                        notificationCount.textContent = currentNotifications.length;
+                    } else {
+                        notificationCount.classList.add("d-none");
+                    }
                     const hasNewNotifications = currentNotifications.length > 0 && !currentNotifications.every(id => previousNotifications.includes(id));
                     if (hasNewNotifications) {
                         const notificationIcon = document.getElementById("notificationIcon");
                         notificationIcon.classList.add("fa-shake");
                         setTimeout(() => {
                             notificationIcon.classList.remove("fa-shake");
-                        }, 1900);
+                        }, 1800);
                     }
                     previousNotifications = currentNotifications;
                     updateContent(langData);

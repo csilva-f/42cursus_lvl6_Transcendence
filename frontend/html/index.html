@@ -63,13 +63,21 @@
                     <!-- Notification and Info -->
                     <div class="p-2 w-100 d-flex justify-content-end align-content-end">
                         <div class="dropdown-center">
-                            <button class="btn btn-secondary justify-content-center me-5 mt-2 pop-hover-xs"
+                            <button class="btn btn-secondary justify-content-center me-5 mt-2"
                                 type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside"
                                 aria-expanded="false"
                                 style="background-color: white; color: var(--primary); border: none; height: 3rem; width: 3rem;">
                                 <i class="fa-solid fa-bell fa-xl" id="notificationIcon"></i>
+                                <span
+                                    class="d-none position-absolute me-5 mt-2 top-0 start-50 translate-middle badge" style="background-color: var(--primary);" id="notificationCount">
+                                </span>
                             </button>
-                            <ul class="dropdown-menu overflow-y-auto overflow-x-hidden" id="notificationDropdownMenu" style="height: 13rem;">
+                            <ul class="dropdown-menu overflow-y-auto overflow-x-hidden" id="notificationDropdownMenu"
+                                style="height: 13rem;">
+                                <p class="h5 d-flex justify-content-center align-items-center fw-bold"
+                                    style="max-width: 20rem; min-width: 20rem; height: 95%; max-height: 95%;">
+                                    No notifications
+                                </p>
                             </ul>
                         </div>
                         <ul class="list-unstyled">

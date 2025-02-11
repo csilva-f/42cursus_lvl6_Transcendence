@@ -1,7 +1,8 @@
 <div class="h-100">
   <div class="container-fluid h-100 d-flex flex-column">
     <div class="row" style="min-height: 5rem;">
-      <div class="col-sm-12 shadow rounded-4 d-flex align-items-center w-100" style="background-color: var(--layoutBg);">
+      <div class="col-sm-12 shadow rounded-4 d-flex align-items-center w-100"
+        style="background-color: var(--layoutBg);">
         <nav class="container-fluid">
           <div class="row">
             <div class="col-lg-10 col-md-10 col-10">
@@ -80,8 +81,9 @@
                       <ul class="nav nav-pills" style="height: 3rem">
                         <li
                           class="pop-hover-s nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-                          style="cursor: pointer; width: 3rem" id="reloadBtn" onclick="reloadInformation(this.dataset.id)">
-                          <i class="fa-solid fa-rotate fa-xl" style="color: black" id="reloadIcon" ></i>
+                          style="cursor: pointer; width: 3rem" id="reloadBtn"
+                          onclick="reloadInformation(this.dataset.id)">
+                          <i class="fa-solid fa-rotate fa-xl" style="color: black" id="reloadIcon"></i>
                         </li>
                       </ul>
                     </div>
@@ -104,16 +106,17 @@
 <div class="modal fade" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
   aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="min-height: 22rem;">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel"><strong data-i18n="createModal"></strong></h1>
+    <div class="modal-content" style="min-height: 22rem; background-color: white">
+      <div class="modal-header" style="background-color: var(--primary); justify-content: center;">
+        <h5 class="h5 m-0 fw-bold mb-2" id="staticBackdropLabel"><strong data-i18n="createModal" style="color: white;"></strong></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <!-- Select Game Type -->
       <div class="modal-body d-flex align-items-center" id="selectForm">
         <ul class="nav nav-pills justify-content-center gap-5 h-100" style="min-height: 12rem; width: 100%;"
           id="createGameOptions">
           <li class="pop-hover-xs modalLi nav-item rounded-4 shadow d-flex align-items-center"
-            onclick="activateGameForm('localForm')" style="width: 12rem;">
+            onclick="activateGameForm('localForm')" style="width: 12rem; background-color: var(--cardBg);">
             <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
               <div class="d-flex align-items-center justify-content-center my-3">
                 <i class="fa-solid fa-user-group fa-2xl" style="color: black"></i>
@@ -122,8 +125,8 @@
                 style="font-weight: bold; text-align: center;" data-i18n="local"></p>
             </div>
           </li>
-          <li class="pop-hover-xs modalLi nav-item rounded-4 shadow d-flex align-items-center"
-            onclick="postGame()" style="width: 12rem;">
+          <li class="pop-hover-xs modalLi nav-item rounded-4 shadow d-flex align-items-center" onclick="postGame()"
+            style="width: 12rem; background-color: var(--cardBg);">
             <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
               <div class="d-flex align-items-center justify-content-center my-3">
                 <i class="fa-solid fa-computer fa-2xl" style="color: black"></i>
@@ -168,9 +171,7 @@
           </div>
         </form>
       </div>
-      <!-- End Local Create Form -->
-      <!-- Remote Create Form -->
-      <!-- End Remote Create Form -->
+      <!-- End Local Create Form -->  
       <!-- Form Actions -->
       <div class="modal-footer">
         <ul class="nav nav-pills" style="height: 2.5rem">
@@ -198,8 +199,8 @@
 <div class="modal fade" id="createTournamentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
   aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="min-height: 22rem;">
-      <div class="modal-header">
+    <div class="modal-content" style="min-height: 22rem; background-color: white">
+      <div class="modal-header" style="background-color: var(--primary); justify-content: center;">
         <h1 class="modal-title fs-5" id="staticBackdropLabel"><strong data-i18n="createTournamentModal"></strong></h1>
       </div>
       <!-- Tournament Form -->
