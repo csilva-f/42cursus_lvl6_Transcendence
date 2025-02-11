@@ -74,6 +74,11 @@ const routes = {
     title: "Profile",
     descripton: "OAuth2 callback",
   },
+  "/validate-email": {
+    template: "/templates/callback.html",
+    title: "Profile",
+    descripton: "Validate Email",
+  },
   "/tournament": {
     template: "/templates/TournamentBracket.html",
     title: "Tournament",
@@ -86,6 +91,7 @@ const bigScreenLocation = [
   "/login",
   "/pong",
   "/callback",
+  "/validate-email",
   "/forgotPassword",
   "/mfa",
   "/resendCode",
@@ -154,13 +160,17 @@ async function changeToBig(location) {
     getForms();
   } else if (location == "/resetPassword") {
     headerElement.setAttribute("data-i18n", "resetPassword");
+    console.log("resetPassword");
     getForms();
   } else if (location == "/pong") {
     headerElement.setAttribute("data-i18n", "pong");
     initGame();
   } else if (location == "/callback") {
-    headerElement.setAttribute("data-i18n", "pong");
+    headerElement.setAttribute("data-i18n", "callback");
     oauthCallback();
+  } else if (location == "/validate-email") {
+    headerElement.setAttribute("data-i18n", "validateEmail");
+    validateEmail();
   }
 
   updateContent(langData);

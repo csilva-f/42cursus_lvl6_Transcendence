@@ -28,10 +28,10 @@
         * #a3bac3
         * ---------
     */
-    --bodyBg: #dfcbe34d;    
+    --bodyBg: #f5ebf4 ;    
     --layoutBg: #ffffffc5;
-    --cardBg: #dfcbe3;
-    --primary: #6e597d;
+    --cardBg: #6f386b40;
+    --primary: #482445;
     --secondary: #de94ad;
     /*? Main Components */
     --mainActiveBg: var(--primary);

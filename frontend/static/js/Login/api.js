@@ -259,31 +259,28 @@ function handleOTPInput(field) {
 	const nextField = document.getElementById(`otp${currentId + 1}`);
 	const prevField = document.getElementById(`otp${currentId - 1}`);
 
-	if (field.value && nextField)
-		nextField.focus();
+  if (field.value && nextField) nextField.focus();
 
-	field.addEventListener('keydown', function (e) {
-		if (e.key === 'Backspace' && !field.value && prevField)
-			prevField.focus();
-	});
+  field.addEventListener("keydown", function (e) {
+    if (e.key === "Backspace" && !field.value && prevField) prevField.focus();
+  });
 
-	field.addEventListener('paste', function (e) {
-		e.preventDefault();
-		const pasteData = e.clipboardData.getData('text').split('');
-		let currentId = parseInt(field.id.replace('otp', ''));
+  field.addEventListener("paste", function (e) {
+    e.preventDefault();
+    const pasteData = e.clipboardData.getData("text").split("");
+    let currentId = parseInt(field.id.replace("otp", ""));
 
-		pasteData.forEach((char) => {
-			const targetField = document.getElementById(`otp${currentId}`);
-			if (targetField) {
-				targetField.value = char;
-				currentId++;
-			}
-		});
+    pasteData.forEach((char) => {
+      const targetField = document.getElementById(`otp${currentId}`);
+      if (targetField) {
+        targetField.value = char;
+        currentId++;
+      }
+    });
 
-		const lastField = document.getElementById(`otp${currentId - 1}`);
-		if (lastField)
-			lastField.focus();
-	});
+    const lastField = document.getElementById(`otp${currentId - 1}`);
+    if (lastField) lastField.focus();
+  });
 }
 
 function verifyAccount() {
@@ -400,4 +397,47 @@ async function fetchProfileInfo() {
 async function insertProfileInfo(UserElement) {
 	document.getElementById("birthdayText").textContent= UserElement.birthdate;
 	document.getElementById("genderText").textContent= UserElement.gender;
+}async function validateEmail() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const uid = urlParams.get("uid");
+  const token = urlParams.get("token");
+  const apiUrl = "/authapi";
+  $.ajax({
+    type: "POST",
+    url: `${apiUrl}/validate-email/`, // Adjust the endpoint as needed
+    contentType: "application/json",
+    headers: { Accept: "application/json" },
+    data: JSON.stringify({ uid, token }),
+    success: function (data) {
+      console.log("email validated successfully");
+    },
+    error: function (xhr) {
+      const data = xhr.responseJSON;
+      console.log("email failed validation");
+    },
+  });
+}
+
+async function resetPassword() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const uid = urlParams.get("uid");
+  const token = urlParams.get("token");
+  const password = $("#newPassword").val();
+  const confirm_password = $("#confirmPassword").val();
+  const apiUrl = "/authapi";
+  $.ajax({
+    type: "POST",
+    url: `${apiUrl}/reset-password/`, // Adjust the endpoint as needed
+    contentType: "application/json",
+    headers: { Accept: "application/json" },
+    data: JSON.stringify({ uid, token, password, confirm_password }),
+    success: function (data) {
+      //renderizar aqui o form de reset password
+      console.log("Token validated successfully");
+    },
+    error: function (xhr) {
+      const data = xhr.responseJSON;
+      console.log("token failed validation");
+    },
+  });
 }

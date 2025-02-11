@@ -38,6 +38,7 @@ class Paddle {
         this.paddleX = paddleX;
         this.paddleY = paddleY;
         this.paddleVelocityY = paddleVelocityY;
+        this.paddleColisionTimes = 0;
     }
     getHalfWidth() { return this.paddleWidth / 2; }
     getHalfHeight() { return this.paddleHeight / 2; }
@@ -108,6 +109,7 @@ class Paddle {
         if (absDX <= (ball.ballRadius + this.getHalfWidth()) && absDY <= (ball.ballRadius + this.getHalfHeight())) {
             // Colisão na frente do paddle
             if (absDX > this.getHalfWidth()) {
+                this.paddleColisionTimes++;
                 if (ball.ballVelocityX < maxSpeed)
                     ball.ballVelocityX *= -1.08;
                 else
@@ -116,7 +118,6 @@ class Paddle {
                     ? this.getCenterWidth() - this.getHalfWidth() - ball.ballRadius
                     : this.getCenterWidth() + this.getHalfWidth() + ball.ballRadius;
             }
-
             // Colisão no topo ou na base
             if (absDY > this.getHalfHeight()) {
                 ball.ballVelocityY *= -1; // Reverte a direção vertical

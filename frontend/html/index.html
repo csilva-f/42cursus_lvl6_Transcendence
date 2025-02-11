@@ -26,6 +26,8 @@
     <!-- GraphJS Imports -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- ParticleJS Imports -->
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
     <!-- Font Imports -->
     <link rel="stylesheet" href="/static/css/font.css">
 </head>
@@ -60,12 +62,16 @@
                 <div class="h-100 d-flex flex-row align-items-stretch">
                     <!-- Notification and Info -->
                     <div class="p-2 w-100 d-flex justify-content-end align-content-end">
-                        <ul class="nav nav-pills justify-content-center me-5 mt-2" style="height: 3rem">
-                            <li class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-                                style="width: 3rem; cursor: pointer; background-color: white;">
-                                <i class="fa-solid fa-bell fa-xl"></i>
-                            </li>
-                        </ul>
+                        <div class="dropdown-center">
+                            <button class="btn btn-secondary justify-content-center me-5 mt-2 pop-hover-xs"
+                                type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                                aria-expanded="false"
+                                style="background-color: white; color: var(--primary); border: none; height: 3rem; width: 3rem;">
+                                <i class="fa-solid fa-bell fa-xl" id="notificationIcon"></i>
+                            </button>
+                            <ul class="dropdown-menu overflow-y-auto overflow-x-hidden" id="notificationDropdownMenu" style="height: 13rem;">
+                            </ul>
+                        </div>
                         <ul class="list-unstyled">
                             <li class="d-flex justify-content-end my-1" style="font-weight: bold;">{NICKNAME}</li>
                             <li>
@@ -173,11 +179,13 @@
     <!-- End Sidebar and Content -->
     <script type="text/javascript" src="/static/js/router.js"></script>
     <script type="text/javascript" src="/static/js/index.js"></script>
+    <script type="text/javascript" src="/static/js/api.js"></script>
     <script type="text/javascript" src="/static/js/Login/api.js"></script>
     <script type="text/javascript" src="/static/js/Home/Home.js"></script>
     <script type="text/javascript" src="/static/js/Home/api.js"></script>
     <script type="text/javascript" src="/static/js/Game/Game.js"></script>
-    <script type="text/javascript" src="/static/js/Game/api.js"></script>
+    <script type="text/javascript" src="/static/js/Game/help.js"></script>
+    <script type="text/javascript" src="/static/js/Game/animation.js"></script>
     <script type="text/javascript" src="/static/js/Game/classes.js"></script>
     <script type="text/javascript" src="/static/js/GamesTournaments/GamesTournaments.js"></script>
     <script type="text/javascript" src="/static/js/GamesTournaments/api.js"></script>
