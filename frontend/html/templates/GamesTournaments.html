@@ -27,7 +27,7 @@
                   <li
                     class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
                     style="width: 3rem; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#createModal"
-                    id="createGameBtn">
+                    id="createGameBtn" onclick="openGameModal()">
                     <i class="fa-solid fa-plus fa-xl" style="color: black;"></i>
                   </li>
                   <li
@@ -101,6 +101,9 @@
     </div>
   </div>
 </div>
+
+<!-- MODALS -->
+<div id="modalGamesContainer"></div>
 
 <!-- CREATE GAME MODAL -->
 <div class="modal fade" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"

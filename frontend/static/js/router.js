@@ -134,6 +134,16 @@ function disableIcon(element) {
   element.classList.add("iconInactive");
 }
 
+function disableTopBar() {
+  const topbar = document.getElementById("topbar")
+  topbar.classList.add('d-none')
+}
+
+function activateTopBar() {
+  const topbar = document.getElementById("topbar")
+  topbar.classList.remove('d-none')
+}
+
 async function changeToBig(location) {
   const allContent = document.getElementById("allContent")
   allContent.classList.remove('d-none');
@@ -145,21 +155,26 @@ async function changeToBig(location) {
 
   if (location == "/mainPage") {
     headerElement.setAttribute("data-i18n", "noContent");
+    disableTopBar();
   }
   else if (location == "/tournament") {
     allContent.style.cssText += 'height: calc(100vh - 7rem); overflow-x: auto;';
   }
   else if (location == "/login") {
     headerElement.setAttribute("data-i18n", "login");
+    disableTopBar();
     getForms();
   } else if (location == "/forgotPassword") {
     headerElement.setAttribute("data-i18n", "forgotPassword");
+    disableTopBar();
     getForms();
   } else if (location == "/mfa") {
     headerElement.setAttribute("data-i18n", "mfa");
+    disableTopBar();
     getForms();
   } else if (location == "/resetPassword") {
     headerElement.setAttribute("data-i18n", "resetPassword");
+    disableTopBar();
     console.log("resetPassword");
     getForms();
   } else if (location == "/pong") {
@@ -167,9 +182,11 @@ async function changeToBig(location) {
     initGame();
   } else if (location == "/callback") {
     headerElement.setAttribute("data-i18n", "callback");
+    disableTopBar();
     oauthCallback();
   } else if (location == "/validate-email") {
     headerElement.setAttribute("data-i18n", "validateEmail");
+    disableTopBar();
     validateEmail();
   }
 
@@ -193,6 +210,7 @@ async function changeActive(location) {
   const langData = await getLanguageData(userLang);
   const allContent = document.getElementById("allContent")
   allContent.classList.add('d-none');
+  activateTopBar();
   switch (location) {
     case "/games":
       iconsElements.forEach((element) => {
