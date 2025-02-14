@@ -12,6 +12,7 @@ async function fetchGames(statusID) {
   setTimeout(() => {
     reloadIcon.classList.remove("rotate");
   }, 250);
+  JWT.getAccess();
   fetch("/templates/Components/CardGame.html")
     .then((response) => {
       if (!response.ok) {
@@ -27,7 +28,7 @@ async function fetchGames(statusID) {
         Accept: "application/json",
         contentType: "application/json",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          Authorization: `Bearer ${JWT.getAccess()}`,
         },
         success: function (res) {
           const divElement = document.getElementById("gamesContent");
@@ -101,7 +102,7 @@ async function postLocalGame() {
   resetModal();
   $("#createModal").modal("hide");
   const enterLi = document.getElementById("enterLi");
-  window.history.pushState({}, "", "/pong");//enterLi.getAttribute("href"));
+  window.history.pushState({}, "", "/pong");
   locationHandler("content");
   localStorage.setItem("gameData", JSON.stringify(gameData));
 }
@@ -160,7 +161,7 @@ async function fetchTournaments(statusID) {
         type: "GET",
         url: APIurl,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          Authorization: `Bearer ${JWT.getAccess()}`,
         },
         success: function (res) {
           const divElement = document.getElementById("gamesContent");
@@ -210,6 +211,35 @@ async function postTournament() {
       fetchTournaments(1);
       resetModal();
       $("#createTournamentModal").modal("hide");
+    },
+    error: function (xhr, status, error) {
+      showErrorToast(APIurl, error, langData);
+      resetModal();
+    },
+  });
+}
+
+//? POST - /api/update-game/
+async function enterTournament(gameID) {
+  const userLang = localStorage.getItem("language") || "en";
+  const langData = await getLanguageData(userLang);
+  const APIurl = `/api/get-games/?tournamentID=${gameID}`;
+  let gameData = {};
+  $.ajax({
+    type: "GET",
+    url: APIurl,
+    contentType: "application/json",
+    headers: {
+      Authorization: `Bearer ${JWT.getAccess()}`,
+    },
+    success: function (res) {
+      console.log(res);
+      res.games.forEach((element) => {
+        if (element.phaseID == 1) {
+          //Logica para entrar nos jogos dos quartos de final
+          //Perguntar carolina se faz-se aqui a logica de entrar para user1 ou user2
+        }
+      });
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);

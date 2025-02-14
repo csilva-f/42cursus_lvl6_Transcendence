@@ -1,3 +1,5 @@
+const JWT = new tokenService();
+
 const images = [
     '/static/img/logos/buttLogo.svg',
     '/static/img/logos/buttLogoMirror.svg',
@@ -43,6 +45,8 @@ function getForms() {
                 console.log("Form is valid: ", form);
                 if (form.id == "localFormID")
                     postLocalGame();
+                else if (form.id == "localTournamentFormID")
+                    postLocalTournament();
                 else if (form.id == "tournamentFormID")
                     postTournament();
                 else if (form.id == "login-form")
@@ -82,7 +86,7 @@ async function checkLogin() {
 }
 
 async function notificationLoad() {
-    var token = localStorage.getItem("jwt");
+    var token = JWT.getAccess();
     if (token != null) {
         setTimeout(async function () {
             await fetchUserNotificationGame();

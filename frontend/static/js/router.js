@@ -192,9 +192,21 @@ async function changeToBig(location) {
 
   updateContent(langData);
   document.getElementById("subMsg").style.display = "none";
-  document.getElementById("content").style.display = "none";
-  document.getElementById("sidebar").style.display = "none";
+
+  document.getElementById("content").classList.add('d-none');
+  document.getElementById("sidebar").classList.add('d-none');
   mainDiv.classList.add("loginActive");
+}
+
+async function changeToSmall(location) {
+  const allContent = document.getElementById('allContent')
+  allContent.classList.add('d-none')
+  const topbar = document.getElementById('topbar')
+  topbar.classList.remove('d-none')
+  const sidebar = document.getElementById('sidebar')
+  sidebar.classList.remove('d-none')
+  const content = document.getElementById('content')
+  content.classList.remove('d-none')
 }
 
 async function changeActive(location) {
@@ -265,6 +277,7 @@ async function changeActive(location) {
       document.getElementById("subMsg").style.display = "none";
       break;
     case "/":
+      console.log(JWT.getAccess());
       iconsElements.forEach((element) => {
         element.id == "homepageIcon"
           ? activateSBIcon(element)
@@ -317,6 +330,7 @@ const locationHandler = async (elementID) => {
       .setAttribute("allContent", route.descripton);
   } else {
     document.getElementById(elementID).innerHTML = html;
+    changeToSmall(location);
     document
       .querySelector('meta[name="description"]')
       .setAttribute("content", route.descripton);

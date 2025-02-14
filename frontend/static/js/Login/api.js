@@ -20,9 +20,14 @@ async function sendLogin() {
 				window.location.href = "/mfa";
 			} else {
 				if (jwtToken) {
-					localStorage.setItem("jwt", jwtToken);
+					//localStorage.setItem("jwt", jwtToken);
+					console.log(data);
+					JWT.setToken(data);
+					console.log("Access: ", JWT.getAccess());
 				}
-				window.location.href = "/";
+				//window.location.href = "/";
+				window.history.pushState({}, "", "/");
+				locationHandler("content");
 				const loginButton = document.getElementById('loginButton');
 				loginButton.classList.remove("fa-right-from-bracket");
 				loginButton.classList.add("fa-right-to-bracket");
