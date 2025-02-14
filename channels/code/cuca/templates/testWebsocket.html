@@ -6,7 +6,7 @@
 <body>
     <h1>Test Websocket</h1>
     <script>
-        const socket = new WebSocket('ws://' + window.location.host + '/ws/game/');
+        const socket = new WebSocket('ws://' + window.location.host + '/ws/game/game_id/');
         socket.onmessage = function(event) {
             const data = JSON.parse(event.data);
             console.log(data.message);

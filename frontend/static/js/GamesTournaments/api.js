@@ -106,17 +106,20 @@ async function postLocalGame() {
   localStorage.setItem("gameData", JSON.stringify(gameData));
 }
 
+const ws = new WebSocket("wss://localhost:8000/channels/game_id/");
 //? POST - Remote Game Creation
 async function postRemoteGame() {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
-  const ws = new WebSocket("wss://localhost:8000/channels/");
 
   ws.onopen = function () {
     console.log("WebSocket connection established successfully.");
+    console.log(ws);
   };
 
   ws.onmessage = function (e) {
+    const data = JSON.parse(e.data);
+    //console.log(data.message);
     console.log("Message received:", e.data);
   };
 
@@ -132,6 +135,9 @@ async function postRemoteGame() {
   console.log("Attempting to connect to WebSocket...");
 }
 
+async function sendMessage(){
+  ws.send("we did it!");
+}
 //TODO getUserID
 //? POST - /api/update-game/
 async function enterGame(gameID) {
