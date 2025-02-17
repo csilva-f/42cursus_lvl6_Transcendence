@@ -8,7 +8,7 @@ from django.conf import settings
 
 
 class GetGames(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request):
         backend_url = settings.BACKEND_GAMES_URL

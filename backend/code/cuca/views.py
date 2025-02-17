@@ -104,6 +104,10 @@ def get_games(request):
             'user1ID': game.user1,
             'user2ID': game.user2,
             'winnerUserID': game.winnerUser,
+            'user1_points': game.user1_points,
+            'user2_points': game.user2_points,
+            'user1_hits': game.user1_hits,
+            'user2_hits': game.user2_hits,
             'statusID': game.status.statusID,
             'status': game.status.status,
             'tournamentID': game.tournament.tournament if game.tournament else None,
@@ -140,6 +144,10 @@ def get_gameinvitations(request):
             'user1ID': game.user1,
             'user2ID': game.user2,
             'winnerUserID': game.winnerUser,
+            'user1_points': game.user1_points,
+            'user2_points': game.user2_points,
+            'user1_hits': game.user1_hits,
+            'user2_hits': game.user2_hits,
             'statusID': game.status.statusID,
             'status': game.status.status,
             'tournamentID': game.tournament.tournament if game.tournament else None,
@@ -212,6 +220,10 @@ def get_usergames(request):
             'user1ID': game.user1,
             'user2ID': game.user2,
             'winnerUserID': game.winnerUser,
+            'user1_points': game.user1_points,
+            'user2_points': game.user2_points,
+            'user1_hits': game.user1_hits,
+            'user2_hits': game.user2_hits,
             'statusID': game.status.statusID,
             'status': game.status.status,
             'tournamentID': game.tournament.tournament if game.tournament else None,
@@ -431,6 +443,8 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 game = tGames.objects.get(game=game_id)
             except tGames.DoesNotExist:
                 return JsonResponse({"error": "Game not found"}, status=404)
+            if game.status_id == 3:
+                return JsonResponse({"error": "Game status does not allow any more updates"}, status=400)
             user2_id = data.get('user2ID')
             winner_id = data.get('winnerUserID')
             status = data.get('statusID')
@@ -452,6 +466,19 @@ def post_update_game(request): #update statusID acording to user2 and winner var
             if winner_id is not None:
                 game.winnerUser = winner_id
                 game.status_id = 3
+
+                u1_points = data.get('user1_points')
+                u2_points = data.get('user2_points')
+                u1_hits = data.get('user1_hits')
+                u2_hits = data.get('user2_hits')
+                if not u1_points or not u2_points or not u1_hits or not u2_hits:
+                    return JsonResponse({"error": "Users game statistics are required for update"}, status=400)
+                if (game.user1 == winner_id and u1_points < 5) or (game.user2 == winner_id and u2_points < 5):
+                    return JsonResponse({"error": "Winner's points are not consistent"}, status=400)
+                game.user1_points = u1_points
+                game.user2_points = u2_points
+                game.user1_hits = u1_hits
+                game.user2_hits = u2_hits
 
                 tUserExtension.objects.filter(user=winner_id).update(victories=models.F('victories') + 1)
                 tUserExtension.objects.filter(user=game.user1).update(totalGamesPlayed=models.F('totalGamesPlayed') + 1)
