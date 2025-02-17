@@ -788,7 +788,7 @@ def post_update_userextension(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            uext_id = data.get('userID')  # Certifica-te de usar o mesmo nome de campo
+            uext_id = data.get('userID')
             if not uext_id:
                 return JsonResponse({"error": "User ID is required for update"}, status=400)
             try:
@@ -800,10 +800,12 @@ def post_update_userextension(request):
             avatar = data.get('avatar')
             bio = data.get('bio')
             unick = data.get('nickname')
+            if (not unick) and (not uext.nick):
+                return JsonResponse({"error": "User nickname is a mandatory field in the first update"}, status=400)
             if gender_id:
                 try:
-                    gender = tauxGender.objects.get(id=gender_id)
-                    uext.gender = gender
+                    gen = tauxGender.objects.get(gender=gender_id)
+                    uext.gender = gen
                 except tauxGender.DoesNotExist:
                     return JsonResponse({"error": f"Gender with id {gender_id} does not exist"}, status=404)
             if unick:
@@ -813,7 +815,7 @@ def post_update_userextension(request):
                     return JsonResponse({"error": f"Nickname '{unick}' is already in use"}, status=400)
             if not any([
                 birthdate and birthdate != uext.birthdate,
-                gender_id and gender_id != (uext.gender.id if uext.gender else None),
+                gender_id and gender_id != (uext.gender.gender if uext.gender else None),
                 bio and bio != uext.bio,
                 avatar and avatar != uext.avatar,
                 unick and unick != uext.nick
