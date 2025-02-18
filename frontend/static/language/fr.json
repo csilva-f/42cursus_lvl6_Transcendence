@@ -48,5 +48,6 @@
 	"mfa": "",
 	"resendCode": "",
 	"resetPassword": "",
+	"callback": "",
     "overall": "overall FR"
 }

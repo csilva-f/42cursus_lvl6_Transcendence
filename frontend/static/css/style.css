@@ -154,6 +154,22 @@ html {
 	color: #fff !important;
 }
 
+.nav-pills .nav-link {
+	color: #000;
+}
+
+.nav-pills .nav-link i {
+	color: #000;
+}
+
+.nav-pills .nav-link.active {
+	color: #fff !important;
+}
+
+.nav-pills .nav-link.active i {
+	color: #fff !important;
+}
+
 /* Static images for profile page */
 body.profile-page {
 	background-image: url('/static/img/profile_page/bot1-removebg-preview.svg'), 
