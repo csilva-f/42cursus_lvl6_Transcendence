@@ -28,27 +28,38 @@ PHASE_DATA=(
   "INSERT INTO cuca_tauxphase (phase, label) VALUES (3, 'Final') ON CONFLICT (phase) DO NOTHING;"
 )
 
+# Dados para a tabela cuca_tuserextension
+GUEST_USER=(
+  "INSERT INTO cuca_tuserextension (\"user\", nick) VALUES (-1, 'Guest') ON CONFLICT (\"user\") DO NOTHING;"
+)
+
 # Função para executar os comandos no PostgreSQL
 execute_sql() {
   local sql_command=$1
   PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_USER -d $DB_NAME -p $DB_PORT -c "$sql_command"
 }
 
-# Inserindo os dados em cuca_tauxstatus
-echo "Inserindo dados em cuca_tauxstatus..."
+# Inserir dados em cuca_tauxstatus
+echo "A inserir dados em cuca_tauxstatus..."
 for sql in "${STATUS_DATA[@]}"; do
   execute_sql "$sql"
 done
 
-# Inserindo os dados em cuca_tauxgender
-echo "Inserindo dados em cuca_tauxgender..."
+# Inserir dados em cuca_tauxgender
+echo "A inserir dados em cuca_tauxgender..."
 for sql in "${GENDER_DATA[@]}"; do
   execute_sql "$sql"
 done
 
-# Inserindo os dados em cuca_tauxphase
-echo "Inserindo dados em cuca_tauxphase..."
+# Inserir dados em cuca_tauxphase
+echo "A inserir dados em cuca_tauxphase..."
 for sql in "${PHASE_DATA[@]}"; do
+  execute_sql "$sql"
+done
+
+# Inserir dados em cuca_tauxphase
+echo "A inserir dados em cuca_tuserextension..."
+for sql in "${GUEST_USER[@]}"; do
   execute_sql "$sql"
 done
 

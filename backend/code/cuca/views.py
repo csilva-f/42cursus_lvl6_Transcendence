@@ -326,6 +326,14 @@ def post_create_game(request):
                 if user2_id == user1_id:
                     return JsonResponse({"error": "User2 cannot be the same as User1"}, status=400)
 
+            if glocal:
+                if ginvit:
+                    return JsonResponse({"error": "A guest user cannot be the invited to a game"}, status=400)
+                try:
+                    user2_id = tUserExtension.objects.get(user=-1).user
+                except tUserExtension.DoesNotExist:
+                    return JsonResponse({"error": "Default user not found in the DB"}, status=404)
+
             game = tGames.objects.create(
                 user1=user1_id,
                 user2=user2_id,
@@ -493,10 +501,10 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 # tUserExtension.objects.filter(user=winner_id).update(victories=models.F('victories') + 1)
                 # tUserExtension.objects.filter(user=game.user1).update(totalGamesPlayed=models.F('totalGamesPlayed') + 1)
                 # tUserExtension.objects.filter(user=game.user2).update(totalGamesPlayed=models.F('totalGamesPlayed') + 1)
-                if game.user1 == winner_id:
+                if game.user1 == winner_id and game.user1 != -1:
                     tUserExtension.objects.filter(user=game.user1).update(ulevel=models.F('ulevel') + 0.2)
                     tUserExtension.objects.filter(user=game.user2).update(ulevel=models.F('ulevel') + 0.05)
-                else:
+                elif game.user1 != -1:
                     tUserExtension.objects.filter(user=game.user1).update(ulevel=models.F('ulevel') + 0.05)
                     tUserExtension.objects.filter(user=game.user2).update(ulevel=models.F('ulevel') + 0.2)
                 
