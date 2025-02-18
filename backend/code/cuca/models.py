@@ -3,6 +3,7 @@ from django.core.validators import MinValueValidator
 from datetime import timedelta, date, datetime
 from django.utils.timezone import now 
 from django.contrib.auth.forms import UserCreationForm
+from decimal import Decimal
 
 class tauxStatus(models.Model):
     statusID = models.AutoField(primary_key=True)
@@ -29,14 +30,10 @@ class tUserExtension(models.Model):
     user = models.IntegerField(primary_key=True, null=False, unique=True)
     nick = models.CharField(max_length=20, null=True, blank=True)
     birthdate = models.DateField(null=True, blank=True)
-    ulevel = models.FloatField(null=True, blank=True, default=0.0)
+    ulevel = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, default=Decimal("0.00"))
     gender = models.ForeignKey(tauxGender, on_delete=models.PROTECT, null=True)
     avatar = models.CharField(max_length=1000, null=True, blank=True)
     bio = models.CharField(max_length=2000, null=True, blank=True)
-    victories = models.IntegerField(null=True, blank=True, default=0)
-    totalGamesPlayed = models.IntegerField(null=True, blank=True, default=0)
-    tVictories = models.IntegerField(null=True, blank=True, default=0)
-    totalTournPlayed = models.IntegerField(null=True, blank=True, default=0)
 
     def __str__(self):
         return f"UserExtension {self.user}"

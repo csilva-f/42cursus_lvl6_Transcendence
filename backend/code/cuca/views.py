@@ -490,9 +490,9 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 game.user1_hits = u1_hits
                 game.user2_hits = u2_hits
 
-                tUserExtension.objects.filter(user=winner_id).update(victories=models.F('victories') + 1)
-                tUserExtension.objects.filter(user=game.user1).update(totalGamesPlayed=models.F('totalGamesPlayed') + 1)
-                tUserExtension.objects.filter(user=game.user2).update(totalGamesPlayed=models.F('totalGamesPlayed') + 1)
+                # tUserExtension.objects.filter(user=winner_id).update(victories=models.F('victories') + 1)
+                # tUserExtension.objects.filter(user=game.user1).update(totalGamesPlayed=models.F('totalGamesPlayed') + 1)
+                # tUserExtension.objects.filter(user=game.user2).update(totalGamesPlayed=models.F('totalGamesPlayed') + 1)
                 if game.user1 == winner_id:
                     tUserExtension.objects.filter(user=game.user1).update(ulevel=models.F('ulevel') + 0.2)
                     tUserExtension.objects.filter(user=game.user2).update(ulevel=models.F('ulevel') + 0.05)
@@ -521,7 +521,6 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                             tournament.winnerUser = winner_id
                             tournament.save()
                         tUserExtension.objects.filter(user=winner_id).update(
-                            tVictories=models.F('tVictories') + 1,
                             ulevel=models.F('ulevel') + 0.5
                         )
                         participating_users = tGames.objects.filter(
@@ -649,11 +648,7 @@ def get_userextensions(request):
             'gender': userext.gender.label if userext.gender else None,
             'level': userext.ulevel,
             'avatar': userext.avatar,
-            'bio': userext.bio,
-            'victories': userext.victories,
-            'totalGamesPlayed': userext.totalGamesPlayed,
-            'tVictories': userext.tVictories,
-            'totalTournPlayed': userext.totalTournPlayed
+            'bio': userext.bio
         }
         for userext in uextensions
     ]
@@ -695,7 +690,6 @@ def post_update_tournament(request): #update statusID acording to user2 and winn
             tourn.winnerUser = winner_id
             tourn.status = 3
             tUserExtension.objects.filter(user=winner_id).update(
-                tvictories=models.F('tvictories') + 1,
                 ulevel=models.F('ulevel') + 0.5
             )
             participating_users = tGames.objects.filter(
@@ -769,9 +763,6 @@ def post_join_tournament(request):  # user joins an active tournament
             if full_games.exists():
                 tourn.status = tauxStatus.objects.get(statusID=2)
                 tourn.save()
-            tUserExtension.objects.filter(user=user_id).update(
-                totalTournPlayed=models.F('totalTournPlayed') + 1
-            )
             return JsonResponse({"message": f"User ID {user_id} joined to tournament ID {tourn_id} successfully"}, status=201)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
@@ -901,17 +892,6 @@ def get_userstatistics(request):
             ~Q(status__statusID__in=ongoing_statuses)
         ).distinct().count()
 
-        # ongoing_games = tGames.objects.filter(
-        #     Q(user1=userext.user) | Q(user2=userext.user),
-        #     status__statusID__in=ongoing_statuses
-        # ).count()
-        # ongoing_tournaments = tTournaments.objects.filter(
-        #     Q(tgames__user1=userext.user) | Q(tgames__user2=userext.user),
-        #     status__statusID__in=ongoing_statuses
-        # ).distinct().count()
-        # game_losses = userext.totalGamesPlayed - userext.victories
-        # tournament_losses = userext.totalTournPlayed - ongoing_tournaments - userext.tVictories
-
         # Total game time
         total_game_time = tGames.objects.filter(
             (Q(user1=userext.user) | Q(user2=userext.user)) &
@@ -925,6 +905,7 @@ def get_userstatistics(request):
 
         userext_data.append({
             'UserID': userext.user,
+            'Level': userext.ulevel,
             'GameVictories': game_victories,
             'GameLosses': max(0, total_games_played - game_victories),
             'TotalGamesPlayed': total_games_played,
