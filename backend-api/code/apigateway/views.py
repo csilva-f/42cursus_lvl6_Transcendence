@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.conf import settings
-
+# [IsAuthenticated]
 
 class GetGames(APIView):
     permission_classes = [AllowAny]
@@ -27,7 +27,7 @@ class GetGames(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class GetTournaments(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request):
         backend_url = settings.BACKEND_TOURNAMENTS_URL

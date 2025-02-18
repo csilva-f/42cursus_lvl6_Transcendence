@@ -5,7 +5,8 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, Sum, F, ExpressionWrapper, DurationField
+from django.utils.timezone import now
 
 ALLOWED_FILTERS_TOURNAMENT = {'tournamentID', 'statusID', 'name', 'winnerID'}
 
@@ -101,6 +102,8 @@ def get_games(request):
         {
             'gameID': game.game,
             'creationTS': game.creationTS.strftime("%Y-%m-%d %H:%M:%S"),
+            'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
+            'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
             'user2ID': game.user2,
             'winnerUserID': game.winnerUser,
@@ -141,6 +144,8 @@ def get_gameinvitations(request):
         {
             'gameID': game.game,
             'creationTS': game.creationTS.strftime("%Y-%m-%d %H:%M:%S"),
+            'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
+            'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
             'user2ID': game.user2,
             'winnerUserID': game.winnerUser,
@@ -217,6 +222,8 @@ def get_usergames(request):
         {
             'gameID': game.game,
             'creationTS': game.creationTS.strftime("%Y-%m-%d %H:%M:%S"),
+            'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
+            'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
             'user2ID': game.user2,
             'winnerUserID': game.winnerUser,
@@ -463,15 +470,18 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 return JsonResponse({"error": f"User2 ID {user2_id} does not exist in tUserExtension"}, status=404)
             if winner_id is not None and winner_id not in [game.user1, game.user2]:
                 return JsonResponse({"error": "Winner must be either User1 or User2"}, status=400)
+            if user2_id is not None and game.user1 is not None:
+                return JsonResponse({"error": "User2 already associated with the game"}, status=400)
             if winner_id is not None:
                 game.winnerUser = winner_id
                 game.status_id = 3
+                game.endTS = now() 
 
                 u1_points = data.get('user1_points')
                 u2_points = data.get('user2_points')
                 u1_hits = data.get('user1_hits')
                 u2_hits = data.get('user2_hits')
-                if not u1_points or not u2_points or not u1_hits or not u2_hits:
+                if (not u1_points and u1_points != 0) or (not u2_points and u2_points != 0) or (not u1_hits and u1_hits != 0) or (not u2_hits and u2_hits != 0):
                     return JsonResponse({"error": "Users game statistics are required for update"}, status=400)
                 if (game.user1 == winner_id and u1_points < 5) or (game.user2 == winner_id and u2_points < 5):
                     return JsonResponse({"error": "Winner's points are not consistent"}, status=400)
@@ -544,14 +554,8 @@ def post_create_userextension(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            
+    
             user_id = data.get('id')
-            # xuser_nick = data.get('nickname')
-            # user_birthdate = data.get('birthdate')
-            # gender_id = data.get('genderid')
-            # user_avatar = data.get('avatar')
-            # user_bio = data.get('bio')
-
             if not user_id:
                 return JsonResponse({"error": "Missing user ID"}, status=400)
             if tUserExtension.objects.filter(user=user_id).exists():
@@ -568,14 +572,6 @@ def post_create_userextension(request):
                     },
                     "isOpenPopup": False
                 }, status=201)
-            # try:
-            #     gender = tauxGender.objects.get(gender=gender_id)
-            # except tauxGender.DoesNotExist:
-            #     return JsonResponse({"error": f"Gender with id {gender_id} does not exist"}, status=404)
-            # if user_nick and len(user_nick) > 20:
-            #     return JsonResponse({"error": "Nickname cannot exceed 20 characters"}, status=400)
-            # if user_nick and tUserExtension.objects.filter(nick=user_nick).exists():
-            #     return JsonResponse({"error": f"Nickname '{user_nick}' is already in use"}, status=400)
             
             userext = tUserExtension.objects.create(
                 user=user_id
@@ -858,25 +854,86 @@ def get_userstatistics(request):
 
     for userext in uextensions:
         ongoing_statuses = [1, 2]
-        ongoing_games = tGames.objects.filter(
-            Q(user1=userext.user) | Q(user2=userext.user),
-            status__statusID__in=ongoing_statuses
+
+        # Game victories/losses
+        total_games_played = tGames.objects.filter(
+            (Q(user1=userext.user) | Q(user2=userext.user)) & ~Q(status__statusID__in=ongoing_statuses)
         ).count()
-        ongoing_tournaments = tTournaments.objects.filter(
-            Q(tgames__user1=userext.user) | Q(tgames__user2=userext.user),
-            status__statusID__in=ongoing_statuses
+
+        game_victories = tGames.objects.filter(
+            Q(winnerUser=userext.user) & ~Q(status__statusID__in=ongoing_statuses)
+        ).count()
+
+        # Total points
+        total_points_user1 = tGames.objects.filter(
+            Q(user1=userext.user) & ~Q(status__statusID__in=ongoing_statuses)
+        ).aggregate(total=Sum('user1_points'))['total'] or 0
+
+        total_points_user2 = tGames.objects.filter(
+            Q(user2=userext.user) & ~Q(status__statusID__in=ongoing_statuses)
+        ).aggregate(total=Sum('user2_points'))['total'] or 0
+
+        total_points = total_points_user1 + total_points_user2
+
+        # Total ball hits
+        total_hits_user1 = tGames.objects.filter(
+            Q(user1=userext.user) & ~Q(status__statusID__in=ongoing_statuses)
+        ).aggregate(total=Sum('user1_hits'))['total'] or 0
+
+        total_hits_user2 = tGames.objects.filter(
+            Q(user2=userext.user) & ~Q(status__statusID__in=ongoing_statuses)
+        ).aggregate(total=Sum('user2_hits'))['total'] or 0
+
+        total_hits = total_hits_user1 + total_hits_user2
+
+        #Tournament victries/losses
+        tournament_victories = tGames.objects.filter(
+            Q(winnerUser=userext.user) &
+            Q(phase__phase=3) &
+            Q(tournament__isnull=False) &
+            ~Q(status__statusID__in=ongoing_statuses)
+        ).count()
+
+        total_tournaments_played = tTournaments.objects.filter(
+            Q(tgames__tournament__isnull=False) &
+            Q(tgames__phase__phase=1) &
+            (Q(tgames__user1=userext.user) | Q(tgames__user2=userext.user)) &
+            ~Q(status__statusID__in=ongoing_statuses)
         ).distinct().count()
-        game_losses = userext.totalGamesPlayed - userext.victories
-        tournament_losses = userext.totalTournPlayed - ongoing_tournaments - userext.tVictories
+
+        # ongoing_games = tGames.objects.filter(
+        #     Q(user1=userext.user) | Q(user2=userext.user),
+        #     status__statusID__in=ongoing_statuses
+        # ).count()
+        # ongoing_tournaments = tTournaments.objects.filter(
+        #     Q(tgames__user1=userext.user) | Q(tgames__user2=userext.user),
+        #     status__statusID__in=ongoing_statuses
+        # ).distinct().count()
+        # game_losses = userext.totalGamesPlayed - userext.victories
+        # tournament_losses = userext.totalTournPlayed - ongoing_tournaments - userext.tVictories
+
+        # Total game time
+        total_game_time = tGames.objects.filter(
+            (Q(user1=userext.user) | Q(user2=userext.user)) &
+            Q(endTS__isnull=False) &
+            ~Q(status__statusID__in=ongoing_statuses)
+        ).aggregate(
+            total_time=Sum(ExpressionWrapper(F('endTS') - F('creationTS'), output_field=DurationField()))
+        )['total_time']
+
+        total_game_time_str = str(total_game_time) if total_game_time else "00:00:00"
 
         userext_data.append({
             'UserID': userext.user,
-            'GameVictories': userext.victories,
-            'GameLosses': max(0, game_losses),
-            'TotalGamesPlayed': userext.totalGamesPlayed,
-            'TournamentVictories': userext.tVictories,
-            'TournamentLosses': max(0, tournament_losses),
-            'TotalTournamentsPlayed': userext.totalTournPlayed
+            'GameVictories': game_victories,
+            'GameLosses': max(0, total_games_played - game_victories),
+            'TotalGamesPlayed': total_games_played,
+            'TournamentVictories': tournament_victories,
+            'TournamentLosses': max(0, total_tournaments_played - tournament_victories),
+            'TotalTournamentsPlayed': total_tournaments_played,
+            'TotalGamePoints': total_points,
+            'TotalBallHits': total_hits,
+            'TotalGameTime': total_game_time_str
         })
 
     return JsonResponse({'users': userext_data}, safe=False, status=200)

@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from datetime import timedelta, date, datetime
+from django.utils.timezone import now 
 from django.contrib.auth.forms import UserCreationForm
 
 class tauxStatus(models.Model):
@@ -57,6 +58,7 @@ class tGames(models.Model):
 
     game = models.AutoField(primary_key=True)
     creationTS = models.DateTimeField(auto_now_add=True)
+    endTS = models.DateTimeField(null=True, blank=True)
     user1 = models.IntegerField(null=True, blank=True)
     user2 = models.IntegerField(null=True, blank=True)
     user1_points = models.IntegerField(null=True, blank=True)
