@@ -46,7 +46,7 @@ function getForms() {
                 if (form.id == "localFormID")
                     postLocalGame();
                 else if (form.id == "localTournamentFormID")
-                    postLocalTournament();
+                    initLocalTournament();
                 else if (form.id == "tournamentFormID")
                     postTournament();
                 else if (form.id == "login-form")

@@ -7,7 +7,6 @@ class tokenService {
 
     setToken(t) {
         this.token = t;
-        console.log(this.token);
         this.setCookie();
     };
     deleteToken() {
@@ -15,7 +14,6 @@ class tokenService {
     };
     async getAccess() {
         let token = this.checkCookie(this.cookieAccessName);
-        console.log(token);
         if (token != "CucaBeludo")
             await this.updateToken();
         return this.token.access;
@@ -23,7 +21,6 @@ class tokenService {
     async updateToken() {
         const apiUrl = "/authapi";
         let token = this.checkCookie(this.cookieRefreshName);
-        console.log("token: ", token);
         $.ajax({
             type: "POST",
             url: `${apiUrl}/refresh/`,
