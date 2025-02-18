@@ -30,6 +30,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
     <!-- Font Imports -->
     <link rel="stylesheet" href="/static/css/font.css">
+    <!-- QRCODE -->
+    <script type="text/javascript" src="/static/js/qrcode.js"></script>
 </head>
 
 <body style="background-color: var(--bodyBg); font-family: 'Poppins';" id="body">
@@ -171,8 +173,8 @@
                 <div class="d-flex flex-sm-column flex-row flex-nowrap align-items-end h-2">
                     <ul
                         class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-end align-items-end">
-                        <li class="pop-hover nav-item rounded-3 my-2" onclick="checkLogin()"
-                            style="width: 3rem; height: 3rem;">
+                        <li class="pop-hover nav-item rounded-3 my-2" style="width: 3rem; height: 3rem;"
+                            data-bs-toggle="modal" data-bs-target="#logOutModal">
                             <a href="/"
                                 class="nav-link fas fa-right-from-bracket fa-xl d-flex align-items-center justify-content-center"
                                 style="height: 100%; color: white">
@@ -184,12 +186,50 @@
             <div class="col-sm p-3" id="content" style="height: calc(100vh - 7rem);"></div>
         </div>
     </nav>
+
+    <div class="modal fade" id="logOutModal" tabindex="-1" aria-labelledby="logOutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content" style="background-color: var(--bodyBg)">
+                <div class="modal-header" style="background-color: var(--primary);">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-center align-items-center">
+                                <h5 class="h6 m-0 fw-bold text-center" style="color: white">Confirm log out?</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <button type="button" class="btn btn-secondary"
+                                style="background-color: var(--primary); color: white;" id="codeButton"
+                                onclick="logOut() "data-bs-dismiss="modal">
+                                <i class="fa-solid fa-check fa-xl" style="color: white;"></i>
+                            </button>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <button type="button" class="btn" style="background-color: var(--primary); color: white;"
+                            data-bs-dismiss="modal">
+                                <i class="fa-solid fa-xmark fa-xl" style="color: white;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
     <!-- End Sidebar and Content -->
     <script type="text/javascript" src="/static/js/Login/tokenService.js"></script>
     <script type="text/javascript" src="/static/js/router.js"></script>
     <script type="text/javascript" src="/static/js/index.js"></script>
     <script type="text/javascript" src="/static/js/api.js"></script>
     <script type="text/javascript" src="/static/js/Login/api.js"></script>
+    <script type="text/javascript" src="/static/js/Login/Profile.js"></script>
     <script type="text/javascript" src="/static/js/mainPage/mainPage.js"></script>
     <script type="text/javascript" src="/static/js/Home/Home.js"></script>
     <script type="text/javascript" src="/static/js/Home/api.js"></script>

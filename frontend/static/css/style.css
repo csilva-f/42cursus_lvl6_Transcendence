@@ -144,13 +144,29 @@ html {
 
  /* Login and profile page */
 #loginSignUpTab .nav-item .nav-link.active {
-	background-color: #AC3B61 !important;
-	border-color: #AC3B61 !important;
+	background-color: var(--primary) !important;
+	border-color: var(--primary) !important;
 	color: #fff !important;
 }
 
 #loginSignUpTab .nav-item .nav-link:hover {
-	background-color: #AC3B61 !important;
+	background-color: var(--primary) !important;
+	color: #fff !important;
+}
+
+.nav-pills .nav-link {
+	color: #000;
+}
+
+.nav-pills .nav-link i {
+	color: #000;
+}
+
+.nav-pills .nav-link.active {
+	color: #fff !important;
+}
+
+.nav-pills .nav-link.active i {
 	color: #fff !important;
 }
 

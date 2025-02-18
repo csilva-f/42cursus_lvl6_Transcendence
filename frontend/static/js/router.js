@@ -75,7 +75,7 @@ const routes = {
     descripton: "OAuth2 callback",
   },
   "/validate-email": {
-    template: "/templates/callback.html",
+    template: "/templates/Callback.html",
     title: "Profile",
     descripton: "Validate Email",
   },
@@ -303,6 +303,7 @@ async function changeActive(location) {
         window.intlTelInput(input, {
             loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
         });
+      createQrCode();
       break;
     default:
       console.log("default");
