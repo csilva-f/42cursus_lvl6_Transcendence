@@ -333,6 +333,10 @@ def post_create_game(request):
                     user2_id = tUserExtension.objects.get(user=-1).user
                 except tUserExtension.DoesNotExist:
                     return JsonResponse({"error": "Default user not found in the DB"}, status=404)
+                try:
+                    status_instance = tauxStatus.objects.get(statusID=2)
+                except tauxStatus.DoesNotExist:
+                    return JsonResponse({"error": f"Status ID {gstatus} does not exist in tauxStatus"}, status=404)
 
             game = tGames.objects.create(
                 user1=user1_id,
