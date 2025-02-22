@@ -101,10 +101,10 @@ async function postLocalGame() {
   showSuccessToast(langData, langData.gameEntered);
   resetModal();
   $("#createModal").modal("hide");
-  const enterLi = document.getElementById("enterLi");
   window.history.pushState({}, "", "/pong");
-  locationHandler("content");
-  localStorage.setItem("gameData", JSON.stringify(gameData));
+  await locationHandler("content");
+  const game = new Game(0, gameData);
+  game.initGame();
 }
 
 //TODO getUserID
@@ -124,12 +124,13 @@ async function enterGame(gameID) {
     contentType: "application/json",
     headers: { Accept: "application/json" },
     data: JSON.stringify(gameData),
-    success: function (res) {
+    success: async function (res) {
       showSuccessToast(langData, langData.gameEntered);
       fetchGames(1);
-      const enterLi = document.getElementById("enterLi");
-      window.history.pushState({}, "", enterLi.getAttribute("href"));
-      locationHandler("content");
+      window.history.pushState({}, "", "/pong");
+      await locationHandler("content");
+      const game = new Game(gameID, null);
+      game.initGame();
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);

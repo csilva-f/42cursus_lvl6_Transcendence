@@ -77,8 +77,9 @@ async function logOut() {
 }
 
 async function notificationLoad() {
-    var token = JWT.getAccess();
-    if (token != null) {
+    var token = await JWT.getAccess();
+    console.log("token: ", token)
+    if (token) {
         setTimeout(async function () {
             await fetchUserNotificationGame();
             notificationLoad();
