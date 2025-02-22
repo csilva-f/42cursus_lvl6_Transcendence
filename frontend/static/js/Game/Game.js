@@ -16,7 +16,7 @@ window.addEventListener('keydown', function (e) {
 window.addEventListener('keyup', function (e) {
     keyPressed[e.keyCode] = false;
 })
-/*
+
 function respawnBall(canvas, objects) {
     if (objects[0].ballVelocityX > 0) {
         objects[0].ballX = canvas.width / 2;
@@ -135,7 +135,7 @@ function initGame() {
     document.getElementById("playerRightScore").innerHTML = objects[2].paddleScore;
     startTimer();
     gameLoop(canvas, ctx, objects);
-}*/
+}
 
 class Game  {
     constructor(gameID, gameData) {
