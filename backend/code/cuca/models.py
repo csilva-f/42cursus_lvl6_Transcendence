@@ -25,6 +25,13 @@ class tauxPhase(models.Model):
 
     def __str__(self):
         return f"Phase {self.phase} is {self.label}"
+
+class tauxFriendshipStatus(models.Model):
+    status = models.AutoField(primary_key=True)
+    label = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"Friendship status {self.status} is {self.label}"
     
 class tUserExtension(models.Model):
     user = models.IntegerField(primary_key=True, null=False, unique=True)
@@ -80,3 +87,12 @@ class  tTournamentUsers(models.Model):
 
     def __str__(self):
         return f"User {self.user} in Tournament {self.tournament} on {self.creationTS}"
+
+class tFriends(models.Model):
+    user1 = models.ForeignKey(tUserExtension, on_delete=models.PROTECT, null=True, blank=True, related_name="friend1")
+    user2 = models.ForeignKey(tUserExtension, on_delete=models.PROTECT, null=True, blank=True, related_name="friend2")
+    requester = models.ForeignKey(tUserExtension, on_delete=models.PROTECT, null=True, blank=True, related_name="requester")
+    requestStatus = models.ForeignKey(tauxFriendshipStatus, on_delete=models.PROTECT, null=False, default=1)
+
+    def _str_(self):
+        return f"Friendship record between {self.user1} and {self.user2} created"

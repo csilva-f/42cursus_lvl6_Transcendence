@@ -20,4 +20,8 @@ urlpatterns = [
     path('get_userinvitations/', get_gameinvitations, name='get_userinvitations'),
     path('get_usernbrinvit/', get_nbr_invitations, name='get_usernbrinvit'),
     path('get_usergames/', get_usergames, name='get_usergames'),
+    path('friendshipstatus/', get_friendshipstatus, name='get_friendshipstatus'),
+    path('get_friendships/', get_friendships, name='get_friendships'),
+    path('send_friendrequest/', post_send_friend_req, name='send_friendrequest'),
+    path('respond_friendrequest/', post_respond_friend_req, name='respond_friendrequest'),
 ]

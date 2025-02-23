@@ -33,6 +33,13 @@ GUEST_USER=(
   "INSERT INTO cuca_tuserextension (\"user\", nick) VALUES (-1, 'Guest') ON CONFLICT (\"user\") DO NOTHING;"
 )
 
+# Dados para a tabela cuca_tauxfriendshipstatus
+FRIENDS_STATUS_DATA=(
+  "INSERT INTO cuca_tauxfriendshipstatus VALUES (1, 'RequestSent') ON CONFLICT (status) DO NOTHING;"
+  "INSERT INTO cuca_tauxfriendshipstatus VALUES (2, 'Friends') ON CONFLICT (status) DO NOTHING;"
+  "INSERT INTO cuca_tauxfriendshipstatus VALUES (3, 'NotFriends') ON CONFLICT (status) DO NOTHING;"
+)
+
 # Função para executar os comandos no PostgreSQL
 execute_sql() {
   local sql_command=$1
@@ -57,9 +64,15 @@ for sql in "${PHASE_DATA[@]}"; do
   execute_sql "$sql"
 done
 
-# Inserir dados em cuca_tauxphase
+# Inserir dados em cuca_tuserextension
 echo "A inserir dados em cuca_tuserextension..."
 for sql in "${GUEST_USER[@]}"; do
+  execute_sql "$sql"
+done
+
+# Inserir dados em tauxfriendshipstatus
+echo "A inserir dados em cuca_tauxfriendshipstatus..."
+for sql in "${FRIENDS_STATUS_DATA[@]}"; do
   execute_sql "$sql"
 done
 

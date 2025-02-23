@@ -32,6 +32,7 @@ BACKEND_USTAT_URL = 'http://backend:8002/backend/get_userstatistics/'
 BACKEND_USINVIT_URL = 'http://backend:8002/backend/get_userinvitations/'
 BACKEND_USNBRINVIT_URL = 'http://backend:8002/backend/get_usernbrinvit/'
 BACKEND_UGAMES_URL = 'http://backend:8002/backend/get_usergames/'
+BACKEND_FRIENDS_URL = 'http://backend:8002/backend/get_friendships/'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

@@ -16,6 +16,8 @@ ALLOWED_FILTERS_UEXT = {'userID'}
 
 ALLOWED_FILTERS_UGAMES = {'userID', 'statusID', 'tournamentID'}
 
+ALLOWED_FILTERS_FRIENDS = {'userID', 'statusID'}
+
 def validate_filters_tournament(request):
     extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_TOURNAMENT
     if extra_keys:
@@ -34,6 +36,11 @@ def validate_filters_uext(request):
     
 def validate_filters_ugames(request):
     extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_UGAMES
+    if extra_keys:
+        raise ValidationError(f"Invalid parameter(s): {', '.join(extra_keys)}")
+
+def validate_filters_friends(request):
+    extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_FRIENDS
     if extra_keys:
         raise ValidationError(f"Invalid parameter(s): {', '.join(extra_keys)}")
 
@@ -638,6 +645,16 @@ def get_phases(request):
     ]
     return JsonResponse({'phases': phases_data}, safe=False)
 
+def get_friendshipstatus(request):
+    friendshipstatus_data = [
+        {
+            'id': status.status,
+            'label': status.label
+        }
+        for status in tauxFriendshipStatus.objects.all()
+    ]
+    return JsonResponse({'friendshipstatus': friendshipstatus_data}, safe=False)
+
 def get_userextensions(request):
     try:
         validate_filters_uext(request)
@@ -930,3 +947,165 @@ def get_userstatistics(request):
         })
 
     return JsonResponse({'users': userext_data}, safe=False, status=200)
+
+def get_friendships(request):
+    try:
+        validate_filters_friends(request)
+        user_id = request.GET.get('userID')
+        status_id = request.GET.get('statusID')
+        if user_id:
+            if user_id.strip() == "":
+                return JsonResponse({"error": "Filter can't be empty."}, status=400)
+            user_id = validate_id(user_id)
+            if not tUserExtension.objects.filter(user=user_id).exists():
+                return JsonResponse({"error": f"User {user_id} does not exist"}, status=404)
+            if status_id:
+                if status_id.strip() == "":
+                    return JsonResponse({"error": "Filter can't be empty."}, status=400)
+                status_id = validate_id(status_id)
+                if not tauxFriendshipStatus.objects.filter(status=status_id).exists():
+                    return JsonResponse({"error": f"Friendship status {status_id} does not exist"}, status=404)
+                friendships = tFriends.objects.filter(Q(user1_id=user_id) | Q(user2_id=user_id), Q(requestStatus_id=status_id))
+            else:
+                friendships = tFriends.objects.filter(Q(user1_id=user_id) | Q(user2_id=user_id))
+            friends_data = [
+                {
+                    'userID': friends.user2.user if friends.user1.user == user_id else friends.user1.user,
+                    'userNick': friends.user2.nick if friends.user1.user == user_id else friends.user1.nick,
+                    'statusID': friends.requestStatus.status, 
+                    'statusLabel': friends.requestStatus.label
+                }
+                for friends in friendships
+            ]
+            return JsonResponse({'friendships': friends_data}, safe=False, status=200)
+            
+        else:
+            if status_id:
+                if status_id.strip() == "":
+                    return JsonResponse({"error": "Filter can't be empty."}, status=400)
+                status_id = validate_id(status_id)
+                if not tauxFriendshipStatus.objects.filter(status=status_id).exists():
+                    return JsonResponse({"error": f"Friendship status {status_id} does not exist"}, status=404)
+                friendships = tFriends.objects.filter(requestStatus_id=status_id)
+            else:
+                friendships = tFriends.objects.all()
+    except ValidationError as e:
+        return JsonResponse({"error": str(e)}, status=400)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+    friendships_data = [
+        {
+            'user1ID': friends.user1.user,
+            'user1Nick': friends.user1.nick,
+            'user2ID': friends.user2.user,
+            'user2Nick': friends.user2.nick,
+            'requesterID': friends.requester.user,
+            'requesterNick': friends.requester.nick,
+            'statusID': friends.requestStatus.status, 
+            'statusLabel': friends.requestStatus.label
+        }
+        for friends in friendships
+    ]
+    
+    return JsonResponse({'friendships': friendships_data}, safe=False, status=200)
+
+@csrf_exempt
+def post_send_friend_req(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user1_id = data.get('user1ID')
+            user2_id = data.get('user2ID')
+            if not user1_id:
+                return JsonResponse({"error": "The ID of the user sending the friendship request is required"}, status=400)
+            if not user2_id:
+                return JsonResponse({"error": "The ID of the user receiving the friendship request is required"}, status=400)
+            if user1_id == user2_id:
+                return JsonResponse({"error": "A user cannot send a friendship request to themselves"}, status=400)
+            
+            try:
+                user1 = tUserExtension.objects.get(user=user1_id)
+            except tUserExtension.DoesNotExist:
+                return JsonResponse({"error": f"User {user1_id} does not exist"}, status=404)
+            try:
+                user2 = tUserExtension.objects.get(user=user2_id)
+            except tUserExtension.DoesNotExist:
+                return JsonResponse({"error": f"User {user2_id} does not exist"}, status=404)
+
+            friendship = tFriends.objects.filter(
+                Q(user1_id=user1_id, user2_id=user2_id) | Q(user1_id=user2_id, user2_id=user1_id)
+            ).first()
+            if friendship:
+                if friendship.requestStatus_id == 1:
+                    return JsonResponse({"error": "A friendship request is already pending between these users"}, status=400)
+                elif friendship.requestStatus_id == 2:
+                    return JsonResponse({"error": "Users are already friends"}, status=400)
+                else:
+                    try:
+                        status = tauxFriendshipStatus.objects.get(status=1)
+                    except tauxFriendshipStatus.DoesNotExist:
+                        return JsonResponse({"error": f"Friendship status does not exist"}, status=404)
+                    friendship.requestStatus = status
+                    friendship.requester = user1
+                    friendship.save()
+            else:
+                friendship = tFriends.objects.create(user1=user1, user2=user2, requester=user1)
+            return JsonResponse({"message": "Friendship request sent successfully"}, status=201)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON data"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    return JsonResponse({"error": "Invalid request method"}, status=405)
+
+@csrf_exempt
+def post_respond_friend_req(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user1_id = data.get('user1ID')
+            user2_id = data.get('user2ID')
+            status_id = data.get('statusID')
+            if not user1_id:
+                return JsonResponse({"error": "User ID 1 is required"}, status=400)
+            if not user2_id:
+                return JsonResponse({"error": "User ID 2 is required"}, status=400)
+            if user1_id == user2_id:
+                return JsonResponse({"error": "The users IDs cannot be the same"}, status=400)
+            
+            try:
+                user1 = tUserExtension.objects.get(user=user1_id)
+            except tUserExtension.DoesNotExist:
+                return JsonResponse({"error": f"User {user1_id} does not exist"}, status=404)
+            try:
+                user2 = tUserExtension.objects.get(user=user2_id)
+            except tUserExtension.DoesNotExist:
+                return JsonResponse({"error": f"User {user2_id} does not exist"}, status=404)
+
+            try:
+                friendship = tFriends.objects.get(
+                    Q(user1_id=user1_id, user2_id=user2_id) |
+                    Q(user1_id=user2_id, user2_id=user1_id)
+                )
+            except tFriends.DoesNotExist:
+                return JsonResponse({"error": f"There is no friendship record between {user1_id} and {user2_id}"}, status=404)
+            if status_id is not None:
+                status_id = validate_status(status_id)
+                if friendship.requestStatus_id == status_id:
+                    return JsonResponse({"error": "The status cannot be the same"}, status=400)
+                elif friendship.requestStatus_id == 1 and friendship.requester_id == user1_id:
+                    return JsonResponse({"error": "The user accepting the request is the same who sent it"}, status=400)
+                elif (friendship.requestStatus_id == 2 and status_id == 1) or (friendship.requestStatus_id == 3 and status_id == 2):
+                    return JsonResponse({"error": "Inconsistent friendship status change"}, status=400)
+                try:
+                    status = tauxFriendshipStatus.objects.get(status=status_id)
+                except tauxFriendshipStatus.DoesNotExist:
+                    return JsonResponse({"error": f"Friendship status does not exist"}, status=404)
+                friendship.requestStatus = status
+            friendship.save()
+            return JsonResponse({"message": "Friendship record updated successfully"}, status=201)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON data"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    return JsonResponse({"error": "Invalid request method"}, status=405)
