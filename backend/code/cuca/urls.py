@@ -24,4 +24,6 @@ urlpatterns = [
     path('get_friendships/', get_friendships, name='get_friendships'),
     path('send_friendrequest/', post_send_friend_req, name='send_friendrequest'),
     path('respond_friendrequest/', post_respond_friend_req, name='respond_friendrequest'),
+    path('get_pendingrequests/', get_pendingrequests, name='get_pendingrequests'),
+    path('get_nonfriendslist/', get_nonfriendslist, name='get_nonfriendslist'),
 ]

@@ -16,7 +16,7 @@ ALLOWED_FILTERS_UEXT = {'userID'}
 
 ALLOWED_FILTERS_UGAMES = {'userID', 'statusID', 'tournamentID'}
 
-ALLOWED_FILTERS_FRIENDS = {'userID', 'statusID'}
+ALLOWED_FILTERS_FRIENDS = {'userID', 'statusID', 'sentToMe'}
 
 def validate_filters_tournament(request):
     extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_TOURNAMENT
@@ -1109,3 +1109,75 @@ def post_respond_friend_req(request):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method"}, status=405)
+
+def get_pendingrequests(request):
+    try:
+        validate_filters_friends(request)
+        user_id = request.GET.get('userID')
+        isSentToMe = str(request.GET.get('sentToMe')).lower() in ['true', '1', 'yes']
+        if user_id:
+            if user_id.strip() == "":
+                return JsonResponse({"error": "Filter can't be empty."}, status=400)
+            user_id = validate_id(user_id)
+            if not tUserExtension.objects.filter(user=user_id).exists():
+                return JsonResponse({"error": f"User {user_id} does not exist"}, status=404)
+            if isSentToMe:
+                friendships = tFriends.objects.filter(
+                    (Q(user1_id=user_id) | Q(user2_id=user_id)) & ~Q(requester_id=user_id) & Q(requestStatus_id=1)
+                )
+            else:
+                friendships = tFriends.objects.filter(
+                    (Q(user1_id=user_id) | Q(user2_id=user_id)) & Q(requester_id=user_id) & Q(requestStatus_id=1)
+                )
+            friends_data = [
+                {
+                    'userID': friends.user2.user if friends.user1.user == user_id else friends.user1.user,
+                    'userNick': friends.user2.nick if friends.user1.user == user_id else friends.user1.nick,
+                    'statusID': friends.requestStatus.status, 
+                    'statusLabel': friends.requestStatus.label
+                }
+                for friends in friendships
+            ]
+            return JsonResponse({'requests': friends_data}, safe=False, status=200)  
+        else:
+            return JsonResponse({"error": f"It's mandatory to indicate a user to find they're pending friendship requests"}, status=404)
+    except ValidationError as e:
+        return JsonResponse({"error": str(e)}, status=400)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+def get_nonfriendslist(request):
+    try:
+        validate_filters_friends(request)
+        user_id = request.GET.get('userID')
+        if user_id:
+            if user_id.strip() == "":
+                return JsonResponse({"error": "Filter can't be empty."}, status=400)
+            user_id = validate_id(user_id)
+            if not tUserExtension.objects.filter(user=user_id).exists():
+                return JsonResponse({"error": f"User {user_id} does not exist"}, status=404)
+
+            friends_ids = tFriends.objects.filter(
+                (Q(user1_id=user_id) | Q(user2_id=user_id)) & ~Q(requestStatus_id=3)
+            ).values_list('user1_id', 'user2_id')
+            friends_ids = set(id for pair in friends_ids for id in pair if id != user_id)
+
+            non_friends = tUserExtension.objects.filter(
+                ~Q(user__in=friends_ids)
+            ).exclude(user=user_id).exclude(user=-1)
+
+            non_friends_data = [
+                {
+                    'userID': user.user,
+                    'userNick': user.nick
+                }
+                for user in non_friends
+            ]
+
+            return JsonResponse({'nonFriendsList': non_friends_data}, safe=False, status=200) 
+        else:
+            return JsonResponse({"error": f"It's mandatory to indicate a user to find users to add as friends"}, status=404)
+    except ValidationError as e:
+        return JsonResponse({"error": str(e)}, status=400)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
