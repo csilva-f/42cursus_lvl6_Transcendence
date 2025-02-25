@@ -1,66 +1,4 @@
 services:
-  backend-api:
-    container_name: backend-api
-    build: ./backend-api
-    volumes:
-      - ./backend-api/code:/code:rw
-    networks:
-      - backend
-      - frontend
-    ports:
-      - "5555:8000"
-    init: true
-    restart: on-failure
-    env_file:
-      - ./backend-api/.env
-    depends_on:
-      - vault
-      - backend
-
-  auth-api:
-    container_name: auth-api
-    build: ./auth-api
-    volumes:
-      - ./auth-api/code:/code:rw
-    networks:
-      - backend
-      - frontend
-    ports:
-      - "5556:8000"
-    init: true
-    restart: on-failure
-    env_file:
-      - ./auth-api/.env
-    depends_on:
-      - vault
-      - auth
-
-  backend:
-    container_name: backend
-    build: ./backend
-    volumes:
-      - ./backend/code:/code:rw
-    networks:
-      - backend
-    ports:
-      - "9000:8002"
-    init: true
-    restart: on-failure
-    env_file:
-      - ./backend/.env
-    depends_on:
-      - vault
-      - backend-db
-
-  backend-db:
-    container_name: backend-db
-    build: ./backend-db
-    env_file:
-      - ./backend-db/.env
-    volumes:
-      - ./backend-db/data:/var/lib/postgresql/data:rw
-    networks:
-      - backend
   auth:
     container_name: auth
     build: ./auth
@@ -76,7 +14,6 @@ services:
       - ./auth/.env
     depends_on:
       - vault
-      - auth-db
 
   auth-db:
     container_name: auth-db
@@ -87,53 +24,6 @@ services:
       - ./auth-db/data:/var/lib/postgresql/data:rw
     networks:
       - backend
-
-  email:
-    container_name: email
-    build: ./email
-    volumes:
-      - ./email/code:/code:rwx
-    ports:
-      - "9005:8000"
-    networks:
-      - backend
-    init: true
-    restart: on-failure
-    env_file:
-      - ./email/.env
-    depends_on:
-      - vault
-      - email-db
-
-  email-db:
-    container_name: email-db
-    build: ./email-db
-    env_file:
-      - ./email-db/.env
-    volumes:
-      - ./email-db/data:/var/lib/postgresql/data:rw
-    networks:
-      - backend
-
-
-
-  nginx:
-    container_name: nginx
-    build: ./nginx
-    volumes:
-      - ./frontend:/frontend:rw
-    networks:
-      - frontend
-    ports:
-      - "8000:443"
-    init: true
-    restart: on-failure
-    env_file:
-      - ./nginx/.env
-    depends_on:
-      - vault
-      - backend-api
-
   vault:
     container_name: vault
     build: ./vault
@@ -147,7 +37,8 @@ services:
     restart: on-failure
     env_file:
       - ./vault/.env
-
+    depends_on:
+      - auth-db
 
 networks:
   backend:

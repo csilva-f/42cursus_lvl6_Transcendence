@@ -13,12 +13,12 @@ from os import getenv
 from pathlib import Path
 #from .utils import get_vault_secrets
 
-import hvac
-client = hvac.Client(url='http://vault:8200', token='myroot')
+#import hvac
+#client = hvac.Client(url='http://vault:8200', token='myroot')
 
-def get_stripe_key(path):
-    secret = client.secrets.kv.v2.read_secret_version(path=path)
-    return secret['data']['data']
+#def get_stripe_key(path):
+#    secret = client.secrets.kv.v2.read_secret_version(path=path)
+#    return secret['data']['data']
 #from auth.code import two_factor
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -114,16 +114,29 @@ WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
 # }
 #
 
-secrets = get_stripe_key('/auth/db')
+import os
+import hvac
+
+def get_database_credentials():
+    client = hvac.Client(url=os.getenv('VAULT_ADDR'), token=os.getenv('VAULT_TOKEN'))
+    try:
+        response = client.secrets.database.generate_credentials('role-auth-db')
+        return response['data']['username'], response['data']['password']
+    except Exception as e:
+        print(f"Error fetching credentials from Vault: {e}")
+        return None, None
+
+# Fetch database credentials from Vault
+DB_USERNAME, DB_PASSWORD = get_database_credentials()
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': secrets.get('POSTGRES_DB', ''),  # Default value if not set
-        'USER': secrets.get('POSTGRES_USER', ''),
-        'PASSWORD': secrets.get('POSTGRES_PASSWORD', ''),
-        'HOST': getenv('DB_HOST', ''),  # 'db' is the service name in docker-compose
-        'PORT': getenv('DB_PORT', '5432'),  # Default PostgreSQL port
+        'NAME': 'auth-db',  # Replace with your database name
+        'USER': DB_USERNAME,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': 'auth-db',  # Replace with your database host
+        'PORT': '5432',      # Replace with your database port
     }
 }
 
