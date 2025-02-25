@@ -7,6 +7,7 @@ import pyotp
 from cuca.models import CucaUser  # Adjust the import based on your project structure
 from .serializer import UserIdSerializer, OTPSerializer
 import requests
+import jwt
 
 class Enable2FAView(generics.GenericAPIView):
     serializer_class = UserIdSerializer
@@ -29,7 +30,10 @@ class SendOTPView(generics.GenericAPIView):
     serializer_class = UserIdSerializer
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        token = request.data["jwtToken"]
+        payload = jwt.decode(token,'django-insecure-@www2r)nc-li_empd8(e()gc592l7wau$zn%y#2*ej)u^xb*(0',algorithms=['HS256'])
+        user_id = payload['user_id']
+        serializer = self.get_serializer(data=user_id)
         serializer.is_valid(raise_exception=True)
         user_id = serializer.validated_data['userId']
         try:
@@ -76,10 +80,12 @@ class VerifyOTPView(generics.GenericAPIView):
 class GetOtpStatus(APIView):
     serializer_class = UserIdSerializer
     permission_classes = [AllowAny]
-    def get(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user_id = serializer.validated_data['userId']
+    def post(self, request, *args, **kwargs):
+        token = request.data["jwtToken"]
+        print(token)
+        payload = jwt.decode(token,'django-insecure-@www2r)nc-li_empd8(e()gc592l7wau$zn%y#2*ej)u^xb*(0',algorithms=['HS256'])
+        print(payload)
+        user_id = payload['user_id']
         try:
             user = CucaUser.objects.get(id=user_id)
         except CucaUser.DoesNotExist:

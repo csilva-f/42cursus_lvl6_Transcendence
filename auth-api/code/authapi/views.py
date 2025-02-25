@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.decorators import action
+from wsgiref import headers
+
 
 #PostRegisterViewSet - Register a new user
 # Input Parameters:
@@ -178,9 +180,8 @@ class VerifyOTPViewSet(viewsets.ViewSet):
 # No Input Parameters
 class VerifyEmailViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
-    @action(detail=False, methods=['get'], url_path='validate-email/(?P<uidb64>[^/.]+)/(?P<token>[^/.]+)')
-    def validate_email(self, request, uidb64, token):
-        backend_url = f'http://auth:8000/register/validate-email/{uidb64}/{token}/'
+    def create(self, request):
+        backend_url = 'http://auth:8000/register/validate-email/'
         try:
             backend_response = requests.get(backend_url, json=request.data)
             backend_response.raise_for_status()
@@ -195,9 +196,8 @@ class VerifyEmailViewSet(viewsets.ViewSet):
 
 class ResetPasswordViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
-    @action(detail=False, methods=['get'], url_path='reset-password/(?P<uidb64>[^/.]+)/(?P<token>[^/.]+)')
-    def reset_password(self, request, uidb64, token):
-        backend_url = f'http://auth:8000/reset-password/reset-password/{uidb64}/{token}/'
+    def create(self, request):
+        backend_url = 'http://auth:8000/register/reset-password/'
         try:
             backend_response = requests.get(backend_url, json=request.data)
             backend_response.raise_for_status()
@@ -225,6 +225,30 @@ class RecoverPasswordViewSet(viewsets.ViewSet):
             backend_response.raise_for_status()
             data = backend_response.json()
             return Response(data, status=status.HTTP_201_CREATED)
+        except requests.exceptions.HTTPError as http_err:
+            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+        except requests.exceptions.RequestException as req_err:
+            return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except ValueError as json_err:
+            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+class ValidateTokenViewSet(viewsets.ViewSet):
+    permission_classes = [AllowAny]
+    @action(detail=False, methods=['get'], url_path='validate-token')
+    def validate_token(self, request):
+        backend_url = 'http://auth:8000/register/validate-token/'
+        try:
+            headers1 = {
+                'Content-Type': 'application/json',
+                'Authorization': request.headers['Authorization'],
+                'Accept': 'application/json',
+            }
+            backend_response = requests.get(backend_url, json=request.data, headers=headers1)
+            backend_response.raise_for_status()
+            data = backend_response.json()
+            return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
             return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:

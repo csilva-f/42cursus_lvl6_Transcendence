@@ -5,6 +5,14 @@
     cursor: not-allowed;
 }
 
+.iconMainPage i {
+    color: var(--mainActiveIcon) !important;
+}
+
+.iconMainPage p {
+    color: var(--mainActiveText) !important;
+}
+
 .iconActive .nav-link {
     color: var(--mainActiveIcon) !important;
 }
@@ -36,28 +44,28 @@
 
 /* Sidebar Icons */
 .iconSBActive {
-    background-color: var(--SidebarActiveBg);
+    background-color: var(--sidebarActiveBg);
     pointer-events: none;
     cursor: not-allowed;
 }
 
 .iconSBActive .nav-link {
-    color: var(--SidebarActiveIcon) !important;
+    color: var(--sidebarActiveIcon) !important;
 }
 
 .iconSBActive i {
-    color: var(--SidebarActiveIcon) !important;
+    color: var(--sidebarActiveIcon) !important;
 }
 
 .iconSBInactive {
-    background-color: var(--SidebarInactiveBg);
+    background-color: var(--sidebarInactiveBg);
 }
 
 .iconSBInactive .nav-link {
-    color: var(--SidebarInactiveIcon) !important;
+    color: var(--sidebarInactiveIcon) !important;
 }
 
 .iconSBInactive i {
-    color: var(--SidebarInactiveIcon) !important;
+    color: var(--sidebarInactiveIcon) !important;
 }
 /* End Sidebar Icons */

@@ -27,6 +27,14 @@ SECRET_KEY = 'django-insecure-@www2r)nc-li_empd8(e()gc592l7wau$zn%y#2*ej)u^xb*(0
 BACKEND_TOURNAMENTS_URL = 'http://backend:8002/backend/tournaments/'
 BACKEND_CREATE_TOURNAMENT_URL = 'http://backend:8002/backend/create_tournament/'
 BACKEND_GAMES_URL = 'http://backend:8002/backend/games/'
+BACKEND_UEXT_URL = 'http://backend:8002/backend/get_userextensions/'
+BACKEND_USTAT_URL = 'http://backend:8002/backend/get_userstatistics/'
+BACKEND_USINVIT_URL = 'http://backend:8002/backend/get_userinvitations/'
+BACKEND_USNBRINVIT_URL = 'http://backend:8002/backend/get_usernbrinvit/'
+BACKEND_UGAMES_URL = 'http://backend:8002/backend/get_usergames/'
+BACKEND_FRIENDS_URL = 'http://backend:8002/backend/get_friendships/'
+BACKEND_REQUESTS_URL = 'http://backend:8002/backend/get_pendingrequests/'
+BACKEND_NONFRIENDSLIST_URL = 'http://backend:8002/backend/get_nonfriendslist/'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -141,13 +149,10 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ],
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.BrowsableAPIRenderer',
-        'rest_framework.renderers.JSONRenderer',
-    ]
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'apigateway.authentication.CustomJWTAuthentication',  # Use your custom class
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }

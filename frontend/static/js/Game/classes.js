@@ -38,11 +38,14 @@ class Paddle {
         this.paddleX = paddleX;
         this.paddleY = paddleY;
         this.paddleVelocityY = paddleVelocityY;
+        this.paddleColisionTimes = 0;
     }
     getHalfWidth() { return this.paddleWidth / 2; }
     getHalfHeight() { return this.paddleHeight / 2; }
     getCenterWidth() { return this.paddleX + this.getHalfWidth(); }
     getCenterHeight() { return this.paddleY + this.getHalfHeight(); }
+    setPaddleX(paddleX) { this.paddleX = paddleX; }
+    setPaddleY(paddleY) { this.paddleY = paddleY; }
     update() {
         if (this.paddleSide == 2) {
             if (keyPressed[KEY_ARROWUP])
@@ -66,11 +69,62 @@ class Paddle {
         if (this.paddleY <= 0)
             this.paddleY = 0;
     }
-    colissionBall(ball) {
+    /*colissionBall(ball) {
         let dX = Math.abs(ball.ballX - this.getCenterWidth());
         let dY = Math.abs(ball.ballY - this.getCenterHeight());
 
         if (dX <= (ball.ballRadius + this.getHalfWidth()) && dY <= (ball.ballRadius + this.getHalfHeight()))
             ball.ballVelocityX *= -1;
+    }*/
+    /*colissionBall(ball) {
+        let dX = Math.abs(ball.ballX - this.getCenterWidth());
+        let dY = Math.abs(ball.ballY - this.getCenterHeight());
+
+        if (dX <= (ball.ballRadius + this.getHalfWidth()) && dY <= (ball.ballRadius + this.getHalfHeight())) {
+            // Reverse horizontal velocity
+            if (ball.ballVelocityX < maxSpeed)
+                ball.ballVelocityX *= -1.08;
+            else
+                ball.ballVelocityX *= -1;
+
+            // Adjust the ball's position to prevent sticking
+            if (dX > this.getHalfWidth()) {
+                ball.ballX = (ball.ballX < this.getCenterWidth()) 
+                    ? this.getCenterWidth() - this.getHalfWidth() - ball.ballRadius
+                    : this.getCenterWidth() + this.getHalfWidth() + ball.ballRadius;
+            }
+            if (dY > this.getHalfHeight()) {
+                ball.ballY = (ball.ballY < this.getCenterHeight()) 
+                    ? this.getCenterHeight() - this.getHalfHeight() - ball.ballRadius
+                    : this.getCenterHeight() + this.getHalfHeight() + ball.ballRadius;
+            }
+        }
+    }*/
+    colissionBall(ball) {
+        let dX = ball.ballX - this.getCenterWidth();
+        let dY = ball.ballY - this.getCenterHeight();
+        let absDX = Math.abs(dX);
+        let absDY = Math.abs(dY);
+
+        if (absDX <= (ball.ballRadius + this.getHalfWidth()) && absDY <= (ball.ballRadius + this.getHalfHeight())) {
+            // Colisão na frente do paddle
+            if (absDX > this.getHalfWidth()) {
+                this.paddleColisionTimes++;
+                if (ball.ballVelocityX < maxSpeed)
+                    ball.ballVelocityX *= -1.08;
+                else
+                    ball.ballVelocityX *= -1;
+                ball.ballX = (dX < 0)
+                    ? this.getCenterWidth() - this.getHalfWidth() - ball.ballRadius
+                    : this.getCenterWidth() + this.getHalfWidth() + ball.ballRadius;
+            }
+            // Colisão no topo ou na base
+            if (absDY > this.getHalfHeight()) {
+                ball.ballVelocityY *= -1; // Reverte a direção vertical
+                ball.ballY = (dY < 0)
+                    ? this.getCenterHeight() - this.getHalfHeight() - ball.ballRadius
+                    : this.getCenterHeight() + this.getHalfHeight() + ball.ballRadius;
+            }
+        }
     }
 }
