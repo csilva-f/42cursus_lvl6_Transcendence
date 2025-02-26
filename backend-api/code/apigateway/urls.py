@@ -20,4 +20,10 @@ urlpatterns = [
     path('get-userinvitations/', GetUserInvitations.as_view(), name='get-userinvitations'),
     path('get-usernbrinvitations/', GetUserNbrInvitations.as_view(), name='get-usernbrinvitations'),
     path('get-usergames/', GetUserGames.as_view(), name='get-usergames'),
+    path('get-friendshipstatus/', GetFriendshipStatus.as_view(), name='get-friendshipstatus'),
+    path('get-friendships/', GetFriendships.as_view(), name='get-friendships'),
+    path('send-friendrequest/', PostSendFriendRequest.as_view(), name='send-friendrequest'),
+    path('respond-friendrequest/', PostRespondFriendRequest.as_view(), name='respond-friendrequest'),
+    path('get-friendrequests/', GetPendingRequests.as_view(), name='get-friendrequests'),
+    path('get-nonfriendslist/', GetNonFriendsList.as_view(), name='get-nonfriendslist'),
 ]
