@@ -150,10 +150,8 @@ class ValidateTokenView(APIView):
 
     def get(self, request):
         token = request.headers['Authorization'].split(' ')[1]
-        print (request.headers)
         try:
             payload = jwt.decode(token,'django-insecure-@www2r)nc-li_empd8(e()gc592l7wau$zn%y#2*ej)u^xb*(0',algorithms=['HS256'])
-            print(payload)
             user = CucaUser.objects.get(id=payload['user_id'])
             data = {'user_id': user.id, 'username': user.username}
             return Response({'data': data}, status=status.HTTP_200_OK)
