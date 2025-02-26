@@ -3,15 +3,18 @@ let allGames = [];
 //* GAMES
 //? GET - /api/get-games/?statusID=
 async function fetchGames(statusID) {
-  const userLang = localStorage.getItem("language") || "en";
+  const userLang = await localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
   const reloadIcon = document.getElementById("reloadIcon");
-  const reloadBtn = document.getElementById('reloadBtn');
+  const reloadBtn = document.getElementById("reloadBtn");
   reloadBtn.setAttribute("data-id", statusID);
   reloadIcon.classList.add("rotate");
   setTimeout(() => {
     reloadIcon.classList.remove("rotate");
   }, 250);
+  const accessToken = await JWT.getAccess();
+  console.log("accessToken", accessToken)
+  console.log("statusID: ", statusID)
   fetch("/templates/Components/CardGame.html")
     .then((response) => {
       if (!response.ok) {
@@ -27,7 +30,7 @@ async function fetchGames(statusID) {
         Accept: "application/json",
         contentType: "application/json",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         success: function (res) {
           const divElement = document.getElementById("gamesContent");
@@ -47,12 +50,12 @@ async function fetchGames(statusID) {
         },
         error: function (xhr, status, error) {
           console.error("Error Thrown:", error);
+          
           showErrorToast(APIurl, error, langData);
         },
       });
     })
     .catch((error) => {
-      console.error("There was a problem with the fetch operation:", error);
     });
 }
 
@@ -63,7 +66,7 @@ async function postGame() {
   const APIurl = `/api/create-game/`;
   let gameData = {
     user1ID: 1,
-    islocal: false
+    islocal: false,
   };
   console.log("gameData: ", gameData);
   $.ajax({
@@ -100,10 +103,10 @@ async function postLocalGame() {
   showSuccessToast(langData, langData.gameEntered);
   resetModal();
   $("#createModal").modal("hide");
-  const enterLi = document.getElementById("enterLi");
-  window.history.pushState({}, "", "/pong");//enterLi.getAttribute("href"));
-  locationHandler("content");
-  localStorage.setItem("gameData", JSON.stringify(gameData));
+  window.history.pushState({}, "", "/pong");
+  await locationHandler("content");
+  const game = new Game(0, gameData);
+  game.initGame();
 }
 
 //TODO getUserID
@@ -114,7 +117,7 @@ async function enterGame(gameID) {
   const APIurl = `/api/update-game/`;
   let gameData = {
     gameID: gameID,
-    user2ID: 2
+    user2ID: 2,
   };
   console.log("gameData: ", gameData);
   $.ajax({
@@ -123,12 +126,13 @@ async function enterGame(gameID) {
     contentType: "application/json",
     headers: { Accept: "application/json" },
     data: JSON.stringify(gameData),
-    success: function (res) {
+    success: async function (res) {
       showSuccessToast(langData, langData.gameEntered);
       fetchGames(1);
-      const enterLi = document.getElementById("enterLi");
-      window.history.pushState({}, "", enterLi.getAttribute("href"));
-      locationHandler("content");
+      window.history.pushState({}, "", "/pong");
+      await locationHandler("content");
+      const game = new Game(gameID, null);
+      game.initGame();
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
@@ -147,6 +151,7 @@ async function fetchTournaments(statusID) {
   setTimeout(() => {
     reloadIcon.classList.remove("rotate");
   }, 250);
+  const accessToken = await JWT.getAccess();
   fetch("/templates/Components/CardTournament.html")
     .then((response) => {
       if (!response.ok) {
@@ -159,7 +164,9 @@ async function fetchTournaments(statusID) {
       $.ajax({
         type: "GET",
         url: APIurl,
-        headers: { Accept: "application/json" },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
         success: function (res) {
           const divElement = document.getElementById("gamesContent");
           divElement.innerHTML = "";
@@ -213,5 +220,99 @@ async function postTournament() {
       showErrorToast(APIurl, error, langData);
       resetModal();
     },
+  });
+}
+
+function getCurrentDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+async function postLocalTournament() {
+  const userLang = localStorage.getItem("language") || "en";
+  const langData = await getLanguageData(userLang);
+  const APIurl = `/api/create-tournament/`;
+  const todayDate = getCurrentDate();
+  
+  let tournamentCreationData = {
+    name: document.getElementById("localNameTournamentInput").value,
+    beginDate: todayDate,
+    endDate: todayDate,
+    createdByUser: 1,
+  };
+
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: APIurl,
+      contentType: "application/json",
+      headers: { Accept: "application/json" },
+      data: JSON.stringify(tournamentCreationData),
+      success: function (res) {
+        showSuccessToast(langData, langData.tournamentcreated);
+        console.log("res.tournament_id", res.tournament_id);
+        resolve(res.tournament_id); // Resolve the promise with the tournament ID
+      },
+      error: function (xhr, status, error) {
+        showErrorToast(APIurl, error, langData);
+        resetModal();
+        reject(error); // Reject the promise on error
+      },
+    });
+  });
+}
+
+
+//? POST - /api/update-game/
+async function enterTournament(gameID) {
+  const userLang = localStorage.getItem("language") || "en";
+  const langData = await getLanguageData(userLang);
+  const APIurl = `/api/get-games/?tournamentID=${gameID}`;
+  let gameData = {};
+  $.ajax({
+    type: "GET",
+    url: APIurl,
+    contentType: "application/json",
+    headers: {
+      Authorization: `Bearer ${JWT.getAccess()}`,
+    },
+    success: function (res) {
+      console.log(res);
+      res.games.forEach((element) => {
+        if (element.phaseID == 1) {
+          //Logica para entrar nos jogos dos quartos de final
+          //Perguntar carolina se faz-se aqui a logica de entrar para user1 ou user2
+        }
+      });
+    },
+    error: function (xhr, status, error) {
+      showErrorToast(APIurl, error, langData);
+      resetModal();
+    },
+  });
+}
+
+async function fetchTournamentGames(tournamentID) {
+  const accessToken = await JWT.getAccess();
+  const APIurl = `/api/get-games/?tournamentID=${tournamentID}`;
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: APIurl,
+      contentType: "application/json",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      success: function (res) {
+        resolve(res.games); // Resolve the promise with the tournament ID
+      },
+      error: function (xhr, status, error) {
+        reject(error); // Reject the promise on error
+      },
+    });
   });
 }

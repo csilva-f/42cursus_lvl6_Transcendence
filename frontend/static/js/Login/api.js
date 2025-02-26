@@ -20,9 +20,14 @@ async function sendLogin() {
 				window.location.href = "/mfa";
 			} else {
 				if (jwtToken) {
-					localStorage.setItem("jwt", jwtToken);
+					//localStorage.setItem("jwt", jwtToken);
+					console.log(data);
+					JWT.setToken(data);
+					console.log("Access: ", JWT.getAccess());
 				}
-				window.location.href = "/";
+				//window.location.href = "/";
+				window.history.pushState({}, "", "/");
+				locationHandler("content");
 				const loginButton = document.getElementById('loginButton');
 				loginButton.classList.remove("fa-right-from-bracket");
 				loginButton.classList.add("fa-right-to-bracket");
@@ -309,13 +314,14 @@ function passwordVisibility(passwordFieldId, toggleIconId) {
 	}
 }
 
-function validateNewPassword(passwordId, validationId, iconId) {
+function validateNewPassword(passwordId, validationId, iconId, confirmPassId) {
 	const password = document.getElementById(passwordId);
 	const validationMessage = document.getElementById(validationId);
 	const icon = document.getElementById(iconId);
+	const confirmPass = document.getElementById(confirmPassId);
 
+	confirmPass.value = '';
 	validationMessage.classList.remove('d-none');
-
 	if (password.value.length >= 8) {
 		validationMessage.classList.add('d-none');
 	} else {

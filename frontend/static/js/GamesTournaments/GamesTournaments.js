@@ -190,6 +190,8 @@ function insertTournamentInfo(newCard, element, statusID, allGames) {
     const tournamentEndDate = newCard.querySelector("#tournamentEndDate")
     tournamentEndDate.textContent = element.endDate;
     const tournamentPlayers = newCard.querySelector("#tournamentPlayers")
+    const enterBtn = newCard.querySelector("#enterLi");
+    enterBtn.setAttribute("data-id", element.tournamentID);
     let playerCount = 0;
     allGames.forEach((game) => {
         if ((game.tournamentID == element.tournamentID) && game.phaseID == 1) {
@@ -208,4 +210,54 @@ function reloadInformation(statusID) {
         fetchGames(statusID);
     else
         fetchTournaments(statusID);
+}
+
+
+
+
+
+
+/*
+?    AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+*/
+
+//* Function to show Forms
+function showGameForm(formID, tabOpenID, confirmBtnID, backBtnID) {
+    const form = document.getElementById(formID);
+    form.classList.remove('d-none');
+    const tab = document.getElementById(tabOpenID);
+    tab.classList.add('d-none');
+    const confirmBtn = document.getElementById(confirmBtnID);
+    confirmBtn.classList.remove('d-none');
+    const backBtb = document.getElementById(backBtnID);
+    backBtb.classList.remove('d-none');
+    backBtb.setAttribute("data-id", formID);
+}
+
+//* Function to hide Forms
+function hideGameForm(formOpenID, tabID, confirmBtnID, backBtnID) {
+    const form = document.getElementById(formOpenID);
+    form.classList.add('d-none');
+    const tab = document.getElementById(tabID);
+    tab.classList.remove('d-none');
+    const confirmBtn = document.getElementById(confirmBtnID);
+    confirmBtn.classList.add('d-none');
+    const backBtn = document.getElementById(backBtnID);
+    backBtn.classList.add('d-none');
+    backBtn.removeAttribute("data-id");
+}
+
+//* Function to cancel and reset Forms
+function closeGameForm(formIDs, tabID, confirmBtnID, backBtnID) {
+    const backBtn = document.getElementById(backBtnID);
+    let formOpenID = backBtn.getAttribute("data-id")
+    if (formOpenID != null)
+        hideGameForm(formOpenID, tabID, confirmBtnID, backBtnID)
+    formIDs.forEach((f) => {
+        const form = document.getElementById(f.id)
+        const inputs = document.querySelectorAll(`#${f.id} input`)
+        inputs.forEach((i) => {
+            i.value = '';
+        })
+    })
 }

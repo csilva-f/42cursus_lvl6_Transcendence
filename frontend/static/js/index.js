@@ -1,3 +1,5 @@
+const JWT = new tokenService();
+
 const images = [
     '/static/img/logos/buttLogo.svg',
     '/static/img/logos/buttLogoMirror.svg',
@@ -19,10 +21,14 @@ function testClick() {
     console.log("miku dayo");
 }
 
-function goToProfile() {
-    const profilePicElement = document.getElementById('profilePicElement');
-    window.history.pushState({}, "", profilePicElement.getAttribute("href"));
-    locationHandler("content");
+function goToProfile(userID) {
+    if (userID == null) {
+        const profilePicElement = document.getElementById('profilePicElement');
+        window.history.pushState({}, "", profilePicElement.getAttribute("href"));
+        locationHandler("content");
+    } else {
+        
+    }
 }
 
 function getForms() {
@@ -38,23 +44,25 @@ function getForms() {
                 // If the form is invalid, prevent submission
                 event.preventDefault();
                 event.stopPropagation();
-				console.log("form invalid")
+                console.log("form invalid")
             } else {
                 console.log("Form is valid: ", form);
                 if (form.id == "localFormID")
                     postLocalGame();
+                else if (form.id == "localTournamentFormID")
+                    initLocalTournament();
                 else if (form.id == "tournamentFormID")
                     postTournament();
                 else if (form.id == "login-form")
                     sendLogin();
                 else if (form.id == "signup-form")
                     sendSignup(form);
-				else if (form.id == "forgotPwd-form")
+                else if (form.id == "forgotPwd-form")
                     forgotPwd();
-				// else if (form.id == "resendCode-form")
-				// 	sendCode();
-				// else if (form.id == "resetPwd-form")
-				// 	resetPwd();
+                // else if (form.id == "resendCode-form")
+                // 	sendCode();
+                // else if (form.id == "resetPwd-form")
+                // 	resetPwd();
                 event.preventDefault();
             }
             form.classList.add('was-validated');
@@ -62,22 +70,22 @@ function getForms() {
     });
 }
 
-async function checkLogin() {
-	var token = localStorage.getItem("jwt");
-	const loginButton = document.getElementById('loginButton');
-	if (token != null) {
-        const   confirmLogout = window.confirm("Are you sure you want to log out?");
-        if (confirmLogout) {
-            loginButton.classList.remove("fa-right-from-bracket");
-            loginButton.classList.add("fa-right-to-bracket");
-            localStorage.removeItem("jwt");
-        }
-	}
-	else {
-		window.history.pushState({}, "", "/login");
-		loginButton.classList.remove("fa-right-to-bracket");
-		loginButton.classList.add("fa-right-from-bracket");
-        locationHandler("allcontent");
-	}
-  }
+async function logOut() {
+    localStorage.removeItem("jwt");
+    window.history.pushState({}, "", "/mainPage");
+    locationHandler("allcontent");
+}
+
+async function notificationLoad() {
+    /*var token = await JWT.getAccess();
+    console.log("token: ", token)
+    if (token) {
+        setTimeout(async function () {
+            await fetchUserNotificationGame();
+            notificationLoad();
+        }, 5000);
+    }*/
+}
+
+notificationLoad();
 
