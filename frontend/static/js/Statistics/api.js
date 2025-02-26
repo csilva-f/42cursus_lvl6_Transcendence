@@ -14,7 +14,8 @@ async function fetchStatistics() {
     success: function (res) {
       userStats = res.users[0];
       updateContent(langData);
-      createChart(userStats, 1)
+      createChart(userStats, 1);
+      insertPageInfo(userStats);
     },
     error: function (xhr, status, error) {
       console.error("Error Thrown:", error);

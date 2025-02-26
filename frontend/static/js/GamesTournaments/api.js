@@ -3,7 +3,7 @@ let allGames = [];
 //* GAMES
 //? GET - /api/get-games/?statusID=
 async function fetchGames(statusID) {
-  const userLang = localStorage.getItem("language") || "en";
+  const userLang = await localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
   const reloadIcon = document.getElementById("reloadIcon");
   const reloadBtn = document.getElementById("reloadBtn");
@@ -13,6 +13,8 @@ async function fetchGames(statusID) {
     reloadIcon.classList.remove("rotate");
   }, 250);
   const accessToken = await JWT.getAccess();
+  console.log("accessToken", accessToken)
+  console.log("statusID: ", statusID)
   fetch("/templates/Components/CardGame.html")
     .then((response) => {
       if (!response.ok) {
@@ -48,12 +50,12 @@ async function fetchGames(statusID) {
         },
         error: function (xhr, status, error) {
           console.error("Error Thrown:", error);
+          
           showErrorToast(APIurl, error, langData);
         },
       });
     })
     .catch((error) => {
-      console.error("There was a problem with the fetch operation:", error);
     });
 }
 

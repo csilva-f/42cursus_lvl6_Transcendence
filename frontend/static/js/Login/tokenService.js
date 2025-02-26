@@ -5,7 +5,7 @@ class tokenService {
     token = {};
     date = new Date();
 
-    setToken(t) {
+    async setToken(t) {
         this.token = t;
         this.setCookie();
     };
@@ -14,11 +14,19 @@ class tokenService {
     };
     async getAccess() {
         let token = this.checkCookie(this.cookieAccessName);
-        if (token != "CucaBeludo")
+        console.log("tokenService: ", token)
+        if (!token)
             await this.updateToken();
         return this.token.access;
-    };
+    }
+    async reloadPage() {
+        console.log("relaodPage")
+        await this.updateToken();
+        return this.token.access
+    }
+    
     async updateToken() {
+        console.log("updateToken");
         const apiUrl = "/authapi";
         let token = this.checkCookie(this.cookieRefreshName);
         $.ajax({
@@ -28,14 +36,14 @@ class tokenService {
             headers: { Accept: "application/json" },
             data: JSON.stringify({ "refresh": token }),
             success: async (data) => {
-                let tk = { "refresh": this.token.refresh, "access": data.access}
-                this.setToken(tk);
+                let tk = { "refresh": token, "access": data.access };
+                await this.setToken(tk);
             },
             error: function (xhr) {
-                console.log("logica de erro, prob mandar para o login")
+                console.log("Error occurred, redirecting to login");
             },
         });
-    };
+    }    
 
     /* Cookie */
     setCookie() {

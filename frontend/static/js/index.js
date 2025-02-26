@@ -77,14 +77,14 @@ async function logOut() {
 }
 
 async function notificationLoad() {
-    var token = await JWT.getAccess();
+    /*var token = await JWT.getAccess();
     console.log("token: ", token)
     if (token) {
         setTimeout(async function () {
             await fetchUserNotificationGame();
             notificationLoad();
         }, 5000);
-    }
+    }*/
 }
 
 notificationLoad();
