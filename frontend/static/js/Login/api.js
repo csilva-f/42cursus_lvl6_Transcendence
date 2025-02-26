@@ -403,7 +403,9 @@ async function fetchProfileInfo() {
 async function insertProfileInfo(UserElement) {
 	document.getElementById("birthdayText").textContent= UserElement.birthdate;
 	document.getElementById("genderText").textContent= UserElement.gender;
-}async function validateEmail() {
+}
+
+async function validateEmail() {
   const urlParams = new URLSearchParams(window.location.search);
   const uid = urlParams.get("uid");
   const token = urlParams.get("token");
