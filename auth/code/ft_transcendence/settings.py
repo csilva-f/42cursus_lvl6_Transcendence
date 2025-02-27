@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 from os import getenv
 from pathlib import Path
+from .hvac import get_database_credentials
 #from .utils import get_vault_secrets
 
 #import hvac
@@ -102,29 +103,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-#
-
-import os
-import hvac
-
-def get_database_credentials():
-    client = hvac.Client(url=os.getenv('VAULT_ADDR'), token=os.getenv('VAULT_TOKEN'))
-    try:
-        response = client.secrets.database.generate_credentials('role-auth-db')
-        return response['data']['username'], response['data']['password']
-    except Exception as e:
-        print(f"Error fetching credentials from Vault: {e}")
-        return None, None
 
 # Fetch database credentials from Vault
 DB_USERNAME, DB_PASSWORD = get_database_credentials()
