@@ -22,6 +22,15 @@ services:
       - ./auth-db/data:/var/lib/postgresql/data:rw
     networks:
       - backend
+  vault-db:
+    container_name: vault-db
+    build: ./vault-db
+    env_file:
+      - ./vault-db/.env
+    volumes:
+      - ./vault-db/data:/var/lib/postgresql/data:rw
+    networks:
+      - backend
   vault:
     container_name: vault
     build: ./vault

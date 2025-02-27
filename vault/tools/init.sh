@@ -1,7 +1,21 @@
 #!/bin/sh
+cat <<EOF > /vault/vault.hcl
+storage "postgresql" {
+    connection_url = "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_DB}:5432/${POSTGRES_DB}?sslmode=disable"
+}
+
+listener "tcp" {
+    address     = "0.0.0.0:8200"
+    tls_disable = 1  # Set to 0 for production with TLS
+}
+
+api_addr = "http://127.0.0.1:8200"
+cluster_addr = "http://127.0.0.1:8201"
+EOF
 
 # Start Vault in the background
-vault server -dev -dev-root-token-id=myroot -dev-listen-address=0.0.0.0:8200 &
+#vault server -dev -dev-root-token-id=myroot -dev-listen-address=0.0.0.0:8200 &
+vault server -config=/vault/vault.hcl &
 # Wait for Vault to start
 sleep 5
 

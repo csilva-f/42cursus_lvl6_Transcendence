@@ -10,7 +10,7 @@ build:
 
 up:
 	@echo "Running Docker Compose setup..."
-	@docker compose up -d auth-db
+	@docker compose up -d auth-db vault-db
 	@echo "Waiting for the database to be up..."
 	@while ! docker inspect -f '{{.State.Health.Status}}' $(AUTH_DB_CONTAINER_NAME) | grep -q "healthy"; do \
 		sleep 2; \
