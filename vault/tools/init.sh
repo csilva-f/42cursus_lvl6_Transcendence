@@ -45,7 +45,7 @@ else
         # Create the role for Django
         vault write database/roles/role-auth-db \
             db_name=config-auth-db \
-            creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}'; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO {{name}};" \
+            creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}'; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
             default_ttl="1h" \
             max_ttl="24h"
 

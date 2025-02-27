@@ -12,8 +12,6 @@ services:
     restart: on-failure
     env_file:
       - ./auth/.env
-    depends_on:
-      - vault
 
   auth-db:
     container_name: auth-db
@@ -37,8 +35,6 @@ services:
     restart: on-failure
     env_file:
       - ./vault/.env
-    depends_on:
-      - auth-db
 
 networks:
   backend:

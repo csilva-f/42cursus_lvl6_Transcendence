@@ -9,10 +9,18 @@ build:
 	@docker compose -p $(NAME) build
 
 up:
-	@mkdir -p ./postgres/data
 	@echo "Running Docker Compose setup..."
-	@docker compose up -d
-
+	@docker compose up -d auth-db
+	@echo "Waiting for the database to be up..."
+	@while ! docker inspect -f '{{.State.Health.Status}}' $(AUTH_DB_CONTAINER_NAME) | grep -q "healthy"; do \
+		sleep 2; \
+	done
+	@echo "Database is up and running! Applying Migrations..."
+	@echo "Setting up Vault..."
+	sleep 2
+	@docker compose up -d vault
+	sleep 2
+	@docker compose up -d auth
 # Stop the Docker Compose setup
 down:
 	@echo "Stopping Docker Compose setup..."
@@ -38,7 +46,7 @@ clean:down
 fclean: clean
 	@echo "Force cleaning: removing all images..."
 	@docker compose -p $(NAME) down --rmi all
-	@docker system prune -af
+	#doc@docker system prune -af
 
 
 destroy: fclean
