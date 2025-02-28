@@ -5,19 +5,44 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.conf import settings
+from urllib.parse import urlencode
 
 from django.shortcuts import render
 
 def testWebsocket(request):
     return render(request, 'testWebsocket.html')
 
+# class GetGames(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def get(self, request):
+#         backend_url = settings.BACKEND_GAMES_URL
+#         query_params = request.GET.urlencode()
+#         userid = request.user.user_id
+#         print(userid)
+#         url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
+#         try:
+#             backend_response = requests.get(url_with_params)
+#             backend_response.raise_for_status()
+#             data = backend_response.json()
+#             return Response(data, status=status.HTTP_200_OK)
+#         except requests.exceptions.HTTPError as http_err:
+#             return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+#         except requests.exceptions.RequestException as req_err:
+#             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+#         except ValueError as json_err:
+#             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 class GetGames(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         backend_url = settings.BACKEND_GAMES_URL
-        query_params = request.GET.urlencode()
-        url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
+        query_params = request.GET.copy()
+        userid = request.user.user_id
+        query_params["uid"] = userid
+        query_string = urlencode(query_params, doseq=True)
+        url_with_params = f"{backend_url}?{query_string}" if query_string else backend_url
         try:
             backend_response = requests.get(url_with_params)
             backend_response.raise_for_status()
@@ -35,8 +60,11 @@ class GetTournaments(APIView):
 
     def get(self, request):
         backend_url = settings.BACKEND_TOURNAMENTS_URL
-        query_params = request.GET.urlencode()
-        url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
+        query_params = request.GET.copy()
+        userid = request.user.user_id
+        query_params["uid"] = userid
+        query_string = urlencode(query_params, doseq=True)
+        url_with_params = f"{backend_url}?{query_string}" if query_string else backend_url
         try:
             backend_response = requests.get(url_with_params)
             backend_response.raise_for_status()
@@ -50,11 +78,12 @@ class GetTournaments(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PostAddGame(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         backend_url = 'http://backend:8002/backend/create_game/'
         game_data = request.data.get('game')
         try:
+            request.data["uid"] = request.user.user_id
             backend_response = requests.post(backend_url, json=request.data)
             backend_response.raise_for_status()
             game_data = backend_response.json()
@@ -83,11 +112,12 @@ class PostAddTournament(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PostUpdateGame(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         backend_url = 'http://backend:8002/backend/update_game/'
         game_data = request.data.get('game')
         try:
+            request.data["uid"] = request.user.user_id
             backend_response = requests.post(backend_url, json=request.data)
             backend_response.raise_for_status()
             game_data = backend_response.json()

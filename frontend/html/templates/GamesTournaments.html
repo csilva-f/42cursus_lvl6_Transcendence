@@ -172,26 +172,15 @@
       <!-- Remote Create Form -->
       <div class="modal-body d-none" id="remoteForm">
         <form class="row g-3 needs-validation p-3" id="remoteFormID" novalidate>
-          <!-- P1 Nickname -->
+          <!-- P1 Nickname NOTACAROL: meter no placeholder do nickname o nick real do user -->
           <div class="input-group has-validation mt-3">
             <span class="input-group-text" id="basic-addon1R" style="margin-top: 10px;">
               <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
                 type="color" class="form-control-color p-0 m-0" id="P1ColorInputR" value="#AC3B61">
             </span>
-            <input type="text" class="form-control" id="P1NickInputR" placeholder="Player1 Nickname(traduzir)"
-              aria-describedby="inputGroupPrepend" style="margin-top: 10px;" required>
+            <input type="text" class="form-control" id="P1NickInputR" placeholder="Nickname"
+              aria-describedby="inputGroupPrepend" style="margin-top: 10px;" required disabled>
             <div class="invalid-feedback" data-i18n="p1NickError">
-            </div>
-          </div>
-          <!-- P2 Nickname -->
-          <div class="input-group has-validation mb-3">
-            <span class="input-group-text" id="basic-addon1R">
-              <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
-                type="color" class="form-control-color p-0 m-0" id="P2ColorInputR" value="#3BAC86">
-            </span>
-            <input type="text" class="form-control" id="P2NickInputR" placeholder="Player2 Nickname(traduzir)"
-              aria-describedby="inputGroupPrepend" required>
-            <div class="invalid-feedback" data-i18n="p2NickError">
             </div>
           </div>
           <!-- Submit Button -->
