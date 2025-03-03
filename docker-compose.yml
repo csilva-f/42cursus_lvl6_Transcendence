@@ -12,6 +12,8 @@ services:
     restart: on-failure
     env_file:
       - ./auth/.env
+    secrets:
+      - vault_root_token
 
   auth-db:
     container_name: auth-db
@@ -22,6 +24,9 @@ services:
       - ./auth-db/data:/var/lib/postgresql/data:rw
     networks:
       - backend
+    secrets:
+      - postgres_user
+      - postgres_password
   vault-db:
     container_name: vault-db
     build: ./vault-db
@@ -31,11 +36,15 @@ services:
       - ./vault-db/data:/var/lib/postgresql/data:rw
     networks:
       - backend
+    secrets:
+      - postgres_user
+      - postgres_password
   vault:
     container_name: vault
     build: ./vault
     volumes:
       - ./vault/data:/vault/file:rw
+      - ./secrets:/vault/secrets:rw
     networks:
       - backend
     ports:
@@ -44,6 +53,10 @@ services:
     restart: on-failure
     env_file:
       - ./vault/.env
+    secrets:
+      - vault_root_token
+      - postgres_user
+      - postgres_password
 
 networks:
   backend:
@@ -58,3 +71,11 @@ networks:
     ipam:
       config:
         - subnet: 172.19.0.0/24
+
+secrets:
+  vault_root_token:
+    file: ./secrets/VAULT_ROOT_TOKEN.txt
+  postgres_user:
+    file: ./secrets/POSTGRES_USER.txt
+  postgres_password:
+    file: ./secrets/POSTGRES_PASSWORD.txt

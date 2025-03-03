@@ -7,4 +7,4 @@ RUN chmod +x ./init.sh
 
 CMD ["./init.sh"]
 #CMD ["server", "-dev", "-dev-root-token-id=myroot"]
-#
+#CMD ["tail -f /dev/null"]
