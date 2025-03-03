@@ -135,12 +135,17 @@ async function postRemoteGame() {
       resetModal();
       $("#createModal").modal("hide");
       console.log("Game Created Response:", res);
-      const gameId = res.game_id;
-      if (!gameId) {
-        throw new Error("game_id não encontrado na resposta da API.");
+      const game = res.game;
+      if (!game || !game.id) {
+          throw new Error("Game not found in API response.");
       }
-      const wsUrl = `wss://localhost:8000/channels/${gameId}/`;
+      const gameId = game.id;
+      localStorage.setItem("isHost", "true");
+      localStorage.setItem("currentGameId", gameId);
+      const wsUrl = `wss://${window.location.host}/channels/${gameId}/`;
       const ws = new WebSocket(wsUrl);
+      let playerCount = 0;
+      // let gameInterval;
 
       ws.onopen = function () {
         console.log("WebSocket connection established successfully.");
@@ -151,6 +156,26 @@ async function postRemoteGame() {
         const data = JSON.parse(e.data);
         //console.log(data.message);
         console.log("Message received:", e.data);
+        if (data.message === "A player joined the game!") {
+          playerCount++;
+          console.log(`Player count: ${playerCount}`);
+          if (playerCount === 2) {
+            console.log("Both players connected. Opening the game page...");
+            
+          //   gameInterval = setInterval(() => {
+          //     if (typeof getCurrentGameState === "function") {  // Verifica se a função existe
+          //         const gameState = getCurrentGameState();
+          //         ws.send(JSON.stringify({
+          //             type: "game_state",
+          //             ...gameState
+          //         }));
+          //     }
+          // }, 50);
+
+            window.history.pushState({}, "", `/pong`);
+            locationHandler("content");
+          }
+        }
       };
 
       ws.onerror = function (error) {
@@ -159,6 +184,7 @@ async function postRemoteGame() {
 
       ws.onclose = function (event) {
         console.log("WebSocket connection closed:", event);
+        // clearInterval(gameInterval);
       };
 
       console.log("Attempting to connect to WebSocket...");
@@ -173,65 +199,13 @@ async function postRemoteGame() {
 async function sendMessage(){
   ws.send("we did it!");
 }
+
 //TODO getUserID
 //? POST - /api/update-game/
 async function enterGame(gameID) {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/update-game/`;
-  let gameData = {
-    gameID: gameID,
-    isJoin: true,
-  };
-  console.log("gameData: ", gameData);
-  $.ajax({
-    type: "POST",
-    url: APIurl,
-    Accept: "application/json",
-    contentType: "application/json",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-    },
-    data: JSON.stringify(gameData),
-    success: function (res) {
-      showSuccessToast(langData, langData.gameEntered);
-      fetchGames(1);
-      const enterLi = document.getElementById("enterLi");
-      window.history.pushState({}, "", enterLi.getAttribute("href"));
-      locationHandler("content");
-      
-      const socketUrl = `ws://${window.location.host}/ws/game/${gameID}/`;
-      console.log("Connecting to WebSocket:", socketUrl);
-      const socket = new WebSocket(socketUrl);
-
-      socket.onmessage = function(event) {
-        const data = JSON.parse(event.data);
-        console.log(data.message);
-      };
-
-      socket.onopen = function () {
-        console.log("WebSocket connection established successfully.");
-      };
-
-      socket.onerror = function (error) {
-        console.error("WebSocket error:", error);
-      };
-
-      socket.onclose = function (event) {
-        console.log("WebSocket connection closed:", event);
-      };
-    },
-    error: function (xhr, status, error) {
-      showErrorToast(APIurl, error, langData);
-      resetModal();
-    },
-  });
-}
-
-async function enterGame(gameID) {
-  const userLang = localStorage.getItem("language") || "en";
-  const langData = await getLanguageData(userLang);
-  const APIurl = `/api/update-game/`;
 
   let gameData = {
     gameID: gameID,
@@ -252,19 +226,30 @@ async function enterGame(gameID) {
     success: function (res) {
       showSuccessToast(langData, langData.gameEntered);
       fetchGames(1);
-
-      const enterLi = document.getElementById("enterLi");
-      window.history.pushState({}, "", enterLi.getAttribute("href"));
-      locationHandler("content");
 
       // Construir dinamicamente a URL do WebSocket com o gameID correto
-      const socketUrl = `ws://${window.location.host}/ws/game/${gameID}/`;
+      const socketUrl = `wss://${window.location.host}/channels/${gameID}/`;
       console.log("Connecting to WebSocket:", socketUrl);
 
       const socket = new WebSocket(socketUrl);
 
       socket.onopen = function () {
         console.log("WebSocket connection established successfully.");
+        // const paddle2 = objects[2];
+
+        // document.addEventListener("keydown", function (event) {
+        //   if (event.key === "ArrowUp") {  // Seta para cima
+        //     paddle2.paddleY = Math.max(0, paddle2.paddleY - 10);  // Move para cima
+        //   } else if (event.key === "ArrowDown") {  // Seta para baixo
+        //     paddle2.paddleY = Math.min(canvas.height - paddle2.height, paddle2.paddleY + 10);  // Move para baixo
+        //   }
+        //   // 🟢 Envia a nova posição do paddle para `user1` via WebSocket
+        //   socket.send(JSON.stringify({
+        //     type: "paddle_move",
+        //     paddle: 2,  // Indica que é o paddle do `user2`
+        //     position: paddle2.paddleY  // Envia a nova posição Y do paddle
+        //   }));
+        // });
       };
 
       socket.onmessage = function (event) {
@@ -279,6 +264,44 @@ async function enterGame(gameID) {
       socket.onclose = function (event) {
         console.log("WebSocket connection closed:", event);
       };
+
+      const enterLi = document.getElementById("enterLi");
+      window.history.pushState({}, "", enterLi.getAttribute("href"));
+      locationHandler("content");
+    },
+    error: function (xhr, status, error) {
+      showErrorToast(APIurl, error, langData);
+      resetModal();
+    },
+  });
+}
+
+//TODO getUserID
+//? POST - /api/update-game/
+async function finishGame(gameID) {
+  const userLang = localStorage.getItem("language") || "en";
+  const langData = await getLanguageData(userLang);
+  const APIurl = `/api/update-game/`;
+
+  let gameData = {
+    gameID: gameID,
+    isJoin: false,
+  };
+  console.log("gameData: ", gameData);
+
+  $.ajax({
+    type: "POST",
+    url: APIurl,
+    Accept: "application/json",
+    contentType: "application/json",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    },
+    data: JSON.stringify(gameData),
+    success: function (res) {
+      showSuccessToast(langData, langData.gameEntered);
+      fetchGames(1);
+
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);

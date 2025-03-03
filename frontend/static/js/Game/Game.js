@@ -8,7 +8,7 @@ const maxScore = 5;
 const ballVelocity = 5;
 const ballRadius = 15;
 var stopGame = false;
-
+const wsConnections = {};
 
 window.addEventListener('keydown', function (e) {
     keyPressed[e.keyCode] = true;
@@ -31,7 +31,6 @@ function respawnBall(canvas, objects) {
     else
         objects[0].ballVelocityX = -ballVelocity;
     objects[0].ballVelocityY *= -1;
-
 }
 
 function incScore(canvas, objects) {
@@ -44,6 +43,7 @@ function incScore(canvas, objects) {
         else {
             stopGame = true;
             stopTimer();
+
         }
     }
     if (objects[0].ballX >= canvas.width + objects[0].ballRadius){
@@ -55,6 +55,7 @@ function incScore(canvas, objects) {
         else {
             stopGame = true;
             stopTimer();
+
         }
     }
 }
@@ -103,6 +104,9 @@ function gameLoop(canvas, ctx, objects) {
 
 
 function initGame() {
+    const gameId = localStorage.getItem("currentGameId");
+    const isHost = localStorage.getItem("isHost") === "true";
+
     /* Main Initializations */
     const canvas = document.getElementById("pongGameCanvas");
     const ctx = canvas.getContext('2d');
@@ -138,3 +142,22 @@ function initGame() {
     startTimer();
     gameLoop(canvas, ctx, objects);
 }
+
+// function getCurrentGameState() {
+//     const ball = objects[0];
+//     const paddle1 = objects[1];
+//     const paddle2 = objects[2];
+
+//     return {
+//         ball: {
+//             x: ball.ballX,
+//             y: ball.ballY,
+//             velocityX: ball.ballVelocityX,
+//             velocityY: ball.ballVelocityY
+//         },
+//         paddles: [
+//             { y: paddle1.paddleY },
+//             { y: paddle2.paddleY }
+//         ]
+//     };
+// }

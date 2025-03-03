@@ -308,7 +308,6 @@ def post_create_game(request):
                     return JsonResponse({"error": f"User2 ID {user2_id} does not exist in tUserExtension"}, status=404)
                 if user2_id == user1_id:
                     return JsonResponse({"error": "User2 cannot be the same as User1"}, status=400)
-
             game = tGames.objects.create(
                 user1=user1_id,
                 user2=user2_id,
@@ -317,7 +316,15 @@ def post_create_game(request):
                 isLocal=glocal,
                 isInvitation = ginvit
             )
-            return JsonResponse({"message": "Game created successfully", "game_id": game.game}, status=201)
+            game_data = {
+                "id": game.game,
+                "user1": user1_id,
+                "user2": user2_id,
+                "tournament": tournament_id,
+                "isLocal": glocal,
+                "isInvitation": ginvit
+            }
+            return JsonResponse({"message": "Game created successfully", "game": game_data}, status=201)
 
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
