@@ -1,4 +1,7 @@
 backend-db/data/
 auth-db/data/
 email-db/data/
+vault-db/data/
+vault/data/*
+secrets/
 **/__pycache__/

@@ -23,7 +23,7 @@ vault server -config=/vault/vault.hcl &
 sleep 5
 
 # Set the VAULT_ADDR environment variable to use HTTP
-export VAULT_ADDR="http://0.0.0.0:8200"
+export VAULT_ADDR="http://vault:8200"
 if ! vault status | grep -q 'Initialized        true'; then
   echo "Initializing Vault..."
   vault operator init -key-shares=1 -key-threshold=1 > /vault/file/init_output.txt
@@ -45,7 +45,6 @@ else
   echo "Unsealing Vault..."
   vault operator unseal "$UNSEAL_KEY"
   ROOT_TOKEN=$(grep 'Root Token:' /vault/file/root_token.txt | awk '{print $NF}')
-  echo $ROOT_TOKEN > /vault/secrets/VAULT_ROOT_TOKEN.txt
   vault login $ROOT_TOKEN
 fi
 
@@ -73,5 +72,7 @@ if ! vault secrets list | grep -q "database/"; then
 else
     echo "Database secrets engine is already enabled."
 fi
+
+echo $ROOT_TOKEN > /vault/secrets/VAULT_ROOT_TOKEN.txt
 # Initialize Vault if it is not already initialized
 tail -f /dev/null

@@ -2,6 +2,7 @@ NAME	= ft_transcendence
 BACKEND_DB_CONTAINER_NAME=backend-db
 AUTH_DB_CONTAINER_NAME=auth-db
 EMAIL_DB_CONTAINER_NAME = email-db
+ROOT_TOKEN_FILE = ./secrets/VAULT_ROOT_TOKEN.txt
 all: build up migrate
 
 build:
@@ -19,7 +20,11 @@ up:
 	@echo "Setting up Vault..."
 	sleep 2
 	@docker compose up -d vault
-	sleep 2
+	@echo "Waiting for $(ROOT_TOKEN_FILE) to contain any value..."
+	@while [ ! -s $(ROOT_TOKEN_FILE) ]; do \
+		sleep 1; \
+	done
+	@echo "$(ROOT_TOKEN_FILE) contains a value!"
 	@docker compose up -d auth
 # Stop the Docker Compose setup
 down:

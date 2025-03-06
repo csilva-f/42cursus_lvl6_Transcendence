@@ -1,5 +1,8 @@
 #!/bin/bash
 POSTGRES_USER=$(cat "$POSTGRES_USER_FILE")
+POSTGRES_PASSWORD=$(cat "$POSTGRES_PASSWORD_FILE")
+
+export POSTGRES_PASSWORD=$POSTGRES_PASSWORD
 
 # Wait for the database to be initialized
 while [ ! -f /var/lib/postgresql/data/PG_VERSION ]; do
