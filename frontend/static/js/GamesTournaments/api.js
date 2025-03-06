@@ -60,6 +60,7 @@ async function fetchGames(statusID) {
 }
 
 //? POST - /api/create-game/
+//! FAZER A CENA PARA PARA CRIAR JOGOS LOCAIS NO API
 async function postGame() {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
