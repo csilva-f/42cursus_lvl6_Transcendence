@@ -8,7 +8,7 @@ const maxScore = 5;
 const ballVelocity = 5;
 const ballRadius = 15;
 var stopGame = false;
-
+const wsConnections = {};
 
 window.addEventListener('keydown', function (e) {
     keyPressed[e.keyCode] = true;
@@ -43,6 +43,7 @@ function incScore(canvas, objects) {
         else {
             stopGame = true;
             stopTimer();
+
         }
     }
     if (objects[0].ballX >= canvas.width + objects[0].ballRadius){
@@ -54,6 +55,7 @@ function incScore(canvas, objects) {
         else {
             stopGame = true;
             stopTimer();
+
         }
     }
 }
@@ -101,6 +103,9 @@ function gameLoop(canvas, ctx, objects) {
 }
 
 function initGame() {
+    const gameId = localStorage.getItem("currentGameId");
+    const isHost = localStorage.getItem("isHost") === "true";
+
     /* Main Initializations */
     const canvas = document.getElementById("pongGameCanvas");
     const ctx = canvas.getContext('2d');
