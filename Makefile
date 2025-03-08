@@ -31,7 +31,7 @@ up:
 		sleep 1; \
 	done
 	@echo "$(ROOT_TOKEN_FILE) contains a value!"
-	@docker compose up -d auth backend email auth-api backend-api
+	@docker compose up -d auth backend email auth-api backend-api channels redis
 	sleep 5
 	@docker compose up -d nginx
 # Stop the Docker Compose setup
@@ -45,12 +45,13 @@ down:
 
 migrate:
 	@echo "Applying Migrations..."
-	@docker compose exec auth python manage.py makemigrations
-	@docker compose exec auth python manage.py migrate
-	@docker compose exec backend python manage.py makemigrations
-	@docker compose exec backend python manage.py migrate
-	@docker compose exec email python manage.py makemigrations
-	@docker compose exec email python manage.py migrate
+	@docker compose exec -it auth python manage.py makemigrations
+	@docker compose exec -it auth python manage.py migrate
+	@docker compose exec -it backend python manage.py makemigrations
+	@docker compose exec -it backend python manage.py migrate
+	@docker compose exec -it email python manage.py makemigrations
+	@docker compose exec -it email python manage.py migrate
+	@docker compose restart auth backend email
 
 clean:down
 	@echo "Cleaning up stopped containers and networks..."

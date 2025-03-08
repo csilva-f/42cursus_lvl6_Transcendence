@@ -106,6 +106,20 @@ services:
     secrets:
       - vault_root_token
 
+  channels:
+    container_name: channels
+    build: ./channels
+    volumes:
+      - ./channels/code:/code:rw
+    networks:
+      - frontend
+    ports:
+      - "9010:8000"
+    init: true
+    restart: on-failure
+    env_file:
+      - ./channels/.env
+
   backend-db:
     container_name: backend-db
     build: ./backend-db
@@ -161,6 +175,14 @@ services:
     restart: on-failure
     env_file:
       - ./nginx/.env
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6378:6379"
+    networks:
+      - frontend
 
 networks:
   backend:

@@ -1,6 +1,6 @@
 <div class="container mt-5">
 	<div class="row justify-content-center">
-		<div class="p-3 shadow rounded" style="background-color: #e1cad2;; width: 600px;">
+		<div class="p-3 shadow rounded" style="background-color: var(--cardBg); width: 600px;">
 	
 				<!-- Login and Sign Up -->
 				<ul class="nav nav-pills" id="loginSignUpTab" role="tablist" style="display: flex; list-style: none; padding: 0; margin: 0;">
@@ -28,7 +28,7 @@
 							<div class="mb-3">
 								<div class="input-group">
 									<span class="input-group-text" style="border: none; background: white;">
-										<i class="fas fa-envelope" style="color: #AC3B61;"></i></span>
+										<i class="fas fa-envelope" style="color: var(--primary);"></i></span>
 									<input type="email" class="form-control" id="loginEmail" placeholder="Email" style="border: none;">
 								</div>
 							</div>
@@ -36,19 +36,19 @@
 							<div class="mb-3">
 								<div class="input-group">
 									<span class="input-group-text" style="border: none; background: white;">
-										<i class="fa-solid fa-lock" style="color: #AC3B61;"></i>
+										<i class="fa-solid fa-lock" style="color: var(--primary);"></i>
 									</span>
 									<input type="password" class="form-control" id="loginPassword" placeholder="Password" required 
 										style="border: none;">
 									<span class="input-group-text" id="togglePassword" style="cursor: pointer; background: white; border: none;"
 										onclick="passwordVisibility(`loginPassword`, `togglePassword`)">
-										<i class="fas fa-eye-slash" style="color: #AC3B61;"></i>
+										<i class="fas fa-eye-slash" style="color: var(--primary);"></i>
 									</span>
 								</div>
 							</div>
 
 							<div class="mb-3">
-								<a href="forgotPassword" class="d-block text-end" style="color: #AC3B61; text-decoration: none;">Forgot password?</a>
+								<a href="forgotPassword" class="d-block text-end" style="color: var(--primary); text-decoration: none;">Forgot password?</a>
 							</div>						
 							<div class="mb-3">
 								<button type="button" onclick="oauthLogin();" class="btn btn-light w-100 d-flex align-items-center justify-content-center"
@@ -58,7 +58,7 @@
 								</button>														
 							</div>
 
-							<button type="submit" class="btn" style="background-color: #AC3B61; color: white; width: 100%;">Login</button>
+							<button type="submit" class="btn" style="background-color: var(--primary); color: white; width: 100%;">Login</button>
 
 						</form>
 						<p id="login-message" class="invalid-feedback">
@@ -72,7 +72,7 @@
 							<div class="mb-3">
 								<div class="input-group">
 									<span class="input-group-text" style="border: none; background: white;">
-										<i class="fa-solid fa-user" style="color: #AC3B61;"></i></span>
+										<i class="fa-solid fa-user" style="color: var(--primary);"></i></span>
 									<input type="text" class="form-control" id="signupFirstname" required placeholder="First name" style="border: none;">
 								</div>
 							</div>
@@ -80,7 +80,7 @@
 							<div class="mb-3">
 								<div class="input-group">
 									<span class="input-group-text" style="border: none; background: white;">
-										<i class="fa-solid fa-user" style="color: #AC3B61;"></i></span>
+										<i class="fa-solid fa-user" style="color: var(--primary);"></i></span>
 									<input type="text" class="form-control" id="signupLastname" required placeholder="Last name" style="border:none;">
 								</div>
 							</div>
@@ -88,7 +88,7 @@
 							<div class="mb-3">
 								<div class="input-group has-validation">
 									<span class="input-group-text" style="border: none; background: white;">
-										<i class="fas fa-envelope" style="color: #AC3B61;"></i></span>
+										<i class="fas fa-envelope" style="color: var(--primary);"></i></span>
 									<input type="email" class="form-control" id="signupEmail" required placeholder="Email" style="border:none;">
 									<div class="invalid-feedback" id="emailInvalid">
 									</div>							
@@ -98,13 +98,13 @@
 							<div class="mb-3">
 								<div class="input-group">
 									<span class="input-group-text" style="border: none; background: white;">
-										<i class="fa-solid fa-lock" style="color: #AC3B61;"></i>
+										<i class="fa-solid fa-lock" style="color: var(--primary);"></i>
 									</span>
 									<input type="password" class="form-control" id="signupPassword" required placeholder="Password" style="border: none;" 
 										oninput="validateNewPassword('signupPassword', 'passwordValidation', 'charCheck')">
 									<span class="input-group-text" id="toggleSignupPassword" style="cursor: pointer; background: white; border: none;"
 										onclick="passwordVisibility('signupPassword', 'toggleSignupPassword')">
-										<i class="fas fa-eye-slash" style="color: #AC3B61;"></i>
+										<i class="fas fa-eye-slash" style="color: var(--primary);"></i>
 									</span>
 								</div>
 								<small id="passwordValidation" class="form-text text-muted d-none">
@@ -116,13 +116,13 @@
 							<div class="mb-3">
 								<div class="input-group">
 									<span class="input-group-text" style="border: none; background: white;">
-										<i class="fa-solid fa-lock" style="color: #AC3B61;"></i>
+										<i class="fa-solid fa-lock" style="color: var(--primary);"></i>
 									</span>
 									<input type="password" class="form-control" id="signupPassword2" required placeholder="Retype password" style="border: none;" 
 										oninput="validatePasswordsMatch('signupPassword', 'signupPassword2', 'confirmValidation', 'matchCheck')">
 									<span class="input-group-text" id="toggleSignupPassword2" style="cursor: pointer; background: white; border: none;"
 										onclick="passwordVisibility('signupPassword2', 'toggleSignupPassword2')">
-										<i class="fas fa-eye-slash" style="color: #AC3B61;"></i>
+										<i class="fas fa-eye-slash" style="color: var(--primary);"></i>
 									</span>
 								</div>
 								<small id="confirmValidation" class="form-text text-muted d-none">
@@ -134,11 +134,11 @@
 							<div class="mb-3">
 								<div class="input-group">
 									<span class="input-group-text" style="border: none; background: white;">
-										<i class="fas fa-phone" style="color: #AC3B61;"></i></span>
+										<i class="fas fa-phone" style="color: var(--primary);"></i></span>
 									<input type="tel" class="form-control" id="signupPhone" required placeholder="Phone number" style="border: none;">
 								</div>
 							</div>
-							<button type="submit" class="btn" style="background-color: #AC3B61; color: white; width: 100%;">Sign up</button>
+							<button type="submit" class="btn" style="background-color: var(--primary); color: white; width: 100%;">Sign up</button>
 						</form>
 					</div>
 				</div>

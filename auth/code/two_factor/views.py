@@ -11,8 +11,10 @@ import jwt
 
 class Enable2FAView(generics.GenericAPIView):
     serializer_class = UserIdSerializer
-    permission_classes = [AllowAny]
+    #permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
+        print(request.data)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user_id = serializer.validated_data['userId']
@@ -20,11 +22,17 @@ class Enable2FAView(generics.GenericAPIView):
             user = CucaUser.objects.get(id=user_id)
         except CucaUser.DoesNotExist:
             return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-        secret = pyotp.random_base32()
-        user.otp_secret = secret
-        user.is_2fa_enabled = True
-        user.save()
-        return Response({'otp_secret': secret}, status=status.HTTP_201_CREATED)
+        if request.data['status'] in [0,1,2]:
+            secret = pyotp.random_base32()
+            user.otp_secret = secret
+            user.is_2fa_enabled = request.data['status']
+            user.save()
+            if request.data['status'] == 0:
+                return Response({'message': '2FA disabled successfully.'}, status=status.HTTP_200_OK)
+            return Response({'otpauth_uri': f"otpauth://totp/CucaBeludo:{user.email}?secret={secret}&issuer=CucaBeludo"}, status=status.HTTP_201_CREATED)
+            #return Response({'otp_secret': secret}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({'error': 'Invalid request.'}, status=status.HTTP_400_BAD_REQUEST)
 
 class SendOTPView(generics.GenericAPIView):
     serializer_class = UserIdSerializer

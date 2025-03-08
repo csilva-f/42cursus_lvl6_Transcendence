@@ -95,6 +95,8 @@ WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
 
 # Fetch database credentials from Vault
 DB_USERNAME, DB_PASSWORD = get_database_credentials()
+print(f"DB_USERNAME: {DB_USERNAME}")
+print(f"DB_PASSWORD: {DB_PASSWORD}")
 
 DATABASES = {
     'default': {
