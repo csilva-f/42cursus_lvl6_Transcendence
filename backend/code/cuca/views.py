@@ -10,7 +10,7 @@ from django.utils.timezone import now
 
 ALLOWED_FILTERS_TOURNAMENT = {'tournamentID', 'statusID', 'name', 'winnerID'}
 
-ALLOWED_FILTERS_GAMES = {'statusID', 'gameID', 'user1ID', 'user2ID', 'winnerID', 'tournamentID'}
+ALLOWED_FILTERS_GAMES = {'uid', 'statusID', 'gameID', 'user1ID', 'user2ID', 'winnerID', 'tournamentID'}
 
 ALLOWED_FILTERS_UEXT = {'userID'}
 
@@ -67,19 +67,25 @@ def validate_name(name):
 
 @csrf_exempt 
 def get_games(request):
+    print(request)
     try:
         validate_filters_games(request)
-
         game_id = request.GET.get('gameID')
         status_id = request.GET.get('statusID')
         user1_id = request.GET.get('user1ID')
         user2_id = request.GET.get('user2ID')
         winner_id = request.GET.get('winnerID')
         tournament_id = request.GET.get('tournamentID')
+        u_id = request.GET.get('uid')
 
-        if game_id == "" or status_id == "" or winner_id == "" or tournament_id == "":
+        if any(param == "" for param in [game_id, status_id, winner_id, tournament_id]):
             return JsonResponse({"error": "Filter can't be empty."}, status=400)
-        
+        u_ext = None
+        if u_id:
+            try:
+                u_ext = tUserExtension.objects.get(user=u_id)
+            except tUserExtension.DoesNotExist:
+                return JsonResponse({"error": "Invalid - user does not exist."}, status=400)
         games = tGames.objects.all()
         if game_id:
             game_id = validate_id(game_id)
@@ -105,14 +111,34 @@ def get_games(request):
 
     except ValidationError as e:
         return JsonResponse({"error": str(e)}, status=400)
-    games_data = [
-        {
+
+    games_data = []
+    for game in games:
+        user1_nick = None
+        user2_nick = None
+
+        if game.user1:
+            try:
+                user1_nick = tUserExtension.objects.get(user=game.user1).nick
+            except tUserExtension.DoesNotExist:
+                user1_nick = None
+        if game.user2:
+            try:
+                user2_nick = tUserExtension.objects.get(user=game.user2).nick
+            except tUserExtension.DoesNotExist:
+                user2_nick = None
+
+        games_data.append({
+            'userID': u_id if u_id else None,
+            'userNick': u_ext.nick if u_ext else None,
             'gameID': game.game,
             'creationTS': game.creationTS.strftime("%Y-%m-%d %H:%M:%S"),
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
+            'user1Nick': user1_nick,
             'user2ID': game.user2,
+            'user2Nick': user2_nick,
             'winnerUserID': game.winnerUser,
             'user1_points': game.user1_points,
             'user2_points': game.user2_points,
@@ -126,9 +152,8 @@ def get_games(request):
             'isLocal': game.isLocal,
             'isInvitation': game.isInvitation,
             'isInvitAccepted': game.isInvitAccepted
-        }
-        for game in games
-    ]
+        })
+
     return JsonResponse({"games": games_data}, status=200)
 
 @csrf_exempt 
@@ -209,7 +234,7 @@ def get_usergames(request):
         
         games_user1 = tGames.objects.filter(user1=user_id)
         games_user2 = tGames.objects.filter(user2=user_id)
-        games = games_user1 | games_user2  # União das duas queries
+        games = games_user1 | games_user2
         if status_id:
             status_id = validate_status(status_id)
             games = games.filter(status__statusID=status_id)

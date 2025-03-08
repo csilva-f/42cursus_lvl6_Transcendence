@@ -5,14 +5,18 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.conf import settings
+from urllib.parse import urlencode
 
 class GetGames(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         backend_url = settings.BACKEND_GAMES_URL
-        query_params = request.GET.urlencode()
-        url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
+        query_params = request.GET.copy()
+        userid = request.user.user_id
+        query_params["uid"] = userid
+        query_string = urlencode(query_params, doseq=True)
+        url_with_params = f"{backend_url}?{query_string}" if query_string else backend_url
         try:
             backend_response = requests.get(url_with_params)
             backend_response.raise_for_status()

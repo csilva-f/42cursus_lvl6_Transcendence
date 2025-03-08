@@ -36,6 +36,7 @@ async function fetchGames(statusID) {
           const divElement = document.getElementById("gamesContent");
           divElement.innerHTML = "";
           allGames = res.games;
+          console.log("Games", allGames)
           res.games.forEach((element) => {
             if (element.tournamentID == null) {
               if (element.isInvitation == false) {

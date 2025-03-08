@@ -45,14 +45,14 @@ class tUserExtension(models.Model):
     def __str__(self):
         return f"UserExtension {self.user}"
 
-class tTournaments(models.Model): #change is_active para status #create status table
+class tTournaments(models.Model):
     tournament = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     beginDate = models.DateField()
     endDate = models.DateField()
     creationTS = models.DateField()
-    createdByUser = models.IntegerField(null=True, blank=True) #Vai ser uma ForeignKey para tUsersExtension
-    winnerUser = models.IntegerField(null=True, blank=True) #Vai ser uma ForeignKey para tUsersExtension
+    createdByUser = models.IntegerField(null=True, blank=True)
+    winnerUser = models.IntegerField(null=True, blank=True)
     status = models.ForeignKey(tauxStatus, on_delete=models.PROTECT, null=False, default=1)
 
     def _str_(self):
