@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-@www2r)nc-li_empd8(e()gc592l7wau$zn%y#2*ej)u^xb*(0'
 
-#BACKEND URL's
+# BACKEND URLs
 BACKEND_TOURNAMENTS_URL = 'http://backend:8002/backend/tournaments/'
 BACKEND_CREATE_TOURNAMENT_URL = 'http://backend:8002/backend/create_tournament/'
 BACKEND_GAMES_URL = 'http://backend:8002/backend/games/'
@@ -32,6 +32,9 @@ BACKEND_USTAT_URL = 'http://backend:8002/backend/get_userstatistics/'
 BACKEND_USINVIT_URL = 'http://backend:8002/backend/get_userinvitations/'
 BACKEND_USNBRINVIT_URL = 'http://backend:8002/backend/get_usernbrinvit/'
 BACKEND_UGAMES_URL = 'http://backend:8002/backend/get_usergames/'
+BACKEND_FRIENDS_URL = 'http://backend:8002/backend/get_friendships/'
+BACKEND_REQUESTS_URL = 'http://backend:8002/backend/get_pendingrequests/'
+BACKEND_NONFRIENDSLIST_URL = 'http://backend:8002/backend/get_nonfriendslist/'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
