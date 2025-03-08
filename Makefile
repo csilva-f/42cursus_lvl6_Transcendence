@@ -3,7 +3,16 @@ BACKEND_DB_CONTAINER_NAME=backend-db
 AUTH_DB_CONTAINER_NAME=auth-db
 EMAIL_DB_CONTAINER_NAME = email-db
 ROOT_TOKEN_FILE = ./secrets/VAULT_ROOT_TOKEN.txt
-all: build up migrate
+all: secrets build up migrate
+
+secrets:
+	@echo "Creating secrets folder..."
+	@mkdir -p ./secrets
+	@echo "Creating secrets files..."
+	@touch ./secrets/VAULT_ROOT_TOKEN.txt
+	@echo eva > ./secrets/POSTGRES_USER.txt
+	@echo gina > ./secrets/POSTGRES_PASSWORD.txt
+
 
 build:
 	@echo "Building Docker Compose setup..."
