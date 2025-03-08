@@ -220,18 +220,19 @@
 							</div>
 						</div>
 
-						<div class="row mb-3">
-							<div class="col-md-12">
-								<label for="twoFactor" class="form-label">Enable two-factor authentication on your
-									account</label>
-								<div class="form-check form-switch">
-									<input class="form-check-input" type="checkbox" id="twoFactor" onclick=""
-										data-bs-toggle="modal" data-bs-target="#twoFactorModal">
-									<label class="form-check-label" for="twoFactor"></label>
+						<div class="container mt-5">
+							<div class="row mb-3">
+								<div class="col-md-12">
+									<label for="twoFactor" class="form-label">
+										Enable two-factor authentication on your account
+									</label>
+									<div class="form-check form-switch">
+										<input class="form-check-input" type="checkbox" id="twoFactor" onclick="verifyButtonOTP(this)">
+										<label class="form-check-label" for="twoFactor"></label>
+									</div>
 								</div>
 							</div>
 						</div>
-
 
 						<div class="row">
 							<div class="col-md-6 text-start">
@@ -265,12 +266,13 @@
 					<div class="col-md-6 text-center">
 						<button type="button" class="btn btn-secondary"
 							style="background-color: var(--primary); color: white;" id="codeButton"
-							data-bs-toggle="modal" data-bs-target="#codeModal">
-							<i class="fa-solid fa-qrcode me-2" style="color: white;"></i> App
+							onclick="EnableOTPViewSet(1)">
+							<i class="fa-solid fa-qrcode me-2" style="color: white;" ></i> App
 						</button>
 					</div>
 					<div class="col-md-6 text-center">
-						<button type="button" class="btn" style="background-color: var(--primary); color: white;">
+						<button type="button" class="btn" style="background-color: var(--primary); color: white;"
+							onclick="EnableOTPViewSet(2)">
 							<i class="fa-solid fa-envelope me-2" style="color: white;"></i> E-mail
 						</button>
 					</div>
@@ -307,7 +309,6 @@
 </div>
 </div>
 </div>
-
 
 <!-- Change Password pop up -->
 <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel"
@@ -355,7 +356,7 @@
 							</span>
 						</div>
 						<small id="passwordValidationChange" class="form-text text-muted d-none">
-							<i id="charCheckChange" class="fa-solid fa-xmark" style="color: #ff2600;"></i>
+							<i id="charCheckChange" class="fa-solid fa-xmark" style="color: red;"></i>
 							Password must be at least 8 characters long
 						</small>
 					</div>
@@ -378,7 +379,7 @@
 							</span>
 						</div>
 						<small id="confirmValidationChange" class="form-text text-muted d-none">
-							<i id="matchCheckChange" class="fa-solid fa-xmark" style="color: #ff2600;"></i>
+							<i id="matchCheckChange" class="fa-solid fa-xmark" style="color: red;"></i>
 							Passwords do not match
 						</small>
 					</div>

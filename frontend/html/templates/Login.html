@@ -19,8 +19,8 @@
 						</button>
 					</li>
 				</ul>
-				
 				<div class="tab-content" id="loginSignUpTabContent">
+
 					<!-- Login -->
 					<div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
 						<form class="mt-3 needs-validation" id="login-form" novalidate>
@@ -29,7 +29,7 @@
 								<div class="input-group">
 									<span class="input-group-text" style="border: none; background: white;">
 										<i class="fas fa-envelope" style="color: var(--primary);"></i></span>
-									<input type="email" class="form-control" id="loginEmail" required placeholder="Email" style="border: none;">
+									<input type="email" class="form-control" id="loginEmail" placeholder="Email" style="border: none;">
 								</div>
 							</div>
 
@@ -58,7 +58,7 @@
 								</button>														
 							</div>
 
-							<button type="submit" class="btn" style="background-color: var(--primary); font-weight: bold; color: white; width: 100%;">Login</button>
+							<button type="submit" class="btn" style="background-color: var(--primary); color: white; width: 100%;">Login</button>
 
 						</form>
 						<p id="login-message" class="invalid-feedback">
@@ -101,9 +101,7 @@
 										<i class="fa-solid fa-lock" style="color: var(--primary);"></i>
 									</span>
 									<input type="password" class="form-control" id="signupPassword" required placeholder="Password" style="border: none;" 
-										oninput="validateNewPassword('signupPassword', 'passwordValidation', 'charCheck', 'signupPassword2')">
-										<div class="invalid-feedback" id="passwordInvalid">
-										</div>
+										oninput="validateNewPassword('signupPassword', 'passwordValidation', 'charCheck')">
 									<span class="input-group-text" id="toggleSignupPassword" style="cursor: pointer; background: white; border: none;"
 										onclick="passwordVisibility('signupPassword', 'toggleSignupPassword')">
 										<i class="fas fa-eye-slash" style="color: var(--primary);"></i>
@@ -140,7 +138,7 @@
 									<input type="tel" class="form-control" id="signupPhone" required placeholder="Phone number" style="border: none;">
 								</div>
 							</div>
-							<button type="submit" class="btn" style="background-color: var(--primary); font-weight: bold; color: white; width: 100%;">Sign up</button>
+							<button type="submit" class="btn" style="background-color: var(--primary); color: white; width: 100%;">Sign up</button>
 						</form>
 					</div>
 				</div>

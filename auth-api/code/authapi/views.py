@@ -92,12 +92,15 @@ class PostRefreshViewSet(viewsets.ViewSet):
 #return in case of success:
     # otp_secret: string  <-- to be changed for boolean, or implement QR code authenticator APP
 class EnableOTPViewSet(viewsets.ViewSet):
-    permission_classes = [AllowAny]
-
+    #permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     def create(self, request):
         backend_url = 'http://auth:8000/otp/enable/'
+        print(request.user.user_id)
+
         try:
-            backend_response = requests.post(backend_url, json=request.data)
+            request.data['userId'] = request.user.user_id
+            backend_response = requests.post(backend_url, json=request.data, headers=request.headers)
             backend_response.raise_for_status()
             data = backend_response.json()
             return Response(data, status=status.HTTP_201_CREATED)

@@ -1,9 +1,9 @@
 class tokenService {
-    cookieRefreshName = "refresh";
-    cookieAccessName = "access";
-    cookieExpiricy = 1 * 60 * 1000;
-    token = {};
-    date = new Date();
+  cookieRefreshName = "refresh";
+  cookieAccessName = "access";
+  cookieExpiricy = 1 * 60 * 1000;
+  token = {};
+  date = new Date();
 
     async setToken(t) {
         this.token = t;
@@ -45,23 +45,21 @@ class tokenService {
         });
     }    
 
-    /* Cookie */
-    setCookie() {
-        this.date.setTime(this.date.getTime() + this.cookieExpiricy);
-        let expires = "expires=" + this.date.toUTCString();
-        document.cookie = this.cookieRefreshName + "=" + this.token.refresh;
-        document.cookie = this.cookieAccessName + "=CucaBeludo;" + expires;
-
+  /* Cookie */
+  setCookie() {
+    this.date.setTime(this.date.getTime() + this.cookieExpiricy);
+    let expires = "expires=" + this.date.toUTCString();
+    document.cookie = this.cookieRefreshName + "=" + this.token.refresh;
+    document.cookie = this.cookieAccessName + "=CucaBeludo;" + expires;
+  }
+  checkCookie(cookieName) {
+    let decodedCookie = document.cookie.split(";");
+    for (let i = 0; i < decodedCookie.length; i++) {
+      let cookie = decodedCookie[i];
+      while (cookie.charAt(0) == " ") cookie = cookie.substring(1);
+      if (cookie.indexOf(cookieName + "=") == 0)
+        return cookie.substring(cookieName.length + 1, cookie.length);
     }
-    checkCookie(cookieName) {
-        let decodedCookie = document.cookie.split(';')
-        for (let i = 0; i < decodedCookie.length; i++) {
-            let cookie = decodedCookie[i];
-            while (cookie.charAt(0) == ' ')
-                cookie = cookie.substring(1);
-            if (cookie.indexOf(cookieName + "=") == 0)
-                return cookie.substring(cookieName.length + 1, cookie.length)
-        }
-        return '';
-    }
+    return "";
+  }
 }

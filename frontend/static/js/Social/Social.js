@@ -13,17 +13,6 @@ function GlobalFriendsSelect(elementID) {
     }
 }
 
-function insertUserInfo2(newCard, userName, usersImg) {
-    const userImg = newCard.querySelector("#userImg");
-    const userNick = newCard.querySelector("#userNick");
-    const userGamesWon = newCard.querySelector("#userGamesWon");
-    const userTournamentsWon = newCard.querySelector("#userTournamentsWon");
-    userImg.src = usersImg;
-    userNick.textContent = userName;
-    userGamesWon.textContent = 3;
-    userTournamentsWon.textContent = 3;
-}
-
 function insertUserInfo(newCard, user) {
     const userNick = newCard.querySelector("#userNick");
     const userLvl = newCard.querySelector("#userLvl");
