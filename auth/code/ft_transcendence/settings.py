@@ -12,20 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from os import getenv
 from pathlib import Path
 from .hvac import get_database_credentials
-#from .utils import get_vault_secrets
-
-#import hvac
-#client = hvac.Client(url='http://vault:8200', token='myroot')
-
-#def get_stripe_key(path):
-#    secret = client.secrets.kv.v2.read_secret_version(path=path)
-#    return secret['data']['data']
-#from auth.code import two_factor
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -110,11 +99,11 @@ DB_USERNAME, DB_PASSWORD = get_database_credentials()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'auth-db',  # Replace with your database name
+        'NAME': getenv('POSTGRES_DB', ''),  # Default value if not set
         'USER': DB_USERNAME,
         'PASSWORD': DB_PASSWORD,
-        'HOST': 'auth-db',  # Replace with your database host
-        'PORT': '5432',      # Replace with your database port
+        'HOST': getenv('DB_HOST', ''),  # Replace with your database host
+        'PORT': getenv('DB_PORT', ''),     # Replace with your database port
     }
 }
 

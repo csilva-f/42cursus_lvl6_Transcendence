@@ -48,7 +48,6 @@ else
   vault login $ROOT_TOKEN
 fi
 
-
 if ! vault secrets list | grep -q "database/"; then
     echo "Enabling the database secrets engine..."
     vault secrets enable database
@@ -57,9 +56,23 @@ if ! vault secrets list | grep -q "database/"; then
     vault write database/config/config-auth-db \
         plugin_name=postgresql-database-plugin \
         allowed_roles="role-auth-db" \
-        connection_url="postgresql://{{username}}:{{password}}@auth-db:5432/auth-db?sslmode=disable" \
-        username="eva" \
-        password="gina"  # Replace with actual credentials
+        connection_url="postgresql://{{username}}:{{password}}@${AUTH_DB}:${AUTH_PORT}/${AUTH_DB}?sslmode=disable" \
+        username="${POSTGRES_USER}" \
+        password="${POSTGRES_PASSWORD}"
+
+    vault write database/config/config-backend-db \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="role-backend-db" \
+        connection_url="postgresql://{{username}}:{{password}}@${BACKEND_DB}:${BACKEND_PORT}/${BACKEND_DB}?sslmode=disable" \
+        username="${POSTGRES_USER}" \
+        password="${POSTGRES_PASSWORD}"
+
+    vault write database/config/config-email-db \
+        plugin_name=postgresql-database-plugin \
+        allowed_roles="role-email-db" \
+        connection_url="postgresql://{{username}}:{{password}}@${EMAIL_DB}:${EMAIL_PORT}/${EMAIL_DB}?sslmode=disable" \
+        username="${POSTGRES_USER}" \
+        password="${POSTGRES_PASSWORD}"
 
     # Create the role for Django
     vault write database/roles/role-auth-db \
@@ -68,7 +81,21 @@ if ! vault secrets list | grep -q "database/"; then
         default_ttl="1h" \
         max_ttl="24h"
 
+    vault write database/roles/role-backend-db \
+        db_name=config-backend-db \
+        creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}'; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
+        default_ttl="1h" \
+        max_ttl="24h"
+
+    vault write database/roles/role-email-db \
+        db_name=config-email-db \
+        creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}'; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
+        default_ttl="1h" \
+        max_ttl="24h"
+
     vault write -f database/rotate-root/config-auth-db
+    vault write -f database/rotate-root/config-backend-db
+    vault write -f database/rotate-root/config-email-db
 else
     echo "Database secrets engine is already enabled."
 fi

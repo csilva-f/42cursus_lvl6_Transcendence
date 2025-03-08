@@ -5,3 +5,4 @@ vault-db/data/
 vault/data/*
 secrets/
 **/__pycache__/
+.vscode/

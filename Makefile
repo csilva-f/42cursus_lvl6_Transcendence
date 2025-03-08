@@ -12,9 +12,14 @@ build:
 up:
 	@echo "" > $(ROOT_TOKEN_FILE)
 	@echo "Running Docker Compose setup..."
-	@docker compose up -d auth-db vault-db
-	@echo "Waiting for the database to be up..."
-	@while ! docker inspect -f '{{.State.Health.Status}}' $(AUTH_DB_CONTAINER_NAME) | grep -q "healthy"; do \
+	@docker compose up -d auth-db vault-db backend-db email-db
+	@while ! ( \
+		docker inspect -f '{{.State.Health.Status}}' auth-db | grep -q "healthy" && \
+		docker inspect -f '{{.State.Health.Status}}' vault-db | grep -q "healthy" && \
+		docker inspect -f '{{.State.Health.Status}}' backend-db | grep -q "healthy" && \
+		docker inspect -f '{{.State.Health.Status}}' email-db | grep -q "healthy" \
+	); do \
+		echo "Waiting for all databases to be healthy..."; \
 		sleep 2; \
 	done
 	@echo "Database is up and running! Applying Migrations..."
@@ -26,24 +31,26 @@ up:
 		sleep 1; \
 	done
 	@echo "$(ROOT_TOKEN_FILE) contains a value!"
-	@docker compose up -d auth
+	@docker compose up -d auth backend email auth-api backend-api
+	sleep 5
+	@docker compose up -d nginx
 # Stop the Docker Compose setup
 down:
 	@echo "Stopping Docker Compose setup..."
 	@docker exec -it auth-db chmod 777 /var/lib/postgresql/data -R
+	@docker exec -it backend-db chmod 777 /var/lib/postgresql/data -R
+	@docker exec -it email-db chmod 777 /var/lib/postgresql/data -R
+	@docker exec -it vault-db chmod 777 /var/lib/postgresql/data -R
 	@docker compose down
 
 migrate:
-	@echo "Applying migrations to the authentication database..."
-	@echo "Waiting for the database to be up..."
-	@while ! docker inspect -f '{{.State.Health.Status}}' $(AUTH_DB_CONTAINER_NAME) | grep -q "healthy"; do \
-		echo "Database is not ready yet..."; \
-		sleep 2; \
-	done
-	@echo "Database is up and running! Applying Migrations..."
-	@sleep 5
+	@echo "Applying Migrations..."
 	@docker compose exec auth python manage.py makemigrations
 	@docker compose exec auth python manage.py migrate
+	@docker compose exec backend python manage.py makemigrations
+	@docker compose exec backend python manage.py migrate
+	@docker compose exec email python manage.py makemigrations
+	@docker compose exec email python manage.py migrate
 
 clean:down
 	@echo "Cleaning up stopped containers and networks..."
@@ -52,11 +59,23 @@ clean:down
 fclean: clean
 	@echo "Force cleaning: removing all images..."
 	@docker compose -p $(NAME) down --rmi all
-	#doc@docker system prune -af
+	@docker system prune -af
 
 
-destroy: fclean
+fulldestroy: fclean
 	@rm -rf "./auth-db/data" -R
+	@rm -rf "./backend-db/data" -R
+	@rm -rf "./vault-db/data" -R
+	@rm -rf "./email-db/data" -R
+	@rm -rf "./vault/data" -R
+	@echo "" > $(ROOT_TOKEN_FILE)
 
+destroy: down
+	@rm -rf "./auth-db/data" -R
+	@rm -rf "./backend-db/data" -R
+	@rm -rf "./vault-db/data" -R
+	@rm -rf "./email-db/data" -R
+	@rm -rf "./vault/data" -R
+	@echo "" > $(ROOT_TOKEN_FILE)
 
 re: fclean all
