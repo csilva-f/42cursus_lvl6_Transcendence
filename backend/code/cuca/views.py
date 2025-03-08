@@ -67,7 +67,6 @@ def validate_name(name):
 
 @csrf_exempt 
 def get_games(request):
-    print(request)
     try:
         validate_filters_games(request)
         game_id = request.GET.get('gameID')
@@ -253,14 +252,12 @@ def get_usergames(request):
         status_id = request.GET.get('statusID')
         tournament_id = request.GET.get('tournamentID')
         user_id = request.GET.get('uid')
-
         if not user_id or user_id == "":
             return JsonResponse({"error": "A user must be provided."}, status=400)
         if not tUserExtension.objects.filter(user=user_id).exists():
             return JsonResponse({"error": f"User ID {user_id} does not exist in tUserExtension"}, status=404)
         if status_id == "" or tournament_id == "":
             return JsonResponse({"error": "Filter can't be empty."}, status=400)
-        
         games_user1 = tGames.objects.filter(user1=user_id)
         games_user2 = tGames.objects.filter(user2=user_id)
         games = games_user1 | games_user2
@@ -273,7 +270,6 @@ def get_usergames(request):
                 games = games.filter(tournament__tournament__isnull=True)
             else:
                 games = games.filter(tournament__tournament=tournament_id)
-
         games = games.filter(models.Q(isInvitation=False) | models.Q(isInvitation=True, isInvitAccepted=True))
         try:
             u_ext = tUserExtension.objects.get(user=user_id)
