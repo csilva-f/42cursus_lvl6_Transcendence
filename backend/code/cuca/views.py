@@ -12,7 +12,7 @@ ALLOWED_FILTERS_TOURNAMENT = {'uid', 'tournamentID', 'statusID', 'name', 'winner
 
 ALLOWED_FILTERS_GAMES = {'uid', 'statusID', 'gameID', 'user1ID', 'user2ID', 'winnerID', 'tournamentID'}
 
-ALLOWED_FILTERS_UEXT = {'uid'}
+ALLOWED_FILTERS_UEXT = {'uid',  'userID'}
 
 ALLOWED_FILTERS_UGAMES = {'uid', 'statusID', 'tournamentID'}
 
