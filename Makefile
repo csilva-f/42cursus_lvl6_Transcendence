@@ -10,6 +10,7 @@ build:
 	@docker compose -p $(NAME) build
 
 up:
+	@echo "" > $(ROOT_TOKEN_FILE)
 	@echo "Running Docker Compose setup..."
 	@docker compose up -d auth-db vault-db
 	@echo "Waiting for the database to be up..."
