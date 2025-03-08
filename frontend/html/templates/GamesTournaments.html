@@ -128,8 +128,8 @@
                 style="font-weight: bold; text-align: center;" data-i18n="local"></p>
             </div>
           </li>
-          <li class="pop-hover-xs modalLi nav-item rounded-4 shadow d-flex align-items-center" onclick="postGame()"
-            style="width: 12rem; background-color: var(--cardBg);">
+          <li class="pop-hover-xs modalLi nav-item rounded-4 shadow d-flex align-items-center"
+            onclick="activateGameForm('remoteForm')" style="width: 12rem;">
             <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
               <div class="d-flex align-items-center justify-content-center my-3">
                 <i class="fa-solid fa-computer fa-2xl" style="color: black"></i>
@@ -175,6 +175,29 @@
         </form>
       </div>
       <!-- End Local Create Form -->
+      <!-- Remote Create Form -->
+      <div class="modal-body d-none" id="remoteForm">
+        <form class="row g-3 needs-validation p-3" id="remoteFormID" novalidate>
+          <!-- P1 Nickname NOTACAROL: meter no placeholder do nickname o nick real do user -->
+          <div class="input-group has-validation mt-3">
+            <span class="input-group-text" id="basic-addon1R" style="margin-top: 10px;">
+              <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
+                type="color" class="form-control-color p-0 m-0" id="P1ColorInputR" value="#AC3B61">
+            </span>
+            <input type="text" class="form-control" id="P1NickInputR" placeholder="Nickname"
+              aria-describedby="inputGroupPrepend" style="margin-top: 10px;" required disabled>
+            <div class="invalid-feedback" data-i18n="p1NickError">
+            </div>
+          </div>
+          <!-- Submit Button -->
+          <div class="d-grid gap-2 d-flex justify-content-end">
+            <button class="pop-hover-xs btn modalActionsLi"
+              style="background-color: black; color: white; font-weight: bold;" type="submit"
+              data-i18n="create"></button>
+          </div>
+        </form>
+      </div>
+      <!-- End Remote Create Form -->
       <!-- Form Actions -->
       <div class="modal-footer">
         <ul class="nav nav-pills" style="height: 2.5rem">

@@ -53,6 +53,8 @@ function getForms() {
         } else {
           console.log("Form is valid: ", form);
           if (form.id == "localFormID") postLocalGame();
+                else if (form.id == "remoteFormID")
+                    postRemoteGame();
           else if (form.id == "localTournamentFormID") initLocalTournament();
           else if (form.id == "tournamentFormID") postTournament();
           else if (form.id == "login-form") sendLogin();

@@ -84,6 +84,11 @@ const routes = {
     title: "Tournament",
     descripton: "Tournament Bracket",
   },
+  "/testWebSocket": {
+    template: "/templates/testWebsocket.html",
+    title: "testWebsocket",
+    descripton: "testWebsocket",
+  },
 };
 
 const bigScreenLocation = [
@@ -97,6 +102,7 @@ const bigScreenLocation = [
   "/resendCode",
   "/resetPassword",
   "/tournament",
+  "/testWebSocket"
 ];
 
 const route = (event) => {

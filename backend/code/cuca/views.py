@@ -8,15 +8,15 @@ from django.db import transaction
 from django.db.models import Q, Sum, F, ExpressionWrapper, DurationField
 from django.utils.timezone import now
 
-ALLOWED_FILTERS_TOURNAMENT = {'tournamentID', 'statusID', 'name', 'winnerID'}
+ALLOWED_FILTERS_TOURNAMENT = {'uid', 'tournamentID', 'statusID', 'name', 'winnerID'}
 
-ALLOWED_FILTERS_GAMES = {'statusID', 'gameID', 'user1ID', 'user2ID', 'winnerID', 'tournamentID'}
+ALLOWED_FILTERS_GAMES = {'uid', 'statusID', 'gameID', 'user1ID', 'user2ID', 'winnerID', 'tournamentID'}
 
-ALLOWED_FILTERS_UEXT = {'userID'}
+ALLOWED_FILTERS_UEXT = {'uid'}
 
-ALLOWED_FILTERS_UGAMES = {'userID', 'statusID', 'tournamentID'}
+ALLOWED_FILTERS_UGAMES = {'uid', 'statusID', 'tournamentID'}
 
-ALLOWED_FILTERS_FRIENDS = {'userID', 'statusID', 'sentToMe'}
+ALLOWED_FILTERS_FRIENDS = {'uid', 'userID', 'statusID', 'sentToMe'}
 
 def validate_filters_tournament(request):
     extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_TOURNAMENT
@@ -67,19 +67,25 @@ def validate_name(name):
 
 @csrf_exempt 
 def get_games(request):
+    print(request)
     try:
         validate_filters_games(request)
-
         game_id = request.GET.get('gameID')
         status_id = request.GET.get('statusID')
         user1_id = request.GET.get('user1ID')
         user2_id = request.GET.get('user2ID')
         winner_id = request.GET.get('winnerID')
         tournament_id = request.GET.get('tournamentID')
+        u_id = request.GET.get('uid')
 
-        if game_id == "" or status_id == "" or winner_id == "" or tournament_id == "":
+        if any(param == "" for param in [game_id, status_id, winner_id, tournament_id]):
             return JsonResponse({"error": "Filter can't be empty."}, status=400)
-        
+        u_ext = None
+        if u_id:
+            try:
+                u_ext = tUserExtension.objects.get(user=u_id)
+            except tUserExtension.DoesNotExist:
+                return JsonResponse({"error": "Invalid - user does not exist."}, status=400)
         games = tGames.objects.all()
         if game_id:
             game_id = validate_id(game_id)
@@ -105,14 +111,34 @@ def get_games(request):
 
     except ValidationError as e:
         return JsonResponse({"error": str(e)}, status=400)
-    games_data = [
-        {
+
+    games_data = []
+    for game in games:
+        user1_nick = None
+        user2_nick = None
+
+        if game.user1:
+            try:
+                user1_nick = tUserExtension.objects.get(user=game.user1).nick
+            except tUserExtension.DoesNotExist:
+                user1_nick = None
+        if game.user2:
+            try:
+                user2_nick = tUserExtension.objects.get(user=game.user2).nick
+            except tUserExtension.DoesNotExist:
+                user2_nick = None
+
+        games_data.append({
+            'userID': u_id if u_id else None,
+            'userNick': u_ext.nick if u_ext else None,
             'gameID': game.game,
             'creationTS': game.creationTS.strftime("%Y-%m-%d %H:%M:%S"),
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
+            'user1Nick': user1_nick,
             'user2ID': game.user2,
+            'user2Nick': user2_nick,
             'winnerUserID': game.winnerUser,
             'user1_points': game.user1_points,
             'user2_points': game.user2_points,
@@ -126,16 +152,15 @@ def get_games(request):
             'isLocal': game.isLocal,
             'isInvitation': game.isInvitation,
             'isInvitAccepted': game.isInvitAccepted
-        }
-        for game in games
-    ]
+        })
+
     return JsonResponse({"games": games_data}, status=200)
 
 @csrf_exempt 
 def get_gameinvitations(request):
     try:
         validate_filters_uext(request)
-        user_id = request.GET.get('userID')
+        user_id = request.GET.get('uid')
 
         if not user_id or user_id == "":
             return JsonResponse({"error": "A user must be provided."}, status=400)
@@ -143,18 +168,41 @@ def get_gameinvitations(request):
             return JsonResponse({"error": f"User ID {user_id} does not exist in tUserExtension"}, status=404)
 
         games = tGames.objects.filter(user2=user_id, isInvitation=True, isInvitAccepted=False)
+        try:
+            u_ext = tUserExtension.objects.get(user=user_id)
+        except tUserExtension.DoesNotExist:
+            return JsonResponse({"error": "Invalid - user does not exist."}, status=400)
 
     except ValidationError as e:
         return JsonResponse({"error": str(e)}, status=400)
-    
-    games_data = [
-        {
+
+    games_data = []
+    for game in games:
+        user1_nick = None
+        user2_nick = None
+
+        if game.user1:
+            try:
+                user1_nick = tUserExtension.objects.get(user=game.user1).nick
+            except tUserExtension.DoesNotExist:
+                user1_nick = None
+        if game.user2:
+            try:
+                user2_nick = tUserExtension.objects.get(user=game.user2).nick
+            except tUserExtension.DoesNotExist:
+                user2_nick = None
+
+        games_data.append({
+            'userID': user_id if user_id else None,
+            'userNick': u_ext.nick if u_ext else None,
             'gameID': game.game,
             'creationTS': game.creationTS.strftime("%Y-%m-%d %H:%M:%S"),
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
+            'user1Nick': user1_nick,
             'user2ID': game.user2,
+            'user2Nick': user2_nick,
             'winnerUserID': game.winnerUser,
             'user1_points': game.user1_points,
             'user2_points': game.user2_points,
@@ -168,16 +216,14 @@ def get_gameinvitations(request):
             'isLocal': game.isLocal,
             'isInvitation': game.isInvitation,
             'isInvitAccepted': game.isInvitAccepted
-        }
-        for game in games
-    ]
+        })
     return JsonResponse({"invitGames": games_data}, status=200)
 
 @csrf_exempt 
 def get_nbr_invitations(request):
     try:
         validate_filters_uext(request)
-        user_id = request.GET.get('userID')
+        user_id = request.GET.get('uid')
 
         if not user_id or user_id == "":
             return JsonResponse({"error": "A user must be provided."}, status=400)
@@ -185,11 +231,19 @@ def get_nbr_invitations(request):
             return JsonResponse({"error": f"User ID {user_id} does not exist in tUserExtension"}, status=404)
 
         total_invitations = tGames.objects.filter(user2=user_id, isInvitation=True, isInvitAccepted=False).count()
+        try:
+            u_nick = tUserExtension.objects.get(user=user_id).nick
+        except tUserExtension.DoesNotExist:
+            u_nick = None
 
     except ValidationError as e:
         return JsonResponse({"error": str(e)}, status=400)
     
-    return JsonResponse({"totalInvit": total_invitations}, status=200)
+    return JsonResponse({
+        "userID": user_id,
+        "nick": u_nick,
+        "totalInvit": total_invitations
+    }, status=200)
 
 @csrf_exempt 
 def get_usergames(request):
@@ -198,7 +252,7 @@ def get_usergames(request):
 
         status_id = request.GET.get('statusID')
         tournament_id = request.GET.get('tournamentID')
-        user_id = request.GET.get('userID')
+        user_id = request.GET.get('uid')
 
         if not user_id or user_id == "":
             return JsonResponse({"error": "A user must be provided."}, status=400)
@@ -209,7 +263,7 @@ def get_usergames(request):
         
         games_user1 = tGames.objects.filter(user1=user_id)
         games_user2 = tGames.objects.filter(user2=user_id)
-        games = games_user1 | games_user2  # União das duas queries
+        games = games_user1 | games_user2
         if status_id:
             status_id = validate_status(status_id)
             games = games.filter(status__statusID=status_id)
@@ -221,18 +275,41 @@ def get_usergames(request):
                 games = games.filter(tournament__tournament=tournament_id)
 
         games = games.filter(models.Q(isInvitation=False) | models.Q(isInvitation=True, isInvitAccepted=True))
+        try:
+            u_ext = tUserExtension.objects.get(user=user_id)
+        except tUserExtension.DoesNotExist:
+            return JsonResponse({"error": "Invalid - user does not exist."}, status=400)
 
     except ValidationError as e:
         return JsonResponse({"error": str(e)}, status=400)
-    
-    games_data = [
-        {
+
+    games_data = []
+    for game in games:
+        user1_nick = None
+        user2_nick = None
+
+        if game.user1:
+            try:
+                user1_nick = tUserExtension.objects.get(user=game.user1).nick
+            except tUserExtension.DoesNotExist:
+                user1_nick = None
+        if game.user2:
+            try:
+                user2_nick = tUserExtension.objects.get(user=game.user2).nick
+            except tUserExtension.DoesNotExist:
+                user2_nick = None
+
+        games_data.append({
+            'userID': user_id if user_id else None,
+            'userNick': u_ext.nick if u_ext else None,
             'gameID': game.game,
             'creationTS': game.creationTS.strftime("%Y-%m-%d %H:%M:%S"),
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
+            'user1Nick': user1_nick,
             'user2ID': game.user2,
+            'user2Nick': user2_nick,
             'winnerUserID': game.winnerUser,
             'user1_points': game.user1_points,
             'user2_points': game.user2_points,
@@ -246,9 +323,7 @@ def get_usergames(request):
             'isLocal': game.isLocal,
             'isInvitation': game.isInvitation,
             'isInvitAccepted': game.isInvitAccepted
-        }
-        for game in games
-    ]
+        })
     return JsonResponse({"games": games_data}, status=200)
 
 #validar os filtros (se tiver filtro com key que nao existe - dar erro)
@@ -268,6 +343,7 @@ def get_tournaments(request):
         status_id = request.GET.get('statusID')
         name = request.GET.get('name')
         winner_id = request.GET.get('winnerID')
+        u_id = request.GET.get('uid')
 
         if name == "" or status_id == "" or winner_id == "" or tournament_id == "":
             return JsonResponse({"error": "Filter can't be empty."}, status=400)
@@ -309,7 +385,7 @@ def post_create_game(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            user1_id = data.get('user1ID')
+            user1_id = data.get('uid')
             if not user1_id:
                 return JsonResponse({"error": "User1 ID is required"}, status=400)
             if not tUserExtension.objects.filter(user=user1_id).exists():
@@ -353,7 +429,15 @@ def post_create_game(request):
                 isLocal=glocal,
                 isInvitation = ginvit
             )
-            return JsonResponse({"message": "Game created successfully", "game_id": game.game}, status=201)
+            game_data = {
+                "id": game.game,
+                "user1": user1_id,
+                "user2": user2_id,
+                "tournament": tournament_id,
+                "isLocal": glocal,
+                "isInvitation": ginvit
+            }
+            return JsonResponse({"message": "Game created successfully", "game": game_data}, status=201)
 
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
@@ -469,10 +553,8 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 game = tGames.objects.get(game=game_id)
             except tGames.DoesNotExist:
                 return JsonResponse({"error": "Game not found"}, status=404)
-            if game.status_id == 3:
-                return JsonResponse({"error": "Game status does not allow any more updates"}, status=400)
-            user2_id = data.get('user2ID')
-            winner_id = data.get('winnerUserID')
+            user_id = data.get('uid')
+            is_join = str(data.get('isJoin')).lower() in ['true', '1', 'yes']
             status = data.get('statusID')
             if status is not None:
                 status = validate_status(status)
@@ -481,18 +563,16 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                     game.save()
                     return JsonResponse({"message": "Game updated successfully, forced finished was performed", "game_id": game.game}, status=201)
                 return JsonResponse({"error": "Override status only allowed for finished"}, status=400)
-            if not user2_id and not winner_id:
-                return JsonResponse({"error": "User2 ID or Winner are required for update"}, status=400)
-            if user2_id is not None and user2_id == game.user1:
+            if not user_id:
+                return JsonResponse({"error": "User ID is required for update"}, status=400)
+            if user_id == game.user1 and is_join:
                 return JsonResponse({"error": "User2 must be different from User1"}, status=400)
-            if user2_id is not None and not tUserExtension.objects.filter(user=user2_id).exists():
-                return JsonResponse({"error": f"User2 ID {user2_id} does not exist in tUserExtension"}, status=404)
-            if winner_id is not None and winner_id not in [game.user1, game.user2]:
+            if is_join and not tUserExtension.objects.filter(user=user_id).exists():
+                return JsonResponse({"error": f"User ID {user_id} does not exist in tUserExtension"}, status=404)
+            if not is_join and user_id not in [game.user1, game.user2]:
                 return JsonResponse({"error": "Winner must be either User1 or User2"}, status=400)
-            if user2_id is not None and game.user1 is not None:
-                return JsonResponse({"error": "User2 already associated with the game"}, status=400)
-            if winner_id is not None:
-                game.winnerUser = winner_id
+            if not is_join:
+                game.winnerUser = user_id
                 game.status_id = 3
                 game.endTS = now() 
 
@@ -502,17 +582,17 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 u2_hits = data.get('user2_hits')
                 if (not u1_points and u1_points != 0) or (not u2_points and u2_points != 0) or (not u1_hits and u1_hits != 0) or (not u2_hits and u2_hits != 0):
                     return JsonResponse({"error": "Users game statistics are required for update"}, status=400)
-                if (game.user1 == winner_id and u1_points < 5) or (game.user2 == winner_id and u2_points < 5):
+                if (game.user1 == user_id and u1_points < 5) or (game.user2 == user_id and u2_points < 5):
                     return JsonResponse({"error": "Winner's points are not consistent"}, status=400)
                 game.user1_points = u1_points
                 game.user2_points = u2_points
                 game.user1_hits = u1_hits
                 game.user2_hits = u2_hits
 
-                # tUserExtension.objects.filter(user=winner_id).update(victories=models.F('victories') + 1)
+                # tUserExtension.objects.filter(user=user_id).update(victories=models.F('victories') + 1)
                 # tUserExtension.objects.filter(user=game.user1).update(totalGamesPlayed=models.F('totalGamesPlayed') + 1)
                 # tUserExtension.objects.filter(user=game.user2).update(totalGamesPlayed=models.F('totalGamesPlayed') + 1)
-                if game.user1 == winner_id and game.user1 != -1:
+                if game.user1 == user_id and game.user1 != -1:
                     tUserExtension.objects.filter(user=game.user1).update(ulevel=models.F('ulevel') + 0.2)
                     tUserExtension.objects.filter(user=game.user2).update(ulevel=models.F('ulevel') + 0.05)
                 elif game.user1 != -1:
@@ -528,18 +608,19 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                         if not next_game:
                             return JsonResponse({"error": "No game found with available spot in the next phase."}, status=400)
                         if next_game.user1 is None:
-                            next_game.user1 = winner_id
+                            next_game.user1 = user_id
                         elif next_game.user2 is None:
-                            next_game.user2 = winner_id
+                            next_game.user2 = user_id
                             next_game.status = tauxStatus.objects.get(statusID=2)
                         next_game.save()
                     elif game.phase.phase == 3:
                         tournament = game.tournament
                         if tournament:
                             tournament.status = tauxStatus.objects.get(statusID=3)
-                            tournament.winnerUser = winner_id
+                            tournament.winnerUser = user_id
                             tournament.save()
-                        tUserExtension.objects.filter(user=winner_id).update(
+                        tUserExtension.objects.filter(user=user_id).update(
+                            tVictories=models.F('tVictories') + 1,
                             ulevel=models.F('ulevel') + 0.5
                         )
                         participating_users = tGames.objects.filter(
@@ -552,12 +633,12 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                                 user_ids.add(user1)
                             if user2 and user2 not in user_ids:
                                 user_ids.add(user2)
-                        user_ids.discard(winner_id)
+                        user_ids.discard(user_id)
                         tUserExtension.objects.filter(user__in=user_ids).update(
                             ulevel=models.F('ulevel') + 0.1
                         )
             else:
-                game.user2 = user2_id
+                game.user2 = user_id
                 game.status_id = 2
             game.save()
             return JsonResponse({"message": "Game updated successfully", "game_id": game.game}, status=201)

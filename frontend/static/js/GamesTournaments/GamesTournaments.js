@@ -79,7 +79,7 @@ function activateGameForm(typeForm) {
 
 function resetModal() {
     document.getElementById('localForm').classList.add('d-none');
-    //document.getElementById('remoteForm').classList.add('d-none');
+    document.getElementById('remoteForm').classList.add('d-none');
     document.getElementById('selectForm').classList.remove('d-none');
     document.getElementById('goBackLi').classList.add('d-none');
 
