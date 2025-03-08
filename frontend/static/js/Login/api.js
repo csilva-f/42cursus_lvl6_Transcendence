@@ -14,7 +14,6 @@ async function sendLogin() {
 			jwtToken = data.access; // Store the JWT token
 			const opt_status = await OTP_check_enable(jwtToken);
 			console.log(opt_status);
-			console.log("aqui");
 			if (opt_status == true) {
 				OTP_send_email(jwtToken);
 				window.location.href = "/mfa";
