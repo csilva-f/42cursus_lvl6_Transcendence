@@ -3,7 +3,7 @@ let allGames = [];
 //* GAMES
 //? GET - /api/get-games/?statusID=
 async function fetchGames(statusID) {
-  const userLang = localStorage.getItem("language") || "en";
+  const userLang = await localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
   const reloadIcon = document.getElementById("reloadIcon");
   const reloadBtn = document.getElementById("reloadBtn");
@@ -13,6 +13,8 @@ async function fetchGames(statusID) {
     reloadIcon.classList.remove("rotate");
   }, 250);
   const accessToken = await JWT.getAccess();
+  console.log("accessToken", accessToken)
+  console.log("statusID: ", statusID)
   fetch("/templates/Components/CardGame.html")
     .then((response) => {
       if (!response.ok) {
@@ -48,16 +50,17 @@ async function fetchGames(statusID) {
         },
         error: function (xhr, status, error) {
           console.error("Error Thrown:", error);
+          
           showErrorToast(APIurl, error, langData);
         },
       });
     })
     .catch((error) => {
-      console.error("There was a problem with the fetch operation:", error);
     });
 }
 
 //? POST - /api/create-game/
+//! FAZER A CENA PARA PARA CRIAR JOGOS LOCAIS NO API
 async function postGame() {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
@@ -101,10 +104,10 @@ async function postLocalGame() {
   showSuccessToast(langData, langData.gameEntered);
   resetModal();
   $("#createModal").modal("hide");
-  const enterLi = document.getElementById("enterLi");
   window.history.pushState({}, "", "/pong");
-  locationHandler("content");
-  localStorage.setItem("gameData", JSON.stringify(gameData));
+  await locationHandler("content");
+  const game = new Game(0, gameData);
+  game.initGame();
 }
 
 //TODO getUserID
@@ -124,12 +127,13 @@ async function enterGame(gameID) {
     contentType: "application/json",
     headers: { Accept: "application/json" },
     data: JSON.stringify(gameData),
-    success: function (res) {
+    success: async function (res) {
       showSuccessToast(langData, langData.gameEntered);
       fetchGames(1);
-      const enterLi = document.getElementById("enterLi");
-      window.history.pushState({}, "", enterLi.getAttribute("href"));
-      locationHandler("content");
+      window.history.pushState({}, "", "/pong");
+      await locationHandler("content");
+      const game = new Game(gameID, null);
+      game.initGame();
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);

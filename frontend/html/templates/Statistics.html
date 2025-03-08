@@ -42,12 +42,72 @@
       </div>
     </div>
     <div class="row pt-3" style="height: calc(100% - 5rem)">
-      <div class="col-sm-12 shadow rounded-4 h-100" style="background-color: var(--layoutBg);">
+      <div class="col-12 shadow rounded-4 h-100" style="background-color: var(--layoutBg);">
         <div class="container-fluid h-100 d-flex flex-column">
           <div class="row p-2 overflow-y-auto" style="height: 100%; padding-top: 0 !important">
-            <div class="col-sm-12 mt-4 px-0 d-flex justify-content-center align-items-center">
+            <div class="col-6 mt-4 px-0 d-flex justify-content-center align-items-center">
               <canvas id="myChart" style="max-width: 30rem; max-height: 30rem;"></canvas>
               <canvas id="myChart2" class="d-none" style="max-width: 30rem; max-height: 30rem;"></canvas>
+            </div>
+            <div class="col-3 d-flex align-items-center justify-content-center">
+              <div class="w-100 h-50 d-flex justify-content-center align-items-center">
+                <div class="row h-75 w-100">
+                  <div class="col-12 h-50 d-flex justify-content-center align-items-center">
+                    <img src="/static/img/icons/point.png" style="width: 6rem; height: 6rem;" class="mt-4"/>
+                  </div>
+                  <div class="col-12 h-50">
+                    <div class="d-flex justify-content-center">
+                      <p class="h2"><strong>Total Points</strong>
+                        <p />
+                    </div>
+                    <div class="d-flex justify-content-center">
+                      <p class="h2" id="totalPoints"><p />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="row h-100">
+                <div class="col-12 d-flex align-items-center justify-content-center">
+                  <div class="w-100 h-75 d-flex justify-content-center align-items-center">
+                    <div class="row h-75 w-100">
+                      <div class="col-12 h-50 d-flex justify-content-center align-items-center">
+                        <img src="/static/img/icons/hourglass.png" style="width: 6rem; height: 6rem;" />
+                      </div>
+                      <div class="col-12 h-50">
+                        <div class="d-flex justify-content-center">
+                          <p class="h2"><strong>Total Time</strong>
+                            <p />
+                        </div>
+                        <div class="d-flex justify-content-center">
+                          <p class="h2" id="totalTime">
+                            <p />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 d-flex align-items-center justify-content-center">
+                  <div class="w-100 h-75 d-flex justify-content-center align-items-center">
+                    <div class="row h-75 w-100">
+                      <div class="col-12 h-50 d-flex justify-content-center align-items-center">
+                        <img src="/static/img/icons/table-tennis.png" style="width: 6rem; height: 6rem;" />
+                      </div>
+                      <div class="col-12 h-50">
+                        <div class="d-flex justify-content-center">
+                          <p class="h2"><strong>Balls Hitted</strong>
+                            <p />
+                        </div>
+                        <div class="d-flex justify-content-center">
+                          <p class="h2" id="totalBallsHit">
+                            <p />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

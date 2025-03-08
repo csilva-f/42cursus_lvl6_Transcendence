@@ -2,32 +2,11 @@
   <div class="container-fluid h-100">
     <!-- First Row -->
     <div class="row h-50 gap-3">
-      <!-- Welcome and Games -->
+      <!-- Welcome -->
       <div class="col-lg-8 col-md-7 col-sm-12 shadow rounded-4" style="background-color: var(--layoutBg); height: 100%;">
-        <div id="carouselExampleIndicators" class="carousel slide py-2" style="height: 100%;">
-          <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-          </div>
-          <div class="carousel-inner" style="height: 100%;">
-            <div class="carousel-item active" style="height: 100%;">
-              <img src="/static/img/banner/welcomeBanner2.svg" class="d-block w-100 h-100" style="overflow: hidden;" alt="Welcome Banner">
-            </div>
-            <div class="carousel-item" style="height: 100%;">
-              
-            </div>
-          </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
+        <img src="/static/img/banner/welcomeBanner2.svg" class="d-block w-100 h-100 py-2" style="overflow: hidden;" alt="Welcome Banner">
       </div>
-      <!-- End Welcome and Games -->
+      <!-- End Welcome -->
       <!-- Game History -->
       <div class="col shadow rounded-4 px-0 d-flex flex-column h-100" style="background-color: var(--layoutBg);">
         <p class="h1 px-4 pt-2" style="font-weight: bold;" data-i18n="matchHistory"></p>
@@ -41,7 +20,63 @@
     <div class="row h-50 gap-3 pt-3">
       <!-- Stats and Top Players -->
       <div class="col-lg-8 col-md-7 col-sm-12 shadow rounded-4" style="background-color: var(--layoutBg);">
-        <p class="h1 px-4 pt-2" style="font-weight: bold;">Stats and Top Players</p>
+        <p class="h1 px-4 pt-2" style="font-weight: bold;" data-i18n="topPlayers"></p>
+        <div class="row h-75 px-4">
+          <div class="col-4 d-flex justify-content-center align-items-center">
+            <div class="rounded rounded-4 h-75 w-100" style="background-color: var(--cardBg);">
+              <div class="row h-100">
+                <div class="col-12 h-50 w-100">
+                  <div class="d-flex justify-content-center align-items-center align-content-center h-100">
+                    <img src="/static/img/pfp1.jpeg" style="object-fit: cover; max-width: 6rem;"
+                    class="img-fluid rounded-circle shadow mt-2"/>
+                  </div>
+                </div>
+                <div class="col-12 h-50 w-100">
+                  <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                      <p class="h3"><strong>souzitaaaa</strong></p>
+                      <p class="h4">Lvl 3.1</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-4 d-flex justify-content-center align-items-center">
+            <div class="rounded rounded-4 h-75 w-100" style="background-color: var(--cardBg);">
+              <div class="row h-100">
+                <div class="col-12 h-50 w-100">
+                  <div class="d-flex justify-content-center align-items-center align-content-center h-100">
+                    <img src="/static/img/pfp2.jpg" style="object-fit: cover; max-width: 6rem;"
+                    class="img-fluid rounded-circle shadow mt-2"/>
+                  </div>
+                </div>
+                <div class="col-12 h-50 w-100">
+                  <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                      <p class="h3"><strong>Miku</strong></p>
+                      <p class="h4">Lvl 2.5</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-4 d-flex justify-content-center align-items-center">
+            <div class="rounded rounded-4 h-75 w-100" style="background-color: var(--cardBg);">
+              <div class="row h-100">
+                <div class="col-12 h-50 w-100">
+                  <div class="d-flex justify-content-center align-items-center align-content-center h-100">
+                    <img src="/static/img/marin.jpg" style="object-fit: cover; max-width: 6rem;"
+                    class="img-fluid rounded-circle shadow mt-2"/>
+                  </div>
+                </div>
+                <div class="col-12 h-50 w-100">
+                  <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                      <p class="h3"><strong>Marin</strong></p>
+                      <p class="h4">Lvl 2.2</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <!-- End Stats and Top Players -->
       <!-- Friends List -->
