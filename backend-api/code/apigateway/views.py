@@ -6,7 +6,6 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.conf import settings
 from urllib.parse import urlencode
-
 from django.shortcuts import render
 
 def testWebsocket(request):
@@ -126,7 +125,7 @@ class PostAddUserExtension(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class GetGenders(APIView):
-    permission_classes = [AllowAny]  # Adjust permissions as needed
+    permission_classes = [AllowAny]
 
     def get(self, request):
         backend_url = 'http://backend:8002/backend/genders/'
@@ -148,7 +147,7 @@ class HelloWorldViewSet(viewsets.ViewSet):
         return Response({"message": "Hello, World!"})
 
 class GetStatus(APIView):
-    permission_classes = [AllowAny]  # Adjust permissions as needed
+    permission_classes = [AllowAny]
 
     def get(self, request):
         backend_url = 'http://backend:8002/backend/status/'
@@ -165,7 +164,7 @@ class GetStatus(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_400_BAD_REQUEST)
 
 class GetUserExtensions(APIView):
-    permission_classes = [AllowAny]  # Adjust permissions as needed
+    permission_classes = [AllowAny]
 
     def get(self, request):
         backend_url = settings.BACKEND_UEXT_URL
@@ -231,6 +230,7 @@ class PostJoinTournament(APIView):
             return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PostUpdateUserExtension(APIView):
@@ -251,7 +251,7 @@ class PostUpdateUserExtension(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class GetUserStatistics(APIView):
-    permission_classes = [AllowAny]  # Adjust permissions as needed
+    permission_classes = [AllowAny]
 
     def get(self, request):
         backend_url = settings.BACKEND_USTAT_URL
@@ -295,7 +295,7 @@ class GetUserInvitations(APIView):
         userid = request.user.user_id
         query_params["uid"] = userid
         query_string = urlencode(query_params, doseq=True)
-        url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
+        url_with_params = f"{backend_url}?{query_string}" if query_string else backend_url
         try:
             backend_response = requests.get(url_with_params)
             backend_response.raise_for_status()
@@ -317,7 +317,7 @@ class GetUserNbrInvitations(APIView):
         userid = request.user.user_id
         query_params["uid"] = userid
         query_string = urlencode(query_params, doseq=True)
-        url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
+        url_with_params = f"{backend_url}?{query_string}" if query_string else backend_url
         try:
             backend_response = requests.get(url_with_params)
             backend_response.raise_for_status()
@@ -339,10 +339,12 @@ class GetUserGames(APIView):
         userid = request.user.user_id
         query_params["uid"] = userid
         query_string = urlencode(query_params, doseq=True)
-        url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
+        url_with_params = f"{backend_url}?{query_string}" if query_string else backend_url
         try:
             backend_response = requests.get(url_with_params)
+            print("aqui7")
             backend_response.raise_for_status()
+            print("aqui8")
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
