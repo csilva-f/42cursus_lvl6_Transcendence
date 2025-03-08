@@ -124,13 +124,15 @@ async function postRemoteGame() {
     islocal: false,
   };
   console.log("gameData: ", gameData);
+  const accessToken = await JWT.getAccess();
+  console.log("accessToken", accessToken)
   $.ajax({
     type: "POST",
     url: APIurl,
     Accept: "application/json",
     contentType: "application/json",
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     data: JSON.stringify(gameData),
     success: function (res) {
@@ -217,6 +219,8 @@ async function enterGame(gameID) {
   };
 
   console.log("gameData: ", gameData);
+  const accessToken = await JWT.getAccess();
+  console.log("accessToken", accessToken)
 
   $.ajax({
     type: "POST",
@@ -224,7 +228,7 @@ async function enterGame(gameID) {
     Accept: "application/json",
     contentType: "application/json",
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     data: JSON.stringify(gameData),
     success: async function (res) {

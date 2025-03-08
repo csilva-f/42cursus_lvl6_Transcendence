@@ -11,6 +11,7 @@ class CustomJWTAuthentication(JWTAuthentication):
             raw_token = request.headers['Authorization']
         except:
             raw_token = ''
+        print(raw_token)
         if not raw_token:
             return None
         response = requests.get('http://auth-api:8000/authapi/validate-token/', headers={
