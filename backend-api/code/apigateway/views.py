@@ -57,6 +57,7 @@ class GetTournaments(APIView):
 
 class PostAddGame(APIView):
     permission_classes = [IsAuthenticated]
+
     def post(self, request):
         backend_url = 'http://backend:8002/backend/create_game/'
         game_data = request.data.get('game')
@@ -74,10 +75,12 @@ class PostAddGame(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PostAddTournament(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         backend_url = settings.BACKEND_CREATE_TOURNAMENT_URL
         try:
+            request.data["uid"] = request.user.user_id
             backend_response = requests.post(backend_url, json=request.data)
             backend_response.raise_for_status()
             data = backend_response.json()
@@ -91,6 +94,7 @@ class PostAddTournament(APIView):
 
 class PostUpdateGame(APIView):
     permission_classes = [IsAuthenticated]
+
     def post(self, request):
         backend_url = 'http://backend:8002/backend/update_game/'
         game_data = request.data.get('game')
@@ -108,11 +112,13 @@ class PostUpdateGame(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PostAddUserExtension(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         backend_url = 'http://backend:8002/backend/create_userextension/'
         user_data = request.data.get('user')
         try:
+            request.data["uid"] = request.user.user_id
             backend_response = requests.post(backend_url, json=request.data)
             backend_response.raise_for_status()
             user_data = backend_response.json()
@@ -164,12 +170,15 @@ class GetStatus(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_400_BAD_REQUEST)
 
 class GetUserExtensions(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         backend_url = settings.BACKEND_UEXT_URL
-        query_params = request.GET.urlencode()
-        url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
+        query_params = request.GET.copy()
+        userid = request.user.user_id
+        query_params["uid"] = userid
+        query_string = urlencode(query_params, doseq=True)
+        url_with_params = f"{backend_url}?{query_string}" if query_string else backend_url
         try:
             backend_response = requests.get(url_with_params)
             backend_response.raise_for_status()
@@ -183,11 +192,13 @@ class GetUserExtensions(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PostUpdateTournament(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         backend_url = 'http://backend:8002/backend/update_tournament/'
         tourn_data = request.data.get('tournament')
         try:
+            request.data["uid"] = request.user.user_id
             backend_response = requests.post(backend_url, json=request.data)
             backend_response.raise_for_status()
             tourn_data = backend_response.json()
@@ -217,11 +228,13 @@ class GetPhases(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PostJoinTournament(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         backend_url = 'http://backend:8002/backend/join_tournament/'
         tourn_data = request.data.get('tournament')
         try:
+            request.data["uid"] = request.user.user_id
             backend_response = requests.post(backend_url, json=request.data)
             backend_response.raise_for_status()
             tourn_data = backend_response.json()
@@ -234,14 +247,16 @@ class PostJoinTournament(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PostUpdateUserExtension(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         backend_url = 'http://backend:8002/backend/update_userextension/'
         uext_data = request.data.get('userextension')
         try:
+            request.data["uid"] = request.user.user_id
             backend_response = requests.post(backend_url, json=request.data)
             backend_response.raise_for_status()
-            uext_data = backend_response.json()
+            game_data = backend_response.json()
             return Response(uext_data, status=backend_response.status_code)
         except requests.exceptions.HTTPError as http_err:
             return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -251,12 +266,15 @@ class PostUpdateUserExtension(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class GetUserStatistics(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        backend_url = settings.BACKEND_USTAT_URL
-        query_params = request.GET.urlencode()
-        url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
+        backend_url = settings.BACKEND_UEXT_URL
+        query_params = request.GET.copy()
+        userid = request.user.user_id
+        query_params["uid"] = userid
+        query_string = urlencode(query_params, doseq=True)
+        url_with_params = f"{backend_url}?{query_string}" if query_string else backend_url
         try:
             backend_response = requests.get(url_with_params)
             backend_response.raise_for_status()
@@ -270,11 +288,13 @@ class GetUserStatistics(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PostAcceptGameInvit(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         backend_url = 'http://backend:8002/backend/accept_gameinvitation/'
         game_data = request.data.get('game')
         try:
+            request.data["uid"] = request.user.user_id
             backend_response = requests.post(backend_url, json=request.data)
             backend_response.raise_for_status()
             game_data = backend_response.json()
@@ -342,9 +362,7 @@ class GetUserGames(APIView):
         url_with_params = f"{backend_url}?{query_string}" if query_string else backend_url
         try:
             backend_response = requests.get(url_with_params)
-            print("aqui7")
             backend_response.raise_for_status()
-            print("aqui8")
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
@@ -372,12 +390,15 @@ class GetFriendshipStatus(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class GetFriendships(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         backend_url = settings.BACKEND_FRIENDS_URL
-        query_params = request.GET.urlencode()
-        url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
+        query_params = request.GET.copy()
+        userid = request.user.user_id
+        query_params["uid"] = userid
+        query_string = urlencode(query_params, doseq=True)
+        url_with_params = f"{backend_url}?{query_string}" if query_string else backend_url
         try:
             backend_response = requests.get(url_with_params)
             backend_response.raise_for_status()
@@ -391,11 +412,13 @@ class GetFriendships(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PostSendFriendRequest(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         backend_url = 'http://backend:8002/backend/send_friendrequest/'
         friendship_data = request.data.get('friendship')
         try:
+            request.data["uid"] = request.user.user_id
             backend_response = requests.post(backend_url, json=request.data)
             backend_response.raise_for_status()
             friendship_data = backend_response.json()
@@ -408,11 +431,13 @@ class PostSendFriendRequest(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PostRespondFriendRequest(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+    
     def post(self, request):
         backend_url = 'http://backend:8002/backend/respond_friendrequest/'
         friendship_data = request.data.get('friendship')
         try:
+            request.data["uid"] = request.user.user_id
             backend_response = requests.post(backend_url, json=request.data)
             backend_response.raise_for_status()
             friendship_data = backend_response.json()
@@ -425,12 +450,15 @@ class PostRespondFriendRequest(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class GetPendingRequests(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         backend_url = settings.BACKEND_REQUESTS_URL
-        query_params = request.GET.urlencode()
-        url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
+        query_params = request.GET.copy()
+        userid = request.user.user_id
+        query_params["uid"] = userid
+        query_string = urlencode(query_params, doseq=True)
+        url_with_params = f"{backend_url}?{query_string}" if query_string else backend_url
         try:
             backend_response = requests.get(url_with_params)
             backend_response.raise_for_status()
@@ -444,12 +472,15 @@ class GetPendingRequests(APIView):
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class GetNonFriendsList(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         backend_url = settings.BACKEND_NONFRIENDSLIST_URL
-        query_params = request.GET.urlencode()
-        url_with_params = f"{backend_url}?{query_params}" if query_params else backend_url
+        query_params = request.GET.copy()
+        userid = request.user.user_id
+        query_params["uid"] = userid
+        query_string = urlencode(query_params, doseq=True)
+        url_with_params = f"{backend_url}?{query_string}" if query_string else backend_url
         try:
             backend_response = requests.get(url_with_params)
             backend_response.raise_for_status()
