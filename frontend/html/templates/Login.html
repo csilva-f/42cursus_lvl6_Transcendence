@@ -29,7 +29,7 @@
 								<div class="input-group">
 									<span class="input-group-text" style="border: none; background: white;">
 										<i class="fas fa-envelope" style="color: var(--primary);"></i></span>
-									<input type="email" class="form-control" id="loginEmail" placeholder="Email" style="border: none;">
+									<input type="email" class="form-control" id="loginEmail" placeholder="Email" required style="border: none;">
 								</div>
 							</div>
 
@@ -49,7 +49,10 @@
 
 							<div class="mb-3">
 								<a href="forgotPassword" class="d-block text-end" style="color: var(--primary); text-decoration: none;">Forgot password?</a>
-							</div>						
+							</div>	
+
+							<button type="submit" class="btn" style="background-color: var(--primary); color: white; width: 100%; margin-bottom: 10px;">Login</button>
+
 							<div class="mb-3">
 								<button type="button" onclick="oauthLogin();" class="btn btn-light w-100 d-flex align-items-center justify-content-center"
 								id="loginWith42Btn" style="color: #000; border: 1px solid #ccc;">
@@ -57,8 +60,6 @@
 									<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/42_Logo.svg/1024px-42_Logo.svg.png" alt="42 logo" style="width: 20px; height: 20px;">
 								</button>														
 							</div>
-
-							<button type="submit" class="btn" style="background-color: var(--primary); color: white; width: 100%;">Login</button>
 
 						</form>
 						<p id="login-message" class="invalid-feedback">
