@@ -16,6 +16,7 @@ async function fetchMatchHistory() {
             $.ajax({
                 type: "GET",
                 url: APIurl,
+                Accept: "application/json",
                 contentType: "application/json",
                 headers: {
                     Authorization: `Bearer ${accessToken}`,

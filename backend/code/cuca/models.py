@@ -59,9 +59,9 @@ class tTournaments(models.Model):
         return f"Tournament {self.id} starting on {self.beginDate} until {self.endDate}"
 
 class tGames(models.Model):
-
     game = models.AutoField(primary_key=True)
     creationTS = models.DateTimeField(auto_now_add=True)
+    startTS = models.DateTimeField(null=True, blank=True)
     endTS = models.DateTimeField(null=True, blank=True)
     user1 = models.IntegerField(null=True, blank=True)
     user2 = models.IntegerField(null=True, blank=True)
