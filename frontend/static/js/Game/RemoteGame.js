@@ -1,14 +1,14 @@
-const KEY_ARROWUP = 38;
-const KEY_ARROWDOWN = 40;
-const KEY_W = 87;
-const KEY_S = 83;
-const keyPressed = [];
-const maxSpeed = 10;
-const maxScore = 5;
-const ballVelocity = 5;
-const ballRadius = 15;
+// const KEY_ARROWUP = 38;
+// const KEY_ARROWDOWN = 40;
+// const KEY_W = 87;
+// const KEY_S = 83;
+// const keyPressed = [];
+// const maxSpeed = 10;
+// const maxScore = 5;
+// const ballVelocity = 5;
+// const ballRadius = 15;
 var stopGame = false;
-const wsConnections = {};
+//const wsConnections = {};
 
 window.addEventListener('keydown', function (e) {
     keyPressed[e.keyCode] = true;
@@ -17,8 +17,8 @@ window.addEventListener('keyup', function (e) {
     keyPressed[e.keyCode] = false;
 })
 
-class Game  {
-    constructor(gameID, gameData) {
+class RemoteGame  {
+    constructor(gameID, ws, isHost, gameData) {
         this.gameID = gameID
         this.gameData = gameData
         this.canvas = document.getElementById("pongGameCanvas")
@@ -28,9 +28,11 @@ class Game  {
         this.ballRadius = 15;
         this.maxScore = 5;
         this.stopGame = false;
+        this.isHost = isHost;
+        this.ws = ws;
     }
-    initGame() {
-        this.resize();
+    initRemoteGame() {
+        console.log("Init remote game");
         if (this.gameData == null) {
             this.objects = [
                 new Ball(this.canvas.width / 2, this.canvas.height / 2, this.ballVelocity, this.ballVelocity, this.ballRadius),
@@ -55,11 +57,6 @@ class Game  {
         this.gameLoop();
     }
     gameLoop() {
-        window.onresize = function() {
-            this.resize();
-            this.objects[1].setPaddleX(30);
-            this.objects[2].setPaddleX(this.canvas.width - 50);
-        }
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (!this.stopGame) {
             window.requestAnimationFrame(() => this.gameLoop());
@@ -118,11 +115,5 @@ class Game  {
         else
             this.objects[0].ballVelocityX = -ballVelocity;
         this.objects[0].ballVelocityY *= -1;
-    }
-    resize() {
-        const marginWidth = window.innerWidth * 0.3;
-        const marginHeight = window.innerHeight * 0.4;
-        this.canvas.width = window.innerWidth - marginWidth;
-        this.canvas.height = window.innerHeight - marginHeight;
     }
 }

@@ -161,14 +161,18 @@ async function postRemoteGame() {
 
       ws.onmessage = function (e) {
         const data = JSON.parse(e.data);
-        //console.log(data.message);
-        console.log("Message received:", e.data);
+        console.log(data.message);
+        //console.log("Message received:", e.data);
         if (data.message === "A player joined the game!") {
           playerCount++;
+          window.history.pushState({}, "", `/pong`);
+          locationHandler("content");
+          const game = new RemoteGame(gameId, ws, true, null);
           console.log(`Player count: ${playerCount}`);
           if (playerCount === 2) {
             console.log("Both players connected. Opening the game page...");
-            
+            //5 4 3 2 1
+            game.initRemoteGame();
           //   gameInterval = setInterval(() => {
           //     if (typeof getCurrentGameState === "function") {  // Verifica se a função existe
           //         const gameState = getCurrentGameState();
@@ -178,9 +182,6 @@ async function postRemoteGame() {
           //         }));
           //     }
           // }, 50);
-
-            window.history.pushState({}, "", `/pong`);
-            locationHandler("content");
           }
         }
       };
@@ -205,6 +206,10 @@ async function postRemoteGame() {
 
 async function sendMessage(){
   ws.send("we did it!");
+}
+
+function openGameModal() {
+
 }
 
 //TODO getUserID
@@ -264,6 +269,12 @@ async function enterGame(gameID) {
       socket.onmessage = function (event) {
         const data = JSON.parse(event.data);
         console.log("Message received:", data.message);
+        if (data.message === "A player joined the game!"){
+          window.history.pushState({}, "", "/pong");
+          locationHandler("content");
+          const game = new RemoteGame(gameID, ws, false, null);
+          game.initRemoteGame();
+        }
       };
 
       socket.onerror = function (error) {
@@ -274,10 +285,6 @@ async function enterGame(gameID) {
         console.log("WebSocket connection closed:", event);
       };
 
-      window.history.pushState({}, "", "/pong");
-      await locationHandler("content");
-      const game = new Game(gameID, null);
-      game.initGame();
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
