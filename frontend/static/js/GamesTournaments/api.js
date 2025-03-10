@@ -158,7 +158,6 @@ async function postRemoteGame() {
         console.log("WebSocket connection established successfully.");
         console.log(ws);
       };
-
       ws.onmessage = function (e) {
         const data = JSON.parse(e.data);
         console.log(data.message);
@@ -245,9 +244,9 @@ async function enterGame(gameID) {
       const socketUrl = `wss://${window.location.host}/channels/${gameID}/`;
       console.log("Connecting to WebSocket:", socketUrl);
 
-      const socket = new WebSocket(socketUrl);
+      const ws = new WebSocket(socketUrl);
 
-      socket.onopen = function () {
+      ws.onopen = function () {
         console.log("WebSocket connection established successfully.");
         // const paddle2 = objects[2];
 
@@ -266,22 +265,22 @@ async function enterGame(gameID) {
         // });
       };
 
-      socket.onmessage = function (event) {
+      ws.onmessage = async function (event) {
         const data = JSON.parse(event.data);
         console.log("Message received:", data.message);
         if (data.message === "A player joined the game!"){
-          window.history.pushState({}, "", "/pong");
-          locationHandler("content");
+          window.history.pushState({}, "", `/pong`);
+          await locationHandler("content");
           const game = new RemoteGame(gameID, ws, false, null);
           game.initRemoteGame();
         }
       };
 
-      socket.onerror = function (error) {
+      ws.onerror = function (error) {
         console.error("WebSocket error:", error);
       };
 
-      socket.onclose = function (event) {
+      ws.onclose = function (event) {
         console.log("WebSocket connection closed:", event);
       };
 
