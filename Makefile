@@ -50,6 +50,7 @@ down:
 	@docker exec -it backend-db chmod 777 /var/lib/postgresql/data -R
 	@docker exec -it email-db chmod 777 /var/lib/postgresql/data -R
 	@docker exec -it vault-db chmod 777 /var/lib/postgresql/data -R
+	@docker exec -it vault chmod 777 /vault -R
 	@docker compose down
 
 migrate:

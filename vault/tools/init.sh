@@ -2,7 +2,7 @@
 POSTGRES_USER=$(cat "$POSTGRES_USER_FILE")
 POSTGRES_PASSWORD=$(cat "$POSTGRES_PASSWORD_FILE")
 
-chmod 777 /vault -r
+chmod 777 /vault -R
 cat <<EOF > /vault/vault.hcl
 storage "postgresql" {
     connection_url = "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_DB}:5432/${POSTGRES_DB}?sslmode=disable"

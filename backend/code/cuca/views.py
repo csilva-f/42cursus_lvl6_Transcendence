@@ -672,7 +672,7 @@ def post_create_userextension(request):
                         "avatar": userext.avatar,
                         "bio": userext.bio
                     },
-                    "isOpenPopup": if userext.nick not None False else True
+                    "isOpenPopup": False if userext.nick else True
                 }, status=201)
             
             userext = tUserExtension.objects.create(

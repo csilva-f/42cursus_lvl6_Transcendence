@@ -24,12 +24,8 @@ async function sendLogin() {
 					console.log("Access: ", JWT.getAccess());
 					await checkUserExtension();
 				}
-				//window.location.href = "/";
 				window.history.pushState({}, "", "/");
 				locationHandler("content");
-				const loginButton = document.getElementById('loginButton');
-				loginButton.classList.remove("fa-right-from-bracket");
-				loginButton.classList.add("fa-right-to-bracket");
 			}
 			$("#login-message").text("Login successful!");
 		},
@@ -43,18 +39,22 @@ async function sendLogin() {
 async function checkUserExtension() {
 	const APIurl = `/api/create-userextension/`
 	const accessToken = await JWT.getAccess();
-	$.ajax({
-		type: "POST",
-		url: APIurl,
-        Accept: "application/json",
-        contentType: "application/json",
-		headers: {
+	return new Promise((resolve, reject) => {
+		$.ajax({
+		  type: "POST",
+		  url: APIurl,
+		  contentType: "application/json",
+		  headers: {
 			Authorization: `Bearer ${accessToken}`,
 		  },
-		success: function (data) {
-			console.log("Data:" , data)
-		}
-	})
+		  success: function (res) {
+			resolve(res.user);
+		  },
+		  error: function (xhr, status, error) {
+			reject(error);
+		  },
+		});
+	  });
 }
 
 async function forgotPwd() {
