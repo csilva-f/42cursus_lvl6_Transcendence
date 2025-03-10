@@ -657,7 +657,7 @@ def post_create_userextension(request):
         try:
             data = json.loads(request.body)
     
-            user_id = data.get('id')
+            user_id = data.get('uid')
             if not user_id:
                 return JsonResponse({"error": "Missing user ID"}, status=400)
             if tUserExtension.objects.filter(user=user_id).exists():
@@ -672,7 +672,7 @@ def post_create_userextension(request):
                         "avatar": userext.avatar,
                         "bio": userext.bio
                     },
-                    "isOpenPopup": False
+                    "isOpenPopup": if userext.nick not None False else True
                 }, status=201)
             
             userext = tUserExtension.objects.create(
