@@ -672,7 +672,7 @@ def post_create_userextension(request):
                         "avatar": userext.avatar,
                         "bio": userext.bio
                     },
-                    "isOpenPopup": if userext.nick not None False else True
+                    "isOpenPopup": False if userext.nick else True
                 }, status=201)
             
             userext = tUserExtension.objects.create(
@@ -1293,3 +1293,24 @@ def get_nonfriendslist(request):
         return JsonResponse({"error": str(e)}, status=400)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+
+def get_topusers(request):
+    try:
+        uextensions = tUserExtension.objects.all().order_by('-ulevel')[:3]
+
+    except ValidationError as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+    userext_data = [
+        {
+            "id": userext.user,
+            "nickname": userext.nick,
+            'level': userext.ulevel,
+            "birthdate": str(userext.birthdate) if userext.birthdate else None,
+            "gender": userext.gender.gender if userext.gender else None,
+            "avatar": userext.avatar,
+            "bio": userext.bio
+        }
+        for userext in uextensions
+    ]
+    return JsonResponse({'users': userext_data}, safe=False, status=200)
