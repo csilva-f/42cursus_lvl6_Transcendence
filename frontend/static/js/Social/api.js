@@ -68,3 +68,28 @@ async function invitePlayer(invitedUserID) {
 		}
 	});
 }
+
+//quando dou reload num game finished ele fica a aparecer a cena de dar join, tratar disso
+async function friendshipPlayer(requestedFriend) {
+	const userLang = localStorage.getItem("language") || "en";
+	const langData = await getLanguageData(userLang);
+	const APIurl = `/api/send-friendrequest/`;
+	let body = {
+		user1ID: 1,
+		user2ID: requestedFriend
+	};
+	console.log("body: ", body);
+	$.ajax({
+		type: "POST",
+		url: APIurl,
+		contentType: "application/json",
+		headers: { Accept: "application/json" },
+		data: JSON.stringify(body),
+		success: function (res) {
+			//showSuccessToast(langData, langData.friendshipInvited);
+		},
+		error: function (xhr, status, error) {
+			showErrorToast(APIurl, error, langData);
+		}
+	});
+}

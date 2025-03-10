@@ -3,7 +3,6 @@ async function fetchMatchHistory() {
     const userLang = localStorage.getItem("language") || "en";
     const langData = await getLanguageData(userLang);
     const accessToken = await JWT.getAccess();
-    console.log("accessToken", accessToken)
     fetch("/templates/Components/CardHistory.html")
         .then((response) => {
             if (!response.ok) {
@@ -12,6 +11,7 @@ async function fetchMatchHistory() {
             return response.text();
         })
         .then((data) => {
+            const userID = 1;
             const APIurl = `/api/get-usergames/?statusID=3`
             $.ajax({
                 type: "GET",
@@ -20,7 +20,7 @@ async function fetchMatchHistory() {
                 contentType: "application/json",
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
-                },
+                  },
                 success: function (res) {
                     const divElement = document.getElementById("historyContent");
                     divElement.innerHTML = "";
