@@ -53,13 +53,13 @@ function getForms() {
         } else {
           console.log("Form is valid: ", form);
           if (form.id == "localFormID") postLocalGame();
-                else if (form.id == "remoteFormID")
-                    postRemoteGame();
+        	else if (form.id == "remoteFormID") postRemoteGame();
           else if (form.id == "localTournamentFormID") initLocalTournament();
           else if (form.id == "tournamentFormID") postTournament();
           else if (form.id == "login-form") sendLogin();
           else if (form.id == "signup-form") sendSignup(form);
           else if (form.id == "forgotPwd-form") forgotPwd();
+		  else if (form.id == "nicknameModal-form") finishProfile();
           // else if (form.id == "resendCode-form")
           // 	sendCode();
           // else if (form.id == "resetPwd-form")

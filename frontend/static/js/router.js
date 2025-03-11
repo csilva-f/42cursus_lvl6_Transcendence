@@ -293,6 +293,7 @@ async function changeActive(location) {
       headerElement.setAttribute("data-i18n", "welcome");
       updateContent(langData);
       document.getElementById("subMsg").style.display = "block";
+	  getForms();
       if (userData.nickname == null) {
         let nickModal = new bootstrap.Modal(document.getElementById('nickModal'));
         nickModal.show();

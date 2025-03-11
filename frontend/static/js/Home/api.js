@@ -43,3 +43,37 @@ async function fetchMatchHistory() {
             console.error("There was a problem with the fetch operation:", error);
         });
 }
+
+async function finishProfile() {
+	const APIurl = `/api/update-userextension/`;
+	const accessToken = await JWT.getAccess();
+	let gender = document.getElementById("gender").value
+	let genderID = 0;
+	if (gender == "male")
+		genderID = 1;
+	else if (gender == "female")
+		genderID = 2;
+	else
+		genderID = 3;
+	let userData = {
+		nickname: document.getElementById("newNickname").value,
+		birthdate: document.getElementById("newBirthday").value,
+		genderid: genderID,
+	};
+	$.ajax({
+		type: "POST",
+		url: APIurl,
+		Accept: "application/json",
+		contentType: "application/json",
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+		data: JSON.stringify(userData),
+		success: function (res) {
+		  showSuccessToast(langData, langData.gameEntered);
+		},
+		error: function (xhr, status, error) {
+		  showErrorToast(APIurl, error, langData);
+		},
+	  });
+}
