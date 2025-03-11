@@ -1,4 +1,3 @@
-
 async function sendLogin() {
 	// Login function
 	const email = $("#loginEmail").val();
@@ -19,17 +18,14 @@ async function sendLogin() {
 				window.location.href = "/mfa";
 			} else {
 				if (jwtToken) {
-					//localStorage.setItem("jwt", jwtToken);
+					localStorage.setItem("jwt", jwtToken);
 					console.log(data);
 					JWT.setToken(data);
 					console.log("Access: ", JWT.getAccess());
+					await checkUserExtension();
 				}
-				//window.location.href = "/";
 				window.history.pushState({}, "", "/");
 				locationHandler("content");
-				const loginButton = document.getElementById('loginButton');
-				loginButton.classList.remove("fa-right-from-bracket");
-				loginButton.classList.add("fa-right-to-bracket");
 			}
 			$("#login-message").text("Login successful!");
 		},
@@ -38,6 +34,27 @@ async function sendLogin() {
 			$("#login-message").text(data.error || "Login failed.");
 		},
 	});
+}
+
+async function checkUserExtension() {
+	const APIurl = `/api/create-userextension/`
+	const accessToken = await JWT.getAccess();
+	return new Promise((resolve, reject) => {
+		$.ajax({
+		  type: "POST",
+		  url: APIurl,
+		  contentType: "application/json",
+		  headers: {
+			Authorization: `Bearer ${accessToken}`,
+		  },
+		  success: function (res) {
+			resolve(res.user);
+		  },
+		  error: function (xhr, status, error) {
+			reject(error);
+		  },
+		});
+	  });
 }
 
 async function forgotPwd() {

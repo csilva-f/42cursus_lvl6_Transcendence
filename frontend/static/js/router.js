@@ -289,7 +289,7 @@ async function changeActive(location) {
       document.getElementById("subMsg").style.display = "none";
       break;
     case "/":
-      console.log(JWT.getAccess());
+      console.log("Access: ", JWT.getAccess());
       iconsElements.forEach((element) => {
         element.id == "homepageIcon"
           ? activateSBIcon(element)
@@ -298,6 +298,11 @@ async function changeActive(location) {
       headerElement.setAttribute("data-i18n", "welcome");
       updateContent(langData);
       document.getElementById("subMsg").style.display = "block";
+	  getForms();
+      if (userData.nickname == null) {
+        let nickModal = new bootstrap.Modal(document.getElementById('nickModal'));
+        nickModal.show();
+      }      
       fetchMatchHistory();
       break;
     case "/profile":
