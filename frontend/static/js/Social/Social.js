@@ -25,9 +25,9 @@ function insertUserInfo(newCard, user) {
     userLvl.textContent = user.userID;
     userGamesWon.textContent = user.victories;
     userTournamentsWon.textContent = user.tVictories;
-    inviteLi.setAttribute("data-id", user.id);
-    friendLi.setAttribute("data-id", user.id);
-    profileLi.setAttribute("data-id", user.id);
+    inviteLi.setAttribute("data-id", user.userID);
+    friendLi.setAttribute("data-id", user.userID);
+    profileLi.setAttribute("data-id", user.userID);
 
 }
 

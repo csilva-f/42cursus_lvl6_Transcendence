@@ -11,6 +11,7 @@ class tokenService {
     };
     deleteToken() {
         this.token = {};
+		deleteCookies();
     };
     async getAccess() {
         let token = this.checkCookie(this.cookieAccessName);
@@ -62,4 +63,9 @@ class tokenService {
     }
     return "";
   }
+  deleteCookies() {
+    const pastDate = new Date(0).toUTCString();
+    document.cookie = this.cookieRefreshName + "=; expires=" + pastDate + "; path=/";
+    document.cookie = this.cookieAccessName + "=; expires=" + pastDate + "; path=/";
+}
 }
