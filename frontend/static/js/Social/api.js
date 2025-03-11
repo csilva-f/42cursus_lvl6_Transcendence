@@ -6,6 +6,7 @@ async function fetchUsers() {
 	setTimeout(() => {
 		reloadIcon.classList.remove("rotate");
 	}, 250);
+	const accessToken = await JWT.getAccess();
 	fetch("/templates/Components/CardUser.html")
 		.then((response) => {
 			if (!response.ok) {
@@ -14,16 +15,18 @@ async function fetchUsers() {
 			return response.text();
 		})
 		.then((data) => {
-			const APIurl = `/api/get-userextensions/`
+			const APIurl = `/api/get-nonfriendslist/`
 			$.ajax({
 				type: "GET",
 				url: APIurl,
 				contentType: "application/json",
-				headers: { Accept: "application/json" },
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
 				success: function (res) {
 					const divElement = document.getElementById("usersContent");
 					divElement.innerHTML = "";
-					res.users.forEach((element) => {
+					res.nonFriendsList.forEach((element) => {
 						const newCard = document.createElement("div");
 						newCard.id = "cardUserContent"
 						newCard.innerHTML = data;

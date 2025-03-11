@@ -25,15 +25,6 @@ function testClick() {
   console.log("miku dayo");
 }
 
-function goToProfile(userID) {
-  if (userID == null) {
-    const profilePicElement = document.getElementById("profilePicElement");
-    window.history.pushState({}, "", profilePicElement.getAttribute("href"));
-    locationHandler("content");
-  } else {
-  }
-}
-
 function getForms() {
   "use strict";
   // Fetch all the forms we want to apply custom Bootstrap validation styles to

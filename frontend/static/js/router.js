@@ -67,7 +67,12 @@ const routes = {
   "/profile": {
     template: "/templates/Profile.html",
     title: "Profile",
-    descripton: "This is the Profile Page",
+    description: "This is the Profile Page",
+  },
+  "/profile/:userID": {
+    template: "/templates/Profile.html",
+    title: "Profile",
+    description: "This is the Profile Page",
   },
   "/callback": {
     template: "/templates/Login.html",
@@ -229,6 +234,7 @@ async function changeActive(location) {
   const allContent = document.getElementById("allContent")
   allContent.classList.add('d-none');
   activateTopBar();
+  console.log("ChangeActive: ")
   switch (location) {
     case "/games":
       iconsElements.forEach((element) => {
@@ -295,6 +301,7 @@ async function changeActive(location) {
       fetchMatchHistory();
       break;
     case "/profile":
+	console.log("Profile: ")
       iconsElements.forEach((element) => {
         disableSBIcon(element);
       });
@@ -303,8 +310,8 @@ async function changeActive(location) {
       document.getElementById("subMsg").style.display = "none";
       const statsEverythingIconProfile = document.getElementById("statsEverythingIcon");
       activateIcon(statsEverythingIconProfile);
-      fetchProfileInfo();
-      fetchStatistics();
+	  	fetchProfileInfo(null);
+		fetchStatistics(null);
         const input = document.querySelector("#phoneNumber");
         window.intlTelInput(input, {
             loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
@@ -322,28 +329,68 @@ async function changeActive(location) {
   }
 }
 
-const locationHandler = async (elementID) => {
-  let location = window.location.pathname;
-  if (location.length == 0) location = "/";
-  console.log("location: ", location);
-  const route = routes[location] || routes["404"];
-  const html = await fetch(route.template).then((response) => response.text());
-  document.title = route.title;
-  if (bigScreenLocation.includes(location)) {
-    document.getElementById("allContent").innerHTML = html;
-    changeToBig(location);
-    document
-      .querySelector('meta[name="description"]')
-      .setAttribute("allContent", route.descripton);
-  } else {
-    document.getElementById(elementID).innerHTML = html;
-    changeToSmall(location);
-    document
-      .querySelector('meta[name="description"]')
-      .setAttribute("content", route.descripton);
-    if (elementID == "content") changeActive(location);
+// Assuming you have a function to get the current user's ID
+function getCurrentUserID() {
+	// Replace this with your actual logic to get the current user's ID
+	return "currentUserID"; // Example: return the actual user ID
   }
-};
+  
+  const locationHandler = async (elementID) => {
+	let location = window.location.pathname;
+	if (location.length == 0) location = "/";
+	console.log("location: ", location);
+  
+	// Check if the location matches the profile route
+	const profileMatch = location.match(/\/profile\/(\w+)/);
+	const currentUserID = getCurrentUserID(); // Get the current user's ID
+  
+	if (profileMatch) {
+	  const userID = profileMatch[1];
+	  
+	  // Check if the userID matches the current user's ID
+	  if (userID === currentUserID) {
+		// Load the current user's profile
+		const route = routes["/profile"]; // Use the route for the current user's profile
+		const html = await fetch(route.template).then((response) => response.text());
+		document.title = route.title;
+		document.getElementById(elementID).innerHTML = html;
+		changeActive(location);
+		loadProfileFromURL(); // Call the function to load profile data
+		return; // Exit the function to prevent further processing
+	  } else {
+		// Load another user's profile
+		const route = routes["/profile/:userID"]; // Use the route for another user's profile
+		const html = await fetch(route.template).then((response) => response.text());
+		document.title = route.title;
+		document.getElementById(elementID).innerHTML = html;
+		changeActive(location);
+		loadProfileFromURL(); // Call the function to load profile data
+		return; // Exit the function to prevent further processing
+	  }
+	}
+  
+	// Handle other routes
+	const route = routes[location] || routes["404"];
+	const html = await fetch(route.template).then((response) => response.text());
+	document.title = route.title;
+  
+	if (bigScreenLocation.includes(location)) {
+	  document.getElementById("allContent").innerHTML = html;
+	  changeToBig(location);
+	  document
+		.querySelector('meta[name="description"]')
+		.setAttribute("content", route.description);
+	} else {
+	  document.getElementById(elementID).innerHTML = html;
+	  changeToSmall(location);
+	  document
+		.querySelector('meta[name="description"]')
+		.setAttribute("content", route.description);
+	  if (elementID == "content") changeActive(location);
+	}
+  };
+  
+
 
 document.addEventListener("click", (e) => {
   const { target } = e;
@@ -353,6 +400,19 @@ document.addEventListener("click", (e) => {
     route(e);
 }});
 
+
+function loadProfileFromURL() {
+	const path = window.location.pathname;
+	const match = path.match(/\/profile\/(\w+)/);
+	if (match) {
+	  const userID = match[1];
+	  fetchProfileInfo(userID);
+	  fetchStatistics(userID);
+	}
+}
+
+window.onload = loadProfileFromURL;
+window.addEventListener("popstate", loadProfileFromURL);
 
 window.onpopstate = () => locationHandler("content");
 window.route = route;
