@@ -43,3 +43,17 @@ function verifyButtonOTP(checkbox) {
     modal.show();
   }
 }
+
+function previewImage(event) {
+	const file = event.target.files[0];
+	if (file) {
+		const reader = new FileReader();
+		reader.onload = function(e) {
+			const avatarPreview = document.getElementById('avatarPreview');
+			avatarPreview.src = e.target.result;
+		}
+		reader.readAsDataURL(file);
+		console.log("avatar:");
+		console.log(avatarPreview);
+	}
+}

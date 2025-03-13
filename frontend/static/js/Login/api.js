@@ -39,6 +39,7 @@ async function sendLogin() {
 async function checkUserExtension() {
 	const APIurl = `/api/create-userextension/`
 	const accessToken = await JWT.getAccess();
+	console.log("checkUserExtension, accessToken: ", accessToken)
 	return new Promise((resolve, reject) => {
 		$.ajax({
 		  type: "POST",
@@ -394,16 +395,21 @@ function toggleSwitch(checkbox) {
 	}
 }
 
-async function fetchProfileInfo() {
+async function fetchProfileInfo(userID) {
 	const userLang = localStorage.getItem("language") || "en";
 	const langData = await getLanguageData(userLang);
-
-	const APIurl = `/api/get-userextensions/?userID=${1}`
+	const accessToken = await JWT.getAccess();
+	console.log("fetchProfileInfo, accessToken: ", accessToken)
+	let APIurl = `/api/get-userextensions/`
+	if (userID != null)
+		APIurl = `/api/get-userextensions/?userID=${userID}`
 	$.ajax({
 		type: "GET",
 		url: APIurl,
 		contentType: "application/json",
-		headers: { Accept: "application/json" },
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
 		success: function (res) {
 			console.log(res);
 			insertProfileInfo(res.users[0]);
@@ -419,6 +425,9 @@ async function fetchProfileInfo() {
 async function insertProfileInfo(UserElement) {
 	document.getElementById("birthdayText").textContent= UserElement.birthdate;
 	document.getElementById("genderText").textContent= UserElement.gender;
+	document.getElementById("phoneNumberText").textContent= UserElement.gender;
+	document.getElementById("nicknameText").textContent= UserElement.nick;
+	document.getElementById("bioText").textContent= UserElement.bio;
 }
 
 async function validateEmail() {
