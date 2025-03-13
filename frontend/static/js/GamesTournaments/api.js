@@ -166,7 +166,7 @@ async function postRemoteGame() {
           playerCount++;
           window.history.pushState({}, "", `/pong`);
           locationHandler("content");
-          const game = new RemoteGame(gameId, ws, true, null);
+          const game = new RemoteHostGame(gameId, ws, true, null);
           console.log(`Player count: ${playerCount}`);
           if (playerCount === 2) {
             console.log("Both players connected. Opening the game page...");

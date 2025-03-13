@@ -40,6 +40,20 @@ class Paddle {
         this.paddleVelocityY = paddleVelocityY;
         this.paddleColisionTimes = 0;
     }
+    toJSON() {
+        return {
+            element: 0,
+            paddleSide: this.paddleSide,
+            paddleWidth: this.paddleWidth,
+            paddleHeight: this.paddleHeight,
+            paddleScore: this.paddleScore,
+            paddleColor: this.paddleColor,
+            paddleX: this.paddleX,
+            paddleY: this.paddleY,
+            paddleVelocityY: this.paddleVelocityY,
+            paddleColisionTimes: this.paddleColisionTimes
+        };
+    }
     getHalfWidth() { return this.paddleWidth / 2; }
     getHalfHeight() { return this.paddleHeight / 2; }
     getCenterWidth() { return this.paddleX + this.getHalfWidth(); }
@@ -62,6 +76,7 @@ class Paddle {
     draw(ctx) {
         ctx.fillStyle = this.paddleColor;
         ctx.fillRect(this.paddleX, this.paddleY, this.paddleWidth, this.paddleHeight);
+        console.log("paddle color: ", this.paddleColor, " | paddleX: ", this.paddleX, " | paddleY: ", this.paddleY, " | paddleWidth", this.paddleWidth, " | paddleHeight", this.paddleHeight);
     }
     colissionEdge(canvas) {
         if (this.paddleY + this.paddleHeight >= canvas.height)

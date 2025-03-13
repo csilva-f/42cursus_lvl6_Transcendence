@@ -2,7 +2,9 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.layers import get_channel_layer
 import json
 
-#from channels.generic.websocket import WebsocketConsumer ??
+from channels.exceptions import StopConsumer
+from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from channels.generic.websocket import WebsocketConsumer
 
 #eu tenho uma instancia da websocket (canal), nessa instancia conectam-se varios clients
 #sempre que algum manda msg, todos os clients do canal "ouvem"
@@ -10,7 +12,7 @@ import json
 #do lado do client terei de mandar msg com atualização do jogo
 #receberei msg com atualizaçoes do jogo que tenho de atualizar
 
-class GameConsumer(AsyncWebsocketConsumer):
+class GameConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f"game_{self.room_name}"
@@ -25,31 +27,44 @@ class GameConsumer(AsyncWebsocketConsumer):
                 "message": "A player joined the game!"
             }
         )
-
     async def receive(self, text_data):
-        try:
-            data = json.loads(text_data)
-            message = data.get("message", "No message provided")
-            username = data.get("username", "Incognito") 
+        # Directly forward the received message without parsing
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                "type": "send_raw_message",
+                "raw_data": text_data  # Forward as-is
+            }
+        )
 
-            # Send the message to all clients in the group
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    "type": "send_message",
-                    "message": message,
-                    "username": username
-                }
-            )
-        except json.JSONDecodeError:
-            await self.send(text_data=json.dumps({"error": "Invalid JSON"}))
+    async def send_raw_message(self, event):
+        # Send the raw JSON data directly to WebSocket clients
+        await self.send(text_data=event["raw_data"])
 
-    async def send_message(self, event):
-        message = event["message"]
-        username = event.get("username", "Incognito")
+    # async def receive(self, text_data):
+    #     try:
+    #         data = json.loads(text_data)
+    #         element = data.get("element", "No element provided")
+    #         paddleSide = data.get("paddleSide", "No paddle side provided") 
 
-        # Send message with username
-        await self.send(text_data=json.dumps({"username": username, "message": message}))
+    #         # Send the message to all clients in the group
+    #         await self.channel_layer.group_send(
+    #             self.room_group_name,
+    #             {
+    #                 "type": "send_message",
+    #                 "element": element,
+    #                 "paddleSide": paddleSide
+    #             }
+    #         )
+    #     except json.JSONDecodeError:
+    #         await self.send(text_data=json.dumps({"error": "Invalid JSON"}))
+
+    # async def send_message(self, event):
+    #     element = event["element"]
+    #     paddleSide = event["paddleSide"]
+
+    #     # Send message with username
+    #     await self.send(text_data=json.dumps({"element": element, "paddleSide": paddleSide}))
 
     async def disconnect(self, close_code):
         # Avisar o grupo que um jogador saiu

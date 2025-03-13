@@ -17,7 +17,7 @@ window.addEventListener('keyup', function (e) {
     keyPressed[e.keyCode] = false;
 })
 
-class RemoteGame  {
+class RemoteHostGame  {
     constructor(gameID, ws, isHost, gameData) {
         this.gameID = gameID
         this.gameData = gameData
@@ -65,11 +65,17 @@ class RemoteGame  {
             showGameStats("Shin", this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, "Chan", this.objects[2].paddleScore, this.objects[2].paddleColisionTimes);
     }
     gameUpdate() {
-        this.ws.onmessage = async function (event) {
-            const data = JSON.parse(event.data);
-            console.log("Element:", data.element);
-            console.log("Side:", data.paddleSide);
-        };
+        this.objects.forEach(element => {
+            element.update();
+            element.colissionEdge(this.canvas);
+            if (element instanceof Paddle)
+                element.colissionBall(this.objects[0], element);
+            if (element instanceof Paddle){
+                const msg = JSON.stringify(element.toJSON());
+                this.ws.send(msg);
+            }
+        });
+        this.incScore();
     }
     gameDraw() {
         this.objects.forEach(element => {
