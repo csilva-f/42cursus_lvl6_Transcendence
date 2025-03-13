@@ -26,4 +26,5 @@ urlpatterns = [
     path('respond-friendrequest/', PostRespondFriendRequest.as_view(), name='respond-friendrequest'),
     path('get-friendrequests/', GetPendingRequests.as_view(), name='get-friendrequests'),
     path('get-nonfriendslist/', GetNonFriendsList.as_view(), name='get-nonfriendslist'),
+    path('get-topusers/', GetTopUsers.as_view(), name='get-topusers'),
 ]
