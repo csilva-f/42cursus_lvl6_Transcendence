@@ -50,6 +50,7 @@ down:
 	@docker exec -it backend-db chmod 777 /var/lib/postgresql/data -R
 	@docker exec -it email-db chmod 777 /var/lib/postgresql/data -R
 	@docker exec -it vault-db chmod 777 /var/lib/postgresql/data -R
+	@docker exec -it vault chmod 777 /vault -R
 	@docker compose down
 
 migrate:
@@ -81,6 +82,14 @@ fulldestroy: fclean
 	@echo "" > $(ROOT_TOKEN_FILE)
 
 destroy: down
+	@rm -rf "./auth-db/data" -R
+	@rm -rf "./backend-db/data" -R
+	@rm -rf "./vault-db/data" -R
+	@rm -rf "./email-db/data" -R
+	@rm -rf "./vault/data" -R
+	@echo "" > $(ROOT_TOKEN_FILE)
+
+db-clear: 
 	@rm -rf "./auth-db/data" -R
 	@rm -rf "./backend-db/data" -R
 	@rm -rf "./vault-db/data" -R

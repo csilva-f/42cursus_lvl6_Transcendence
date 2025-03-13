@@ -2,7 +2,7 @@
 POSTGRES_USER=$(cat "$POSTGRES_USER_FILE")
 POSTGRES_PASSWORD=$(cat "$POSTGRES_PASSWORD_FILE")
 
-chmod 777 /vault -r
+chmod 777 /vault -R
 cat <<EOF > /vault/vault.hcl
 storage "postgresql" {
     connection_url = "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_DB}:5432/${POSTGRES_DB}?sslmode=disable"
@@ -85,13 +85,15 @@ if ! vault secrets list | grep -q "database/"; then
 
     vault write database/roles/role-backend-db \
         db_name=config-backend-db \
-        creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}'; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
+        creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}'; \
+							GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
         default_ttl="1h" \
         max_ttl="24h"
 
     vault write database/roles/role-email-db \
         db_name=config-email-db \
-        creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}'; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
+        creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}'; \
+							 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
         default_ttl="1h" \
         max_ttl="24h"
 

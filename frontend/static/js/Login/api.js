@@ -1,4 +1,3 @@
-
 async function sendLogin() {
 	// Login function
 	const email = $("#loginEmail").val();
@@ -19,17 +18,14 @@ async function sendLogin() {
 				window.location.href = "/mfa";
 			} else {
 				if (jwtToken) {
-					//localStorage.setItem("jwt", jwtToken);
+					localStorage.setItem("jwt", jwtToken);
 					console.log(data);
 					JWT.setToken(data);
 					console.log("Access: ", JWT.getAccess());
+					await checkUserExtension();
 				}
-				//window.location.href = "/";
 				window.history.pushState({}, "", "/");
 				locationHandler("content");
-				const loginButton = document.getElementById('loginButton');
-				loginButton.classList.remove("fa-right-from-bracket");
-				loginButton.classList.add("fa-right-to-bracket");
 			}
 			$("#login-message").text("Login successful!");
 		},
@@ -38,6 +34,28 @@ async function sendLogin() {
 			$("#login-message").text(data.error || "Login failed.");
 		},
 	});
+}
+
+async function checkUserExtension() {
+	const APIurl = `/api/create-userextension/`
+	const accessToken = await JWT.getAccess();
+	console.log("checkUserExtension, accessToken: ", accessToken)
+	return new Promise((resolve, reject) => {
+		$.ajax({
+		  type: "POST",
+		  url: APIurl,
+		  contentType: "application/json",
+		  headers: {
+			Authorization: `Bearer ${accessToken}`,
+		  },
+		  success: function (res) {
+			resolve(res.user);
+		  },
+		  error: function (xhr, status, error) {
+			reject(error);
+		  },
+		});
+	  });
 }
 
 async function forgotPwd() {
@@ -377,16 +395,21 @@ function toggleSwitch(checkbox) {
 	}
 }
 
-async function fetchProfileInfo() {
+async function fetchProfileInfo(userID) {
 	const userLang = localStorage.getItem("language") || "en";
 	const langData = await getLanguageData(userLang);
-
-	const APIurl = `/api/get-userextensions/?userID=${1}`
+	const accessToken = await JWT.getAccess();
+	console.log("fetchProfileInfo, accessToken: ", accessToken)
+	let APIurl = `/api/get-userextensions/`
+	if (userID != null)
+		APIurl = `/api/get-userextensions/?userID=${userID}`
 	$.ajax({
 		type: "GET",
 		url: APIurl,
 		contentType: "application/json",
-		headers: { Accept: "application/json" },
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
 		success: function (res) {
 			console.log(res);
 			insertProfileInfo(res.users[0]);
@@ -402,6 +425,9 @@ async function fetchProfileInfo() {
 async function insertProfileInfo(UserElement) {
 	document.getElementById("birthdayText").textContent= UserElement.birthdate;
 	document.getElementById("genderText").textContent= UserElement.gender;
+	document.getElementById("phoneNumberText").textContent= UserElement.gender;
+	document.getElementById("nicknameText").textContent= UserElement.nick;
+	document.getElementById("bioText").textContent= UserElement.bio;
 }
 
 async function validateEmail() {
