@@ -79,29 +79,3 @@ async function finishProfile() {
 		},
 	  });
 }
-
-async function uploadAvatar() {
-	const APIurl = `/api/update-userextension/`;
-	const accessToken = await JWT.getAccess();
-
-	let userData = {
-		// avatar: aqui o path
-	};
-	$.ajax({
-		type: "POST",
-		url: APIurl,
-		Accept: "application/json",
-		contentType: "application/json",
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-		},
-		data: JSON.stringify(userData),
-		success: function (res) {
-		
-		  //showSuccessToast(langData, langData.gameEntered);
-		},
-		error: function (xhr, status, error) {
-		  //showErrorToast(APIurl, error, langData);
-		},
-	  });
-}

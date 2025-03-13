@@ -428,6 +428,7 @@ async function insertProfileInfo(UserElement) {
 	document.getElementById("phoneNumberText").textContent= UserElement.gender;
 	document.getElementById("nicknameText").textContent= UserElement.nick;
 	document.getElementById("bioText").textContent= UserElement.bio;
+
 }
 
 async function validateEmail() {
