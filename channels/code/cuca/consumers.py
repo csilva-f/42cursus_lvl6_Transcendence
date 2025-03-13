@@ -1,6 +1,10 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.layers import get_channel_layer
 import json
+from django.contrib.auth.models import AnonymousUser
+from channels.db import database_sync_to_async
+from django.contrib.auth import get_user_model
+from .models import CustomUser
 
 #from channels.generic.websocket import WebsocketConsumer ??
 
@@ -70,3 +74,60 @@ class GameConsumer(AsyncWebsocketConsumer):
     # Notificar clientes quando alguém sai
     async def player_left(self, event):
         await self.send(text_data=json.dumps({"message": event["message"]}))
+
+
+online_users = set()
+
+import json
+from channels.generic.websocket import AsyncWebsocketConsumer
+
+online_users = set()  # Set para armazenar IDs dos utilizadores online
+
+import json
+from channels.generic.websocket import AsyncWebsocketConsumer
+
+online_users = set()  # Armazena os IDs dos utilizadores online
+
+class OnlineStatusConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        """Aceita a conexão WebSocket."""
+        self.room_name="home"
+        self.room_group_name = "online_home"
+        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+        await self.accept()
+
+    async def receive(self, text_data):
+        """Recebe mensagens do cliente (com o ID do user) e atualiza a lista de online."""
+        try:
+            data = json.loads(text_data)  # Converte JSON para dicionário
+            user_id = data.get("user_id")
+            if user_id:
+                online_users.add(user_id)  # Adiciona o user à lista de online
+                self.user_id = user_id  # Guarda o user_id na instância
+                await self.update_online_users()
+            elif "action" in data and data["action"] == "queryOnline":
+                await self.send(text_data=json.dumps({"online_users": list(online_users)}))
+            else:
+                await self.send(text_data=json.dumps({"error": "User ID missing"}))
+        except json.JSONDecodeError:
+            await self.send(text_data=json.dumps({"error": "Invalid JSON"}))
+
+    async def disconnect(self, close_code):
+        """Remove o utilizador da lista ao desconectar-se."""
+        if hasattr(self, "user_id") and self.user_id in online_users:
+            online_users.discard(self.user_id)
+            await self.update_online_users()
+
+    async def update_online_users(self):
+        """Envia a lista atualizada de utilizadores online para todos os clientes."""
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                "type": "broadcast_online_users",
+                "users": list(online_users),
+            },
+        )
+
+    async def broadcast_online_users(self, event):
+        """Envia a lista de utilizadores online para o cliente."""
+        await self.send(text_data=json.dumps({"online_users": event["users"]}))

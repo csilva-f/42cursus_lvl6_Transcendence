@@ -27,6 +27,8 @@ async function sendLogin() {
 				window.history.pushState({}, "", "/");
 				locationHandler("content");
 			}
+			const wsUrl = `wss://${window.location.host}/onlineStatus/`;
+      		const ws = new WebSocket(wsUrl);
 			$("#login-message").text("Login successful!");
 		},
 		error: function (xhr) {
