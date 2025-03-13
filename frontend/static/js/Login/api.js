@@ -39,6 +39,7 @@ async function sendLogin() {
 async function checkUserExtension() {
 	const APIurl = `/api/create-userextension/`
 	const accessToken = await JWT.getAccess();
+	console.log("checkUserExtension, accessToken: ", accessToken)
 	return new Promise((resolve, reject) => {
 		$.ajax({
 		  type: "POST",
@@ -398,6 +399,7 @@ async function fetchProfileInfo(userID) {
 	const userLang = localStorage.getItem("language") || "en";
 	const langData = await getLanguageData(userLang);
 	const accessToken = await JWT.getAccess();
+	console.log("fetchProfileInfo, accessToken: ", accessToken)
 	let APIurl = `/api/get-userextensions/`
 	if (userID != null)
 		APIurl = `/api/get-userextensions/?userID=${userID}`
@@ -425,6 +427,7 @@ async function insertProfileInfo(UserElement) {
 	document.getElementById("genderText").textContent= UserElement.gender;
 	document.getElementById("phoneNumberText").textContent= UserElement.gender;
 	document.getElementById("nicknameText").textContent= UserElement.nick;
+	document.getElementById("bioText").textContent= UserElement.bio;
 }
 
 async function validateEmail() {

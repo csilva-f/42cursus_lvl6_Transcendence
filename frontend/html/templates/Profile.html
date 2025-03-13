@@ -15,7 +15,7 @@
 										alt="Avatar" class="rounded-circle shadow"
 										style="width: 150px; height: 150px; object-fit: cover; cursor: pointer; border: 2px solid white;">
 								</label>
-								<input type="file" id="avatar" class="d-none" accept="image/*">
+								<input type="file" id="avatar" class="d-none" accept="image/*" onchange="previewImage(event)">
 							</div>
 
 							<div id="profileData" class="mt-4">
@@ -35,8 +35,7 @@
 								</ul>
 
 								<!-- Bio -->
-								<p class="p-3 text-center mt-3" style="font-style: italic; color: black;" id="bio">
-									Testing testing testing testing testing </p>
+								<p class="p-3 text-center mt-3" style="font-style: italic; color: black;" id="bioText"></p>
 
 								<div class="p-3 mt-4 shadow rounded-4" style="background-color: var(--cardBg);">
 									<p class="text-start"><strong>Phone number:</strong> <span
@@ -216,8 +215,7 @@
 						<div class="row mb-4">
 							<div class="col-md-12">
 								<label for="biography" class="form-label">Bio</label>
-								<textarea class="form-control" id="biography"
-									rows="4">Testing testing testing testing testing testing testing testing testing</textarea>
+								<textarea class="form-control" id="biography" rows="4"></textarea>
 							</div>
 						</div>
 
