@@ -80,12 +80,14 @@ fulldestroy: fclean
 	@rm -rf "./vault/data" -R
 	@echo "" > $(ROOT_TOKEN_FILE)
 
-destroy: down
+db-clear:
 	@rm -rf "./auth-db/data" -R
 	@rm -rf "./backend-db/data" -R
 	@rm -rf "./vault-db/data" -R
 	@rm -rf "./email-db/data" -R
 	@rm -rf "./vault/data" -R
 	@echo "" > $(ROOT_TOKEN_FILE)
+
+
 
 re: fclean all
