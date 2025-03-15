@@ -9,12 +9,14 @@ class Ball {
     update() {
         this.ballX += this.ballVelocityX;
         this.ballY += this.ballVelocityY;
+        //console.log("update ball:", this);
     }
     draw(ctx) {
         ctx.fillStyle = "#ffffff";
         ctx.beginPath();
         ctx.arc(this.ballX, this.ballY, this.ballRadius, 0, Math.PI * 2);
         ctx.fill()
+        //console.log("ball x: ", this.ballX, " | ball Y: ", this.ballY, " | ball radius: ", this.ballRadius)
     }
     colissionEdge(canvas) {
         if (this.ballY + this.ballRadius >= canvas.height)
@@ -72,11 +74,12 @@ class Paddle {
             if (keyPressed[KEY_S])
                 this.paddleY += this.paddleVelocityY;
         }
+        //console.log("update paddle:", this);
     }
     draw(ctx) {
         ctx.fillStyle = this.paddleColor;
         ctx.fillRect(this.paddleX, this.paddleY, this.paddleWidth, this.paddleHeight);
-        console.log("paddle color: ", this.paddleColor, " | paddleX: ", this.paddleX, " | paddleY: ", this.paddleY, " | paddleWidth", this.paddleWidth, " | paddleHeight", this.paddleHeight);
+        //console.log("paddle color: ", this.paddleColor, " | paddleX: ", this.paddleX, " | paddleY: ", this.paddleY, " | paddleWidth", this.paddleWidth, " | paddleHeight", this.paddleHeight);
     }
     colissionEdge(canvas) {
         if (this.paddleY + this.paddleHeight >= canvas.height)

@@ -25,11 +25,11 @@ class RemoteGame  {
         this.ctx = this.canvas.getContext('2d');
         this.objects = []
         this.ballVelocity = 5;
-        this.ballRadius = 15;
+        this.ballRadius = 7;
         this.maxScore = 5;
         this.stopGame = false;
-        this.isHost = isHost;
         this.ws = ws;
+        this.isHost = isHost;
     }
     initRemoteGame() {
         if (this.gameData == null) {
@@ -44,8 +44,8 @@ class RemoteGame  {
             console.log(this.gameData)
             this.objects = [
                 new Ball(this.canvas.width / 2, this.canvas.height / 2, this.ballVelocity, this.ballVelocity, this.ballRadius),
-                new Paddle(1, 20, 150, this.gameData.P1Color, 30, (this.canvas.height / 2) - 75, 10),
-                new Paddle(2, 20, 150, this.gameData.P2Color,  this.canvas.width - 50, (this.canvas.height / 2) - 75 , 10)
+                new Paddle(1, 10, 50, this.gameData.P1Color, 30, (this.canvas.height / 2) - 75, 10),
+                new Paddle(2, 10, 50, this.gameData.P2Color,  this.canvas.width - 50, (this.canvas.height / 2) - 75 , 10)
             ]
             document.getElementById("leftPlayerName").innerHTML = this.gameData.P1;
             document.getElementById("rightPlayerName").innerHTML = this.gameData.P2;
@@ -53,16 +53,19 @@ class RemoteGame  {
         document.getElementById("playerLeftScore").innerHTML = this.objects[1].paddleScore;
         document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
         startTimer();
-        this.gameLoop();
+        //this.gameLoop();
     }
     gameLoop() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (!this.stopGame) {
             window.requestAnimationFrame(() => this.gameLoop());
-            this.gameUpdate();
+            if(this.isHost)
+                this.gameHostUpdate();
+            else
+                this.gameUpdate();
             this.gameDraw();
         } else
-            showGameStats("Shin", this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, "Chan", this.objects[2].paddleScore, this.objects[2].paddleColisionTimes);
+            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes);
     }
     gameUpdate() {
         this.ws.onmessage = async function (event) {
@@ -70,6 +73,20 @@ class RemoteGame  {
             console.log("Element:", data.element);
             console.log("Side:", data.paddleSide);
         };
+        this.incScore();
+    }
+    gameHostUpdate(){
+        this.objects.forEach(element => {
+            element.update();
+            element.colissionEdge(this.canvas);
+            if (element instanceof Paddle)
+                element.colissionBall(this.objects[0], element);
+            if (element instanceof Paddle){
+                const msg = JSON.stringify(element.toJSON());
+                this.ws.send(msg);
+            }
+        });
+        this.incScore();
     }
     gameDraw() {
         this.objects.forEach(element => {

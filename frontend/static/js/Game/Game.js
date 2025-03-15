@@ -7,6 +7,9 @@ const maxSpeed = 10;
 const maxScore = 5;
 const ballVelocity = 5;
 const ballRadius = 15;
+const paddleWidth = 20;
+const paddleHeight = 150;
+const paddleVelocity = 10;
 var stopGame = false;
 const wsConnections = {};
 
@@ -18,7 +21,7 @@ window.addEventListener('keyup', function (e) {
 })
 
 class Game  {
-    constructor(gameID, gameData) {
+    constructor(gameID, ws, isHost, gameData) {
         this.gameID = gameID
         this.gameData = gameData
         this.canvas = document.getElementById("pongGameCanvas")
@@ -28,14 +31,33 @@ class Game  {
         this.ballRadius = 15;
         this.maxScore = 5;
         this.stopGame = false;
+        this.ws = ws;
+        this.isHost = isHost;
     }
     initGame() {
-        this.resize();
+        console.log("onload");
+        //this.canvas = document.getElementById('pongGameCanvas');
+        //const context = canvas.getContext('2d');
+
+        // Get the device pixel ratio (DPR)
+        const dpr = window.devicePixelRatio || 1;
+
+        // Set the logical canvas size (how big it should appear visually)
+        const width = 1200;
+        const height = 550;
+
+        // Set the actual canvas size (scale by the device pixel ratio)
+        this.canvas.width = width * dpr;
+        this.canvas.height = height * dpr;
+
+        // Scale the context to account for the device pixel ratio
+        this.ctx.scale(dpr, dpr);
+
         if (this.gameData == null) {
             this.objects = [
                 new Ball(this.canvas.width / 2, this.canvas.height / 2, this.ballVelocity, this.ballVelocity, this.ballRadius),
-                new Paddle(1, 20, 150, "#482445", 30, (this.canvas.height / 2) - 75, 10),
-                new Paddle(2, 20, 150, "#de94ad",  this.canvas.width - 50, (this.canvas.height / 2) - 75 , 10)
+                new Paddle(1, paddleWidth, paddleHeight, "#482445", 30, (this.canvas.height / 2) - 75, 10),
+                new Paddle(2, paddleWidth, paddleHeight, "#de94ad",  this.canvas.width - 50, (this.canvas.height / 2) - 75 , 10)
             ]
             document.getElementById("leftPlayerName").innerHTML = "Shin";
             document.getElementById("rightPlayerName").innerHTML = "Chan";
@@ -43,8 +65,8 @@ class Game  {
             console.log(this.gameData)
             this.objects = [
                 new Ball(this.canvas.width / 2, this.canvas.height / 2, this.ballVelocity, this.ballVelocity, this.ballRadius),
-                new Paddle(1, 20, 150, this.gameData.P1Color, 30, (this.canvas.height / 2) - 75, 10),
-                new Paddle(2, 20, 150, this.gameData.P2Color,  this.canvas.width - 50, (this.canvas.height / 2) - 75 , 10)
+                new Paddle(1, paddleWidth, paddleHeight, this.gameData.P1Color, 30, (this.canvas.height / 2) - 75, paddleVelocity),
+                new Paddle(2, paddleWidth, paddleHeight, this.gameData.P2Color,  this.canvas.width - 50, (this.canvas.height / 2) - 75 , paddleVelocity)
             ]
             document.getElementById("leftPlayerName").innerHTML = this.gameData.P1;
             document.getElementById("rightPlayerName").innerHTML = this.gameData.P2;
@@ -55,11 +77,11 @@ class Game  {
         this.gameLoop();
     }
     gameLoop() {
-        window.onresize = function() {
-            this.resize();
-            this.objects[1].setPaddleX(30);
-            this.objects[2].setPaddleX(this.canvas.width - 50);
-        }
+        // window.onresize = function() {
+        //     this.resize();
+        //     this.objects[1].setPaddleX(30);
+        //     this.objects[2].setPaddleX(this.canvas.width - 50);
+        // }
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (!this.stopGame) {
             window.requestAnimationFrame(() => this.gameLoop());
@@ -69,13 +91,40 @@ class Game  {
             showGameStats("Shin", this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, "Chan", this.objects[2].paddleScore, this.objects[2].paddleColisionTimes);
     }
     gameUpdate() {
+        if (this.ws == null)
+            this.gameLocalUpdate()
+        else if(this.isHost)
+            this.gameHostUpdate()
+        else
+            this.gameJoinerUpdate()
+        this.incScore();
+    }
+    gameLocalUpdate(){
         this.objects.forEach(element => {
             element.update();
             element.colissionEdge(this.canvas);
             if (element instanceof Paddle)
                 element.colissionBall(this.objects[0], element);
         });
-        this.incScore();
+    }
+    gameHostUpdate(){
+        this.objects.forEach(element => {
+            element.update();
+            element.colissionEdge(this.canvas);
+            if (element instanceof Paddle)
+                element.colissionBall(this.objects[0], element);
+            if (element instanceof Paddle){
+                const msg = JSON.stringify(element.toJSON());
+                this.ws.send(msg);
+            }
+        });
+    }
+    gameJoinerUpdate() {
+        this.ws.onmessage = async function (event) {
+            const data = JSON.parse(event.data);
+            console.log("Element:", data.element);
+            console.log("Side:", data.paddleSide);
+        };
     }
     gameDraw() {
         this.objects.forEach(element => {

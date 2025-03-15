@@ -107,7 +107,7 @@ async function postLocalGame() {
   $("#createModal").modal("hide");
   window.history.pushState({}, "", "/pong");
   await locationHandler("content");
-  const game = new Game(0, gameData);
+  const game = new Game(0, null, false, gameData);
   game.initGame();
 }
 
@@ -118,9 +118,9 @@ async function postRemoteGame() {
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/create-game/`;
   let gameData = {
-    P1: document.getElementById("P1NickInput").value,
+    P1: "Me",
     P1Color: document.getElementById("P1ColorInput").value,
-    P2: document.getElementById("P2NickInput").value,
+    P2: "Waiting for player 1",
     P2Color: document.getElementById("P2ColorInput").value,
     islocal: false,
   };
@@ -138,7 +138,6 @@ async function postRemoteGame() {
     data: JSON.stringify(gameData),
     success: function (res) {
       showSuccessToast(langData, langData.gamecreated);
-      fetchGames(1);
       resetModal();
       $("#createModal").modal("hide");
       console.log("Game Created Response:", res);
@@ -160,18 +159,22 @@ async function postRemoteGame() {
       };
       ws.onmessage = function (e) {
         const data = JSON.parse(e.data);
+        console.log("I'm here");
         console.log(data.message);
         //console.log("Message received:", e.data);
         if (data.message === "A player joined the game!") {
           playerCount++;
-          window.history.pushState({}, "", `/pong`);
-          locationHandler("content");
-          const game = new RemoteHostGame(gameId, ws, true, null);
+          if (playerCount === 1){
+            window.history.pushState({}, "", `/pong`);
+            locationHandler("content");
+          }
           console.log(`Player count: ${playerCount}`);
           if (playerCount === 2) {
             console.log("Both players connected. Opening the game page...");
+            console.table(gameData)
+            const game = new Game(gameId, ws, true, gameData);
             //5 4 3 2 1
-            game.initRemoteGame();
+            game.initGame();
           //   gameInterval = setInterval(() => {
           //     if (typeof getCurrentGameState === "function") {  // Verifica se a função existe
           //         const gameState = getCurrentGameState();
@@ -223,6 +226,13 @@ async function enterGame(gameID) {
     isJoin: true,
   };
 
+  let gameDataCanvas = {
+    P1: "host",
+    P1Color: document.getElementById("P1ColorInput").value,
+    P2: "me",
+    P2Color: document.getElementById("P2ColorInput").value,
+  };
+
   console.log("gameData: ", gameData);
   const accessToken = await JWT.getAccess();
   console.log("accessToken", accessToken)
@@ -271,8 +281,9 @@ async function enterGame(gameID) {
         if (data.message === "A player joined the game!"){
           window.history.pushState({}, "", `/pong`);
           await locationHandler("content");
-          const game = new RemoteGame(gameID, ws, false, null);
-          game.initRemoteGame();
+          const game = new Game(gameID, ws, false, gameDataCanvas);
+          //5 4 3 2 1
+          game.initGame();
         }
       };
 
