@@ -11,6 +11,6 @@ from .consumers import GameConsumer, OnlineStatusConsumer
 
 websocket_urlpatterns = [
     re_path(r'ws/game/(?P<room_name>\w+)/$', GameConsumer.as_asgi()),
-    re_path(r'ws/home/$', OnlineStatusConsumer.as_asgi()),
+    re_path(r'ws/onlineStatus/$', OnlineStatusConsumer.as_asgi()),
 ]
 

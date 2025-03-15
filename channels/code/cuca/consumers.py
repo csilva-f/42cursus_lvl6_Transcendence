@@ -75,17 +75,6 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def player_left(self, event):
         await self.send(text_data=json.dumps({"message": event["message"]}))
 
-
-online_users = set()
-
-import json
-from channels.generic.websocket import AsyncWebsocketConsumer
-
-online_users = set()  # Set para armazenar IDs dos utilizadores online
-
-import json
-from channels.generic.websocket import AsyncWebsocketConsumer
-
 online_users = set()  # Armazena os IDs dos utilizadores online
 
 class OnlineStatusConsumer(AsyncWebsocketConsumer):
@@ -102,11 +91,12 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
             data = json.loads(text_data)  # Converte JSON para dicionário
             user_id = data.get("user_id")
             if user_id:
+                user_id = int(user_id)
                 online_users.add(user_id)  # Adiciona o user à lista de online
                 self.user_id = user_id  # Guarda o user_id na instância
                 await self.update_online_users()
             elif "action" in data and data["action"] == "queryOnline":
-                await self.send(text_data=json.dumps({"online_users": list(online_users)}))
+                await self.send(text_data=json.dumps({"online_users": list(map(int, online_users))}))
             else:
                 await self.send(text_data=json.dumps({"error": "User ID missing"}))
         except json.JSONDecodeError:

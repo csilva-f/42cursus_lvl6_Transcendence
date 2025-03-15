@@ -1081,6 +1081,7 @@ def get_friendships(request):
                 friendships = tFriends.objects.filter(Q(user1_id=u_id) | Q(user2_id=u_id), Q(requestStatus_id=status_id))
             else:
                 friendships = tFriends.objects.filter(Q(user1_id=u_id) | Q(user2_id=u_id))
+                
             friends_data = [
                 {
                     'friendID': friends.user2.user if friends.user1.user == u_id else friends.user1.user,
