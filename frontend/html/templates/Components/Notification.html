@@ -1,31 +1,71 @@
-<li>
-    <a class="dropdown-item d-flex flex-column shadow-sm m-2 p-0 rounded rounded-2"
-        style="max-width: 20rem; min-width: 20rem; background-color: var(--bodyBg); height: 5.5rem; max-height: 5.5rem;">
-        <div class="m-0 p-0 rounded-top-2"
-            style="background-color: var(--primary); height: 2rem;">
-            <div class="row">
-                <div class="col-2 mt-1 ms-2">
-                    <i class="fa-solid fa-question fa-lg" style="color: white;" id="notificationIcon"></i>
-                </div>
-                <div class="col-8 mt-1">
-                    <strong class="text-white" id="notificationMessage"></strong>
-                </div>
-            </div>
+<div>
+  <a
+    class="dropdown-item d-flex flex-column shadow-sm m-2 p-0 rounded rounded-2"
+    style="
+      max-width: 20rem;
+      min-width: 20rem;
+      background-color: var(--bodyBg);
+      height: 5.5rem;
+      max-height: 5.5rem;
+    "
+  >
+    <div
+      class="m-0 p-0 rounded-top-2"
+      style="background-color: var(--primary); height: 2rem"
+    >
+      <div class="row">
+        <div class="col-2 mt-1 ms-2">
+          <i
+            class="fa-solid fa-question fa-lg"
+            style="color: white"
+            id="notificationIcon"
+          ></i>
         </div>
-        <div class="row" style="height: 3.5rem; min-height: 3.5rem;">
-            <div class="col-8 d-flex align-items-center">
-                <strong class="ms-2" id="notificationNickname"></strong>
-            </div>
-            <div class="col-4 d-flex align-items-center">
-                <button class="btn btn-sm pop-hover-xs me-2"
-                    style="background-color: var(--primary); color: white; border-radius: 8px; width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center;" id="notificationAccept">
-                    <i class="fa-solid fa-check fa-sm"></i>
-                </button>
-                <button class="btn btn-sm pop-hover-xs ms-2"
-                    style="background-color: var(--primary); color: white; border-radius: 8px; width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center;" id="notificationDeny">
-                    <i class="fa-solid fa-xmark fa-sm"></i>
-                </button>
-            </div>
+        <div class="col-8 mt-1">
+          <strong class="text-white" id="notificationMessage"></strong>
         </div>
-    </a>
-</li>
+      </div>
+    </div>
+    <div class="row" style="height: 3.5rem; min-height: 3.5rem">
+      <div class="col-8 d-flex align-items-center">
+        <strong class="ms-2" id="notificationNickname"></strong>
+      </div>
+      <div class="col-4 d-flex align-items-center">
+        <button
+        onclick="notificationAccept(this.dataset.id, this.dataset.type)"
+          class="btn btn-sm pop-hover-xs me-2"
+          style="
+            background-color: var(--primary);
+            color: white;
+            border-radius: 8px;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+          id="notificationAccept"
+        >
+          <i class="fa-solid fa-check fa-sm"></i>
+        </button>
+        <button
+        onclick="notificationDeny(this.dataset.id, this.dataset.type)"
+          class="btn btn-sm pop-hover-xs ms-2"
+          style="
+            background-color: var(--primary);
+            color: white;
+            border-radius: 8px;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+          id="notificationDeny"
+        >
+          <i class="fa-solid fa-xmark fa-sm"></i>
+        </button>
+      </div>
+    </div>
+  </a>
+</div>

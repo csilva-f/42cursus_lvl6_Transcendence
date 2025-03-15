@@ -1045,6 +1045,7 @@ def get_friendships(request):
         status_id = request.GET.get('statusID')
         u_id = request.GET.get('uid')
         if user_id:
+            print("user_id")
             if user_id.strip() == "":
                 return JsonResponse({"error": "Filter can't be empty."}, status=400)
             user_id = validate_id(user_id)
@@ -1070,6 +1071,8 @@ def get_friendships(request):
             ]
             return JsonResponse({'friendships': friends_data}, safe=False, status=200)
         elif u_id:
+            print("u_id")
+            print(u_id)
             if not tUserExtension.objects.filter(user=u_id).exists():
                 return JsonResponse({"error": f"User {u_id} does not exist"}, status=404)
             if status_id:
@@ -1084,8 +1087,8 @@ def get_friendships(request):
                 
             friends_data = [
                 {
-                    'friendID': friends.user2.user if friends.user1.user == u_id else friends.user1.user,
-                    'friendNick': friends.user2.nick if friends.user1.user == u_id else friends.user1.nick,
+                    'friendID': friends.user2.user if int(friends.user1.user) == int(u_id) else friends.user1.user,
+                    'friendNick': friends.user2.nick if int(friends.user1.user) == int(u_id) else friends.user1.nick,
                     'statusID': friends.requestStatus.status, 
                     'statusLabel': friends.requestStatus.label
                 }
