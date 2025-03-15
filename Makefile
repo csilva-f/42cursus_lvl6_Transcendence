@@ -18,7 +18,16 @@ build:
 	@echo "Building Docker Compose setup..."
 	@docker compose -p $(NAME) build
 
-up:
+directories:
+	@echo "Creating directories..."
+	@mkdir -p ./secrets
+	@mkdir -p ./auth-db/data
+	@mkdir -p ./backend-db/data
+	@mkdir -p ./vault-db/data
+	@mkdir -p ./email-db/data
+	@mkdir -p ./vault/data
+
+up: directories
 	@echo "" > $(ROOT_TOKEN_FILE)
 	@echo "Running Docker Compose setup..."
 	@docker compose up -d auth-db vault-db backend-db email-db

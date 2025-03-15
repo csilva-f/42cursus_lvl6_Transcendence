@@ -3,7 +3,7 @@ services:
     container_name: auth
     build: ./auth
     volumes:
-      - ./auth/code:/code:rw
+      - auth-data:/code:rw
     ports:
       - "9001:8000"
     networks:
@@ -21,7 +21,7 @@ services:
     env_file:
       - ./auth-db/.env
     volumes:
-      - ./auth-db/data:/var/lib/postgresql/data:rw
+      - auth-db-data:/var/lib/postgresql/data:rw
     networks:
       - backend
     secrets:
@@ -32,7 +32,7 @@ services:
     container_name: auth-api
     build: ./auth-api
     volumes:
-      - ./auth-api/code:/code:rw
+      - auth-api-data:/code:rw
     networks:
       - backend
       - frontend
@@ -49,7 +49,7 @@ services:
     env_file:
       - ./vault-db/.env
     volumes:
-      - ./vault-db/data:/var/lib/postgresql/data:rw
+      - vault-db-data:/var/lib/postgresql/data:rw
     networks:
       - backend
     secrets:
@@ -60,8 +60,8 @@ services:
     container_name: vault
     build: ./vault
     volumes:
-      - ./vault/data:/vault/file:rw
-      - ./secrets:/vault/secrets:rw
+      - vault-data:/vault/file:rw
+      - secrets-data:/vault/secrets:rw
     networks:
       - backend
     ports:
@@ -79,7 +79,7 @@ services:
     container_name: backend-api
     build: ./backend-api
     volumes:
-      - ./backend-api/code:/code:rw
+      - backend-api-data:/code:rw
     networks:
       - backend
       - frontend
@@ -94,7 +94,7 @@ services:
     container_name: backend
     build: ./backend
     volumes:
-      - ./backend/code:/code:rw
+      - backend-data:/code:rw
     networks:
       - backend
     ports:
@@ -110,7 +110,7 @@ services:
     container_name: channels
     build: ./channels
     volumes:
-      - ./channels/code:/code:rw
+      - channels-data:/code:rw
     networks:
       - frontend
     ports:
@@ -126,7 +126,7 @@ services:
     env_file:
       - ./backend-db/.env
     volumes:
-      - ./backend-db/data:/var/lib/postgresql/data:rw
+      - backend-db-data:/var/lib/postgresql/data:rw
     networks:
       - backend
     secrets:
@@ -137,7 +137,7 @@ services:
     container_name: email
     build: ./email
     volumes:
-      - ./email/code:/code:rwx
+      - email-data:/code:rwx
     ports:
       - "9005:8000"
     networks:
@@ -155,7 +155,7 @@ services:
     env_file:
       - ./email-db/.env
     volumes:
-      - ./email-db/data:/var/lib/postgresql/data:rw
+      - email-db-data:/var/lib/postgresql/data:rw
     networks:
       - backend
     secrets:
@@ -166,7 +166,7 @@ services:
     container_name: nginx
     build: ./nginx
     volumes:
-      - ./frontend:/frontend:rw
+      - frontend-data:/frontend:rw
     networks:
       - frontend
     ports:
@@ -205,3 +205,96 @@ secrets:
     file: ./secrets/POSTGRES_USER.txt
   postgres_password:
     file: ./secrets/POSTGRES_PASSWORD.txt
+
+volumes:
+  auth-db-data:
+    name: auth-db-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./auth-db/data
+      o: bind
+  auth-data:
+    name: auth-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./auth/code
+      o: bind
+  auth-api-data:
+    name: auth-api-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./auth-api/code
+      o: bind
+  backend-db-data:
+    name: backend-db_data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./backend-db/data
+      o: bind
+  backend-data:
+    name: backend-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./backend/code
+      o: bind
+  backend-api-data:
+    name: backend-api-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./backend-api/code
+      o: bind
+  email-db-data:
+    name: email-db-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./email-db/data
+      o: bind
+  email-data:
+    name: email-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./email/code
+      o: bind
+  channels-data:
+    name: channels-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./channels/code
+      o: bind
+  vault-db-data:
+    name: vault-db-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./vault-db/data
+      o: bind
+  vault-data:
+    name: vault-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./vault/data
+      o: bind
+  frontend-data:
+    name: frontend-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./frontend
+      o: bind
+  secrets-data:
+    name: secrets-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./secrets
+      o: bind
