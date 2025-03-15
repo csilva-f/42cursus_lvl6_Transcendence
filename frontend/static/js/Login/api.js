@@ -284,24 +284,24 @@ function handleOTPInput(field) {
   if (field.value && nextField) nextField.focus();
 
   field.addEventListener("keydown", function (e) {
-    if (e.key === "Backspace" && !field.value && prevField) prevField.focus();
+	if (e.key === "Backspace" && !field.value && prevField) prevField.focus();
   });
 
   field.addEventListener("paste", function (e) {
-    e.preventDefault();
-    const pasteData = e.clipboardData.getData("text").split("");
-    let currentId = parseInt(field.id.replace("otp", ""));
+	e.preventDefault();
+	const pasteData = e.clipboardData.getData("text").split("");
+	let currentId = parseInt(field.id.replace("otp", ""));
 
-    pasteData.forEach((char) => {
-      const targetField = document.getElementById(`otp${currentId}`);
-      if (targetField) {
-        targetField.value = char;
-        currentId++;
-      }
-    });
+	pasteData.forEach((char) => {
+	  const targetField = document.getElementById(`otp${currentId}`);
+	  if (targetField) {
+		targetField.value = char;
+		currentId++;
+	  }
+	});
 
-    const lastField = document.getElementById(`otp${currentId - 1}`);
-    if (lastField) lastField.focus();
+	const lastField = document.getElementById(`otp${currentId - 1}`);
+	if (lastField) lastField.focus();
   });
 }
 
@@ -412,7 +412,7 @@ async function fetchProfileInfo(userID) {
 		},
 		success: function (res) {
 			console.log(res);
-			insertProfileInfo(res.users[0]);
+			insertProfileInfo(res.users[0]), userID;
 			updateContent(langData);
 		},
 		error: function (xhr, status, error) {
@@ -422,13 +422,23 @@ async function fetchProfileInfo(userID) {
 	});
 }
 
-async function insertProfileInfo(UserElement) {
+async function insertProfileInfo(UserElement, userID) {
 	document.getElementById("birthdayText").textContent= UserElement.birthdate;
 	document.getElementById("genderText").textContent= UserElement.gender;
-	document.getElementById("phoneNumberText").textContent= UserElement.gender;
 	document.getElementById("nicknameText").textContent= UserElement.nick;
 	document.getElementById("bioText").textContent= UserElement.bio;
 
+	// edit pop up
+	document.getElementById("birthday").value = UserElement.birthdate;
+
+	let genderSelect = document.getElementById("gender");
+	if (UserElement.gender) {
+		genderSelect.value = UserElement.gender.toLowerCase(); 
+		updateIcon();
+	}
+	if (userID != null)
+		document.getElementById("fullNameText").classList.add=("d-none");
+		
 }
 
 async function validateEmail() {
@@ -437,18 +447,18 @@ async function validateEmail() {
   const token = urlParams.get("token");
   const apiUrl = "/authapi";
   $.ajax({
-    type: "POST",
-    url: `${apiUrl}/validate-email/`, // Adjust the endpoint as needed
-    contentType: "application/json",
-    headers: { Accept: "application/json" },
-    data: JSON.stringify({ uid, token }),
-    success: function (data) {
-      console.log("email validated successfully");
-    },
-    error: function (xhr) {
-      const data = xhr.responseJSON;
-      console.log("email failed validation");
-    },
+	type: "POST",
+	url: `${apiUrl}/validate-email/`, // Adjust the endpoint as needed
+	contentType: "application/json",
+	headers: { Accept: "application/json" },
+	data: JSON.stringify({ uid, token }),
+	success: function (data) {
+	  console.log("email validated successfully");
+	},
+	error: function (xhr) {
+	  const data = xhr.responseJSON;
+	  console.log("email failed validation");
+	},
   });
 }
 
@@ -460,18 +470,52 @@ async function resetPassword() {
   const confirm_password = $("#confirmPassword").val();
   const apiUrl = "/authapi";
   $.ajax({
-    type: "POST",
-    url: `${apiUrl}/reset-password/`, // Adjust the endpoint as needed
-    contentType: "application/json",
-    headers: { Accept: "application/json" },
-    data: JSON.stringify({ uid, token, password, confirm_password }),
-    success: function (data) {
-      //renderizar aqui o form de reset password
-      console.log("Token validated successfully");
-    },
-    error: function (xhr) {
-      const data = xhr.responseJSON;
-      console.log("token failed validation");
-    },
+	type: "POST",
+	url: `${apiUrl}/reset-password/`, // Adjust the endpoint as needed
+	contentType: "application/json",
+	headers: { Accept: "application/json" },
+	data: JSON.stringify({ uid, token, password, confirm_password }),
+	success: function (data) {
+	  //renderizar aqui o form de reset password
+	  console.log("Token validated successfully");
+	},
+	error: function (xhr) {
+	  const data = xhr.responseJSON;
+	  console.log("token failed validation");
+	},
   });
+}
+
+async function updateProfile() {
+	const userLang = localStorage.getItem("language") || "en";
+	const langData = await getLanguageData(userLang);
+	const accessToken = await JWT.getAccess();
+	const apiUrl = "/authapi";
+ $.ajax({
+	 type: "POST",
+	 url: `${apiUrl}/get-profile/`, 
+	 contentType: "application/json",
+	 headers: {
+		 "Authorization": `Bearer ${accessToken}`
+	 },
+	 data: "",
+	 success: function (res) {
+		 insertProfileData(res.data);
+		 //updateContent(langData);
+		 console.log(res);
+	 },
+	 error: function (xhr, status, error) {
+		console.error("Error Thrown:", error);
+		showErrorToast(APIurl, error, langData);
+	 }
+ });
+}
+
+async function insertProfileData(UserElement) {
+	document.getElementById("birthdayText").textContent= UserElement.birthdate;
+	document.getElementById("firstName").value = UserElement.first_name;
+	document.getElementById("lastName").value = UserElement.last_name;
+	document.getElementById("phoneNumber").value = UserElement.phone_number;
+
+	document.getElementById("fullNameText").textContent = `${UserElement.first_name} ${UserElement.last_name}`;
 }
