@@ -235,8 +235,10 @@ async function changeActive(location) {
 	allContent.classList.add('d-none');
 	const userData = await checkUserExtension();
 	activateTopBar();
-	document.getElementById("personNickname").textContent = userData.nickname;
-	document.getElementById("subMsg").textContent = `${userData.nickname} ${userData.nickname} `;
+	if (userData.nickname != null) {
+		document.getElementById("personNickname").textContent = userData.nickname;
+		document.getElementById("subMsg").textContent = `${userData.nickname} ${userData.nickname} `;
+	}
 	console.log("ChangeActive: ")
 	switch (location) {
 		case "/games":
@@ -307,6 +309,7 @@ async function changeActive(location) {
 				nickModal.show();
 			}
 			fetchMatchHistory();
+			fetchHomeFriends();
 			break;
 		case "/profile":
 			console.log("Profile: ")
