@@ -69,3 +69,22 @@
     color: var(--sidebarInactiveIcon) !important;
 }
 /* End Sidebar Icons */
+
+/* Online Status */
+
+.status-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.status-dot-profile {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* End Online Status */

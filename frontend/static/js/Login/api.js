@@ -485,30 +485,117 @@ async function fetchProfileInfo(userID) {
 				initializeWebSocket(() => {
 					requestOnlineUsers(function (onlineUsers) {
 						console.log("Updated online users list:", onlineUsers);
+						insertProfileInfo(res.users[0], onlineUsers);
 					});
 				});
 			} else {
 				requestOnlineUsers(function (onlineUsers) {
 					console.log("Updated online users list:", onlineUsers);
+					insertProfileInfo(res.users[0], onlineUsers);
 				});
 			}
-
-			insertProfileInfo(res.users[0]);
 			updateContent(langData);
 		},
 		error: function (xhr, status, error) {
-			console.error("Error Thrown:", error);
+			console.error("Error thrown:", error);
 			showErrorToast(APIurl, error, langData);
 		},
 	});
 }
 
-async function insertProfileInfo(UserElement) {
+// async function getUserExtensions(userID, accessToken) {
+//     const APIurl = userID ? `/api/get-userextensions/?userID=${userID}` : `/api/get-userextensions/`;
+//     try {
+//         const response = await $.ajax({
+//             type: "GET",
+//             url: APIurl,
+//             contentType: "application/json",
+//             headers: { Authorization: `Bearer ${accessToken}` },
+//         });
+//         console.log("Data get-userextension:", response);
+//         return response.users[0];
+//     } catch (error) {
+//         console.error("Error GET user extension:", error);
+//         return null;
+//     }			
+// }
+
+// async function getUserProfile(accessToken) {
+//     const APIurl = `/api/get-profile/`;
+//     try {
+//         const response = await $.ajax({
+//             type: "GET",
+//             url: APIurl,
+//             contentType: "application/json",
+//             headers: { Authorization: `Bearer ${accessToken}` },
+//         });
+//         console.log("Data get-profile:", response);
+//         return response.data || response;
+//     } catch (error) {
+//         console.error("Error GET user profile:", error);
+//         return null;
+//     }
+// }
+
+// async function fetchProfileInfo(userID) {
+//     const userLang = localStorage.getItem("language") || "en";
+//     const langData = await getLanguageData(userLang);
+//     const accessToken = await JWT.getAccess();
+//     console.log("🔹 fetchProfileInfo() iniciado, accessToken:", accessToken);
+
+//     try {
+//         const [userExtensions, userProfile] = await Promise.all([
+//             getUserExtensions(userID, accessToken),
+//             getUserProfile(accessToken)
+//         ]);
+
+//         if (!userExtensions || !userProfile) {
+//             console.error("Error: incomplete data!");
+//             return;
+//         }
+
+//         const userData = { ...userExtensions, ...userProfile };
+//         console.log("Combined profile data:", userData);
+
+//         if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
+// 			console.warn("WebSocket not found or closed. Reinitializing...");
+// 			initializeWebSocket(() => {
+// 				requestOnlineUsers(function (onlineUsers) {
+// 					console.log("Updated online users list:", onlineUsers);
+// 					insertProfileInfo(userData, onlineUsers);
+// 				});
+// 			});
+// 		} else {
+// 			requestOnlineUsers(function (onlineUsers) {
+// 				console.log("Updated online users list:", onlineUsers);
+// 				insertProfileInfo(userData, onlineUsers);
+// 			});
+// 		}
+
+//         updateContent(langData);
+
+//     } catch (error) {
+//         console.error("Error profile data:", error);
+//         showErrorToast("Error loading profile", error, langData);
+//     }
+// }
+
+async function insertProfileInfo(UserElement, users_on) {
+	console.log(UserElement);
 	document.getElementById("birthdayText").textContent= UserElement.birthdate;
 	document.getElementById("genderText").textContent= UserElement.gender;
 	document.getElementById("phoneNumberText").textContent= UserElement.gender;
 	document.getElementById("nicknameText").textContent= UserElement.nick;
 	document.getElementById("bioText").textContent= UserElement.bio;
+
+	console.log(Number(UserElement.id));
+	console.log(users_on);
+	if (users_on.includes(Number(UserElement.id))) {
+        userOnStatus.style.backgroundColor = "green"; // Online
+    } else {
+        userOnStatus.style.backgroundColor = "white"; // Offline
+        userOnStatus.style.border = "1px solid gray";
+    }
 }
 
 async function validateEmail() {

@@ -15,23 +15,31 @@ function GlobalFriendsSelect(elementID) {
     }
 }
 
-function insertGlobalUserInfo(newCard, user) {
+function insertGlobalUserInfo(newCard, user, users_on) {
     const userNick = newCard.querySelector("#userNick");
     const userLvl = newCard.querySelector("#userLvl");
     const inviteLi = newCard.querySelector("#inviteLi");
     const friendLi = newCard.querySelector("#friendLi");
     const profileLi = newCard.querySelector("#profileLi");
+    const userOnStatus = newCard.querySelector("#userOnStatus");
     userNick.textContent = user.userNick;
-    userLvl.textContent = user.userID;
+    userLvl.textContent = user.userLevel;
     inviteLi.setAttribute("data-id", user.userID);
     friendLi.setAttribute("data-id", user.userID);
     friendLi.setAttribute("data-type", 0);
     profileLi.setAttribute("data-id", user.userID);
+
+    if (users_on.includes(Number(user.userID))) {
+        userOnStatus.style.backgroundColor = "green"; // Online
+    } else {
+        userOnStatus.style.backgroundColor = "white"; // Offline
+        userOnStatus.style.border = "1px solid gray";
+    }
 }
 
 function insertFriendInfo(newCard, user) {
     newCard.querySelector("#userNick").textContent = user.friendNick;
-    newCard.querySelector("#userLvl").textContent = user.friendID;
+    newCard.querySelector("#userLvl").textContent = user.friendLevel;
     newCard.querySelector("#inviteLi").setAttribute("data-id", user.friendID);
     newCard.querySelector("#friendLi").setAttribute("data-id", user.friendID);
     newCard.querySelector("#friendLi").setAttribute("data-type", 1);
