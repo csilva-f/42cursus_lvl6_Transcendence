@@ -37,7 +37,7 @@ function insertGlobalUserInfo(newCard, user, users_on) {
     }
 }
 
-function insertFriendInfo(newCard, user) {
+function insertFriendInfo(newCard, user, users_on) {
     newCard.querySelector("#userNick").textContent = user.friendNick;
     newCard.querySelector("#userLvl").textContent = user.friendLevel;
     newCard.querySelector("#inviteLi").setAttribute("data-id", user.friendID);
@@ -46,6 +46,14 @@ function insertFriendInfo(newCard, user) {
     newCard.querySelector("#friendLiIcon").classList.remove("fa-user-plus")
     newCard.querySelector("#friendLiIcon").classList.add("fa-user-minus")
     newCard.querySelector("#profileLi").setAttribute("data-id", user.friendID);
+
+    const userOnStatus = newCard.querySelector("#userOnStatus");
+    if (users_on.includes(Number(user.friendID))) {
+        userOnStatus.style.backgroundColor = "green"; // Online
+    } else {
+        userOnStatus.style.backgroundColor = "white"; // Offline
+        userOnStatus.style.border = "1px solid gray";
+    }
 }
 
 function searchUser() {

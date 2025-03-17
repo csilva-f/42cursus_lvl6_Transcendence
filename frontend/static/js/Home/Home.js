@@ -14,6 +14,14 @@ function insertHistoryInfo(newCard, element, userID) {
     }
 }
 
-function insertHomeFriendInfo(newCard, element) {
-    newCard.querySelector('#friendNick').textContent = element.friendNick
+function insertHomeFriendInfo(newCard, element, users_on) {
+    newCard.querySelector('#friendNick').textContent = element.friendNick;
+    const userOnStatus = newCard.querySelector("#userOnStatus");
+
+    if (users_on.includes(Number(element.friendID))) {
+        userOnStatus.style.backgroundColor = "green"; // Online
+    } else {
+        userOnStatus.style.backgroundColor = "white"; // Offline
+        userOnStatus.style.border = "1px solid gray";
+    }
 }

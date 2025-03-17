@@ -29,13 +29,13 @@ async function fetchUsers() {
             initializeWebSocket(() => {
                 requestOnlineUsers(function (onlineUsers) {
                     console.log("Updated online users list:", onlineUsers);
-                    renderUserCards(res.nonFriendsList, data, onlineUsers);
+                    renderUserCards(res.nonFriendsList, data, onlineUsers, 1);
                 });
             });
           } else {
             requestOnlineUsers(function (onlineUsers) {
                 console.log("Updated online users list:", onlineUsers);
-                renderUserCards(res.nonFriendsList, data, onlineUsers);
+                renderUserCards(res.nonFriendsList, data, onlineUsers, 1);
             });
           }
           updateContent(langData);
@@ -51,7 +51,7 @@ async function fetchUsers() {
     });
 }
 
-function renderUserCards(usersList, cardTemplate, users_on) {
+function renderUserCards(usersList, cardTemplate, users_on, isNonFriends) {
   const divElement = document.getElementById("usersContent");
   divElement.innerHTML = "";
 
@@ -59,7 +59,11 @@ function renderUserCards(usersList, cardTemplate, users_on) {
       const newCard = document.createElement("div");
       newCard.id = "cardUserContent";
       newCard.innerHTML = cardTemplate;
-      insertGlobalUserInfo(newCard, element, users_on);
+      if (isNonFriends) {
+        insertGlobalUserInfo(newCard, element, users_on);
+      } else {
+        insertFriendInfo(newCard, element, users_on);
+      }
       divElement.appendChild(newCard);
   });
 }
@@ -95,13 +99,13 @@ async function fetchFriends() {
             initializeWebSocket(() => {
                 requestOnlineUsers(function (onlineUsers) {
                     console.log("Updated online users list:", onlineUsers);
-                    renderUserCards(res.friendships, data, onlineUsers);
+                    renderUserCards(res.friendships, data, onlineUsers, 0);
                 });
             });
           } else {
             requestOnlineUsers(function (onlineUsers) {
                 console.log("Updated online users list:", onlineUsers);
-                renderUserCards(res.friendships, data, onlineUsers);
+                renderUserCards(res.friendships, data, onlineUsers, 0);
             });
           }
           updateContent(langData);
