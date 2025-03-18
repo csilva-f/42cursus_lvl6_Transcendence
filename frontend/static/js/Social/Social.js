@@ -19,13 +19,15 @@ function insertUserInfo(newCard, user) {
     const userGamesWon = newCard.querySelector("#userGamesWon");
     const userTournamentsWon = newCard.querySelector("#userTournamentsWon");
     const inviteLi = newCard.querySelector("#inviteLi");
+    const friendLi = newCard.querySelector("#friendLi");
     const profileLi = newCard.querySelector("#profileLi");
-    userNick.textContent = user.nick;
-    userLvl.textContent = user.level;
+    userNick.textContent = user.userNick;
+    userLvl.textContent = user.userID;
     userGamesWon.textContent = user.victories;
     userTournamentsWon.textContent = user.tVictories;
-    inviteLi.setAttribute("data-id", user.id);
-    profileLi.setAttribute("data-id", user.id);
+    inviteLi.setAttribute("data-id", user.userID);
+    friendLi.setAttribute("data-id", user.userID);
+    profileLi.setAttribute("data-id", user.userID);
 
 }
 
@@ -45,4 +47,11 @@ function searchUser() {
             }
         }
     });
+}
+
+function goToProfile(userID) {
+	window.history.pushState({}, "", `/profile/${userID}`);
+	locationHandler("content");
+	fetchProfileInfo(userID);
+	fetchStatistics(userID);
 }

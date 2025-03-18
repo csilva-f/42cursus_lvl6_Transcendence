@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 from os import getenv
 from pathlib import Path
+from .hvac import get_database_credentials
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -81,14 +82,16 @@ ASGI_APPLICATION = 'ft_transcendence.asgi.application'
 #     }
 # }
 #
+DB_USERNAME, DB_PASSWORD = get_database_credentials()
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': getenv('POSTGRES_DB', ''),  # Default value if not set
-        'USER': getenv('POSTGRES_USER', ''),
-        'PASSWORD': getenv('POSTGRES_PASSWORD', ''),
-        'HOST': getenv('DB_HOST', ''),  # 'db' is the service name in docker-compose
-        'PORT': getenv('DB_PORT', '5432'),  # Default PostgreSQL port
+        'USER': DB_USERNAME,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': getenv('DB_HOST', ''),  # Replace with your database host
+        'PORT': getenv('DB_PORT', '5432'),     # Replace with your database port
     }
 }
 

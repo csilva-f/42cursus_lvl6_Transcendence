@@ -6,6 +6,7 @@ async function fetchUsers() {
 	setTimeout(() => {
 		reloadIcon.classList.remove("rotate");
 	}, 250);
+	const accessToken = await JWT.getAccess();
 	fetch("/templates/Components/CardUser.html")
 		.then((response) => {
 			if (!response.ok) {
@@ -14,16 +15,18 @@ async function fetchUsers() {
 			return response.text();
 		})
 		.then((data) => {
-			const APIurl = `/api/get-userextensions/`
+			const APIurl = `/api/get-nonfriendslist/`
 			$.ajax({
 				type: "GET",
 				url: APIurl,
 				contentType: "application/json",
-				headers: { Accept: "application/json" },
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
 				success: function (res) {
 					const divElement = document.getElementById("usersContent");
 					divElement.innerHTML = "";
-					res.users.forEach((element) => {
+					res.nonFriendsList.forEach((element) => {
 						const newCard = document.createElement("div");
 						newCard.id = "cardUserContent"
 						newCard.innerHTML = data;
@@ -62,6 +65,31 @@ async function invitePlayer(invitedUserID) {
 		data: JSON.stringify(body),
 		success: function (res) {
 			showSuccessToast(langData, langData.gameInvited);
+		},
+		error: function (xhr, status, error) {
+			showErrorToast(APIurl, error, langData);
+		}
+	});
+}
+
+//quando dou reload num game finished ele fica a aparecer a cena de dar join, tratar disso
+async function friendshipPlayer(requestedFriend) {
+	const userLang = localStorage.getItem("language") || "en";
+	const langData = await getLanguageData(userLang);
+	const APIurl = `/api/send-friendrequest/`;
+	let body = {
+		user1ID: 1,
+		user2ID: requestedFriend
+	};
+	console.log("body: ", body);
+	$.ajax({
+		type: "POST",
+		url: APIurl,
+		contentType: "application/json",
+		headers: { Accept: "application/json" },
+		data: JSON.stringify(body),
+		success: function (res) {
+			//showSuccessToast(langData, langData.friendshipInvited);
 		},
 		error: function (xhr, status, error) {
 			showErrorToast(APIurl, error, langData);

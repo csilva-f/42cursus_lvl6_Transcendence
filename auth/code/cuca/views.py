@@ -159,3 +159,28 @@ class ValidateTokenView(APIView):
             return Response({'error': 'Token has expired'}, status=status.HTTP_401_UNAUTHORIZED)
         except jwt.InvalidTokenError:
             return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
+
+class GetProfileAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        data = {
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email,
+            'phone_number': user.phone_number
+        }
+        return Response({'data': data}, status=status.HTTP_200_OK)
+
+class UpdateProfileAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        data = request.data
+        user.first_name = data.get('first_name', user.first_name)
+        user.last_name = data.get('last_name', user.last_name)
+        user.phone_number = data.get('phone_number', user.phone_number)
+        user.save()
+        return Response({'message': 'Profile updated successfully.'}, status=status.HTTP_200_OK)
