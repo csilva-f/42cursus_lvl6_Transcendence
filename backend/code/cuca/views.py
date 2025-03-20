@@ -568,7 +568,7 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                     game.save()
                     return JsonResponse({"message": "Game updated successfully, forced finished was performed", "game_id": game.game}, status=201)
                 return JsonResponse({"error": "Override status only allowed for finished"}, status=400)
-            if not user_id:
+            if not user_id and not is_join:
                 return JsonResponse({"error": "User ID is required for update"}, status=400)
             if user_id == game.user1 and is_join:
                 return JsonResponse({"error": "User2 must be different from User1"}, status=400)
@@ -577,7 +577,6 @@ def post_update_game(request): #update statusID acording to user2 and winner var
             if not is_join and user_id not in [game.user1, game.user2]:
                 return JsonResponse({"error": "Winner must be either User1 or User2"}, status=400)
             if not is_join:
-                game.winnerUser = user_id
                 game.status_id = 3
                 game.endTS = now() 
 
@@ -593,7 +592,7 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 game.user2_points = u2_points
                 game.user1_hits = u1_hits
                 game.user2_hits = u2_hits
-
+                game.winnerUser = game.user1 if int(game.user1_points) > int(game.user2_points) else game.user2
                 if game.user1 == user_id and game.user1 != -1:
                     tUserExtension.objects.filter(user=game.user1).update(ulevel=models.F('ulevel') + 0.2)
                     tUserExtension.objects.filter(user=game.user2).update(ulevel=models.F('ulevel') + 0.05)
@@ -669,6 +668,7 @@ def post_create_userextension(request):
                         "nickname": userext.nick,
                         "birthdate": str(userext.birthdate) if userext.birthdate else None,
                         "gender": userext.gender.gender if userext.gender else None,
+                        "level": userext.ulevel,
                         "avatar": userext.avatar,
                         "bio": userext.bio
                     },
@@ -685,6 +685,7 @@ def post_create_userextension(request):
                     "nickname": userext.nick,
                     "birthdate": str(userext.birthdate) if userext.birthdate else None,
                     "gender": userext.gender.gender if userext.gender else None,
+                    "level": userext.ulevel,
                     "avatar": userext.avatar,
                     "bio": userext.bio
                 },
@@ -1045,7 +1046,6 @@ def get_friendships(request):
         status_id = request.GET.get('statusID')
         u_id = request.GET.get('uid')
         if user_id:
-            print("user_id")
             if user_id.strip() == "":
                 return JsonResponse({"error": "Filter can't be empty."}, status=400)
             user_id = validate_id(user_id)
@@ -1062,8 +1062,9 @@ def get_friendships(request):
                 friendships = tFriends.objects.filter(Q(user1_id=user_id) | Q(user2_id=user_id))
             friends_data = [
                 {
-                    'friendID': friends.user2.user if friends.user1.user == user_id else friends.user1.user,
-                    'friendNick': friends.user2.nick if friends.user1.user == user_id else friends.user1.nick,
+                    'friendID': friends.user2.user if int(friends.user1.user) == int(user_id) else friends.user1.user,
+                    'friendNick': friends.user2.nick if int(friends.user1.user) == int(user_id) else friends.user1.nick,
+                    'friendLevel': friends.user2.ulevel if int(friends.user1.user) == int(user_id) else friends.user1.ulevel,
                     'statusID': friends.requestStatus.status, 
                     'statusLabel': friends.requestStatus.label
                 }
@@ -1071,8 +1072,6 @@ def get_friendships(request):
             ]
             return JsonResponse({'friendships': friends_data}, safe=False, status=200)
         elif u_id:
-            print("u_id")
-            print(u_id)
             if not tUserExtension.objects.filter(user=u_id).exists():
                 return JsonResponse({"error": f"User {u_id} does not exist"}, status=404)
             if status_id:
@@ -1084,10 +1083,12 @@ def get_friendships(request):
                 friendships = tFriends.objects.filter(Q(user1_id=u_id) | Q(user2_id=u_id), Q(requestStatus_id=status_id))
             else:
                 friendships = tFriends.objects.filter(Q(user1_id=u_id) | Q(user2_id=u_id))
+                
             friends_data = [
                 {
                     'friendID': friends.user2.user if int(friends.user1.user) == int(u_id) else friends.user1.user,
                     'friendNick': friends.user2.nick if int(friends.user1.user) == int(u_id) else friends.user1.nick,
+                    'friendLevel': friends.user2.ulevel if int(friends.user1.user) == int(u_id) else friends.user1.ulevel,
                     'statusID': friends.requestStatus.status, 
                     'statusLabel': friends.requestStatus.label
                 }
@@ -1130,15 +1131,14 @@ def post_send_friend_req(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            user1_id = data.get('uid')
-            user2_id = data.get('user2ID')
+            user1_id = int(data.get('uid'))
+            user2_id = int(data.get('user2ID'))
             if not user1_id:
                 return JsonResponse({"error": "The ID of the user sending the friendship request is required"}, status=400)
             if not user2_id:
                 return JsonResponse({"error": "The ID of the user receiving the friendship request is required"}, status=400)
             if user1_id == user2_id:
                 return JsonResponse({"error": "A user cannot send a friendship request to themselves"}, status=400)
-            
             try:
                 user1 = tUserExtension.objects.get(user=user1_id)
             except tUserExtension.DoesNotExist:
@@ -1147,7 +1147,6 @@ def post_send_friend_req(request):
                 user2 = tUserExtension.objects.get(user=user2_id)
             except tUserExtension.DoesNotExist:
                 return JsonResponse({"error": f"User {user2_id} does not exist"}, status=404)
-
             friendship = tFriends.objects.filter(
                 Q(user1_id=user1_id, user2_id=user2_id) | Q(user1_id=user2_id, user2_id=user1_id)
             ).first()
@@ -1246,8 +1245,9 @@ def get_pendingrequests(request):
                 )
             friends_data = [
                 {
-                    'userID': friends.user2.user if friends.user1.user == user_id else friends.user1.user,
-                    'userNick': friends.user2.nick if friends.user1.user == user_id else friends.user1.nick,
+                    'userID': friends.user2.user if int(friends.user1.user) == int(user_id) else friends.user1.user,
+                    'userNick': friends.user2.nick if int(friends.user1.user) == int(user_id) else friends.user1.nick,
+                    'userLevel': friends.user2.ulevel if int(friends.user1.user) == int(user_id) else friends.user1.ulevel,
                     'statusID': friends.requestStatus.status, 
                     'statusLabel': friends.requestStatus.label
                 }
@@ -1284,7 +1284,8 @@ def get_nonfriendslist(request):
             non_friends_data = [
                 {
                     'userID': user.user,
-                    'userNick': user.nick
+                    'userNick': user.nick,
+                    'userLevel': user.ulevel
                 }
                 for user in non_friends
             ]

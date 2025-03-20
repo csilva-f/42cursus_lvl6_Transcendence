@@ -313,3 +313,28 @@ class UpdateProfileViewSet(viewsets.ViewSet):
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ChangePasswordViewSet(viewsets.ViewSet):
+    permission_classes = [AllowAny]
+
+    def create(self, request):
+        backend_url = 'http://auth:8000/register/change-password/'
+        try:
+            print (request.data)
+            headers = {
+                'Content-Type': 'application/json',
+                'Origin': request.headers['Origin'],
+                'Authorization': request.headers['Authorization'],
+                'Accept': 'application/json',
+            }
+            backend_response = requests.post(backend_url, json=request.data, headers=headers)
+            backend_response.raise_for_status()
+            data = backend_response.json()
+            return Response(data, status=status.HTTP_201_CREATED)
+        except requests.exceptions.HTTPError as http_err:
+            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+        except requests.exceptions.RequestException as req_err:
+            return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except ValueError as json_err:
+            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

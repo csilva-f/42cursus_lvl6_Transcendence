@@ -24,15 +24,20 @@ async function fetchUsers() {
           Authorization: `Bearer ${accessToken}`,
         },
         success: function (res) {
-          const divElement = document.getElementById("usersContent");
-          divElement.innerHTML = "";
-          res.nonFriendsList.forEach((element) => {
-            const newCard = document.createElement("div");
-            newCard.id = "cardUserContent";
-            newCard.innerHTML = data;
-            insertGlobalUserInfo(newCard, element);
-            divElement.appendChild(newCard);
-          });
+          if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
+            console.warn("WebSocket not found or closed. Reinitializing...");
+            initializeWebSocket(() => {
+                requestOnlineUsers(function (onlineUsers) {
+                    console.log("Updated online users list:", onlineUsers);
+                    renderUserCards(res.nonFriendsList, data, onlineUsers, 1);
+                });
+            });
+          } else {
+            requestOnlineUsers(function (onlineUsers) {
+                console.log("Updated online users list:", onlineUsers);
+                renderUserCards(res.nonFriendsList, data, onlineUsers, 1);
+            });
+          }
           updateContent(langData);
         },
         error: function (xhr, status, error) {
@@ -44,6 +49,23 @@ async function fetchUsers() {
     .catch((error) => {
       console.error("There was a problem with the fetch operation:", error);
     });
+}
+
+function renderUserCards(usersList, cardTemplate, users_on, isNonFriends) {
+  const divElement = document.getElementById("usersContent");
+  divElement.innerHTML = "";
+
+  usersList.forEach(element => {
+      const newCard = document.createElement("div");
+      newCard.id = "cardUserContent";
+      newCard.innerHTML = cardTemplate;
+      if (isNonFriends) {
+        insertGlobalUserInfo(newCard, element, users_on);
+      } else {
+        insertFriendInfo(newCard, element, users_on);
+      }
+      divElement.appendChild(newCard);
+  });
 }
 
 async function fetchFriends() {
@@ -72,15 +94,20 @@ async function fetchFriends() {
           Authorization: `Bearer ${accessToken}`,
         },
         success: function (res) {
-          const divElement = document.getElementById("usersContent");
-          divElement.innerHTML = "";
-          res.friendships.forEach((element) => {
-            const newCard = document.createElement("div");
-            newCard.id = "cardUserContent";
-            newCard.innerHTML = data;
-            insertFriendInfo(newCard, element);
-            divElement.appendChild(newCard);
-          });
+          if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
+            console.warn("WebSocket not found or closed. Reinitializing...");
+            initializeWebSocket(() => {
+                requestOnlineUsers(function (onlineUsers) {
+                    console.log("Updated online users list:", onlineUsers);
+                    renderUserCards(res.friendships, data, onlineUsers, 0);
+                });
+            });
+          } else {
+            requestOnlineUsers(function (onlineUsers) {
+                console.log("Updated online users list:", onlineUsers);
+                renderUserCards(res.friendships, data, onlineUsers, 0);
+            });
+          }
           updateContent(langData);
         },
         error: function (xhr, status, error) {

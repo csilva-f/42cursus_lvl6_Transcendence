@@ -1,3 +1,5 @@
+window.ws_os = null;
+
 async function sendLogin() {
 	// Login function
 	const email = $("#loginEmail").val();
@@ -13,6 +15,7 @@ async function sendLogin() {
 			jwtToken = data.access; // Store the JWT token
 			const opt_status = await OTP_check_enable(jwtToken);
 			console.log(opt_status);
+			let user = null;
 			if (opt_status == true) {
 				OTP_send_email(jwtToken);
 				window.location.href = "/mfa";
@@ -22,11 +25,23 @@ async function sendLogin() {
 					console.log(data);
 					JWT.setToken(data);
 					console.log("Access: ", JWT.getAccess());
-					await checkUserExtension();
+					user = await checkUserExtension();
+					localStorage.setItem("uid", user.id);
 				}
 				window.history.pushState({}, "", "/");
 				locationHandler("content");
 			}
+			console.log(user);
+
+			initializeWebSocket(() => {
+				if (user && window.ws_os && window.ws_os.readyState === WebSocket.OPEN) {
+                    window.ws_os.send(JSON.stringify({ user_id: user.id }));
+                }
+                // requestOnlineUsers(function (onlineUsers) {
+                //     console.log("Test: Online users list (login):", onlineUsers);
+                // });
+            });
+
 			$("#login-message").text("Login successful!");
 		},
 		error: function (xhr) {
@@ -34,6 +49,58 @@ async function sendLogin() {
 			$("#login-message").text(data.error || "Login failed.");
 		},
 	});
+}
+
+function initializeWebSocket(callback = null) {
+    if (window.ws_os && window.ws_os.readyState === WebSocket.OPEN) {
+        console.log("WebSocket already open (no need for recreation).");
+        if (callback) callback();
+        return;
+    }
+
+    console.log("Initializing WebSocket...");
+    const wsUrl = `wss://${window.location.host}/onlineStatus/`;
+    window.ws_os = new WebSocket(wsUrl);
+
+    window.ws_os.onopen = function () {
+        console.log("WebSocket: user connection established successfully.");
+        if (callback) callback();
+    };
+
+	window.ws_os.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        if (data.online_users) {
+            console.log("Online users list:", data.online_users);
+            if (window.onlineUsersCallback) {
+                window.onlineUsersCallback(data.online_users);
+            }
+        } else {
+            console.log("Message received:", e.data);
+        }
+    };
+
+    window.ws_os.onerror = function (error) {
+        console.error("WebSocket error:", error);
+    };
+
+    window.ws_os.onclose = function (event) {
+        console.log("WebSocket connection closed:", event);
+    };
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    initializeWebSocket();
+});
+
+function requestOnlineUsers(callback) {
+	console.log(window.ws_os);
+    if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
+        console.error("WebSocket is not open. Cannot fetch online users.");
+        return;
+    }
+    window.ws_os.send(JSON.stringify({ action: "queryOnline" }));
+
+	window.onlineUsersCallback = callback;
 }
 
 async function checkUserExtension() {
@@ -412,22 +479,123 @@ async function fetchProfileInfo(userID) {
 		},
 		success: function (res) {
 			console.log(res);
-			insertProfileInfo(res.users[0]);
+
+			if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
+				console.warn("WebSocket not found or closed. Reinitializing...");
+				initializeWebSocket(() => {
+					requestOnlineUsers(function (onlineUsers) {
+						console.log("Updated online users list:", onlineUsers);
+						insertProfileInfo(res.users[0], onlineUsers);
+					});
+				});
+			} else {
+				requestOnlineUsers(function (onlineUsers) {
+					console.log("Updated online users list:", onlineUsers);
+					insertProfileInfo(res.users[0], onlineUsers);
+				});
+			}
 			updateContent(langData);
 		},
 		error: function (xhr, status, error) {
-			console.error("Error Thrown:", error);
+			console.error("Error thrown:", error);
 			showErrorToast(APIurl, error, langData);
 		},
 	});
 }
 
-async function insertProfileInfo(UserElement) {
+// async function getUserExtensions(userID, accessToken) {
+//     const APIurl = userID ? `/api/get-userextensions/?userID=${userID}` : `/api/get-userextensions/`;
+//     try {
+//         const response = await $.ajax({
+//             type: "GET",
+//             url: APIurl,
+//             contentType: "application/json",
+//             headers: { Authorization: `Bearer ${accessToken}` },
+//         });
+//         console.log("Data get-userextension:", response);
+//         return response.users[0];
+//     } catch (error) {
+//         console.error("Error GET user extension:", error);
+//         return null;
+//     }			
+// }
+
+// async function getUserProfile(accessToken) {
+//     const APIurl = `/api/get-profile/`;
+//     try {
+//         const response = await $.ajax({
+//             type: "GET",
+//             url: APIurl,
+//             contentType: "application/json",
+//             headers: { Authorization: `Bearer ${accessToken}` },
+//         });
+//         console.log("Data get-profile:", response);
+//         return response.data || response;
+//     } catch (error) {
+//         console.error("Error GET user profile:", error);
+//         return null;
+//     }
+// }
+
+// async function fetchProfileInfo(userID) {
+//     const userLang = localStorage.getItem("language") || "en";
+//     const langData = await getLanguageData(userLang);
+//     const accessToken = await JWT.getAccess();
+//     console.log("🔹 fetchProfileInfo() iniciado, accessToken:", accessToken);
+
+//     try {
+//         const [userExtensions, userProfile] = await Promise.all([
+//             getUserExtensions(userID, accessToken),
+//             getUserProfile(accessToken)
+//         ]);
+
+//         if (!userExtensions || !userProfile) {
+//             console.error("Error: incomplete data!");
+//             return;
+//         }
+
+//         const userData = { ...userExtensions, ...userProfile };
+//         console.log("Combined profile data:", userData);
+
+//         if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
+// 			console.warn("WebSocket not found or closed. Reinitializing...");
+// 			initializeWebSocket(() => {
+// 				requestOnlineUsers(function (onlineUsers) {
+// 					console.log("Updated online users list:", onlineUsers);
+// 					insertProfileInfo(userData, onlineUsers);
+// 				});
+// 			});
+// 		} else {
+// 			requestOnlineUsers(function (onlineUsers) {
+// 				console.log("Updated online users list:", onlineUsers);
+// 				insertProfileInfo(userData, onlineUsers);
+// 			});
+// 		}
+
+//         updateContent(langData);
+
+//     } catch (error) {
+//         console.error("Error profile data:", error);
+//         showErrorToast("Error loading profile", error, langData);
+//     }
+// }
+
+async function insertProfileInfo(UserElement, users_on) {
+	console.log(UserElement);
 	document.getElementById("birthdayText").textContent= UserElement.birthdate;
 	document.getElementById("genderText").textContent= UserElement.gender;
 	document.getElementById("phoneNumberText").textContent= UserElement.gender;
 	document.getElementById("nicknameText").textContent= UserElement.nick;
 	document.getElementById("bioText").textContent= UserElement.bio;
+
+	console.log(Number(UserElement.id));
+	console.log(users_on);
+	if (users_on.includes(Number(UserElement.id))) {
+        userOnStatus.style.backgroundColor = "green"; // Online
+    } else {
+        userOnStatus.style.backgroundColor = "white"; // Offline
+        userOnStatus.style.border = "1px solid gray";
+    }
 }
 
 async function validateEmail() {

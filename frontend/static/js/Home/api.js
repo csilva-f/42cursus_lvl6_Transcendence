@@ -67,14 +67,30 @@ async function fetchHomeFriends() {
           Authorization: `Bearer ${accessToken}`,
         },
         success: function (res) {
-          const divElement = document.getElementById("friendsContent");
-          divElement.innerHTML = "";
-          res.friendships.forEach((element) => {
-            const newCard = document.createElement("div");
-            newCard.innerHTML = data;
-            insertHomeFriendInfo(newCard, element);
-            divElement.appendChild(newCard);
-          });
+          // const divElement = document.getElementById("friendsContent");
+          // divElement.innerHTML = "";
+          // res.friendships.forEach((element) => {
+          //   const newCard = document.createElement("div");
+          //   newCard.innerHTML = data;
+          //   insertHomeFriendInfo(newCard, element);
+          //   divElement.appendChild(newCard);
+          // });
+
+          if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
+            console.warn("WebSocket not found or closed. Reinitializing...");
+            initializeWebSocket(() => {
+                requestOnlineUsers(function (onlineUsers) {
+                    console.log("Updated online users list:", onlineUsers);
+                    renderHomeFriends(res.friendships, data, onlineUsers);
+                });
+            });
+          } else {
+            requestOnlineUsers(function (onlineUsers) {
+                console.log("Updated online users list:", onlineUsers);
+                renderHomeFriends(res.friendships, data, onlineUsers);
+            });
+          }
+
           updateContent(langData);
         },
         error: function (xhr, status, error) {
@@ -86,6 +102,18 @@ async function fetchHomeFriends() {
     .catch((error) => {
       console.error("There was a problem with the fetch operation:", error);
     });
+}
+
+function renderHomeFriends(usersList, cardTemplate, users_on) {
+  const divElement = document.getElementById("friendsContent");
+  divElement.innerHTML = "";
+
+  usersList.forEach(element => {
+    const newCard = document.createElement("div");
+    newCard.innerHTML = cardTemplate;
+    insertHomeFriendInfo(newCard, element, users_on);
+    divElement.appendChild(newCard);
+  });
 }
 
 async function finishProfile() {

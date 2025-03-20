@@ -269,7 +269,7 @@ class GetUserStatistics(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        backend_url = settings.BACKEND_UEXT_URL
+        backend_url = settings.BACKEND_USTAT_URL
         query_params = request.GET.copy()
         userid = request.user.user_id
         query_params["uid"] = userid

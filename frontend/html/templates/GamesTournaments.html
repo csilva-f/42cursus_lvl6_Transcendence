@@ -175,7 +175,6 @@
       <!-- Remote Create Form -->
       <div class="modal-body d-none" id="remoteForm">
         <form class="row g-3 needs-validation p-3" id="remoteFormID" novalidate>
-          <!-- P1 Nickname NOTACAROL: meter no placeholder do nickname o nick real do user -->
           <div class="input-group has-validation mt-3">
             <span class="input-group-text" id="basic-addon1R" style="margin-top: 10px;">
               <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
@@ -238,7 +237,7 @@
               <div class="input-group has-validation">
                 <span class="input-group-text" id="basic-addon1">
                   <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
-                    type="color" class="form-control-color p-0 m-0" id="P2ColorInput" value="#AC61C3">
+                    type="color" class="form-control-color p-0 m-0" id="P2ColorInput" value="#ffC3AC">
                 </span>
                 <input type="text" class="form-control" id="P2NickInput" placeholder="Player2 Nickname(traduzir)"
                   aria-describedby="inputGroupPrepend" required>
@@ -262,7 +261,7 @@
               <div class="input-group has-validation">
                 <span class="input-group-text" id="basic-addon1">
                   <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
-                    type="color" class="form-control-color p-0 m-0" id="P4ColorInput" value="#C361AC">
+                    type="color" class="form-control-color p-0 m-0" id="P4ColorInput" value="#3BAC61">
                 </span>
                 <input type="text" class="form-control" id="P4NickInput" placeholder="Player4 Nickname(traduzir)"
                   aria-describedby="inputGroupPrepend" required>
@@ -324,9 +323,25 @@
             <!-- End Local Tournament Form -->
           </div>
           <!-- Action Buttons -->
-          <div class="col-md-4 text-start mt-4">
+          <!-- <div class="col-md-4 text-start mt-4">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-              onclick="closeGameForm([localTournamentFormID, remoteTournamentFormID],'createTournamentOptions', 'confirmTournamentBtn', 'backTournamentBtn')">Close</button>
+              onclick="closeGameForm([localTournamentFormID],'createTournamentOptions', 'confirmTournamentBtn', 'backTournamentBtn')">Close</button>
+          </div> -->
+          <div class="modal-footer">
+            <ul class="nav nav-pills" style="height: 2.5rem">
+              <li id="backTournamentBtn"
+                class="pop-hover-xs modalActionsLi nav-item border border-2 border-black rounded-3 me-2 d-flex align-items-center bg-black d-none"
+                onclick="closeGameForm([localTournamentFormID],'createTournamentOptions', 'confirmTournamentBtn', 'backTournamentBtn')">
+                <i class="fa-solid fa-arrow-left fa-l ms-2" style="color: white"></i>
+                <p class="h6 m-0 ms-2 d-none d-xl-block" style="font-weight: bold; color: white" data-i18n="back"></p>
+              </li>
+              <li
+                class="pop-hover-xs modalActionsLi nav-item border border-2 border-black rounded-3 ms-2 me-3 d-flex align-items-center"
+                data-bs-dismiss="modal" onclick="closeGameForm([localTournamentFormID],'createTournamentOptions', 'confirmTournamentBtn', 'backTournamentBtn')">
+                <i class="fa-solid fa-xmark fa-xl ms-2" style="color: black"></i>
+                <p class="h6 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="close"></p>
+              </li>
+            </ul>
           </div>
           <!-- End Action Buttons -->
         </div>

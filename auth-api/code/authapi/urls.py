@@ -2,7 +2,7 @@
 from django.urls import path, include
 from rest_framework import routers
 from .views import PostRegisterViewSet,PostAuthViewSet, PostRefreshViewSet, EnableOTPViewSet, SendOTPViewSet, VerifyOTPViewSet,VerifyEmailViewSet, \
-    RecoverPasswordViewSet, ResetPasswordViewSet, GetOTPStatusViewSet,ValidateTokenViewSet, UpdateProfileViewSet, GetProfileViewSet
+    RecoverPasswordViewSet, ResetPasswordViewSet, GetOTPStatusViewSet,ValidateTokenViewSet, UpdateProfileViewSet, GetProfileViewSet, ChangePasswordViewSet
 
 router = routers.DefaultRouter()
 router.register(r'register', PostRegisterViewSet, basename='Register')
@@ -17,6 +17,8 @@ router.register(r'recover-password', RecoverPasswordViewSet, basename='recover-p
 router.register(r'reset-password', ResetPasswordViewSet, basename='reset-password')
 router.register(r'get-profile', GetProfileViewSet, basename='get-profile')
 router.register(r'update-profile', UpdateProfileViewSet, basename='update-profile')
+router.register(r'change-password', ChangePasswordViewSet, basename='change-password')
+
 #router.register(r'validate-token', ValidateTokenViewSet, basename='validate-token')
 
 

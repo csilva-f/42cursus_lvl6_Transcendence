@@ -19,6 +19,7 @@
     "finished": "Terminados",
     "waiting": "Á espera",
     "createModal": "Criar jogo",
+    "createRemoteMsg": "Deseja criar um novo jogo remoto?",
     "createTournamentModal": "Criar Torneios",
     "close": "Fechar",
     "back": "Voltar",
