@@ -1,0 +1,199 @@
+/* Animation */
+.pop-hover {
+	transition: transform .3s;
+}
+
+.pop-hover:hover {
+	transform: scale(1.2);
+}
+
+.pop-hover-s {
+	transition: transform .3s;
+}
+
+.pop-hover-s:hover {
+	transform: scale(1.1);
+}
+
+.pop-hover-xs {
+	transition: transform .3s;
+}
+
+.pop-hover-xs:hover {
+	transform: scale(1.05);
+}
+
+.pop-hover-xxs {
+	transition: transform .3s;
+}
+
+.pop-hover-xxs:hover {
+	transform: scale(1.02);
+}
+
+/* End Animation */
+
+.loginActive {
+	display: block !important;
+}
+
+.disabled-content {
+	pointer-events: none;
+	cursor: not-allowed;
+	opacity: 0.7;
+}
+
+.enabled-content {
+	pointer-events: all;
+	cursor: pointer;
+	opacity: 1;
+}
+
+.bigger-checkbox {
+	width: 1.3rem !important;
+	height: 1.3rem !important;
+}
+
+@media (width < 1200px) {}
+
+@media (width < 992px) {
+	#mainMsgDiv {
+		justify-content: end;
+	}
+
+	#mainMsg {
+		display: none;
+	}
+
+	#subMsg {
+		display: none !important;
+	}
+
+	#sidebarBtn {
+		display: block !important;
+	}
+
+	#user1Content {
+		display: none !important;
+	}
+
+	#user2Content {
+		display: none !important;
+	}
+
+	#user1Div {
+		width: 6rem !important;
+		min-width: 6rem !important;
+	}
+
+	#user2Div {
+		width: 6rem !important;
+		min-width: 6rem !important;
+	}
+	#sidebarBtn {
+		display: block !important;
+	}
+}
+
+.noBorder {
+	border: none !important;
+}
+
+/* Animation */
+.fadeIn {
+	-webkit-animation-name: fadeIn;
+	animation-name: fadeIn;
+	-webkit-animation-duration: 0.5s;
+	animation-duration: 0.5s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both;
+}
+
+@-webkit-keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+.noScrollBar::-webkit-scrollbar {
+	display: none;
+}
+
+.noScrollBar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+html {
+	height: 100%;
+}
+
+ /* Login and profile page */
+#loginSignUpTab .nav-item .nav-link.active {
+	background-color: var(--primary) !important;
+	border-color: var(--primary) !important;
+	color: #fff !important;
+}
+
+#loginSignUpTab .nav-item .nav-link:hover {
+	background-color: var(--primary) !important;
+	color: #fff !important;
+}
+
+.nav-pills .nav-link {
+	color: #000;
+}
+
+.nav-pills .nav-link i {
+	color: #000;
+}
+
+.nav-pills .nav-link.active {
+	color: #fff !important;
+}
+
+.nav-pills .nav-link.active i {
+	color: #fff !important;
+}
+
+/* Static images for profile page */
+body.profile-page {
+	background-image: url('/static/img/profile_page/bot1-removebg-preview.svg'), 
+					  url('/static/img/profile_page/bot2-removebg-preview.svg'), 
+					  url('/static/img/profile_page/bot3-removebg-preview.svg');
+	background-repeat: no-repeat, no-repeat, no-repeat;
+	background-position: 10% 20%, 50% 60%, 80% 30%;
+	background-size: 150px, 200px, 180px;
+	background-attachment: fixed;
+}
+
+
+intl-tel-input {
+	display: table-cell;
+  }
+  .intl-tel-input .selected-flag {
+	z-index: 4;
+  }
+  .intl-tel-input .country-list {
+	z-index: 5;
+  }
+  .input-group .intl-tel-input .form-control {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 0;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 0;
+  }

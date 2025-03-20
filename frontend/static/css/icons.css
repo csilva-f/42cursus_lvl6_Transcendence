@@ -1,0 +1,71 @@
+/* Main Icons */
+.iconActive {
+    background-color: var(--mainActiveBg);
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.iconMainPage i {
+    color: var(--mainActiveIcon) !important;
+}
+
+.iconMainPage p {
+    color: var(--mainActiveText) !important;
+}
+
+.iconActive .nav-link {
+    color: var(--mainActiveIcon) !important;
+}
+
+.iconActive i {
+    color: var(--mainActiveIcon) !important;
+}
+
+.iconActive p {
+    color: var(--mainActiveText) !important;
+}
+
+.iconInactive {
+    background-color: var(--mainInactiveBg);
+}
+
+.iconInactive .nav-link {
+    color: var(--mainInactiveIcon) !important;
+}
+
+.iconInactive i {
+    color: var(--mainInactiveIcon) !important;
+}
+
+.iconInactive p {
+    color: var(--mainInactiveText) !important;
+}
+/* End Main Icons */
+
+/* Sidebar Icons */
+.iconSBActive {
+    background-color: var(--sidebarActiveBg);
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.iconSBActive .nav-link {
+    color: var(--sidebarActiveIcon) !important;
+}
+
+.iconSBActive i {
+    color: var(--sidebarActiveIcon) !important;
+}
+
+.iconSBInactive {
+    background-color: var(--sidebarInactiveBg);
+}
+
+.iconSBInactive .nav-link {
+    color: var(--sidebarInactiveIcon) !important;
+}
+
+.iconSBInactive i {
+    color: var(--sidebarInactiveIcon) !important;
+}
+/* End Sidebar Icons */

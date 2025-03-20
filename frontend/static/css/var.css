@@ -1,0 +1,26 @@
+:root {
+    --bodyBg: #f5ebf4 ;    
+    --layoutBg: #ffffffc5;
+    --cardBg: #6f386b40;
+    --primary: #482445;
+    --secondary: #de94ad;
+    /*? Main Components */
+    --mainActiveBg: var(--primary);
+    --mainActiveIcon: white;
+    --mainActiveText: white;
+    --mainInactiveBg: transparent;
+    --mainInactiveIcon: black;
+    --mainInactiveText: black;
+    /*? Secondary Components */
+    --secondaryBg: var(--secondary);
+    --secondaryIcon: white;
+    --secondaryText: white;
+    /*? Sidebar Components */
+    --sidebarBg: var(--primary);
+    --sidebarActiveBg: white;
+    --sidebarActiveIcon: var(--primary);
+    --sidebarInactiveBg: transparent;
+    --sidebarInactiveIcon: white;
+    /*? Other Components */
+    --progressLevelBg: var(--primary)
+}

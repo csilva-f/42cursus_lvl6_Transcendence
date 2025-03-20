@@ -1,0 +1,307 @@
+services:
+  auth:
+    container_name: auth
+    build: ./auth
+    volumes:
+      #- auth-data:/code:rw
+      - ./auth/code:/code:rw
+    ports:
+      - "9001:8000"
+    networks:
+      - backend
+    init: true
+    restart: on-failure
+    env_file:
+      - ./auth/.env
+    secrets:
+      - vault_root_token
+
+  auth-db:
+    container_name: auth-db
+    build: ./auth-db
+    env_file:
+      - ./auth-db/.env
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data:rw
+    networks:
+      - backend
+    secrets:
+      - postgres_user
+      - postgres_password
+
+  auth-api:
+    container_name: auth-api
+    build: ./auth-api
+    volumes:
+      #- auth-api-data:/code:rw
+      - ./auth-api/code:/code:rw
+    networks:
+      - backend
+      - frontend
+    ports:
+      - "5556:8000"
+    init: true
+    restart: on-failure
+    env_file:
+      - ./auth-api/.env
+
+  vault-db:
+    container_name: vault-db
+    build: ./vault-db
+    env_file:
+      - ./vault-db/.env
+    volumes:
+      - vault-db-data:/var/lib/postgresql/data:rw
+    networks:
+      - backend
+    secrets:
+      - postgres_user
+      - postgres_password
+
+  vault:
+    container_name: vault
+    build: ./vault
+    volumes:
+      - vault-data:/vault/file:rw
+      - secrets-data:/vault/secrets:rw
+    networks:
+      - backend
+    ports:
+      - "8200:8200"
+    init: true
+    restart: on-failure
+    env_file:
+      - ./vault/.env
+    secrets:
+      - vault_root_token
+      - postgres_user
+      - postgres_password
+
+  backend-api:
+    container_name: backend-api
+    build: ./backend-api
+    volumes:
+      #- backend-api-data:/code:rw
+      - ./backend-api/code:/code:rw
+    networks:
+      - backend
+      - frontend
+    ports:
+      - "5555:8000"
+    init: true
+    restart: on-failure
+    env_file:
+      - ./backend-api/.env
+
+  backend:
+    container_name: backend
+    build: ./backend
+    volumes:
+      #- backend-data:/code:rw
+      - ./backend/code:/code:rw
+    networks:
+      - backend
+    ports:
+      - "9000:8002"
+    init: true
+    restart: on-failure
+    env_file:
+      - ./backend/.env
+    secrets:
+      - vault_root_token
+
+  channels:
+    container_name: channels
+    build: ./channels
+    volumes:
+      #- channels-data:/code:rw
+      - ./channels/code:/code:rw
+    networks:
+      - frontend
+    ports:
+      - "9010:8000"
+    init: true
+    restart: on-failure
+    env_file:
+      - ./channels/.env
+
+  backend-db:
+    container_name: backend-db
+    build: ./backend-db
+    env_file:
+      - ./backend-db/.env
+    volumes:
+      - backend-db-data:/var/lib/postgresql/data:rw
+    networks:
+      - backend
+    secrets:
+      - postgres_user
+      - postgres_password
+
+  email:
+    container_name: email
+    build: ./email
+    volumes:
+      #- email-data:/code:rwx
+      - ./email/code:/code:rwx
+    ports:
+      - "9005:8000"
+    networks:
+      - backend
+    init: true
+    restart: on-failure
+    env_file:
+      - ./email/.env
+    secrets:
+      - vault_root_token
+
+  email-db:
+    container_name: email-db
+    build: ./email-db
+    env_file:
+      - ./email-db/.env
+    volumes:
+      - email-db-data:/var/lib/postgresql/data:rw
+    networks:
+      - backend
+    secrets:
+      - postgres_user
+      - postgres_password
+
+  nginx:
+    container_name: nginx
+    build: ./nginx
+    volumes:
+      #- frontend-data:/frontend:rw
+      - ./frontend:/frontend:rw
+    networks:
+      - frontend
+    ports:
+      - "8000:443"
+    init: true
+    restart: on-failure
+    env_file:
+      - ./nginx/.env
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6378:6379"
+    networks:
+      - frontend
+
+networks:
+  backend:
+    name: backend
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
+  frontend:
+    name: frontend
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/24
+
+secrets:
+  vault_root_token:
+    file: ./secrets/VAULT_ROOT_TOKEN.txt
+  postgres_user:
+    file: ./secrets/POSTGRES_USER.txt
+  postgres_password:
+    file: ./secrets/POSTGRES_PASSWORD.txt
+
+volumes:
+  auth-db-data:
+    name: auth-db-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ${HOME}/ft_transcendence_data/auth-db/data
+      o: bind
+  auth-data:
+    name: auth-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./auth/code
+      o: bind
+  auth-api-data:
+    name: auth-api-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./auth-api/code
+      o: bind
+  backend-db-data:
+    name: backend-db_data
+    driver: local
+    driver_opts:
+      type: none
+      device: ${HOME}/ft_transcendence_data/backend-db/data
+      o: bind
+  backend-data:
+    name: backend-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./backend/code
+      o: bind
+  backend-api-data:
+    name: backend-api-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./backend-api/code
+      o: bind
+  email-db-data:
+    name: email-db-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ${HOME}/ft_transcendence_data/email-db/data
+      o: bind
+  email-data:
+    name: email-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./email/code
+      o: bind
+  channels-data:
+    name: channels-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./channels/code
+      o: bind
+  vault-db-data:
+    name: vault-db-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ${HOME}/ft_transcendence_data/vault-db/data
+      o: bind
+  vault-data:
+    name: vault-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./vault/data
+      o: bind
+  frontend-data:
+    name: frontend-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./frontend
+      o: bind
+  secrets-data:
+    name: secrets-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./secrets
+      o: bind
