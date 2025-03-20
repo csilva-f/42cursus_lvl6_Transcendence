@@ -568,7 +568,7 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                     game.save()
                     return JsonResponse({"message": "Game updated successfully, forced finished was performed", "game_id": game.game}, status=201)
                 return JsonResponse({"error": "Override status only allowed for finished"}, status=400)
-            if not user_id:
+            if not user_id and not is_join:
                 return JsonResponse({"error": "User ID is required for update"}, status=400)
             if user_id == game.user1 and is_join:
                 return JsonResponse({"error": "User2 must be different from User1"}, status=400)
@@ -577,7 +577,6 @@ def post_update_game(request): #update statusID acording to user2 and winner var
             if not is_join and user_id not in [game.user1, game.user2]:
                 return JsonResponse({"error": "Winner must be either User1 or User2"}, status=400)
             if not is_join:
-                game.winnerUser = user_id
                 game.status_id = 3
                 game.endTS = now() 
 
@@ -593,7 +592,7 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 game.user2_points = u2_points
                 game.user1_hits = u1_hits
                 game.user2_hits = u2_hits
-
+                game.winnerUser = game.user1 if int(game.user1_points) > int(game.user2_points) else game.user2
                 if game.user1 == user_id and game.user1 != -1:
                     tUserExtension.objects.filter(user=game.user1).update(ulevel=models.F('ulevel') + 0.2)
                     tUserExtension.objects.filter(user=game.user2).update(ulevel=models.F('ulevel') + 0.05)
@@ -669,6 +668,7 @@ def post_create_userextension(request):
                         "nickname": userext.nick,
                         "birthdate": str(userext.birthdate) if userext.birthdate else None,
                         "gender": userext.gender.gender if userext.gender else None,
+                        "level": userext.ulevel,
                         "avatar": userext.avatar,
                         "bio": userext.bio
                     },
@@ -685,6 +685,7 @@ def post_create_userextension(request):
                     "nickname": userext.nick,
                     "birthdate": str(userext.birthdate) if userext.birthdate else None,
                     "gender": userext.gender.gender if userext.gender else None,
+                    "level": userext.ulevel,
                     "avatar": userext.avatar,
                     "bio": userext.bio
                 },
