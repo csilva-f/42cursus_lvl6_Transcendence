@@ -73,7 +73,6 @@ function activateGameForm(typeForm) {
     if (formElement) {
         formElement.classList.remove('d-none');
         selectForm.classList.add('d-none');
-        document.getElementById('goBackLi').classList.remove('d-none');
     }
 }
 
@@ -159,26 +158,18 @@ function insertInfo(newCard, element, statusID) {
     const user2Level = newCard.querySelector("#user2Level");
     const user2Nick = newCard.querySelector("#user2Nick");
     const enterBtn = newCard.querySelector("#enterLi");
-    switch (statusID) {
-        case 1:
-            enterBtn.setAttribute("data-id", element.gameID);
-            break;
-        case 2:
+    enterBtn.setAttribute("data-id", element.gameID);
+    if (statusID != 1)
             enterBtn.classList.add('d-none');
-            break;
-        case 3:
-            enterBtn.classList.add('d-none');
-            break;
-    }
     user1Level.textContent = element.user1ID;
-    user1Nick.textContent = "{Nickname}";
+    user1Nick.textContent = element.user1Nick;
     if (element.user2ID == null) {
         setRandomImage(user2Img);
         user2LvlLabel.style.display = "none";
         user2Nick.setAttribute("data-i18n", "waiting");
     } else {
         user2Level.textContent = element.user2ID;
-        user2Nick.textContent = "{Nickname2}";
+        user2Nick.textContent = element.user2Nick;
     }
 }
 

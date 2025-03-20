@@ -18,12 +18,10 @@ function GlobalFriendsSelect(elementID) {
 function insertGlobalUserInfo(newCard, user) {
     const userNick = newCard.querySelector("#userNick");
     const userLvl = newCard.querySelector("#userLvl");
-    const inviteLi = newCard.querySelector("#inviteLi");
     const friendLi = newCard.querySelector("#friendLi");
     const profileLi = newCard.querySelector("#profileLi");
     userNick.textContent = user.userNick;
     userLvl.textContent = user.userID;
-    inviteLi.setAttribute("data-id", user.userID);
     friendLi.setAttribute("data-id", user.userID);
     friendLi.setAttribute("data-type", 0);
     profileLi.setAttribute("data-id", user.userID);
@@ -32,7 +30,6 @@ function insertGlobalUserInfo(newCard, user) {
 function insertFriendInfo(newCard, user) {
     newCard.querySelector("#userNick").textContent = user.friendNick;
     newCard.querySelector("#userLvl").textContent = user.friendID;
-    newCard.querySelector("#inviteLi").setAttribute("data-id", user.friendID);
     newCard.querySelector("#friendLi").setAttribute("data-id", user.friendID);
     newCard.querySelector("#friendLi").setAttribute("data-type", 1);
     newCard.querySelector("#friendLiIcon").classList.remove("fa-user-plus")

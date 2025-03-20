@@ -12,7 +12,7 @@ async function fetchUserNotificationGame() {
       return response.text();
     })
     .then((data) => {
-      const APIurl = `/api/get-userinvitations`;
+      const APIurl = `/api/get-friendrequests/?sentToMe=true`;
       $.ajax({
         type: "GET",
         url: APIurl,
@@ -27,35 +27,16 @@ async function fetchUserNotificationGame() {
           );
           notificationDropdownMenu.innerHTML = "";
           const currentNotifications = [];
-          res.invitGames.forEach((element) => {
+          res.requests.forEach((element) => {
             if (element.statusID == 1) {
               const newCard = document.createElement("div");
               newCard.innerHTML = data;
-              insertNotificationInfo(newCard, element, 0);
+              insertNotificationInfo(newCard, element);
               notificationDropdownMenu.appendChild(newCard);
               currentNotifications.push(element.gameID);
             }
           });
-          const APIurl = `/api/get-friendrequests/?sentToMe=true`;
-          $.ajax({
-            type: "GET",
-            url: APIurl,
-            Accept: "application/json",
-            contentType: "application/json",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-            success: function (res) {
-              res.requests.forEach((element) => {
-                if (element.statusID == 1) {
-                  const newCard = document.createElement("div");
-                  newCard.innerHTML = data;
-                  insertNotificationInfo(newCard, element, 1);
-                  notificationDropdownMenu.appendChild(newCard);
-                  currentNotifications.push(element.gameID);
-                }
-              });
-              const notificationCount =
+          const notificationCount =
                 document.getElementById("notificationCount");
               if (currentNotifications.length > 0) {
                 notificationCount.classList.remove("d-none");
@@ -78,12 +59,6 @@ async function fetchUserNotificationGame() {
               }
               previousNotifications = currentNotifications;
               updateContent(langData);
-            },
-            error: function (xhr, status, error) {
-              console.error("Error Thrown:", error);
-              showErrorToast(APIurl, error, langData);
-            },
-          });
         },
         error: function (xhr, status, error) {
           console.error("Error Thrown:", error);
@@ -123,41 +98,20 @@ async function respondFriendRequest(friendID, statusID) {
   });
 }
 
-function insertNotificationInfo(newCard, element, type) {
-  const notificationMessage = newCard.querySelector("#notificationMessage");
+function insertNotificationInfo(newCard, element) {
   const notificationNickname = newCard.querySelector("#notificationNickname");
-  const notificationIcon = newCard.querySelector("#notificationIcon");
   const notificationAccept = newCard.querySelector("#notificationAccept");
   const notificationDeny = newCard.querySelector("#notificationDeny");
-  if (!type) {
-    notificationMessage.textContent = "Game invitation";
-    notificationNickname.textContent = element.user1Nick;
-    notificationIcon.classList.remove("fa-question");
-    notificationIcon.classList.add("fa-table-tennis-paddle-ball");
-    notificationAccept.setAttribute("data-id", element.gameID);
-    notificationAccept.setAttribute("data-type", 0);
-    notificationDeny.setAttribute("data-id", element.gameID);
-    notificationDeny.setAttribute("data-type", 0);
-  } else {
-    notificationMessage.textContent = "Friend Request"
-    notificationNickname.textContent = element.userNick;
-    notificationIcon.classList.remove("fa-question");
-    notificationIcon.classList.add("fa-user-plus");
-    notificationAccept.setAttribute("data-id", element.userID);
-    notificationAccept.setAttribute("data-type", 1);
-    notificationDeny.setAttribute("data-id", element.userID);
-    notificationDeny.setAttribute("data-type", 1);
-  }
+  notificationNickname.textContent = element.userNick;
+  notificationAccept.setAttribute("data-id", element.userID);
+  notificationDeny.setAttribute("data-id", element.userID);
 }
 
-async function notificationAccept(ID, type) {
-  if  (type == '0')
-    await acceptGameRequest(ID)
-  else
-    await respondFriendRequest(ID, 2)
+async function notificationAccept(ID) {
+  await respondFriendRequest(ID, 2)
 }
 
-async function notificationDeny(ID, type) {
-    console.log("Deny")
-    console.log("ID: ", ID, " Type: ", type)
+async function notificationDeny(ID) {
+  console.log("Deny")
+  console.log("ID: ", ID)
 }

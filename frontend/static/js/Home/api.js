@@ -1,4 +1,5 @@
-//? GET - /api/get-usergames/?userID=X&statusID=3
+//? GET - /api/get-usergames/?statusID=3
+// Lógica de merda do UserID tenho de rever como fazer
 async function fetchMatchHistory() {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
