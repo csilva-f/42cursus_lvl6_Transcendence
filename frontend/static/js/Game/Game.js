@@ -85,46 +85,85 @@ class Game  {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (!this.stopGame) {
             window.requestAnimationFrame(() => this.gameLoop());
-            this.gameUpdate();
-            this.gameDraw();
+            if (this.ws == null)
+                this.localGame()
+            else if(this.isHost)
+                this.hostGame()
+            else
+                this.joinerGame()
         } else
             showGameStats("Shin", this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, "Chan", this.objects[2].paddleScore, this.objects[2].paddleColisionTimes);
     }
-    gameUpdate() {
-        if (this.ws == null)
-            this.gameLocalUpdate()
-        else if(this.isHost)
-            this.gameHostUpdate()
-        else
-            this.gameJoinerUpdate()
+    localGame(){
+        this.gameUpdate();
         this.incScore();
+        this.gameDraw();
     }
-    gameLocalUpdate(){
-        this.objects.forEach(element => {
-            element.update();
-            element.colissionEdge(this.canvas);
-            if (element instanceof Paddle)
-                element.colissionBall(this.objects[0], element);
-        });
-    }
-    gameHostUpdate(){
-        this.objects.forEach(element => {
-            element.update();
-            element.colissionEdge(this.canvas);
-            if (element instanceof Paddle)
-                element.colissionBall(this.objects[0], element);
-            if (element instanceof Paddle){
-                const msg = JSON.stringify(element.toJSON());
-                this.ws.send(msg);
-            }
-        });
-    }
-    gameJoinerUpdate() {
-        this.ws.onmessage = async function (event) {
+    hostGame(){
+        //1 - update ball
+        //this.objects[0].update(); //update ball
+
+        //2 - update right paddle
+        this.objects[2].update(); //update right paddle
+        this.objects[2].colissionEdge(this.canvas);
+        //this.objects[2].colissionBall(this.objects[0], element);
+        const msg = JSON.stringify(this.objects[2].toJSON());
+        this.ws.send(msg);
+
+        //3 - update left padddle
+        this.ws.onmessage = async (event) => {
             const data = JSON.parse(event.data);
-            console.log("Element:", data.element);
-            console.log("Side:", data.paddleSide);
+            // console.log("Element:", data.element);
+            // console.log("Side:", data.paddleSide);
+            // console.log("X:", data.paddleX);
+            // console.log("Y:", data.paddleY);
+            if (data.element == 1 && data.paddleSide == 1){
+                this.objects[1].updateByValueBasic(data.paddleX, data.paddleY);
+                this.objects[1].colissionEdge(this.canvas);
+            }
         };
+        //4 - Inc score
+
+        //5 - draw
+        this.gameDraw();
+    }
+    joinerGame() {
+        //1 - update ball
+        //this.objects[0].update(); //update ball
+
+        //2 - update left paddle
+        this.objects[1].update(); 
+        this.objects[1].colissionEdge(this.canvas);
+        //this.objects[1].colissionBall(this.objects[0], element);
+        const msg = JSON.stringify(this.objects[1].toJSON());
+        this.ws.send(msg);
+
+        //3 - update right paddle
+        this.ws.onmessage = async (event) => {
+            const data = JSON.parse(event.data);
+            // console.log("Element:", data.element);
+            // console.log("Side:", data.paddleSide);
+            // console.log("X:", data.paddleX);
+            // console.log("Y:", data.paddleY);
+        
+            if (data.element == 1 && data.paddleSide == 2) {
+                this.objects[2].updateByValueBasic(data.paddleX, data.paddleY);
+                this.objects[2].colissionEdge(this.canvas);
+            }
+        };
+
+        //4 - Inc score
+
+        //5 - draw
+        this.gameDraw();
+    }updateByPrediction
+    gameUpdate(){
+        this.objects.forEach(element => {
+            element.update();
+            element.colissionEdge(this.canvas);
+            if (element instanceof Paddle)
+                element.colissionBall(this.objects[0], element);
+        });
     }
     gameDraw() {
         this.objects.forEach(element => {

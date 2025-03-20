@@ -44,16 +44,11 @@ class Paddle {
     }
     toJSON() {
         return {
-            element: 0,
+            element: 1,
             paddleSide: this.paddleSide,
-            paddleWidth: this.paddleWidth,
-            paddleHeight: this.paddleHeight,
             paddleScore: this.paddleScore,
-            paddleColor: this.paddleColor,
             paddleX: this.paddleX,
             paddleY: this.paddleY,
-            paddleVelocityY: this.paddleVelocityY,
-            paddleColisionTimes: this.paddleColisionTimes
         };
     }
     getHalfWidth() { return this.paddleWidth / 2; }
@@ -75,6 +70,27 @@ class Paddle {
                 this.paddleY += this.paddleVelocityY;
         }
         //console.log("update paddle:", this);
+    }
+    updateByValueBasic(targetX, targetY) {
+        this.paddleX = targetX;
+        this.paddleY = targetY;
+    }
+    updateByValue(targetX, targetY) {
+        const lerpFactor = 0.2; // Adjust this for smoother movement (0 = no movement, 1 = instant)
+    
+        this.paddleX = this.paddleX + (targetX - this.paddleX) * lerpFactor;
+        this.paddleY = this.paddleY + (targetY - this.paddleY) * lerpFactor;
+    
+        // Ensure it doesn't go out of bounds
+        if (this.paddleY < 0) this.paddleY = 0;
+        if (this.paddleY + this.paddleHeight > canvas.height) 
+            this.paddleY = canvas.height - this.paddleHeight;
+    }
+    updateByPrediction(targetY) {
+        const predictionTime = 0.1; // Predict 100ms ahead
+        const predictedY = targetY + this.paddleVelocityY * predictionTime;
+    
+        this.paddleY = this.paddleY + (predictedY - this.paddleY) * 0.2;
     }
     draw(ctx) {
         ctx.fillStyle = this.paddleColor;
