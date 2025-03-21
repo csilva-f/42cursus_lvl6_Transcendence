@@ -29,7 +29,7 @@ async function sendLogin() {
 					localStorage.setItem("uid", user.id);
 				}
 				window.history.pushState({}, "", "/");
-				locationHandler("content");
+				locationHandler();
 			}
 			console.log(user);
 

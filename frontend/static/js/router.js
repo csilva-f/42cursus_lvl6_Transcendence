@@ -118,10 +118,9 @@ const route = (event) => {
 
 	if (targetUrl.origin === window.location.origin) {
 		window.history.pushState({}, "", targetUrl.pathname);
-		locationHandler("content");
-	} else {
+		locationHandler();
+	} else
 		window.open(targetUrl.href, "_blank");
-	}
 };
 
 
@@ -340,49 +339,38 @@ async function changeActive(location) {
 	}
 }
 
-// Assuming you have a function to get the current user's ID
+//TODO: Lógica para ir buscar o nosso userID
 function getCurrentUserID() {
-	// Replace this with your actual logic to get the current user's ID
-	return "currentUserID"; // Example: return the actual user ID
+	return "currentUserID";
 }
 
-const locationHandler = async (elementID) => {
+function isProfile(location) {
+	const profileMatch = location.match(/\/profile\/(\w+)/);
+	if (profileMatch) {
+		console.log('profileMatch :>> ', profileMatch);
+		return true;
+	}
+	return false;
+}
+
+const locationHandler = async () => {
+	let route, html;
 	let location = window.location.pathname;
 	if (location.length == 0) location = "/";
+
 	console.log("location: ", location);
-
-	// Check if the location matches the profile route
-	const profileMatch = location.match(/\/profile\/(\w+)/);
-	const currentUserID = getCurrentUserID(); // Get the current user's ID
-
-	if (profileMatch) {
-		const userID = profileMatch[1];
-
-		// Check if the userID matches the current user's ID
-		if (userID === currentUserID) {
-			// Load the current user's profile
-			const route = routes["/profile"]; // Use the route for the current user's profile
-			const html = await fetch(route.template).then((response) => response.text());
-			document.title = route.title;
-			document.getElementById(elementID).innerHTML = html;
-			changeActive(location);
-			loadProfileFromURL(); // Call the function to load profile data
-			return; // Exit the function to prevent further processing
-		} else {
-			// Load another user's profile
-			const route = routes["/profile/:userID"]; // Use the route for another user's profile
-			const html = await fetch(route.template).then((response) => response.text());
-			document.title = route.title;
-			document.getElementById(elementID).innerHTML = html;
-			changeActive(location);
-			loadProfileFromURL(); // Call the function to load profile data
-			return; // Exit the function to prevent further processing
-		}
+	if (isProfile(location)) {
+		console.log("isProfile")
+		route = routes["/profile/:userID"];
+		html = await fetch(route.template).then((response) => response.text());
+		document.title = route.title;
+		document.getElementById("content").innerHTML = html;
+		changeActive(location);
+		loadProfileFromURL();
+		return;
 	}
-
-	// Handle other routes
-	const route = routes[location] || routes["404"];
-	const html = await fetch(route.template).then((response) => response.text());
+	route = routes[location] || routes["404"];
+	html = await fetch(route.template).then((response) => response.text());
 	document.title = route.title;
 
 	if (bigScreenLocation.includes(location)) {
@@ -392,12 +380,12 @@ const locationHandler = async (elementID) => {
 			.querySelector('meta[name="description"]')
 			.setAttribute("content", route.description);
 	} else {
-		document.getElementById(elementID).innerHTML = html;
+		document.getElementById("content").innerHTML = html;
 		changeToSmall(location);
 		document
 			.querySelector('meta[name="description"]')
 			.setAttribute("content", route.description);
-		if (elementID == "content") changeActive(location);
+		changeActive(location);
 	}
 };
 
@@ -405,7 +393,6 @@ const locationHandler = async (elementID) => {
 
 document.addEventListener("click", (e) => {
 	const { target } = e;
-
 	if (target.matches("nav a")) {
 		e.preventDefault();
 		route(e);

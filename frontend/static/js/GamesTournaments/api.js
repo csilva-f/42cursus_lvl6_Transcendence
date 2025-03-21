@@ -106,7 +106,7 @@ async function postLocalGame() {
   resetModal();
   $("#createModal").modal("hide");
   window.history.pushState({}, "", "/pong");
-  await locationHandler("content");
+  await locationHandler();
   const game = new Game(0, gameData);
   game.initGame();
 }
@@ -176,7 +176,7 @@ async function postRemoteGame() {
           // }, 50);
 
             window.history.pushState({}, "", `/pong`);
-            locationHandler("content");
+            locationHandler();
           }
         }
       };
@@ -271,7 +271,7 @@ async function enterGame(gameID) {
       };
 
       window.history.pushState({}, "", "/pong");
-      await locationHandler("content");
+      await locationHandler();
       const game = new Game(gameID, null);
       game.initGame();
     },

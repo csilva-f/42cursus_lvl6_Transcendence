@@ -71,10 +71,17 @@ function searchUser() {
 }
 
 function goToProfile(userID) {
-	window.history.pushState({}, "", `/profile/${userID}`);
-	locationHandler("content");
-	fetchProfileInfo(userID);
-	fetchStatistics(userID);
+    if (userID == null) {
+        window.history.pushState({}, "", `/profile`);
+        locationHandler();
+        fetchProfileInfo();
+        fetchStatistics();
+    } else {
+        window.history.pushState({}, "", `/profile/${userID}`);
+        locationHandler();
+        fetchProfileInfo(userID);
+        fetchStatistics(userID);
+    }
 }
 
 async function friendshipPlayer(ID, type){

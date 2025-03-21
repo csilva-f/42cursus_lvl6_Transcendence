@@ -33,10 +33,12 @@
 	<!-- QRCODE -->
 	<script type="text/javascript" src="/static/js/qrcode.js"></script>
 	<script type="text/javascript" src="/static/js/Login/tokenService.js"></script>
+	<script type="text/javascript" src="/static/js/Classes/User.js"></script>
 	<script type="text/javascript" src="/static/js/router.js"></script>
 	<script type="text/javascript" src="/static/js/index.js"></script>
 	<script>
 		JWT.reloadPage();
+		populateUserInfo();
 	</script>
 	<script type="text/javascript" src="/static/js/api.js"></script>
 	<script type="text/javascript" src="/static/js/Login/api.js"></script>
@@ -140,7 +142,7 @@
 					<!-- End Notification and Info -->
 					<!-- Profile Picture -->
 					<div class="ms-1 justify-content-end align-content-end">
-						<a href="/profile" id="profilePicElement" onclick="goToProfile()">
+						<a href="/profile" id="profilePicElement" onclick="goToProfile(null)">
 							<img src="/static/img/pfp1.jpeg" style="
                                         object-fit: cover;
                                         max-width: 5rem;
