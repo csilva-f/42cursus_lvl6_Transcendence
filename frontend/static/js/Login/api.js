@@ -10,24 +10,7 @@ async function sendLogin() {
 		headers: { Accept: "application/json" },
 		data: JSON.stringify({ email, password }),
 		success: async function (data) {
-			jwtToken = data.access; // Store the JWT token
-			const opt_status = await OTP_check_enable(jwtToken);
-			console.log(opt_status);
-			if (opt_status == true) {
-				OTP_send_email(jwtToken);
-				window.location.href = "/mfa";
-			} else {
-				if (jwtToken) {
-					localStorage.setItem("jwt", jwtToken);
-					console.log(data);
-					JWT.setToken(data);
-					console.log("Access: ", JWT.getAccess());
-					await checkUserExtension();
-				}
-				window.history.pushState({}, "", "/");
-				locationHandler("content");
-			}
-			$("#login-message").text("Login successful!");
+		  loginSuccess(data);
 		},
 		error: function (xhr) {
 			const data = xhr.responseJSON;
@@ -36,8 +19,31 @@ async function sendLogin() {
 	});
 }
 
-	const APIurl = `/api/create-userextension/`
+async function loginSuccess(data) {
+  jwtToken = data.access; // Store the JWT token
+	const otp_status = await OTP_check_enable(jwtToken);
+	console.log("BMC: ", otp_status);
+	if (otp_status) {
+		//OTP_send_email(jwtToken);
+		JWT.setTempToken(data);
+		window.location.href = "/mfa";
+		locationHandler("content");
+	} else {
+		if (jwtToken) {
+			localStorage.setItem("jwt", jwtToken);
+			JWT.setToken(data);
+			console.log("Access: ", JWT.getAccess());
+			await checkUserExtension();
+		}
+		window.history.pushState({}, "", "/");
+		locationHandler("content");
+	}
+	$("#login-message").text("Login successful!");
+}
+
+
 async function checkUserExtension() {
+	const APIurl = `/api/create-userextension/`
 	const accessToken = await JWT.getAccess();
 	console.log("checkUserExtension, accessToken: ", accessToken)
 	return new Promise((resolve, reject) => {
@@ -242,7 +248,7 @@ async function OTP_check_enable(jwtToken) {
 			data: JSON.stringify({ jwtToken }),
 			success: function (data) {
 				console.log(data);
-				var status = data.otp_enabled;
+				var status = data.is_2fa_enabled;
 				if (status == 1) {
 					resolve(true);
 				} else {
@@ -305,7 +311,10 @@ function handleOTPInput(field) {
   });
 }
 
-function verifyAccount() {
+
+
+
+async function verifyAccount() {
 	let code = '';
 	for (let i = 1; i <= 6; i++) {
 		const field = document.getElementById(`otp${i}`);
@@ -313,6 +322,31 @@ function verifyAccount() {
 			code += field.value;
 	}
 	console.log('Code:', code);
+	const apiUrl = "/authapi";
+	let token = await JWT.getTempToken();
+	let access = await JWT.getTempAccess();
+
+	console.log("Access: ", access);
+	console.log("TempToken: ", token);
+	$.ajax({
+    type: "POST",
+    url: `${apiUrl}/otp-verify/`,
+    contentType: "application/json",
+    headers: { Accept: "application/json",
+              Authorization: `Bearer ${access}` },
+    data: JSON.stringify({ code }),
+    success: function (data) {
+      console.log(data);
+      JWT.setToken(token);
+      window.history.pushState({}, "", "/");
+      locationHandler("content");
+    },
+    error: function (xhr) {
+      const data = xhr.responseJSON;
+      $("#login-message").text(data.error || "Login failed.");
+    },
+  });
+
 }
 
 // Password validate

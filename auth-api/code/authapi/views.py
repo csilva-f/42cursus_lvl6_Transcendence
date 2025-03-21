@@ -157,7 +157,6 @@ class GetOTPStatusViewSet(viewsets.ViewSet):
 
 #VerifyOTPViewSet - Verify OTP for a user
 # Input Parameters:
-    # userId: integer
     # otp: string
 #return in case of success:
     # message: string
@@ -167,7 +166,7 @@ class VerifyOTPViewSet(viewsets.ViewSet):
     def create(self, request):
         backend_url = 'http://auth:8000/otp/verify/'
         try:
-            backend_response = requests.post(backend_url, json=request.data)
+            backend_response = requests.post(backend_url, json=request.data, headers=request.headers)
             backend_response.raise_for_status()
             data = backend_response.json()
             return Response(data, status=status.HTTP_201_CREATED)

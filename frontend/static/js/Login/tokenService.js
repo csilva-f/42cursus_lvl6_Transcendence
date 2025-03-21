@@ -3,6 +3,7 @@ class tokenService {
   cookieAccessName = "access";
   cookieExpiricy = 1 * 60 * 1000;
   token = {};
+  tempToken = {};
   date = new Date();
   isUpdating = false;
 
@@ -12,11 +13,25 @@ class tokenService {
     await locationHandler("allcontent");
   }
 
-  async setToken(t) {
-    console.log("setToken: ", t);
+  async setTempToken(t) {
+    console.log("TempToken: ", t);
     this.token = t;
     this.setCookie();
   }
+
+  async getTempAccess() {
+    return this.tempToken.access;
+  }
+
+  async getTempToken() {
+    return this.tempToken;
+  }
+
+  async setToken(t) {
+    console.log("setToken: ", t);
+    this.tempToken = t;
+  }
+
   deleteToken() {
     this.token = {};
     deleteCookies();

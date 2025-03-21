@@ -66,20 +66,14 @@ class SendOTPView(generics.GenericAPIView):
 
 class VerifyOTPView(generics.GenericAPIView):
     serializer_class = OTPSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
-        user_id_serializer = UserIdSerializer(data=request.data)
-        user_id_serializer.is_valid(raise_exception=True)
-        user_id = user_id_serializer.validated_data['userId']
-        try:
-            user = CucaUser.objects.get(id=user_id)
-        except CucaUser.DoesNotExist:
-            print(f'User not found with id {user_id}')
-            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+        print(request.data)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        otp = serializer.validated_data['otp']
-        totp = pyotp.TOTP(user.otp_secret)
+        print(request.data)
+        otp = serializer.validated_data['code']
+        totp = pyotp.TOTP(request.user.otp_secret)
         if totp.verify(otp, valid_window=3):
             return Response({'message': 'OTP verified successfully.'}, status=status.HTTP_200_OK)
         else:
