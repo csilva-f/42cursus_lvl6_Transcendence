@@ -25,10 +25,17 @@ class tokenService {
   async getAccess() {
     let cookie = this.checkCookie(this.cookieAccessName);
     console.log("tokenService: ", cookie);
-    if (cookie) return this.token.access;
+    if (cookie && this.token.access) return this.token.access;
     if (!this.isUpdating) {
       this.isUpdating = true;
-      await this.updateToken();
+      try{
+        await this.updateToken();
+      }
+      catch(error){
+        console.log("Error updating token");
+        this.isUpdating = false;
+        await this.redirectLogin();
+      }
     }
     else {
       console.log("Waiting for token update");
@@ -45,7 +52,12 @@ class tokenService {
     console.log("relaodPage");
     let token = this.checkCookie(this.cookieRefreshName);
     if (!token) return null;
-    await this.updateToken();
+    try{
+      await this.updateToken();
+    }
+    catch(error){
+      console.log("Error updating token");
+    }
     return this.token.access;
   }
 
@@ -53,35 +65,36 @@ class tokenService {
       console.log("updateToken");
       const apiUrl = "/authapi";
       let token = this.checkCookie(this.cookieRefreshName);
+
       if (!token) {
-        console.log("No token found");
-        await this.redirectLogin();
-        return; // Exit if no token is found
+          console.log("No token found");
+          await this.redirectLogin();
+          return; // Exit if no token is found
       }
+
       console.log("token: ", token);
 
-      return new Promise((resolve, reject) => {
-        $.ajax({
-          type: "POST",
-          url: `${apiUrl}/refresh/`,
-          contentType: "application/json",
-          headers: { Accept: "application/json" },
-          data: JSON.stringify({ refresh: token }),
-          success: async (data) => {
-            console.log("Token updated");
-            let tk = { refresh: token, access: data.access };
-            await this.setToken(tk);
-            this.isUpdating = false;
-            resolve(); // Resolve the promise when the token is updated
-          },
-          error: async (xhr) => {
-            console.log("Error occurred, redirecting to login");
-            await this.redirectLogin();
-            this.isUpdating = false;
-            reject(); // Reject the promise on error
-          },
-        });
-      });
+      try {
+          const data = await $.ajax({
+              type: "POST",
+              url: `${apiUrl}/refresh/`,
+              contentType: "application/json",
+              headers: { Accept: "application/json" },
+              data: JSON.stringify({ refresh: token }),
+          });
+
+          console.log("Token updated");
+          let tk = { refresh: token, access: data.access };
+          await this.setToken(tk);
+          this.isUpdating = false;
+          return; // Successfully updated, exit the function
+
+      } catch (xhr) {
+          console.log("Error occurred, redirecting to login");
+          await this.redirectLogin();
+          this.isUpdating = false;
+          throw new Error("Token update failed"); // Throw an error to indicate failure
+      }
   }
 
 

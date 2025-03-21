@@ -64,6 +64,12 @@ services:
     volumes:
       - vault-data:/vault/file:rw
       - secrets-data:/vault/secrets:rw
+    cap_add:
+      - IPC_LOCK
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     networks:
       - backend
     ports:
