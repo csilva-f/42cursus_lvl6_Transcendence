@@ -6,17 +6,33 @@ class Ball {
         this.ballVelocityX = ballVelocityX;
         this.ballVelocityY = ballVelocityY;
     }
+    toJSON() {
+        return {
+            element: 0,
+            ballX: this.ballX,
+            ballY: this.ballY,
+            ballVelocityX: this.ballVelocityX,
+            ballVelocityY: this.ballVelocityY,
+        };
+    }
     update() {
         this.ballX += this.ballVelocityX;
         this.ballY += this.ballVelocityY;
+        //console.log("update ball:", this);
+    }
+    updateByValue(x, y, velocityX, velocityY) {
+        this.ballX = x;
+        this.ballY = y;
+        this.ballVelocityX  = velocityX;
+        this.ballVelocityY = velocityY;
         //console.log("update ball:", this);
     }
     draw(ctx) {
         ctx.fillStyle = "#ffffff";
         ctx.beginPath();
         ctx.arc(this.ballX, this.ballY, this.ballRadius, 0, Math.PI * 2);
-        ctx.fill()
-        //console.log("ball x: ", this.ballX, " | ball Y: ", this.ballY, " | ball radius: ", this.ballRadius)
+        ctx.fill();
+        console.log("ball x: ", this.ballX, " | ball Y: ", this.ballY);
     }
     colissionEdge(canvas) {
         if (this.ballY + this.ballRadius >= canvas.height)
@@ -75,16 +91,13 @@ class Paddle {
         this.paddleX = targetX;
         this.paddleY = targetY;
     }
+
+    //functions to test smoth paddles
     updateByValue(targetX, targetY) {
         const lerpFactor = 0.2; // Adjust this for smoother movement (0 = no movement, 1 = instant)
     
         this.paddleX = this.paddleX + (targetX - this.paddleX) * lerpFactor;
         this.paddleY = this.paddleY + (targetY - this.paddleY) * lerpFactor;
-    
-        // Ensure it doesn't go out of bounds
-        if (this.paddleY < 0) this.paddleY = 0;
-        if (this.paddleY + this.paddleHeight > canvas.height) 
-            this.paddleY = canvas.height - this.paddleHeight;
     }
     updateByPrediction(targetY) {
         const predictionTime = 0.1; // Predict 100ms ahead
