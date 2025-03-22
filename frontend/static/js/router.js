@@ -232,11 +232,10 @@ async function changeActive(location) {
 	const langData = await getLanguageData(userLang);
 	const allContent = document.getElementById("allContent")
 	allContent.classList.add('d-none');
-	const userData = await checkUserExtension();
 	activateTopBar();
-	if (userData.nickname != null) {
-		document.getElementById("personNickname").textContent = userData.nickname;
-		document.getElementById("subMsg").textContent = `${userData.nickname} ${userData.nickname} `;
+	if (UserInfo.getUserNick()) {
+		document.getElementById("personNickname").textContent = UserInfo.getUserNick();
+		document.getElementById("subMsg").textContent = `${UserInfo.getUserNick()} ${UserInfo.getUserNick()} `;
 	}
 	console.log("ChangeActive: ")
 	switch (location) {
@@ -293,7 +292,6 @@ async function changeActive(location) {
 			document.getElementById("subMsg").style.display = "none";
 			break;
 		case "/":
-			console.log("Access: ", JWT.getAccess());
 			iconsElements.forEach((element) => {
 				element.id == "homepageIcon"
 					? activateSBIcon(element)
@@ -303,7 +301,8 @@ async function changeActive(location) {
 			updateContent(langData);
 			document.getElementById("subMsg").style.display = "block";
 			getForms();
-			if (userData.nickname == null) {
+			console.log('UserInfo.getUserNick() :>> ', UserInfo.getUserNick());
+			if (!UserInfo.getUserNick()) {
 				let nickModal = new bootstrap.Modal(document.getElementById('nickModal'));
 				nickModal.show();
 			}
@@ -357,8 +356,6 @@ const locationHandler = async () => {
 	let route, html;
 	let location = window.location.pathname;
 	if (location.length == 0) location = "/";
-
-	console.log("location: ", location);
 	if (isProfile(location)) {
 		console.log("isProfile")
 		route = routes["/profile/:userID"];
@@ -372,7 +369,8 @@ const locationHandler = async () => {
 	route = routes[location] || routes["404"];
 	html = await fetch(route.template).then((response) => response.text());
 	document.title = route.title;
-
+	// if (UserInfo.getUserID() == null)
+	// 	await UserInfo.fetchUserExtension(await JWT.getAccess());
 	if (bigScreenLocation.includes(location)) {
 		document.getElementById("allContent").innerHTML = html;
 		changeToBig(location);
@@ -389,8 +387,6 @@ const locationHandler = async () => {
 	}
 };
 
-
-
 document.addEventListener("click", (e) => {
 	const { target } = e;
 	if (target.matches("nav a")) {
@@ -398,7 +394,6 @@ document.addEventListener("click", (e) => {
 		route(e);
 	}
 });
-
 
 function loadProfileFromURL() {
 	const path = window.location.pathname;
@@ -415,6 +410,6 @@ function loadProfileFromURL() {
 window.onload = loadProfileFromURL;
 window.addEventListener("popstate", loadProfileFromURL);
 
-window.onpopstate = () => locationHandler("content");
+window.onpopstate = () => locationHandler();
 window.route = route;
-locationHandler("content");
+locationHandler();

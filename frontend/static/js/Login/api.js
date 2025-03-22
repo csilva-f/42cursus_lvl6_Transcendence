@@ -430,7 +430,7 @@ function validatePasswordsMatch(passwordId1, passwordId2, validationId, iconId) 
 	}
 }
 
-// change icon gender 
+// change icon gender
 function updateIcon() {
 	const genderSelect = document.getElementById('gender');
 	const icon = document.getElementById('icon');

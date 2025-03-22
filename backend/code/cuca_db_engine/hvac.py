@@ -16,7 +16,7 @@ def get_database_credentials():
     client = hvac.Client(url=os.getenv('VAULT_ADDR'), token=token)
     #client = hvac.Client(url=os.getenv('VAULT_ADDR'), token=os.getenv('VAULT_ROOT_TOKEN'))
     try:
-        response = client.secrets.database.generate_credentials(os.getenv('VAULT_ROLE',""))
+        response = client.secrets.database.generate_credentials(os.getenv('VAULT_ROLE'))
         return response['data']['username'], response['data']['password']
     except Exception as e:
         print(f"Error fetching credentials from Vault: {e}")

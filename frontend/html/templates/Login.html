@@ -1,7 +1,7 @@
 <div class="container mt-5">
 	<div class="row justify-content-center">
 		<div class="p-3 shadow rounded" style="background-color: var(--cardBg); width: 600px;">
-	
+
 				<!-- Login and Sign Up -->
 				<ul class="nav nav-pills" id="loginSignUpTab" role="tablist" style="display: flex; list-style: none; padding: 0; margin: 0;">
 					<li class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center iconInactive" role="presentation" style="flex: 1;">
@@ -38,7 +38,7 @@
 									<span class="input-group-text" style="border: none; background: white;">
 										<i class="fa-solid fa-lock" style="color: var(--primary);"></i>
 									</span>
-									<input type="password" class="form-control" id="loginPassword" placeholder="Password" required 
+									<input type="password" class="form-control" id="loginPassword" placeholder="Password" required
 										style="border: none;">
 									<span class="input-group-text" id="togglePassword" style="cursor: pointer; background: white; border: none;"
 										onclick="passwordVisibility(`loginPassword`, `togglePassword`)">
@@ -49,7 +49,7 @@
 
 							<div class="mb-3">
 								<a href="forgotPassword" class="d-block text-end" style="color: var(--primary); text-decoration: none;">Forgot password?</a>
-							</div>	
+							</div>
 
 							<button type="submit" class="btn" style="background-color: var(--primary); color: white; width: 100%; margin-bottom: 10px;">Login</button>
 
@@ -58,7 +58,7 @@
 								id="loginWith42Btn" style="color: #000; border: 1px solid #ccc;">
 									<span class="me-2">Login with</span>
 									<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/42_Logo.svg/1024px-42_Logo.svg.png" alt="42 logo" style="width: 20px; height: 20px;">
-								</button>														
+								</button>
 							</div>
 
 						</form>
@@ -92,7 +92,7 @@
 										<i class="fas fa-envelope" style="color: var(--primary);"></i></span>
 									<input type="email" class="form-control" id="signupEmail" required placeholder="Email" style="border:none;">
 									<div class="invalid-feedback" id="emailInvalid">
-									</div>							
+									</div>
 								</div>
 							</div>
 
@@ -101,7 +101,7 @@
 									<span class="input-group-text" style="border: none; background: white;">
 										<i class="fa-solid fa-lock" style="color: var(--primary);"></i>
 									</span>
-									<input type="password" class="form-control" id="signupPassword" required placeholder="Password" style="border: none;" 
+									<input type="password" class="form-control" id="signupPassword" required placeholder="Password" style="border: none;"
 										oninput="validateNewPassword('signupPassword', 'passwordValidation', 'charCheck')">
 									<span class="input-group-text" id="toggleSignupPassword" style="cursor: pointer; background: white; border: none;"
 										onclick="passwordVisibility('signupPassword', 'toggleSignupPassword')">
@@ -113,13 +113,13 @@
 									Password must be at least 8 characters long
 								</small>
 							</div>
-							
+
 							<div class="mb-3">
 								<div class="input-group">
 									<span class="input-group-text" style="border: none; background: white;">
 										<i class="fa-solid fa-lock" style="color: var(--primary);"></i>
 									</span>
-									<input type="password" class="form-control" id="signupPassword2" required placeholder="Retype password" style="border: none;" 
+									<input type="password" class="form-control" id="signupPassword2" required placeholder="Retype password" style="border: none;"
 										oninput="validatePasswordsMatch('signupPassword', 'signupPassword2', 'confirmValidation', 'matchCheck')">
 									<span class="input-group-text" id="toggleSignupPassword2" style="cursor: pointer; background: white; border: none;"
 										onclick="passwordVisibility('signupPassword2', 'toggleSignupPassword2')">
@@ -131,7 +131,7 @@
 									Passwords do not match
 								</small>
 							</div>
-							
+
 							<div class="mb-3">
 								<div class="input-group">
 									<span class="input-group-text" style="border: none; background: white;">

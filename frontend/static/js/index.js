@@ -1,10 +1,6 @@
 const JWT = new tokenService();
 const UserInfo = new User();
 
-async function populateUserInfo() {
-  await UserInfo.fetchUserExtension();
-}
-
 const images = [
   "/static/img/logos/buttLogo.svg",
   "/static/img/logos/buttLogoMirror.svg",
