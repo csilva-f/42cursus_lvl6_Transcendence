@@ -26,7 +26,7 @@ async function loginSuccess(data) {
 	if (otp_status) {
 		//OTP_send_email(jwtToken);
 		await JWT.setTempToken(data);
-		window.location.href = "/mfa";
+		window.history.pushState({}, "", "/mfa");
 		locationHandler("content");
 	} else {
 		if (jwtToken) {
@@ -290,6 +290,7 @@ function handleOTPInput(field) {
   if (field.value && nextField) nextField.focus();
 
   field.addEventListener("keydown", function (e) {
+
     if (e.key === "Backspace" && !field.value && prevField) prevField.focus();
   });
 
@@ -326,8 +327,6 @@ async function verifyAccount() {
 	let token = await JWT.getTempToken();
 	let access = await JWT.getTempAccess();
 
-	console.log("Access: ", access);
-	console.log("TempToken: ", token);
 	$.ajax({
     type: "POST",
     url: `${apiUrl}/otp-verify/`,
@@ -343,7 +342,11 @@ async function verifyAccount() {
     },
     error: function (xhr) {
       const data = xhr.responseJSON;
-      $("#login-message").text(data.error || "Login failed.");
+      $("#mfa-message").text(data.error || "Login failed.");
+      for (let i = 1; i <= 6; i++) {
+  		const field = document.getElementById(`otp${i}`);
+  		document.getElementById(`otp${i}`).value = '';
+  	}
     },
   });
 

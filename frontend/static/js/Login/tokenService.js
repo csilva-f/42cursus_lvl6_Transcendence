@@ -14,7 +14,7 @@ class tokenService {
   }
 
   async setToken(t) {
-    console.log("TempToken: ", t);
+    console.log("Token: ", t);
     this.token = t;
     this.setCookie();
   }
@@ -28,12 +28,13 @@ class tokenService {
   }
 
   async setTempToken(t) {
-    console.log("setToken: ", t);
+    console.log("setTempToken: ", t);
     this.tempToken = t;
   }
 
   deleteToken() {
     this.token = {};
+    this.tempToken = {};
     deleteCookies();
   }
 
