@@ -35,13 +35,6 @@
 	<script type="text/javascript" src="/static/js/Login/tokenService.js"></script>
 	<script type="text/javascript" src="/static/js/Classes/User.js"></script>
 	<script type="text/javascript" src="/static/js/index.js"></script>
-	<script>
-		async function refreshClasses() {
-			await JWT.reloadPage();
-			await UserInfo.fetchUserExtension(await JWT.getAccess());
-		}
-		refreshClasses();
-	</script>
 	<script type="text/javascript" src="/static/js/api.js"></script>
 	<script type="text/javascript" src="/static/js/Login/api.js"></script>
 	<script type="text/javascript" src="/static/js/Login/Profile.js"></script>

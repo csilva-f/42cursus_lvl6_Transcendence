@@ -220,6 +220,9 @@ async function changeToSmall(location) {
 }
 
 async function changeActive(location) {
+	while (UserInfo.getUserID == null || UserInfo.getUserID === undefined){
+		setTimeout(10)
+	}
 	const iconsElements = [
 		document.getElementById("homepageIcon"),
 		document.getElementById("gamesIcon"),
@@ -233,11 +236,8 @@ async function changeActive(location) {
 	const allContent = document.getElementById("allContent")
 	allContent.classList.add('d-none');
 	activateTopBar();
-	if (UserInfo.getUserNick()) {
-		document.getElementById("personNickname").textContent = UserInfo.getUserNick();
-		document.getElementById("subMsg").textContent = `${UserInfo.getUserNick()} ${UserInfo.getUserNick()} `;
-	}
-	console.log("ChangeActive: ")
+	document.getElementById("personNickname").textContent = await UserInfo.getUserNick();
+	document.getElementById("subMsg").textContent = `${await UserInfo.getUserNick()} ${await UserInfo.getUserNick()} `;
 	switch (location) {
 		case "/games":
 			iconsElements.forEach((element) => {
@@ -302,7 +302,7 @@ async function changeActive(location) {
 			document.getElementById("subMsg").style.display = "block";
 			getForms();
 			console.log('UserInfo.getUserNick() :>> ', UserInfo.getUserNick());
-			if (!UserInfo.getUserNick()) {
+			if (await UserInfo.getUserNick() == null) {
 				let nickModal = new bootstrap.Modal(document.getElementById('nickModal'));
 				nickModal.show();
 			}
@@ -410,6 +410,15 @@ function loadProfileFromURL() {
 window.onload = loadProfileFromURL;
 window.addEventListener("popstate", loadProfileFromURL);
 
-window.onpopstate = () => locationHandler();
+async function reloadPage() {
+	await JWT.reloadPage();
+	if (await JWT.getAccess())
+		await UserInfo.refreshUser();
+	locationHandler();
+}
+
+window.onpopstate = async () => {
+	await reloadPage();
+}
 window.route = route;
-locationHandler();
+reloadPage();

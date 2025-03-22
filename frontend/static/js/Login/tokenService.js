@@ -1,7 +1,7 @@
 class tokenService {
   cookieRefreshName = "refresh";
   cookieAccessName = "access";
-  cookieExpiricy = 1 * 60 * 1000;
+  cookieExpiricy = 1 * 10 * 1000;
   token = {};
   date = new Date();
   isUpdating = false;
@@ -13,7 +13,6 @@ class tokenService {
   }
 
   async setToken(t) {
-    console.log("setToken: ", t);
     this.token = t;
     this.setCookie();
   }
@@ -22,9 +21,10 @@ class tokenService {
     deleteCookies();
   }
 
+  getIsUpdating() { return this.isUpdating; }
+
   async getAccess() {
     let cookie = this.checkCookie(this.cookieAccessName);
-    console.log("tokenService: ", cookie);
     if (cookie) return this.token.access;
     if (!this.isUpdating) {
       this.isUpdating = true;
@@ -42,15 +42,22 @@ class tokenService {
   }
 
   async reloadPage() {
-    console.log("relaodPage");
     let token = this.checkCookie(this.cookieRefreshName);
     if (!token) return null;
-    await this.updateToken();
+    if (!this.isUpdating) {
+      this.isUpdating = true;
+      await this.updateToken();
+    }
+    else {
+      while (this.isUpdating) {
+        await new Promise((resolve) => setTimeout(resolve, 10));
+      }
+    }
     return this.token.access;
   }
 
   async updateToken() {
-      console.log("updateToken");
+    console.log("[updateToken]")
       const apiUrl = "/authapi";
       let token = this.checkCookie(this.cookieRefreshName);
       if (!token) {
@@ -58,8 +65,6 @@ class tokenService {
         await this.redirectLogin();
         return; // Exit if no token is found
       }
-      console.log("token: ", token);
-
       return new Promise((resolve, reject) => {
         $.ajax({
           type: "POST",
@@ -68,16 +73,16 @@ class tokenService {
           headers: { Accept: "application/json" },
           data: JSON.stringify({ refresh: token }),
           success: async (data) => {
-            console.log("Token updated");
             let tk = { refresh: token, access: data.access };
-            await this.setToken(tk);
             this.isUpdating = false;
+            await this.setToken(tk);
+            console.log("[Finished updateToken]")
             resolve(); // Resolve the promise when the token is updated
           },
           error: async (xhr) => {
             console.log("Error occurred, redirecting to login");
-            await this.redirectLogin();
             this.isUpdating = false;
+            await this.redirectLogin();
             reject(); // Reject the promise on error
           },
         });
