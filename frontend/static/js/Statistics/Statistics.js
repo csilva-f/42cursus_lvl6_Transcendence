@@ -119,10 +119,12 @@ function insertPageInfo(userStats) {
 	const points = document.getElementById("totalPoints");
 	const time = document.getElementById("totalTime");
 	const hits = document.getElementById("totalBallsHit");
-
-	points.textContent = userStats.TotalGamePoints;
+	if (points)
+		points.textContent = userStats.TotalGamePoints;
 	const timeString = userStats.TotalGameTime;
 	const formattedTime = timeString.split('.')[0];
-	time.textContent = formattedTime;
-	hits.textContent = userStats.TotalBallHits;
+	if (time)
+		time.textContent = formattedTime;
+	if (hits)
+		hits.textContent = userStats.TotalBallHits;
 }

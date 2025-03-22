@@ -1,3 +1,5 @@
+window.ws_os = null;
+
 async function sendLogin() {
 	// Login function
 	const email = $("#loginEmail").val();
@@ -10,7 +12,7 @@ async function sendLogin() {
 		headers: { Accept: "application/json" },
 		data: JSON.stringify({ email, password }),
 		success: async function (data) {
-		  await loginSuccess(data);
+			await loginSuccess(data);
 		},
 		error: function (xhr) {
 			const data = xhr.responseJSON;
@@ -20,27 +22,92 @@ async function sendLogin() {
 }
 
 async function loginSuccess(data) {
-  jwtToken = data.access; // Store the JWT token
-	const otp_status = await OTP_check_enable(jwtToken);
-	console.log("BMC: ", otp_status);
-	if (otp_status) {
+	jwtToken = data.access; // Store the JWT token
+	const opt_status = await OTP_check_enable(jwtToken);
+	console.log(opt_status);
+
+	if (opt_status == true) {
 		//OTP_send_email(jwtToken);
 		await JWT.setTempToken(data);
 		window.history.pushState({}, "", "/mfa");
 		locationHandler("content");
 	} else {
 		if (jwtToken) {
-			localStorage.setItem("jwt", jwtToken);
-			await JWT.setToken(data);
-			console.log("Access: ", await JWT.getAccess());
-			await checkUserExtension();
+  		localStorage.setItem("jwt", jwtToken);
+  		await JWT.setToken(data);
+  		console.log("Access: ", await JWT.getAccess());
 		}
+		await UserInfo.refreshUser();
 		window.history.pushState({}, "", "/");
-		locationHandler("content");
+		locationHandler();
+		let uid = await UserInfo.getUserID();
+		initializeWebSocket(() => {
+			if (uid && window.ws_os && window.ws_os.readyState === WebSocket.OPEN) {
+			  //console.log("User ID:", UserInfo.getUserID());
+				window.ws_os.send(JSON.stringify({ user_id: uid }));
+			}
+			// requestOnlineUsers(function (onlineUsers) {
+			//     console.log("Test: Online users list (login):", onlineUsers);
+			// });
+		});
 	}
 	$("#login-message").text("Login successful!");
 }
 
+
+
+function initializeWebSocket(callback = null) {
+    if (window.ws_os && window.ws_os.readyState === WebSocket.OPEN) {
+        console.log("WebSocket already open (no need for recreation).");
+        if (callback) callback();
+        return;
+    }
+
+    console.log("Initializing WebSocket...");
+    const wsUrl = `wss://${window.location.host}/onlineStatus/`;
+    window.ws_os = new WebSocket(wsUrl);
+
+    window.ws_os.onopen = function () {
+        console.log("WebSocket: user connection established successfully.");
+        if (callback) callback();
+    };
+
+	window.ws_os.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        if (data.online_users) {
+            console.log("Online users list:", data.online_users);
+            if (window.onlineUsersCallback) {
+                window.onlineUsersCallback(data.online_users);
+            }
+        } else {
+            console.log("Message received:", e.data);
+        }
+    };
+
+    window.ws_os.onerror = function (error) {
+        console.error("WebSocket error:", error);
+    };
+
+    window.ws_os.onclose = function (event) {
+        console.log("WebSocket connection closed:", event);
+    };
+}
+
+//document.addEventListener("DOMContentLoaded", function () {
+
+  //initializeWebSocket();
+  //});
+
+function requestOnlineUsers(callback) {
+	console.log(window.ws_os);
+    if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
+        console.error("WebSocket is not open. Cannot fetch online users.");
+        return;
+    }
+    window.ws_os.send(JSON.stringify({ action: "queryOnline" }));
+
+	window.onlineUsersCallback = callback;
+}
 
 async function checkUserExtension() {
 	const APIurl = `/api/create-userextension/`
@@ -326,7 +393,8 @@ async function verifyAccount() {
 	const apiUrl = "/authapi";
 	let token = await JWT.getTempToken();
 	let access = await JWT.getTempAccess();
-
+	console.log('Token:', token);
+	console.log('Access:', access);
 	$.ajax({
     type: "POST",
     url: `${apiUrl}/otp-verify/`,
@@ -334,9 +402,19 @@ async function verifyAccount() {
     headers: { Accept: "application/json",
               Authorization: `Bearer ${access}` },
     data: JSON.stringify({ code }),
-    success: function (data) {
+    success: async function (data) {
       console.log(data);
       JWT.setToken(token);
+      await UserInfo.refreshUser();
+      let uid = await UserInfo.getUserID();
+     	initializeWebSocket(() => {
+      		if (uid && window.ws_os && window.ws_os.readyState === WebSocket.OPEN) {
+     			window.ws_os.send(JSON.stringify({ user_id: uid }));
+      		}
+      		// requestOnlineUsers(function (onlineUsers) {
+      		//     console.log("Test: Online users list (login):", onlineUsers);
+      		// });
+     	});
       window.history.pushState({}, "", "/");
       locationHandler("content");
     },
@@ -449,22 +527,123 @@ async function fetchProfileInfo(userID) {
 		},
 		success: function (res) {
 			console.log(res);
-			insertProfileInfo(res.users[0]);
+
+			if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
+				console.warn("WebSocket not found or closed. Reinitializing...");
+				initializeWebSocket(() => {
+					requestOnlineUsers(function (onlineUsers) {
+						console.log("Updated online users list:", onlineUsers);
+						insertProfileInfo(res.users[0], onlineUsers);
+					});
+				});
+			} else {
+				requestOnlineUsers(function (onlineUsers) {
+					console.log("Updated online users list:", onlineUsers);
+					insertProfileInfo(res.users[0], onlineUsers);
+				});
+			}
 			updateContent(langData);
 		},
 		error: function (xhr, status, error) {
-			console.error("Error Thrown:", error);
+			console.error("Error thrown:", error);
 			showErrorToast(APIurl, error, langData);
 		},
 	});
 }
 
-async function insertProfileInfo(UserElement) {
+// async function getUserExtensions(userID, accessToken) {
+//     const APIurl = userID ? `/api/get-userextensions/?userID=${userID}` : `/api/get-userextensions/`;
+//     try {
+//         const response = await $.ajax({
+//             type: "GET",
+//             url: APIurl,
+//             contentType: "application/json",
+//             headers: { Authorization: `Bearer ${accessToken}` },
+//         });
+//         console.log("Data get-userextension:", response);
+//         return response.users[0];
+//     } catch (error) {
+//         console.error("Error GET user extension:", error);
+//         return null;
+//     }
+// }
+
+// async function getUserProfile(accessToken) {
+//     const APIurl = `/api/get-profile/`;
+//     try {
+//         const response = await $.ajax({
+//             type: "GET",
+//             url: APIurl,
+//             contentType: "application/json",
+//             headers: { Authorization: `Bearer ${accessToken}` },
+//         });
+//         console.log("Data get-profile:", response);
+//         return response.data || response;
+//     } catch (error) {
+//         console.error("Error GET user profile:", error);
+//         return null;
+//     }
+// }
+
+// async function fetchProfileInfo(userID) {
+//     const userLang = localStorage.getItem("language") || "en";
+//     const langData = await getLanguageData(userLang);
+//     const accessToken = await JWT.getAccess();
+//     console.log("🔹 fetchProfileInfo() iniciado, accessToken:", accessToken);
+
+//     try {
+//         const [userExtensions, userProfile] = await Promise.all([
+//             getUserExtensions(userID, accessToken),
+//             getUserProfile(accessToken)
+//         ]);
+
+//         if (!userExtensions || !userProfile) {
+//             console.error("Error: incomplete data!");
+//             return;
+//         }
+
+//         const userData = { ...userExtensions, ...userProfile };
+//         console.log("Combined profile data:", userData);
+
+//         if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
+// 			console.warn("WebSocket not found or closed. Reinitializing...");
+// 			initializeWebSocket(() => {
+// 				requestOnlineUsers(function (onlineUsers) {
+// 					console.log("Updated online users list:", onlineUsers);
+// 					insertProfileInfo(userData, onlineUsers);
+// 				});
+// 			});
+// 		} else {
+// 			requestOnlineUsers(function (onlineUsers) {
+// 				console.log("Updated online users list:", onlineUsers);
+// 				insertProfileInfo(userData, onlineUsers);
+// 			});
+// 		}
+
+//         updateContent(langData);
+
+//     } catch (error) {
+//         console.error("Error profile data:", error);
+//         showErrorToast("Error loading profile", error, langData);
+//     }
+// }
+
+async function insertProfileInfo(UserElement, users_on) {
+	console.log(UserElement);
 	document.getElementById("birthdayText").textContent= UserElement.birthdate;
 	document.getElementById("genderText").textContent= UserElement.gender;
 	document.getElementById("phoneNumberText").textContent= UserElement.gender;
 	document.getElementById("nicknameText").textContent= UserElement.nick;
 	document.getElementById("bioText").textContent= UserElement.bio;
+
+	console.log(Number(UserElement.id));
+	console.log(users_on);
+	if (users_on.includes(Number(UserElement.id))) {
+        userOnStatus.style.backgroundColor = "green"; // Online
+    } else {
+        userOnStatus.style.backgroundColor = "white"; // Offline
+        userOnStatus.style.border = "1px solid gray";
+    }
 }
 
 async function validateEmail() {

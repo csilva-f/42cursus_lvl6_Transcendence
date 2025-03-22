@@ -106,7 +106,7 @@ async function postLocalGame() {
   resetModal();
   $("#createModal").modal("hide");
   window.history.pushState({}, "", "/pong");
-  await locationHandler("content");
+  await locationHandler();
   const game = new Game(0, gameData);
   game.initGame();
 }
@@ -118,10 +118,6 @@ async function postRemoteGame() {
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/create-game/`;
   let gameData = {
-    P1: document.getElementById("P1NickInput").value,
-    P1Color: document.getElementById("P1ColorInput").value,
-    P2: document.getElementById("P2NickInput").value,
-    P2Color: document.getElementById("P2ColorInput").value,
     islocal: false,
   };
   console.log("gameData: ", gameData);
@@ -180,7 +176,7 @@ async function postRemoteGame() {
           // }, 50);
 
             window.history.pushState({}, "", `/pong`);
-            locationHandler("content");
+            locationHandler();
           }
         }
       };
@@ -275,7 +271,7 @@ async function enterGame(gameID) {
       };
 
       window.history.pushState({}, "", "/pong");
-      await locationHandler("content");
+      await locationHandler();
       const game = new Game(gameID, null);
       game.initGame();
     },
