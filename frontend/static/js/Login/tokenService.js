@@ -13,7 +13,7 @@ class tokenService {
     await locationHandler("allcontent");
   }
 
-  async setTempToken(t) {
+  async setToken(t) {
     console.log("TempToken: ", t);
     this.token = t;
     this.setCookie();
@@ -27,7 +27,7 @@ class tokenService {
     return this.tempToken;
   }
 
-  async setToken(t) {
+  async setTempToken(t) {
     console.log("setToken: ", t);
     this.tempToken = t;
   }

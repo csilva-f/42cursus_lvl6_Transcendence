@@ -10,7 +10,7 @@ async function sendLogin() {
 		headers: { Accept: "application/json" },
 		data: JSON.stringify({ email, password }),
 		success: async function (data) {
-		  loginSuccess(data);
+		  await loginSuccess(data);
 		},
 		error: function (xhr) {
 			const data = xhr.responseJSON;
@@ -25,14 +25,14 @@ async function loginSuccess(data) {
 	console.log("BMC: ", otp_status);
 	if (otp_status) {
 		//OTP_send_email(jwtToken);
-		JWT.setTempToken(data);
+		await JWT.setTempToken(data);
 		window.location.href = "/mfa";
 		locationHandler("content");
 	} else {
 		if (jwtToken) {
 			localStorage.setItem("jwt", jwtToken);
-			JWT.setToken(data);
-			console.log("Access: ", JWT.getAccess());
+			await JWT.setToken(data);
+			console.log("Access: ", await JWT.getAccess());
 			await checkUserExtension();
 		}
 		window.history.pushState({}, "", "/");
