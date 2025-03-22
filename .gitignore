@@ -6,3 +6,4 @@ vault/data/*
 secrets/
 **/__pycache__/
 .vscode/
+**/.DS_Store
