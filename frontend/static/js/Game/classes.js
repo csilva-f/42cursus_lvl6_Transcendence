@@ -32,7 +32,7 @@ class Ball {
         ctx.beginPath();
         ctx.arc(this.ballX, this.ballY, this.ballRadius, 0, Math.PI * 2);
         ctx.fill();
-        console.log("ball x: ", this.ballX, " | ball Y: ", this.ballY);
+        //console.log("ball x: ", this.ballX, " | ball Y: ", this.ballY);
     }
     colissionEdge(canvas) {
         if (this.ballY + this.ballRadius >= canvas.height)
@@ -65,6 +65,8 @@ class Paddle {
             paddleScore: this.paddleScore,
             paddleX: this.paddleX,
             paddleY: this.paddleY,
+            paddleScore: this.paddleScore,
+            paddleColisionTimes: this.paddleColisionTimes,
         };
     }
     getHalfWidth() { return this.paddleWidth / 2; }
@@ -84,6 +86,33 @@ class Paddle {
                 this.paddleY -= this.paddleVelocityY;
             if (keyPressed[KEY_S])
                 this.paddleY += this.paddleVelocityY;
+        }
+        //console.log("update paddle:", this);
+    }
+    updateRemote(isHost, ws) {
+        if (this.paddleSide == 2 && isHost) {
+            if (keyPressed[KEY_ARROWUP]){
+                this.paddleY -= this.paddleVelocityY;
+                let msg = JSON.stringify(this.toJSON());
+                ws.send(msg);
+            }
+            if (keyPressed[KEY_ARROWDOWN]){
+                this.paddleY += this.paddleVelocityY;
+                let msg = JSON.stringify(this.toJSON());
+                ws.send(msg);
+            }
+        }
+        if (this.paddleSide == 1 && !isHost) {
+            if (keyPressed[KEY_W]){
+                this.paddleY -= this.paddleVelocityY;
+                let msg = JSON.stringify(this.toJSON());
+                ws.send(msg);
+            }
+            if (keyPressed[KEY_S]){
+                this.paddleY += this.paddleVelocityY;
+                let msg = JSON.stringify(this.toJSON());
+                ws.send(msg);
+            }
         }
         //console.log("update paddle:", this);
     }
@@ -171,6 +200,38 @@ class Paddle {
                 ball.ballY = (dY < 0)
                     ? this.getCenterHeight() - this.getHalfHeight() - ball.ballRadius
                     : this.getCenterHeight() + this.getHalfHeight() + ball.ballRadius;
+            }
+        }
+    }
+
+    remoteColissionBall(ball, ws, isHost) {
+        let dX = ball.ballX - this.getCenterWidth();
+        let dY = ball.ballY - this.getCenterHeight();
+        let absDX = Math.abs(dX);
+        let absDY = Math.abs(dY);
+
+        if (absDX <= (ball.ballRadius + this.getHalfWidth()) && absDY <= (ball.ballRadius + this.getHalfHeight())) {
+            // Colisão na frente do paddle
+            if (absDX > this.getHalfWidth()) {
+                this.paddleColisionTimes++;
+                if (ball.ballVelocityX < maxSpeed)
+                    ball.ballVelocityX *= -1.08;
+                else
+                    ball.ballVelocityX *= -1;
+                ball.ballX = (dX < 0)
+                    ? this.getCenterWidth() - this.getHalfWidth() - ball.ballRadius
+                    : this.getCenterWidth() + this.getHalfWidth() + ball.ballRadius;
+            }
+            // Colisão no topo ou na base
+            if (absDY > this.getHalfHeight()) {
+                ball.ballVelocityY *= -1; // Reverte a direção vertical
+                ball.ballY = (dY < 0)
+                    ? this.getCenterHeight() - this.getHalfHeight() - ball.ballRadius
+                    : this.getCenterHeight() + this.getHalfHeight() + ball.ballRadius;
+            }
+            if(isHost){
+                let msg = JSON.stringify(ball.toJSON());
+                ws.send(msg);
             }
         }
     }

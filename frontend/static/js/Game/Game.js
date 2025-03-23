@@ -74,6 +74,21 @@ class Game  {
         document.getElementById("playerLeftScore").innerHTML = this.objects[1].paddleScore;
         document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
         startTimer();
+        // this.ws.onmessage = (event) => {
+        //     const data = JSON.parse(event.data);
+        //     // console.log("Element:", data.element);
+        //     // console.log("Side:", data.paddleSide);
+        //     // console.log("X:", data.paddleX);
+        //     // console.log("Y:", data.paddleY);
+        //     //NOTE - 1 - Atualizar a bola
+        //     if (data.element == 0) { //saber se e a a minha bola faz sentido? o nuno diz que nao
+        //         this.ballUpdateByValue(this.objects[0], data.ballX, data.ballY, data.ballVelocityX, data.ballVelocityY);
+        //     }
+        //     //NOTE - 2 - Atualizar o paddle
+        //     if (data.element == 1) {
+        //         this.paddleUpdateByValue(this.objects[data.paddleSide], data.paddleX, data.paddleY);
+        //     }
+        // };
         this.gameLoop();
     }
     gameLoop() {
@@ -100,12 +115,10 @@ class Game  {
         this.gameDraw();
     }
     hostGame(){
-        //NOTE - 1 - Atualizar a bola
+        //Update bola e paddle direito
         this.elementUpdate(this.objects[0]);
-        this.objects[1].colissionBall(this.objects[0], this.objects[1]);
-
-        //NOTE - 2 - Atualizar o paddle direito e bola
-        this.elementUpdate(this.objects[2]);
+        this.objects[1].colissionBall(this.objects[0], this.objects[1]); //colisao da bola com o paddle esquerdo
+        this.elementUpdate(this.objects[2]); //atualiza o padle consoante as teclas, colisao do paddle com os limites cima e baixo da canva e colisao da bola com o paddle
 
         //NOTE - SEND MESSAGES
         const ball_msg = JSON.stringify(this.objects[0].toJSON());
@@ -113,47 +126,26 @@ class Game  {
         const paddle_msg = JSON.stringify(this.objects[2].toJSON());
         this.ws.send(paddle_msg);
 
-        //NOTE  - 3 - Atualizar o paddle esquerdo
-        this.ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            console.log("Element:", data.element);
-            console.log("Side:", data.paddleSide);
-            console.log("X:", data.paddleX);
-            console.log("Y:", data.paddleY);
-            if (data.element == 1 && data.paddleSide == 1){
-                this.paddleUpdateByValue(this.objects[1], data.paddleX, data.paddleY);
-            }
-        };
-
         // TODO
         //4 - Inc score
-
+        this.incScore();
         //5 - draw
         this.gameDraw();
     }
     joinerGame() {
-        this.ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            // console.log("Element:", data.element);
-            // console.log("Side:", data.paddleSide);
-            // console.log("X:", data.paddleX);
-            // console.log("Y:", data.paddleY);
-            //NOTE - 1 - Atualizar a bola
-            if (data.element == 0) {
-                this.ballUpdateByValue(this.objects[0], data.ballX, data.ballY, data.ballVelocityX, data.ballVelocityY);
-            }
-            //NOTE - 2 - Atualizar o paddle direito
-            if (data.element == 1 && data.paddleSide == 2) {
-                this.paddleUpdateByValue(this.objects[2], data.paddleX, data.paddleY);
-            }
-        };
-        //NOTE - 1 - Atualizar o paddle esquerdo
+        this.elementUpdate(this.objects[0]);
+        this.objects[1].colissionBall(this.objects[0], this.objects[1]); //colisao da bola com o paddle esquerdo
         this.elementUpdate(this.objects[1]);
+
+        //NOTE - 1 - Atualizar o paddle esquerdo e colisao com bola
+
         const msg = JSON.stringify(this.objects[1].toJSON());
         this.ws.send(msg);
+        const ball_msg = JSON.stringify(this.objects[0].toJSON());
+        this.ws.send(ball_msg);
 
-        //4 - Inc score
-
+        //4 - Inc scores
+        this.incScore();
         //5 - draw
         this.gameDraw();
 
@@ -178,7 +170,7 @@ class Game  {
         element.update();
         element.colissionEdge(this.canvas);
         if (element instanceof Paddle)
-            element.colissionBall(this.objects[0], element);
+            element.colissionBall(this.objects[0]);
     }
     paddleUpdateByValue(element, x, y){
         element.updateByValue(x, y);
@@ -188,6 +180,8 @@ class Game  {
     ballUpdateByValue(element, x, y, velocityX, velocityY){
         element.updateByValue(x, y, velocityX, velocityY);
         element.colissionEdge(this.canvas);
+        this.objects[1].colissionBall(element, this.objects[1]);
+        this.objects[1].colissionBall(element, this.objects[1]);
     }
     gameDraw() {
         this.objects.forEach(element => {

@@ -172,7 +172,7 @@ async function postRemoteGame() {
           if (playerCount === 2) {
             console.log("Both players connected. Opening the game page...");
             console.table(gameData)
-            const game = new Game(gameId, ws, true, gameData);
+            const game = new RemoteGame(gameId, ws, true, gameData);
             //5 4 3 2 1
             game.initGame();
           //   gameInterval = setInterval(() => {
@@ -281,7 +281,7 @@ async function enterGame(gameID) {
         if (data.message === "A player joined the game!"){
           window.history.pushState({}, "", `/pong`);
           await locationHandler("content");
-          const game = new Game(gameID, ws, false, gameDataCanvas);
+          const game = new RemoteGame(gameID, ws, false, gameDataCanvas);
           //5 4 3 2 1
           game.initGame();
         }
