@@ -74,8 +74,8 @@ class RemoteGame  {
             //NOTE - 2 - Atualizar o paddle
             if (data.element == 1) {
                 this.paddleUpdateByValue(this.objects[data.paddleSide], data.paddleY);
+                this.objects[data.paddleSide].paddleScore = data.paddleScore;
                 if(data.paddleSide == 1){
-                    this.objects[1].paddleScore = data.paddleScore;
                     document.getElementById("playerLeftScore").innerHTML = data.paddleScore;
                 }
                 if(data.paddleSide == 2)
@@ -113,14 +113,24 @@ class RemoteGame  {
         this.gameDraw();
     }
     joinerGame(){
-        this.objects[0].update();
+        // this.objects[0].update();
+        // this.objects[0].colissionEdge(this.canvas);
+        // this.ballUpdate();
+        // this.paddleUpdate(this.objects[1]);
+        //this.gameUpdate();
         this.objects[0].colissionEdge(this.canvas);
-        this.objects[2].colissionBall(this.objects[0]);
+        //this.objects[1].colissionBall(this.objects[0]);
+        //this.objects[2].colissionBall(this.objects[0]);
+        this.objects[1].remoteColissionBall(this.objects[0], this.ws, this.isHost);
+        this.objects[2].remoteColissionBall(this.objects[0], this.ws, this.isHost);
         this.paddleUpdate(this.objects[1]);
+        this.paddleUpdate(this.objects[2]);
         this.gameDraw();
     }
     gameUpdate(){
         this.ballUpdate();
+        let msg = JSON.stringify(this.objects[0].toJSON());
+        this.ws.send(msg);
         this.paddleUpdate(this.objects[1]);
         this.paddleUpdate(this.objects[2]);
     }
@@ -128,20 +138,23 @@ class RemoteGame  {
     ballUpdate(){
         this.objects[0].update();
         this.objects[0].colissionEdge(this.canvas);
+        //this.objects[1].colissionBall(this.objects[0]);
+        //this.objects[2].colissionBall(this.objects[0]);
         this.objects[1].remoteColissionBall(this.objects[0], this.ws, this.isHost);
         this.objects[2].remoteColissionBall(this.objects[0], this.ws, this.isHost);
+    }
+    //update do paddle pelas teclas e update da colisao do paddle com a bola
+    paddleUpdate(paddle){
+        paddle.updateRemote(this.isHost, this.ws);
+        paddle.colissionEdge(this.canvas);
+        //paddle.colissionBall(this.objects[0]);
+        paddle.remoteColissionBall(this.objects[0], this.ws, this.isHost);
     }
     ballUpdateByValue(x, y, velocityX, velocityY){
         this.objects[0].updateByValue(x, y, velocityX, velocityY);
         this.objects[0].colissionEdge(this.canvas);
         this.objects[1].colissionBall(this.objects[0]);
         this.objects[2].colissionBall(this.objects[0]);
-    }
-    //update do paddle pelas teclas e update da colisao do paddle com a bola
-    paddleUpdate(paddle){
-        paddle.updateRemote(this.isHost, this.ws);
-        paddle.colissionEdge(this.canvas);
-        paddle.remoteColissionBall(this.objects[0], this.ws, this.isHost);
     }
     paddleUpdateByValue(paddle, y){
         paddle.paddleY = y;

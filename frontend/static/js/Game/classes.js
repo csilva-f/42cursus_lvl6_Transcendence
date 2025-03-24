@@ -32,7 +32,7 @@ class Ball {
         ctx.beginPath();
         ctx.arc(this.ballX, this.ballY, this.ballRadius, 0, Math.PI * 2);
         ctx.fill();
-        //console.log("ball x: ", this.ballX, " | ball Y: ", this.ballY);
+        console.log("ball x: ", this.ballX, " | ball Y: ", this.ballY, " | velocity: ", this.ballVelocityX);
     }
     colissionEdge(canvas) {
         if (this.ballY + this.ballRadius >= canvas.height)
@@ -63,9 +63,7 @@ class Paddle {
             element: 1,
             paddleSide: this.paddleSide,
             paddleScore: this.paddleScore,
-            paddleX: this.paddleX,
             paddleY: this.paddleY,
-            paddleScore: this.paddleScore,
             paddleColisionTimes: this.paddleColisionTimes,
         };
     }
@@ -204,7 +202,7 @@ class Paddle {
         }
     }
 
-    remoteColissionBall(ball, ws, isHost) {
+    remoteColissionBall(ball, ws, sendMsg) {
         let dX = ball.ballX - this.getCenterWidth();
         let dY = ball.ballY - this.getCenterHeight();
         let absDX = Math.abs(dX);
@@ -229,7 +227,7 @@ class Paddle {
                     ? this.getCenterHeight() - this.getHalfHeight() - ball.ballRadius
                     : this.getCenterHeight() + this.getHalfHeight() + ball.ballRadius;
             }
-            if(isHost){
+            if(sendMsg){
                 let msg = JSON.stringify(ball.toJSON());
                 ws.send(msg);
             }
