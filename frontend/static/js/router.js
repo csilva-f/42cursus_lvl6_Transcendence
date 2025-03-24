@@ -107,7 +107,7 @@ const bigScreenLocation = [
 	"/resendCode",
 	"/resetPassword",
 	"/tournament",
-	"/testWebSocket"
+	"/testWebSocket",
 ];
 
 const route = (event) => {
@@ -199,6 +199,9 @@ async function changeToBig(location) {
 		headerElement.setAttribute("data-i18n", "validateEmail");
 		disableTopBar();
 		validateEmail();
+	} else if (location == "/profile") {
+		console.log("router");
+		getForms();
 	}
 
 	updateContent(langData);
@@ -320,7 +323,8 @@ async function changeActive(location) {
 			activateIcon(statsEverythingIconProfile);
 			fetchProfileInfo(null);
 			fetchStatistics(null);
-			updateProfile(null);
+			GetProfileView(null);
+			getForms();
 			const input = document.querySelector("#phoneNumber");
 			window.intlTelInput(input, {
 				loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
@@ -399,8 +403,6 @@ const locationHandler = async (elementID) => {
 	}
 };
 
-
-
 document.addEventListener("click", (e) => {
 	const { target } = e;
 
@@ -409,7 +411,6 @@ document.addEventListener("click", (e) => {
 		route(e);
 	}
 });
-
 
 function loadProfileFromURL() {
 	const path = window.location.pathname;

@@ -46,14 +46,15 @@ function verifyButtonOTP(checkbox) {
 
 function previewImage(event) {
 	const file = event.target.files[0];
+	const reader = new FileReader();
+
+	reader.onload = function(e) {
+		const imgElement = document.getElementById('avatarPreview');
+		imgElement.src = e.target.result;
+		localStorage.setItem('avatarImage', e.target.result);
+	};
+
 	if (file) {
-		const reader = new FileReader();
-		reader.onload = function(e) {
-			const avatarPreview = document.getElementById('avatarPreview');
-			avatarPreview.src = e.target.result;
-		}
 		reader.readAsDataURL(file);
-		console.log("avatar:");
-		console.log(avatarPreview);
 	}
 }

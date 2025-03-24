@@ -29,7 +29,7 @@ function getForms() {
   "use strict";
   // Fetch all the forms we want to apply custom Bootstrap validation styles to
   const forms = document.querySelectorAll(".needs-validation");
-
+  console.log("getForms()");
   // Loop over them and prevent submission
   Array.from(forms).forEach((form) => {
     form.addEventListener(
@@ -44,13 +44,20 @@ function getForms() {
         } else {
           console.log("Form is valid: ", form);
           if (form.id == "localFormID") postLocalGame();
-        	else if (form.id == "remoteFormID") postRemoteGame();
+          else if (form.id == "remoteFormID") postRemoteGame();
           else if (form.id == "localTournamentFormID") initLocalTournament();
           else if (form.id == "tournamentFormID") postTournament();
           else if (form.id == "login-form") sendLogin();
           else if (form.id == "signup-form") sendSignup(form);
           else if (form.id == "forgotPwd-form") forgotPwd();
 		  else if (form.id == "nicknameModal-form") finishProfile();
+		  else if (form.id == "editProfileForm"){
+			  const firstName = document.getElementById("firstName").value;
+			  const lastName = document.getElementById("lastName").value;
+			  const phoneNumber = document.getElementById("phoneNumber").value;
+			console.log("last Name", lastName);
+			updateProfile(firstName, lastName, phoneNumber);
+		}
           // else if (form.id == "resendCode-form")
           // 	sendCode();
           // else if (form.id == "resetPwd-form")

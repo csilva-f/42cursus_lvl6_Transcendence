@@ -331,19 +331,42 @@ function passwordVisibility(passwordFieldId, toggleIconId) {
 	}
 }
 
-function validateNewPassword(passwordId, validationId, iconId, confirmPassId) {
+function validateNewPassword(passwordId, validationId, confirmPassId) {
 	const password = document.getElementById(passwordId);
+	const lengthCheck = document.getElementById('lengthCheck');
+	const upperCaseCheck = document.getElementById('upperCaseCheck');
+	const numberCheck = document.getElementById('numberCheck');
+	const specialCharCheck = document.getElementById('specialCharCheck');
 	const validationMessage = document.getElementById(validationId);
-	const icon = document.getElementById(iconId);
 	const confirmPass = document.getElementById(confirmPassId);
 
 	confirmPass.value = '';
-	validationMessage.classList.remove('d-none');
-	if (password.value.length >= 8) {
+
+	const hasUpperCase = /[A-Z]/.test(password.value);
+	const hasNumbers = /\d/.test(password.value);
+	const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password.value);
+	const isValidLength = password.value.length >= 8;
+
+	lengthCheck.className = isValidLength ? 'requirement valid' : 'requirement invalid';
+	document.getElementById('lengthIcon').className = isValidLength ? 'fa-solid fa-check' : 'fa-solid fa-xmark';
+	document.getElementById('lengthIcon').style.color = isValidLength ? 'green' : 'red';
+
+	upperCaseCheck.className = hasUpperCase ? 'requirement valid' : 'requirement invalid';
+	document.getElementById('upperCaseIcon').className = hasUpperCase ? 'fa-solid fa-check' : 'fa-solid fa-xmark';
+	document.getElementById('upperCaseIcon').style.color = hasUpperCase ? 'green' : 'red';
+
+	numberCheck.className = hasNumbers ? 'requirement valid' : 'requirement invalid';
+	document.getElementById('numberIcon').className = hasNumbers ? 'fa-solid fa-check' : 'fa-solid fa-xmark';
+	document.getElementById('numberIcon').style.color = hasNumbers ? 'green' : 'red';
+
+	specialCharCheck.className = hasSpecialChars ? 'requirement valid' : 'requirement invalid';
+	document.getElementById('specialCharIcon').className = hasSpecialChars ? 'fa-solid fa-check' : 'fa-solid fa-xmark';
+	document.getElementById('specialCharIcon').style.color = hasSpecialChars ? 'green' : 'red';
+
+	if (isValidLength && hasUpperCase && hasNumbers && hasSpecialChars) {
 		validationMessage.classList.add('d-none');
 	} else {
-		icon.className = 'fa-solid fa-xmark';
-		icon.style.color = '#ff2600';
+		validationMessage.classList.remove('d-none');
 	}
 }
 
@@ -357,9 +380,14 @@ function validatePasswordsMatch(passwordId1, passwordId2, validationId, iconId) 
 
 	if (password1.value === password2.value && password1.value.length >= 8) {
 		validationMessage.classList.add('d-none');
+		validationMessage.classList.add('valid');
+		validationMessage.classList.remove('invalid');
 	} else {
-		icon.className = 'fa-solid fa-xmark';
+		// icon.className = 'fa-solid fa-xmark';
 		icon.style.color = '#ff2600';
+		validationMessage.classList.remove('d-none');
+		validationMessage.classList.add('invalid');
+		validationMessage.classList.remove('valid');
 	}
 }
 
@@ -459,7 +487,7 @@ async function validateEmail() {
 	  const data = xhr.responseJSON;
 	  console.log("email failed validation");
 	},
-  });
+});
 }
 
 async function resetPassword() {
@@ -486,7 +514,7 @@ async function resetPassword() {
   });
 }
 
-async function updateProfile() {
+async function GetProfileView() {
 	const userLang = localStorage.getItem("language") || "en";
 	const langData = await getLanguageData(userLang);
 	const accessToken = await JWT.getAccess();
@@ -502,7 +530,7 @@ async function updateProfile() {
 	 success: function (res) {
 		 insertProfileData(res.data);
 		 //updateContent(langData);
-		 console.log(res);
+		 console.log("data do get: " ,res);
 	 },
 	 error: function (xhr, status, error) {
 		console.error("Error Thrown:", error);
@@ -512,10 +540,43 @@ async function updateProfile() {
 }
 
 async function insertProfileData(UserElement) {
-	document.getElementById("birthdayText").textContent= UserElement.birthdate;
 	document.getElementById("firstName").value = UserElement.first_name;
 	document.getElementById("lastName").value = UserElement.last_name;
 	document.getElementById("phoneNumber").value = UserElement.phone_number;
 
 	document.getElementById("fullNameText").textContent = `${UserElement.first_name} ${UserElement.last_name}`;
+
+	document.getElementById("phoneNumberText").textContent= UserElement.phone_number;
+}
+
+async function updateProfile() {
+	const userLang = localStorage.getItem("language") || "en";
+	const langData = getLanguageData(userLang);
+	const accessToken = await JWT.getAccess();
+	const apiUrl = "/authapi";
+	const firstName = document.getElementById("firstName").value;
+	const lastName = document.getElementById("lastName").value;
+	const number = document.getElementById("phoneNumber").value;
+	
+	const data = {
+		first_name: firstName,
+		last_name: lastName,
+		phone_number: number
+	};
+	$.ajax({
+		type: "POST",
+		url: `${apiUrl}/update-profile/`,
+		contentType: "application/json",
+		headers: {
+			"Authorization": `Bearer ${accessToken}`
+		},
+		data: JSON.stringify(data),
+		success: function(res) {
+			console.log(res.message);
+		},
+		error: function(xhr, status, error) {
+			console.error("Error Thrown:", error);
+			showErrorToast(apiUrl, error, langData);
+		}
+	});
 }

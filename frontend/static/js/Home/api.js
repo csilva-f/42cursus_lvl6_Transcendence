@@ -69,11 +69,15 @@ async function finishProfile() {
 			Authorization: `Bearer ${accessToken}`,
 		},
 		data: JSON.stringify(userData),
-		success: function (res) {
-		let nickModal = new bootstrap.Modal(document.getElementById('nickModal'));
-        nickModal.hide();
-		  //showSuccessToast(langData, langData.gameEntered);
-		},
+		success: async function (res) {
+			$("#nickModal").modal("hide");
+			const userData = await checkUserExtension();
+			document.getElementById("personNickname").textContent = userData.nickname;
+			document.getElementById(
+			  "subMsg"
+			).textContent = `${userData.nickname} ${userData.nickname} `;
+			//showSuccessToast(langData, langData.gameEntered);
+		  },
 		error: function (xhr, status, error) {
 		  //showErrorToast(APIurl, error, langData);
 		},

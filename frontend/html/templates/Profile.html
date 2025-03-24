@@ -15,9 +15,9 @@
 										alt="Avatar" class="rounded-circle shadow"
 										style="width: 150px; height: 150px; object-fit: cover; cursor: pointer; border: 2px solid white;">
 								</label>
-								<input type="file" id="avatar" class="d-none" accept="image/*" onchange="previewImage(event)">
+								<input type="file" id="avatar" class="d-none" accept="image/*"
+									onchange="previewImage(event)">
 							</div>
-
 							<div id="profileData" class="mt-4">
 								<p class="h5 m-0 ms-3 fw-bold text-center mb-1" id="fullNameText"></p>
 								<p class="h6 m-0 ms-3 text-center mb-1" id="nicknameText"></p>
@@ -149,7 +149,7 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<form id="editProfileForm">
+					<form id="editProfileForm" class="needs-validation" novalidate>
 						<div class="row mb-3">
 							<div class="col-md-6">
 								<label for="firstName" class="form-label">First name</label>
@@ -157,8 +157,7 @@
 									<span class="input-group-text" style="border: none; background: white;">
 										<i class="fa-solid fa-user" style="color: var(--primary);"></i>
 									</span>
-									<input type="text" class="form-control" id="firstName"
-										style="border: none;">
+									<input type="text" class="form-control" id="firstName" style="border: none;" required>
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -167,8 +166,7 @@
 									<span class="input-group-text" style="border: none; background: white;">
 										<i class="fa-solid fa-user" style="color: var(--primary);"></i>
 									</span>
-									<input type="text" class="form-control" id="lastName"
-										style="border: none;">
+									<input type="text" class="form-control" id="lastName" style="border: none;">
 								</div>
 							</div>
 						</div>
@@ -186,8 +184,7 @@
 									<span class="input-group-text" style="border: none; background: white;">
 										<i class="fa-solid fa-cake-candles" style="color: var(--primary);"></i>
 									</span>
-									<input type="date" class="form-control" id="birthday" style="border: none;"
-										value="2015-02-12">
+									<input type="date" class="form-control" id="birthday" style="border: none;">
 								</div>
 							</div>
 						</div>
@@ -225,7 +222,8 @@
 										Enable two-factor authentication on your account
 									</label>
 									<div class="form-check form-switch">
-										<input class="form-check-input" type="checkbox" id="twoFactor" onclick="verifyButtonOTP(this)">
+										<input class="form-check-input" type="checkbox" id="twoFactor"
+											onclick="verifyButtonOTP(this)">
 										<label class="form-check-label" for="twoFactor"></label>
 									</div>
 								</div>
@@ -237,9 +235,9 @@
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 							</div>
 							<div class="col-md-6 text-end">
-								<button type="button" class="btn"
+								<button class="btn" onclick="updateProfile()"
 									style="background-color: var(--primary); color: white;"
-									id="saveButton">Save</button>
+									id="saveButtonProfile">Save</button>
 							</div>
 						</div>
 					</form>
@@ -265,7 +263,7 @@
 						<button type="button" class="btn btn-secondary"
 							style="background-color: var(--primary); color: white;" id="codeButton"
 							onclick="EnableOTPViewSet(1)">
-							<i class="fa-solid fa-qrcode me-2" style="color: white;" ></i> App
+							<i class="fa-solid fa-qrcode me-2" style="color: white;"></i> App
 						</button>
 					</div>
 					<div class="col-md-6 text-center">
@@ -343,7 +341,7 @@
 							</span>
 							<input type="password" class="form-control" id="newPasswordChange" style="border: none;"
 								required
-								oninput="validateNewPassword('newPasswordChange', 'passwordValidationChange', 'charCheckChange', 'confirmPasswordChange')">
+								oninput="validateNewPassword('newPasswordChange', 'passwordValidationChange', 'confirmPasswordChange')">
 							<span class="input-group-text" id="toggleNewPasswordChange"
 								style="cursor: pointer; background: white; border: none;"
 								onclick="passwordVisibility('newPasswordChange', 'toggleNewPasswordChange')">
@@ -351,8 +349,24 @@
 							</span>
 						</div>
 						<small id="passwordValidationChange" class="form-text text-muted d-none">
-							<i id="charCheckChange" class="fa-solid fa-xmark" style="color: red;"></i>
-							Password must be at least 8 characters long
+							<ul>
+								<li id="lengthCheck" class="requirement">
+									<i class="fa-solid fa-xmark" id="lengthIcon" style="color: red;"></i>
+									At least 8 characters long
+								</li>
+								<li id="upperCaseCheck" class="requirement">
+									<i class="fa-solid fa-xmark" id="upperCaseIcon" style="color: red;"></i>
+									At least 1 uppercase letter
+								</li>
+								<li id="numberCheck" class="requirement">
+									<i class="fa-solid fa-xmark" id="numberIcon" style="color: red;"></i>
+									At least 1 number
+								</li>
+								<li id="specialCharCheck" class="requirement">
+									<i class="fa-solid fa-xmark" id="specialCharIcon" style="color: red;"></i>
+									At least 1 special character
+								</li>
+							</ul>
 						</small>
 					</div>
 
@@ -373,10 +387,15 @@
 								<i class="fas fa-eye-slash" style="color: var(--primary);"></i>
 							</span>
 						</div>
-						<small id="confirmValidationChange" class="form-text text-muted d-none">
-							<i id="matchCheckChange" class="fa-solid fa-xmark" style="color: red;"></i>
-							Passwords do not match
-						</small>
+				
+							<small id="confirmValidationChange" class="form-text text-muted d-none">
+								<ul>
+									<li id="matchCheckChange" class="requirement">
+									<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+										Passwords do not match
+									</li>
+								</ul>
+							</small>
 					</div>
 
 					<!-- Submit -->

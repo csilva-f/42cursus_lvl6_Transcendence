@@ -90,6 +90,7 @@
 		width: 6rem !important;
 		min-width: 6rem !important;
 	}
+
 	#sidebarBtn {
 		display: block !important;
 	}
@@ -142,7 +143,7 @@ html {
 	height: 100%;
 }
 
- /* Login and profile page */
+/* Login and profile page */
 #loginSignUpTab .nav-item .nav-link.active {
 	background-color: var(--primary) !important;
 	border-color: var(--primary) !important;
@@ -172,9 +173,9 @@ html {
 
 /* Static images for profile page */
 body.profile-page {
-	background-image: url('/static/img/profile_page/bot1-removebg-preview.svg'), 
-					  url('/static/img/profile_page/bot2-removebg-preview.svg'), 
-					  url('/static/img/profile_page/bot3-removebg-preview.svg');
+	background-image: url('/static/img/profile_page/bot1-removebg-preview.svg'),
+		url('/static/img/profile_page/bot2-removebg-preview.svg'),
+		url('/static/img/profile_page/bot3-removebg-preview.svg');
 	background-repeat: no-repeat, no-repeat, no-repeat;
 	background-position: 10% 20%, 50% 60%, 80% 30%;
 	background-size: 150px, 200px, 180px;
@@ -184,16 +185,39 @@ body.profile-page {
 
 intl-tel-input {
 	display: table-cell;
-  }
-  .intl-tel-input .selected-flag {
+}
+
+.intl-tel-input .selected-flag {
 	z-index: 4;
-  }
-  .intl-tel-input .country-list {
+}
+
+.intl-tel-input .country-list {
 	z-index: 5;
-  }
-  .input-group .intl-tel-input .form-control {
+}
+
+.input-group .intl-tel-input .form-control {
 	border-top-left-radius: 4px;
 	border-top-right-radius: 0;
 	border-bottom-left-radius: 4px;
 	border-bottom-right-radius: 0;
-  }
+}
+
+/* Password validation */
+
+.requirement {
+	color: gray;
+}
+
+.valid {
+	color: green;
+}
+
+.invalid {
+	color: red;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
