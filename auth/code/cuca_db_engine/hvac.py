@@ -28,6 +28,8 @@ class VaultDatabaseCredentials:
             }
             self.lease_id = response['lease_id']
             self.lease_duration = response['lease_duration']
+            expire_time = self.client.sys.read_lease(lease_id=self.lease_id)
+            print (expire_time)
             print(f"Credentials fetched. Lease ID: {self.lease_id}, Lease duration: {self.lease_duration} seconds.")
             return self.credentials
         except Exception as e:

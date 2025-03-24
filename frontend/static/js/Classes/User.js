@@ -51,7 +51,7 @@ class User {
     }
 
     async fetchUserExtension() {
-        const accessToken = await JWT.getAccess();  
+        const accessToken = await JWT.getAccess();
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "POST",
@@ -84,5 +84,15 @@ class User {
         this.userGender = userInfo.gender;
         this.userBio = userInfo.bio;
         this.userAvatar = userInfo.avatar;
+    }
+
+    async resetUser() {
+        this.userID = null;
+        this.userNick = null;
+        this.userLvl = null;
+        this.userBirthdate = null;
+        this.userGender = null;
+        this.userBio = null;
+        this.userAvatar = null;
     }
 }

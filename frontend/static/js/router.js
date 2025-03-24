@@ -12,7 +12,7 @@ const routes = {
 		needAuth: 0,
 	},
 	401: {
-		template: "/templates/Error/404.html",
+		template: "/templates/Error/401.html",
 		title: "401",
 		descripton: "Forbidden",
 		needAuth: 0,
@@ -453,7 +453,7 @@ window.addEventListener("popstate", loadProfileFromURL);
 async function reloadPage() {
   let location = window.location.pathname;
   let route = routes[location] || routes["404"];
-  //if (route.needAuth != 1)
+
 	await JWT.reloadPage();
 	if (await JWT.getAccess())
 		await UserInfo.refreshUser();

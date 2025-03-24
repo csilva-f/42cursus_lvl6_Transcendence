@@ -59,6 +59,7 @@ function getForms() {
 async function logOut() {
   localStorage.removeItem("jwt");
   JWT.deleteToken();
+  UserInfo.resetUser();
   window.history.pushState({}, "", "/mainPage");
   locationHandler();
 }
