@@ -44,9 +44,10 @@ class tokenService {
 
   async getAccess() {
     let cookie = this.checkCookie(this.cookieAccessName);
+    let cookieRefresh = this.checkCookie(this.cookieRefreshName);
     console.log("tokenService: ", cookie);
     if (cookie && this.token.access) return this.token.access;
-    if (!this.isUpdating) {
+    if (!this.isUpdating && cookieRefresh) {
       this.isUpdating = true;
       try{
         await this.updateToken();
@@ -58,7 +59,11 @@ class tokenService {
       }
     }
     else {
-      console.log("Waiting for token update");
+      if (!cookieRefresh) {
+        console.log("No refresh token found");
+        //await this.redirectLogin();
+      }
+      else console.log("Waiting for token update");
       while (this.isUpdating) {
         await new Promise((resolve) => setTimeout(resolve, 10));
       }

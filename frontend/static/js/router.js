@@ -386,7 +386,6 @@ const locationHandler = async () => {
 	console.log("locationHandler: ", route);
 	let uid = await UserInfo.getUserID();
 	let tempToken = await JWT.getTempToken();
-
 	if (!(location === "/mfa" && (tempToken && !uid))) {
     if ((isProfile(location) && !uid) || (route.needAuth == 1 && !uid)){
       location = "/mainPage";
@@ -452,6 +451,9 @@ window.onload = loadProfileFromURL;
 window.addEventListener("popstate", loadProfileFromURL);
 
 async function reloadPage() {
+  let location = window.location.pathname;
+  let route = routes[location] || routes["404"];
+  //if (route.needAuth != 1)
 	await JWT.reloadPage();
 	if (await JWT.getAccess())
 		await UserInfo.refreshUser();
