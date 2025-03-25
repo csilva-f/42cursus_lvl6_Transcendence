@@ -172,11 +172,20 @@ function disableIcon(element) {
 function disableTopBar() {
 	const topbar = document.getElementById("topbar")
 	topbar.classList.add('d-none')
+	document.getElementById("personNickname").textContent = "";
+	document.getElementById("subMsg").textContent = "";
+    document.getElementById("personLvlProgress").style.width = "0%"
 }
 
-function activateTopBar() {
+async function activateTopBar() {
 	const topbar = document.getElementById("topbar")
 	topbar.classList.remove('d-none')
+	document.getElementById("personNickname").textContent = await UserInfo.getUserNick();
+	document.getElementById("subMsg").textContent = `${await UserInfo.getUserFirstName()} ${await UserInfo.getUserLastName()}`;
+	let lvlDecimal = await UserInfo.getUserLvl();
+    lvlDecimal = lvlDecimal.split(".")[1];
+	let lvlProgress = parseFloat((lvlDecimal * 100) / (99))
+    document.getElementById("personLvlProgress").style.width = lvlProgress + "%"
 }
 
 async function changeToBig(location) {
@@ -246,7 +255,7 @@ async function changeToSmall(location) {
 }
 
 async function changeActive(location) {
-	while (UserInfo.getUserID == null || UserInfo.getUserID === undefined){
+	while (UserInfo.getUserID() == null || UserInfo.getUserID() === undefined){
 		setTimeout(10)
 	}
 	const iconsElements = [
@@ -261,9 +270,7 @@ async function changeActive(location) {
 	const langData = await getLanguageData(userLang);
 	const allContent = document.getElementById("allContent")
 	allContent.classList.add('d-none');
-	activateTopBar();
-	document.getElementById("personNickname").textContent = await UserInfo.getUserNick();
-	document.getElementById("subMsg").textContent = `${await UserInfo.getUserNick()} ${await UserInfo.getUserNick()} `;
+	await activateTopBar();
 	switch (location) {
 		case "/games":
 			iconsElements.forEach((element) => {
@@ -327,7 +334,6 @@ async function changeActive(location) {
 			updateContent(langData);
 			document.getElementById("subMsg").style.display = "block";
 			getForms();
-			console.log('UserInfo.getUserNick() :>> ', UserInfo.getUserNick());
 			if (await UserInfo.getUserNick() == null) {
 				let nickModal = new bootstrap.Modal(document.getElementById('nickModal'));
 				nickModal.show();
