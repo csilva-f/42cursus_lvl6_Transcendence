@@ -32,7 +32,7 @@
 	<link rel="stylesheet" href="/static/css/font.css" />
 	<!-- QRCODE -->
 	<script type="text/javascript" src="/static/js/qrcode.js"></script>
-	<script type="text/javascript" src="/static/js/Login/tokenService.js"></script>
+	<script type="text/javascript" src="/static/js/Classes/tokenService.js"></script>
 	<script type="text/javascript" src="/static/js/Classes/User.js"></script>
 	<script type="text/javascript" src="/static/js/index.js"></script>
 	<script type="text/javascript" src="/static/js/api.js"></script>
@@ -59,11 +59,10 @@
 
 <body style="
             background-color: var(--bodyBg);
-            font-family: &quot;Poppins&quot;;
-        " id="body">
+            font-family: Poppins;" id="body">
 	<!-- Topbar -->
 	<div class="container-fluid d-none" style="background-color: transparent" id="topbar">
-		<div class="row d-flex flex-nowrap" style="height: 7rem" >
+		<div class="row d-flex flex-nowrap" style="height: 7rem">
 			<!-- Icon -->
 			<div class="col-auto d-flex align-items-center justify-content-center" style="min-width: 9rem">
 				<img id="logoImg" src="/static/img/logos/buttLogo.svg" alt="Logo" class="w-75 h-100"
@@ -85,7 +84,6 @@
 			<!-- End Text Info -->
 			<!-- Profile -->
 			<div class="col-lg d-none d-lg-block p-3 d-flex align-content-center" id="profileDiv">
-				<!--? PASSAR ISTO DEPOIS PARA COMPONENTE E DAR LOAD QUANDO O LOGIN FOR EFETUADO -->
 				<div class="h-100 d-flex flex-row align-items-stretch">
 					<!-- Notification and Info -->
 					<div class="p-2 w-100 d-flex justify-content-end align-content-end">
@@ -103,36 +101,29 @@
 									style="background-color: var(--primary)" id="notificationCount">
 								</span>
 							</button>
-							<div class="dropdown-menu overflow-y-auto overflow-x-hidden" id="notificationDropdownMenu" style="
+							<div class="dropdown-menu overflow-y-auto overflow-x-hidden" id="notificationDropdownMenu"
+								style="
 							max-width: 21rem;
 							min-width: 21rem;
 							height: 13rem;
 							max-height: 13rem;
 						">
-								<p class="h5 d-flex justify-content-center align-items-center align-content-center fw-bold mt-2">
+								<p
+									class="h5 d-flex justify-content-center align-items-center align-content-center fw-bold mt-2">
 									No notifications
 								</p>
 							</div>
 						</div>
 						<ul class="list-unstyled">
-							<li class="d-flex justify-content-end my-1" style="font-weight: bold" id="personNickname">
+							<li class="d-flex justify-content-end my-1" style="font-weight: bold; font-size: 1.2rem" id="personNickname">
 							</li>
 							<li>
-								<div class="progress mt-3" role="progressbar" aria-label="Basic example"
-									aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"
-									style="background-color: white">
-									<div class="progress-bar" style="
-                                                width: 25%;
-                                                background-color: var(
-                                                    --progressLevelBg
-                                                );
-                                            "></div>
+								<div class="progress mt-3" role="progressbar" aria-valuemax="100" style="height: 1.2rem; width: 10rem; background-color: white; position: relative;">
+									<div class="progress-bar" style="background-color: var(--primary);" id="personLvlProgress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 								</div>
 							</li>
-							<li style="font-weight: bold">
-								0&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;1
-							</li>
 						</ul>
+						
 					</div>
 					<!-- End Notification and Info -->
 					<!-- Profile Picture -->
@@ -217,8 +208,7 @@
 						class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-end align-items-end">
 						<li class="pop-hover nav-item rounded-3 my-2" style="width: 3rem; height: 3rem"
 							data-bs-toggle="modal" data-bs-target="#logOutModal">
-							<i
-								class="nav-link fas fa-right-from-bracket fa-xl d-flex align-items-center justify-content-center enabled-content"
+							<i class="nav-link fas fa-right-from-bracket fa-xl d-flex align-items-center justify-content-center enabled-content"
 								style="height: 100%; color: white;">
 							</i>
 						</li>
