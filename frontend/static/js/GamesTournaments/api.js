@@ -95,20 +95,43 @@ async function postLocalGame() {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/create-game/`;
+  const accessToken = await JWT.getAccess();
   let gameData = {
-    P1: document.getElementById("P1NickInput").value,
     P1Color: document.getElementById("P1ColorInput").value,
-    P2: document.getElementById("P2NickInput").value,
     P2Color: document.getElementById("P2ColorInput").value,
+    islocal: true,
   };
-  console.log("gameData: ", gameData);
-  showSuccessToast(langData, langData.gameEntered);
-  resetModal();
-  $("#createModal").modal("hide");
-  window.history.pushState({}, "", "/pong");
-  await locationHandler();
-  const game = new Game(0, null, false, gameData);
-  game.initGame();
+  $.ajax({
+    type: "POST",
+    url: APIurl,
+    Accept: "application/json",
+    contentType: "application/json",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: JSON.stringify(gameData),
+    success: async function (res) {
+      showSuccessToast(langData, langData.gameEntered);
+      resetModal();
+      $("#createModal").modal("hide");
+      if(res.game.id){
+        gameData["gameId"] = res.game.id;
+        gameData["P1"] = res.game.user1_nick;
+        gameData["P1_uid"] = res.game.user1;
+        gameData["P2"] = res.game.user2_nick;
+      }
+      window.history.pushState({}, "", "/pong");
+      await locationHandler();
+      //const game = new Game(gameData);
+      localStorage.setItem("gameInfo", JSON.stringify(gameData));
+      //game.initGame();
+    },
+    error: function (xhr, status, error) {
+      showErrorToast(APIurl, error, langData);
+      resetModal();
+    },
+  });
+  
 }
 
 // const ws = new WebSocket("wss://localhost:8000/channels/game_id/");

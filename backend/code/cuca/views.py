@@ -484,6 +484,7 @@ def post_create_tournament(request):
             init_str = data.get('beginDate')
             end_str = data.get('endDate')
             save_name = data.get('name')
+            print(request.data)
             # if save_name is None: #validates missing key
             #     save_name = "random_stuff"
             if not save_name:  #validates empty value
