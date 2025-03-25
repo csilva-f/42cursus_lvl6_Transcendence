@@ -23,8 +23,22 @@ class Ball {
     updateByValue(x, y, velocityX, velocityY) {
         this.ballX = x;
         this.ballY = y;
-        this.ballVelocityX  = velocityX;
-        this.ballVelocityY = velocityY;
+        this.ballVelocityX = velocityX;
+        this.ballvelocityY = velocityY;
+        // if(velocityX < 0 && this.ballVelocityX > 0)
+        //     this.ballVelocityX *= -1;
+        // if(velocityX > 0 && this.ballVelocityX < 0)
+        //     this.ballVelocityX *= -1;
+        // if(velocityY < 0 && this.ballVelocityY > 0)
+        //     this.ballVelocityY *= -1;
+        // if(velocityY > 0 && this.ballVelocityY < 0)
+        //     this.ballVelocityY *= -1;
+        // // this.ballX = x;
+        // // this.ballY = y;
+        // const predictedX = x + this.ballVelocityX  * predictionTime;
+        // this.ballX = this.ballX + (predictedX - this.ballX) * lerpFactor;
+        // const predictedY = y + this.ballVelocityY  * predictionTime;
+        // this.ballY = this.ballY + (predictedY - this.ballY) * lerpFactor;
         //console.log("update ball:", this);
     }
     draw(ctx) {
@@ -187,7 +201,7 @@ class Paddle {
             if (absDX > this.getHalfWidth()) {
                 this.paddleColisionTimes++;
                 if (ball.ballVelocityX < maxSpeed)
-                    ball.ballVelocityX *= -1.08;
+                    ball.ballVelocityX *= speedIncreaseFactor;
                 else
                     ball.ballVelocityX *= -1;
                 ball.ballX = (dX < 0)
@@ -214,8 +228,8 @@ class Paddle {
             // Colisão na frente do paddle
             if (absDX > this.getHalfWidth()) {
                 this.paddleColisionTimes++;
-                if (ball.ballVelocityX < maxSpeed)
-                    ball.ballVelocityX *= -1.08;
+                if (ball.ballVelocityX < maxRemoteSpeed)
+                    ball.ballVelocityX *= speedIncreaseFactor;
                 else
                     ball.ballVelocityX *= -1;
                 ball.ballX = (dX < 0)
@@ -229,10 +243,14 @@ class Paddle {
                     ? this.getCenterHeight() - this.getHalfHeight() - ball.ballRadius
                     : this.getCenterHeight() + this.getHalfHeight() + ball.ballRadius;
             }
-            if(isHost){
+            if (this.paddleSide == 2 && isHost){
+                 let msg = JSON.stringify(ball.toJSON());
+                 ws.send(msg);
+            }
+            if (this.paddleSide == 1){
                 let msg = JSON.stringify(ball.toJSON());
                 ws.send(msg);
-            }
+           }
         }
     }
 }

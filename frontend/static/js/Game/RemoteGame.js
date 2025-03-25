@@ -1,4 +1,5 @@
-
+const maxRemoteSpeed = 6;
+const speedIncreaseFactor = -1.05;
 
 window.addEventListener('keydown', function (e) {
     keyPressed[e.keyCode] = true;
@@ -78,14 +79,16 @@ class RemoteGame  {
                     this.objects[1].paddleScore = data.paddleScore;
                     document.getElementById("playerLeftScore").innerHTML = data.paddleScore;
                 }
-                if(data.paddleSide == 2)
+                if(data.paddleSide == 2){
+                    this.objects[1].paddleScore = data.paddleScore;
                     document.getElementById("playerRightScore").innerHTML = data.paddleScore;
+                }
             }
         };
         this.gameLoop();
     }
     gameLoop() {
-        // window.onresize = function() {
+        // window.onresize = function() {   
         //     this.resize();
         //     this.objects[1].setPaddleX(30);
         //     this.objects[2].setPaddleX(this.canvas.width - 50);
@@ -113,10 +116,7 @@ class RemoteGame  {
         this.gameDraw();
     }
     joinerGame(){
-        this.objects[0].update();
-        this.objects[0].colissionEdge(this.canvas);
-        this.objects[2].colissionBall(this.objects[0]);
-        this.paddleUpdate(this.objects[1]);
+        this.gameUpdate();
         this.gameDraw();
     }
     gameUpdate(){
