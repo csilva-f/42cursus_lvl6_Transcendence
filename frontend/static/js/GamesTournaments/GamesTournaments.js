@@ -151,6 +151,7 @@ function setRandomImage(imgElement) {
 }
 
 function insertInfo(newCard, element, statusID) {
+    console.log("statusID: ", statusID)
     const user1Level = newCard.querySelector("#user1Level");
     const user1Nick = newCard.querySelector("#user1Nick");
     const user2Img = newCard.querySelector("#user2Img");
@@ -166,7 +167,8 @@ function insertInfo(newCard, element, statusID) {
     if (element.user2ID == null) {
         setRandomImage(user2Img);
         user2LvlLabel.style.display = "none";
-        user2Nick.setAttribute("data-i18n", "waiting");
+        //user2Nick.setAttribute("data-i18n", "waiting");
+        user2Nick.textContent = element.gameID
     } else {
         user2Level.textContent = element.user2ID;
         user2Nick.textContent = element.user2Nick;

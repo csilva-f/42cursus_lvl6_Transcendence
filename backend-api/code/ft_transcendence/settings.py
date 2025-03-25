@@ -39,7 +39,7 @@ BACKEND_NONFRIENDSLIST_URL = 'http://backend:8002/backend/get_nonfriendslist/'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition

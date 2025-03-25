@@ -81,3 +81,35 @@ function stopTimer() {
         timerActive = false;
     }
 }
+
+async function updateGameStatus(gameData){
+    const userLang = localStorage.getItem("language") || "en";
+    const langData = await getLanguageData(userLang);
+    const data = {
+        uid: gameData.P1_uid,
+        gameID: gameData.gameId, 
+        user1_points : gameData.objects[1].paddleScore,
+        user2_points: gameData.objects[2].paddleScore,
+        user1_hits: gameData.objects[1].paddleColisionTimes,
+        user2_hits: gameData.objects[2].paddleColisionTimes,
+    } 
+    console.log(data);
+    const APIurl = `/api/update-game/`;
+    const accessToken = await JWT.getAccess();
+    $.ajax({
+        type: "POST",
+        url: APIurl,
+        Accept: "application/json",
+        contentType: "application/json",
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+        data: JSON.stringify(data),
+        success: async function (res) {
+            console.log(res);
+        },
+        error: function (xhr, status, error) {
+            showErrorToast(APIurl, error, langData);
+        },
+    });  
+}

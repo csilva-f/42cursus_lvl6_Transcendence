@@ -385,6 +385,7 @@ def post_create_game(request):
         try:
             data = json.loads(request.body)
             user1_id = data.get('uid')
+            print(user1_id)
             if not user1_id:
                 return JsonResponse({"error": "User1 ID is required"}, status=400)
             if not tUserExtension.objects.filter(user=user1_id).exists():
@@ -483,6 +484,7 @@ def post_create_tournament(request):
             init_str = data.get('beginDate')
             end_str = data.get('endDate')
             save_name = data.get('name')
+            print(request.data)
             # if save_name is None: #validates missing key
             #     save_name = "random_stuff"
             if not save_name:  #validates empty value
@@ -559,6 +561,7 @@ def post_update_game(request): #update statusID acording to user2 and winner var
             except tGames.DoesNotExist:
                 return JsonResponse({"error": "Game not found"}, status=404)
             user_id = data.get('uid')
+            print(user_id)
             is_join = str(data.get('isJoin')).lower() in ['true', '1', 'yes']
             status = data.get('statusID')
             if status is not None:
