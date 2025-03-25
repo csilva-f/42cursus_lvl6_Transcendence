@@ -107,6 +107,8 @@ const bigScreenLocation = [
 	"/resendCode",
 	"/resetPassword",
 	"/tournament",
+	"/404",
+	"/401",
 	"/testWebSocket",
 ];
 
@@ -168,6 +170,8 @@ async function changeToBig(location) {
 		headerElement.setAttribute("data-i18n", "noContent");
 		disableTopBar();
 	}
+	else if (location == "/401" || location == "/404")
+		disableTopBar();
 	else if (location == "/tournament") {
 		allContent.style.cssText += 'height: calc(100vh - 7rem); overflow-x: auto;';
 	}
