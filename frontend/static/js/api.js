@@ -25,7 +25,8 @@ async function fetchUserNotificationGame() {
           const notificationDropdownMenu = document.getElementById(
             "notificationDropdownMenu"
           );
-          notificationDropdownMenu.innerHTML = "";
+          //if (res.requests.length > 1)
+            notificationDropdownMenu.innerHTML = "";
           const currentNotifications = [];
           res.requests.forEach((element) => {
             if (element.statusID == 1) {

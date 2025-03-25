@@ -340,6 +340,7 @@ async function changeActive(location) {
 			}
 			fetchMatchHistory();
 			fetchHomeFriends();
+			fetchTopUsers();
 			break;
 		case "/profile":
 			console.log("Profile: ")
@@ -368,11 +369,6 @@ async function changeActive(location) {
 			document.getElementById("subMsg").style.display = "none";
 			break;
 	}
-}
-
-//TODO: Lógica para ir buscar o nosso userID
-function getCurrentUserID() {
-	return "currentUserID";
 }
 
 function isProfile(location) {
@@ -446,8 +442,8 @@ function loadProfileFromURL() {
 	const match = path.match(/\/profile\/(\w+)/);
 	if (match) {
 		const userID = match[1];
-		document.getElementById("editButton").classList.add('d-none')
-		document.getElementById("changePasswordButton").classList.add('d-none')
+		//document.getElementById("editButton").classList.add('d-none')
+		//document.getElementById("changePasswordButton").classList.add('d-none')
 		fetchProfileInfo(userID);
 		fetchStatistics(userID);
 	}
