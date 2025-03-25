@@ -17,6 +17,18 @@ async function fetchStatistics(userID) {
 	  },
     success: function (res) {
       userStats = res.users[0];
+      // if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
+			// 	console.warn("WebSocket not found or closed. Reinitializing...");
+			// 	initializeWebSocket(() => {
+			// 		requestOnlineUsers(function (onlineUsers) {
+			// 			console.log("Updated online users list:", onlineUsers);
+			// 		});
+			// 	});
+			// } else {
+			// 	requestOnlineUsers(function (onlineUsers) {
+			// 		console.log("Updated online users list:", onlineUsers);
+			// 	});
+			// }
       updateContent(langData);
       createChart(userStats, 1);
       insertPageInfo(userStats);

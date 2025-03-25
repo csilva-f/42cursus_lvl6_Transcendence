@@ -106,7 +106,7 @@ async function postLocalGame() {
   resetModal();
   $("#createModal").modal("hide");
   window.history.pushState({}, "", "/pong");
-  await locationHandler("content");
+  await locationHandler();
   const game = new Game(0, null, false, gameData);
   game.initGame();
 }

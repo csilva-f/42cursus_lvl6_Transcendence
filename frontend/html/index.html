@@ -33,11 +33,8 @@
 	<!-- QRCODE -->
 	<script type="text/javascript" src="/static/js/qrcode.js"></script>
 	<script type="text/javascript" src="/static/js/Login/tokenService.js"></script>
-
+	<script type="text/javascript" src="/static/js/Classes/User.js"></script>
 	<script type="text/javascript" src="/static/js/index.js"></script>
-	<script>
-		JWT.reloadPage();
-	</script>
 	<script type="text/javascript" src="/static/js/api.js"></script>
 	<script type="text/javascript" src="/static/js/Login/api.js"></script>
 	<script type="text/javascript" src="/static/js/Login/Profile.js"></script>
@@ -66,8 +63,8 @@
             font-family: &quot;Poppins&quot;;
         " id="body">
 	<!-- Topbar -->
-	<div class="container-fluid" style="background-color: transparent">
-		<div class="row d-flex flex-nowrap" style="height: 7rem" id="topbar">
+	<div class="container-fluid d-none" style="background-color: transparent" id="topbar">
+		<div class="row d-flex flex-nowrap" style="height: 7rem" >
 			<!-- Icon -->
 			<div class="col-auto d-flex align-items-center justify-content-center" style="min-width: 9rem">
 				<img id="logoImg" src="/static/img/logos/buttLogo.svg" alt="Logo" class="w-75 h-100"
@@ -107,17 +104,16 @@
 									style="background-color: var(--primary)" id="notificationCount">
 								</span>
 							</button>
-							<ul class="dropdown-menu overflow-y-auto overflow-x-hidden" id="notificationDropdownMenu"
-								style="height: 13rem">
-								<p class="h5 d-flex justify-content-center align-items-center fw-bold" style="
-                                            max-width: 20rem;
-                                            min-width: 20rem;
-                                            height: 95%;
-                                            max-height: 95%;
-                                        ">
+							<div class="dropdown-menu overflow-y-auto overflow-x-hidden" id="notificationDropdownMenu" style="
+							max-width: 21rem;
+							min-width: 21rem;
+							height: 13rem;
+							max-height: 13rem;
+						">
+								<p class="h5 d-flex justify-content-center align-items-center align-content-center fw-bold mt-2">
 									No notifications
 								</p>
-							</ul>
+							</div>
 						</div>
 						<ul class="list-unstyled">
 							<li class="d-flex justify-content-end my-1" style="font-weight: bold" id="personNickname">
@@ -142,7 +138,7 @@
 					<!-- End Notification and Info -->
 					<!-- Profile Picture -->
 					<div class="ms-1 justify-content-end align-content-end">
-						<a href="/profile" id="profilePicElement" onclick="goToProfile()">
+						<a href="/profile" id="profilePicElement" onclick="goToProfile(null)">
 							<img src="/static/img/pfp1.jpeg" style="
                                         object-fit: cover;
                                         max-width: 5rem;
@@ -161,7 +157,7 @@
 	<div class="container-fluid w-100" id="allContent" style="height: calc(100vh - 7rem)"></div>
 	<!-- End All Content -->
 	<!-- Sidebar and Content -->
-	<nav class="container-fluid" id="sidebar">
+	<nav class="container-fluid d-none" id="sidebar">
 		<div class="row">
 			<div class="col-sm-auto d-none d-lg-block sticky-top rounded-4 my-3 ms-2 shadow"
 				style="min-width: 8rem; background-color: var(--sidebarBg)">
@@ -206,13 +202,13 @@
 							data-bs-toggle="dropdown" aria-expanded="false"></button>
 						<ul class="dropdown-menu">
 							<li>
-								<i class="dropdown-item" href="/" onclick="changeLanguage('en')" data-i18n="en"></i>
+								<i class="dropdown-item" onclick="changeLanguage('en')" data-i18n="en"></i>
 							</li>
 							<li>
-								<i class="dropdown-item" href="/" onclick="changeLanguage('pt')" data-i18n="pt"></i>
+								<i class="dropdown-item" onclick="changeLanguage('pt')" data-i18n="pt"></i>
 							</li>
 							<li>
-								<i class="dropdown-item" href="/" onclick="changeLanguage('fr')" data-i18n="fr"></i>
+								<i class="dropdown-item" onclick="changeLanguage('fr')" data-i18n="fr"></i>
 							</li>
 						</ul>
 					</div>
@@ -222,10 +218,10 @@
 						class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-end align-items-end">
 						<li class="pop-hover nav-item rounded-3 my-2" style="width: 3rem; height: 3rem"
 							data-bs-toggle="modal" data-bs-target="#logOutModal">
-							<a href="/"
-								class="nav-link fas fa-right-from-bracket fa-xl d-flex align-items-center justify-content-center"
-								style="height: 100%; color: white">
-							</a>
+							<i
+								class="nav-link fas fa-right-from-bracket fa-xl d-flex align-items-center justify-content-center enabled-content"
+								style="height: 100%; color: white;">
+							</i>
 						</li>
 					</ul>
 				</div>
