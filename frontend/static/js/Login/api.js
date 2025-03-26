@@ -51,7 +51,7 @@ async function loginSuccess(data) {
 			// });
 		});
 	}
-	$("#login-message").text("Login successful!");
+	$("#customlogin-message").text("Login successful!");
 }
 
 
@@ -148,7 +148,7 @@ async function forgotPwd() {
 			//element.classList.add("valid-feedback");
 		},
 		error: function (xhr) {
-			const data = xhr.responseJSON;
+			const data = JSON.parse(xhr.responseJSON);
 			$("#forgotPwd-message").text(data.error || "forgotPwd failed.");
 		},
 	});
@@ -184,7 +184,7 @@ async function sendSignup(form) {
 			return true;
 		},
 		error: function (xhr, error) {
-			const data = xhr.responseJSON;
+			const data = JSON.parse(xhr.responseJSON);
 			const errorMsg = data.error.match(/"(.*?)"/);
 			$("#signup-message").text(data.error || "register failed.");
 
@@ -237,11 +237,11 @@ async function oauthLogin() {
 				console.log(url);
 				window.location.href = url;
 			}
-			$("#login-message").text("Login successful!");
+			$("#customlogin-message").text("Login successful!");
 		},
 		error: function (xhr) {
-			const data = xhr.responseJSON;
-			$("#login-message").text(data.error || "Login failed.");
+			const data = JSON.parse(xhr.responseJSON);
+			$("#customLogin-message").text(data["error_description"]  || "Login failed.");
 		},
 	});
 }
@@ -262,12 +262,13 @@ async function oauthCallback() {
 			success: function (data) {
 				console.log(data);
 				sendOAuthLogin(data);
-				$("#login-message").text("Login successful!");
+				$("#customlogin-message").text("Login successful!");
 				//window.location.href = '/';
 			},
 			error: function (xhr) {
-				const data = xhr.responseJSON;
-				$("#login-message").text(data.error || "Login failed.");
+				const data = JSON.parse(xhr.responseJSON);
+				console.log(data["error_description"]);
+				$("#customlogin-message").text(data["error_description"] || "Login failed.");
 			},
 		});
 	}
@@ -294,11 +295,11 @@ async function sendOAuthLogin(userdata) {
 			if (jwtToken) {
 				localStorage.setItem("jwt", jwtToken);
 			}
-			$("#login-message").text("Login successful!");
+			$("#customlogin-message").text("Login successful!");
 		},
 		error: function (xhr) {
-			const data = xhr.responseJSON;
-			$("#login-message").text(data.error || "Login failed.");
+			const data = JSON.parse(xhr.responseJSON);
+			$("#customlogin-message").text(data.error || "Login failed.");
 		},
 	});
 }
@@ -323,8 +324,8 @@ async function OTP_check_enable(jwtToken) {
 				}
 			},
 			error: function (xhr) {
-				const data = xhr.responseJSON;
-				$("#login-message").text(data.error || "Login failed.");
+				const data = JSON.parse(xhr.responseJSON);
+				$("#customlogin-message").text(data.error || "Login failed.");
 				reject(data.error || "Login failed.");
 			},
 		});
@@ -343,8 +344,8 @@ async function OTP_send_email(jwtToken) {
 			console.log("sucess");
 		},
 		error: function (xhr) {
-			const data = xhr.responseJSON;
-			$("#login-message").text(data.error || "Login failed.");
+			const data = JSON.parse(xhr.responseJSON);
+			$("#customlogin-message").text(data.error || "Login failed.");
 		},
 	});
 }
@@ -419,7 +420,7 @@ async function verifyAccount() {
       locationHandler("content");
     },
     error: function (xhr) {
-      const data = xhr.responseJSON;
+      const data = JSON.parse(xhr.responseJSON);
       $("#mfa-message").text(data.error || "Login failed.");
       for (let i = 1; i <= 6; i++) {
   		const field = document.getElementById(`otp${i}`);
@@ -661,7 +662,7 @@ async function validateEmail() {
       console.log("email validated successfully");
     },
     error: function (xhr) {
-      const data = xhr.responseJSON;
+      const data = JSON.parse(xhr.responseJSON);
       console.log("email failed validation");
     },
   });
@@ -689,7 +690,7 @@ async function resetPassword() {
       locationHandler();
     },
     error: function (xhr, status, error) {
-      const data = xhr.responseJSON;
+      const data = JSON.parse(xhr.responseJSON);
       document.getElementById("resetPwd-message").textContent = data.error || "Reset password failed.";
       console.log("Reset password failed:", data.error || "Reset password failed.");
     },
