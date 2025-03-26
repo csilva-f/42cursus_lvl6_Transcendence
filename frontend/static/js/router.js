@@ -406,6 +406,7 @@ const locationHandler = async () => {
       location = "401";
       route = routes[location];
     }
+  if (!location === "/pong") localStorage.removeItem("gameInfo");
   }
 
 	if (isProfile(location)) {

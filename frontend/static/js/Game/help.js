@@ -2,6 +2,11 @@ let timer;
 let timerSeconds = 0;
 let timerActive = false;
 
+function goToHome() {
+  window.history.pushState({}, "", "/");
+  locationHandler();
+}
+
 
 function showGameStats(leftName, leftScore, leftColision, rightName, rightScore, rightColision) {
     console.log(window.location.href);
@@ -96,12 +101,12 @@ async function updateGameStatus(gameData){
     const langData = await getLanguageData(userLang);
     const data = {
         uid: gameData.P1_uid,
-        gameID: gameData.gameId, 
+        gameID: gameData.gameId,
         user1_points : gameData.objects[1].paddleScore,
         user2_points: gameData.objects[2].paddleScore,
         user1_hits: gameData.objects[1].paddleColisionTimes,
         user2_hits: gameData.objects[2].paddleColisionTimes,
-    } 
+    }
     console.log(data);
     const APIurl = `/api/update-game/`;
     const accessToken = await JWT.getAccess();
@@ -133,7 +138,7 @@ async function updateGameStatusForceFinish(gameData){
         uid: gameData.P1_uid,
         gameID: gameData.gameId,
         statusID: 3,
-    } 
+    }
     console.log(data);
     const APIurl = `/api/update-game/`;
     const accessToken = await JWT.getAccess();

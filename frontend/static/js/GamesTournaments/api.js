@@ -51,7 +51,7 @@ async function fetchGames(statusID) {
         },
         error: function (xhr, status, error) {
           console.error("Error Thrown:", error);
-          
+
           showErrorToast(APIurl, error, langData);
         },
       });
@@ -95,10 +95,9 @@ async function postLocalGame() {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/create-game/`;
+  let gameData = {};
   const accessToken = await JWT.getAccess();
-  let gameData = {
-    P1Color: document.getElementById("P1ColorInput").value,
-    P2Color: document.getElementById("P2ColorInput").value,
+  gameData = {
     islocal: true,
   };
   $.ajax({
@@ -131,7 +130,7 @@ async function postLocalGame() {
       resetModal();
     },
   });
-  
+
 }
 
 // const ws = new WebSocket("wss://localhost:8000/channels/game_id/");
@@ -458,7 +457,7 @@ async function postLocalTournament() {
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/create-tournament/`;
   const todayDate = getCurrentDate();
-  
+
   let tournamentCreationData = {
     name: document.getElementById("localNameTournamentInput").value,
     beginDate: todayDate,
