@@ -35,9 +35,9 @@ function getForms() {
           event.preventDefault();
           event.stopPropagation();
         } else {
-          if (form.id == "localFormID") postLocalGame();
-          else if (form.id == "remoteFormID") postRemoteGame();
-          else if (form.id == "localTournamentFormID") initLocalTournament();
+          //if (form.id == "localFormID") postLocalGame();
+          //if (form.id == "remoteFormID") postRemoteGame();
+          if (form.id == "localTournamentFormID") initLocalTournament();
           else if (form.id == "tournamentFormID") postTournament();
           else if (form.id == "login-form") sendLogin();
           else if (form.id == "signup-form") sendSignup(form);

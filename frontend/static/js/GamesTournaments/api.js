@@ -141,9 +141,9 @@ async function postRemoteGame() {
   const APIurl = `/api/create-game/`;
   let gameData = {
     P1: "Me",
-    P1Color: document.getElementById("P1ColorInput").value,
+    P1Color: "#482445",
     P2: "Waiting for player 1",
-    P2Color: document.getElementById("P2ColorInput").value,
+    P2Color: "#de94ad",
     islocal: false,
   };
   console.log("gameData: ", gameData);
@@ -160,7 +160,7 @@ async function postRemoteGame() {
     data: JSON.stringify(gameData),
     success: function (res) {
       showSuccessToast(langData, langData.gamecreated);
-      resetModal();
+      //resetModal();
       $("#createModal").modal("hide");
       console.log("Game Created Response:", res);
       const game = res.game;

@@ -68,6 +68,14 @@ function activateInput(elementID) {
 }
 
 function activateGameForm(typeForm) {
+    if (typeForm == 'localForm') {
+        postLocalGame();
+        return;
+    }
+    if (typeForm == 'remoteForm') {
+        postRemoteGame();
+        return;
+    }
     const formElement = document.getElementById(typeForm);
     const selectForm = document.getElementById('selectForm');
     if (formElement) {
@@ -76,21 +84,21 @@ function activateGameForm(typeForm) {
     }
 }
 
-function resetModal() {
-    document.getElementById('localForm').classList.add('d-none');
-    document.getElementById('remoteForm').classList.add('d-none');
-    document.getElementById('selectForm').classList.remove('d-none');
-    document.getElementById('goBackLi').classList.add('d-none');
+// function resetModal() {
+//     document.getElementById('localForm').classList.add('d-none');
+//     document.getElementById('remoteForm').classList.add('d-none');
+//     document.getElementById('selectForm').classList.remove('d-none');
+//     document.getElementById('goBackLi').classList.add('d-none');
 
-    const localInputs = document.querySelectorAll('#localForm input[type="text"]');
-    localInputs.forEach(input => {
-        input.value = '';
-    });
-    const remoteInputs = document.querySelectorAll('#remoteForm input[type="text"]');
-    remoteInputs.forEach(input => {
-        input.value = '';
-    });
-}
+//     const localInputs = document.querySelectorAll('#localForm input[type="text"]');
+//     localInputs.forEach(input => {
+//         input.value = '';
+//     });
+//     const remoteInputs = document.querySelectorAll('#remoteForm input[type="text"]');
+//     remoteInputs.forEach(input => {
+//         input.value = '';
+//     });
+// }
 
 function GamesTournamentsMatches(elementID) {
     const searchElement = document.getElementById('loadGamesIcon');
