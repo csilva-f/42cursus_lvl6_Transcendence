@@ -227,7 +227,7 @@ class Paddle {
                     ? this.getCenterHeight() - this.getHalfHeight() - ball.ballRadius
                     : this.getCenterHeight() + this.getHalfHeight() + ball.ballRadius;
             }
-            if (this.paddleSide == 2 && isHost){
+            if (this.paddleSide == 2 && sendMsg){
                 let msg = JSON.stringify(ball.toJSON());
                 ws.send(msg);
            }

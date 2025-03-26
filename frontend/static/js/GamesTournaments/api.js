@@ -141,10 +141,6 @@ async function postRemoteGame() {
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/create-game/`;
   let gameData = {
-    P1: "Me",
-    P1Color: document.getElementById("P1ColorInput").value,
-    P2: "Waiting for player 1",
-    P2Color: document.getElementById("P2ColorInput").value,
     islocal: false,
   };
   console.log("gameData: ", gameData);
@@ -160,6 +156,7 @@ async function postRemoteGame() {
     },
     data: JSON.stringify(gameData),
     success: function (res) {
+      console.log("Enter game: ", res);
       showSuccessToast(langData, langData.gamecreated);
       resetModal();
       $("#createModal").modal("hide");
@@ -191,23 +188,20 @@ async function postRemoteGame() {
             localStorage.setItem("gameInfo", JSON.stringify(gameData));
             window.history.pushState({}, "", `/pong`);
             await locationHandler();
+            document.getElementById("leftPlayerName").innerHTML = await UserInfo.getUserNick();
+            document.getElementById("rightPlayerName").innerHTML = "Waiting...";
           }
           console.log(`Player count: ${playerCount}`);
           if (playerCount === 2) {
             console.log("Both players connected. Opening the game page...");
+            //gameData["gameId"] = res.game.id;
+            gameData["P1"] = "lulu";
+            //gameData["P1_uid"] = res.game.user1;
+            gameData["P2"] = "lala";
             console.table(gameData)
             const game = new RemoteGame(gameId, ws, true, gameData);
             //5 4 3 2 1
             game.initGame();
-          //   gameInterval = setInterval(() => {
-          //     if (typeof getCurrentGameState === "function") {  // Verifica se a função existe
-          //         const gameState = getCurrentGameState();
-          //         ws.send(JSON.stringify({
-          //             type: "game_state",
-          //             ...gameState
-          //         }));
-          //     }
-          // }, 50);
           }
         }
       };
@@ -247,19 +241,14 @@ async function enterGame(gameID) {
 
   let gameData = {
     gameID: gameID,
-    isJoin: true,
-  };
-
-  let gameDataCanvas = {
     P1: "host",
-    P1Color: document.getElementById("P1ColorInput").value,
     P2: "me",
-    P2Color: document.getElementById("P2ColorInput").value,
+    isJoin: true,
   };
 
   console.log("gameData: ", gameData);
   const accessToken = await JWT.getAccess();
-  console.log("accessToken", accessToken)
+  console.log("accessToken", accessToken);
 
   $.ajax({
     type: "POST",
@@ -271,6 +260,7 @@ async function enterGame(gameID) {
     },
     data: JSON.stringify(gameData),
     success: async function (res) {
+      console.log("Enter game: ", res);
       showSuccessToast(langData, langData.gameEntered);
       fetchGames(1);
 
@@ -282,21 +272,6 @@ async function enterGame(gameID) {
 
       ws.onopen = function () {
         console.log("WebSocket connection established successfully.");
-        // const paddle2 = objects[2];
-
-        // document.addEventListener("keydown", function (event) {
-        //   if (event.key === "ArrowUp") {  // Seta para cima
-        //     paddle2.paddleY = Math.max(0, paddle2.paddleY - 10);  // Move para cima
-        //   } else if (event.key === "ArrowDown") {  // Seta para baixo
-        //     paddle2.paddleY = Math.min(canvas.height - paddle2.height, paddle2.paddleY + 10);  // Move para baixo
-        //   }
-        //   // 🟢 Envia a nova posição do paddle para `user1` via WebSocket
-        //   socket.send(JSON.stringify({
-        //     type: "paddle_move",
-        //     paddle: 2,  // Indica que é o paddle do `user2`
-        //     position: paddle2.paddleY  // Envia a nova posição Y do paddle
-        //   }));
-        // });
       };
 
       ws.onmessage = async function (event) {
@@ -306,7 +281,7 @@ async function enterGame(gameID) {
           localStorage.setItem("gameInfo", JSON.stringify(gameData));
           window.history.pushState({}, "", `/pong`);
           await locationHandler();
-          const game = new RemoteGame(gameID, ws, false, gameDataCanvas);
+          const game = new RemoteGame(gameData, ws, false);
           //5 4 3 2 1
           game.initGame();
         }
@@ -319,40 +294,6 @@ async function enterGame(gameID) {
       ws.onclose = function (event) {
         console.log("WebSocket connection closed:", event);
       };
-
-    },
-    error: function (xhr, status, error) {
-      showErrorToast(APIurl, error, langData);
-      resetModal();
-    },
-  });
-}
-
-//TODO getUserID
-//? POST - /api/update-game/
-async function finishGame(gameID) {
-  const userLang = localStorage.getItem("language") || "en";
-  const langData = await getLanguageData(userLang);
-  const APIurl = `/api/update-game/`;
-
-  let gameData = {
-    gameID: gameID,
-    isJoin: false,
-  };
-  console.log("gameData: ", gameData);
-
-  $.ajax({
-    type: "POST",
-    url: APIurl,
-    Accept: "application/json",
-    contentType: "application/json",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-    },
-    data: JSON.stringify(gameData),
-    success: function (res) {
-      showSuccessToast(langData, langData.gameEntered);
-      fetchGames(1);
 
     },
     error: function (xhr, status, error) {

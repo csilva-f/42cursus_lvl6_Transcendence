@@ -561,7 +561,7 @@ def post_update_game(request): #update statusID acording to user2 and winner var
             except tGames.DoesNotExist:
                 return JsonResponse({"error": "Game not found"}, status=404)
             user_id = data.get('uid')
-            print(user_id)
+            #print(user_id)
             is_join = str(data.get('isJoin')).lower() in ['true', '1', 'yes']
             status = data.get('statusID')
             if status is not None:
@@ -646,7 +646,25 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 game.status_id = 2
                 game.startTS = now()
             game.save()
-            return JsonResponse({"message": "Game updated successfully", "game_id": game.game}, status=201)
+            if game.user1:
+                try:
+                    user1_nick = tUserExtension.objects.get(user=game.user1).nick
+                except tUserExtension.DoesNotExist:
+                    user1_nick = None
+            if game.user2:
+                try:
+                    user2_nick = tUserExtension.objects.get(user=game.user2).nick
+                except tUserExtension.DoesNotExist:
+                    user2_nick = None
+            game_data = {
+                "id": game.game,
+                "user1": game.user1,
+                "user1_nick": user1_nick,
+                "user2": game.user2,
+                "user2_nick": user2_nick,
+                "isLocal": game.isLocal,
+            }
+            return JsonResponse({"message": "Game updated successfully", "game": game_data}, status=201)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
         except Exception as e:
