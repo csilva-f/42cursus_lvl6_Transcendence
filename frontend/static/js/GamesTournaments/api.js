@@ -120,10 +120,10 @@ async function postLocalGame() {
         gameData["P1_uid"] = res.game.user1;
         gameData["P2"] = res.game.user2_nick;
       }
+      localStorage.setItem("gameInfo", JSON.stringify(gameData));
       window.history.pushState({}, "", "/pong");
       await locationHandler();
       //const game = new Game(gameData);
-      localStorage.setItem("gameInfo", JSON.stringify(gameData));
       //game.initGame();
     },
     error: function (xhr, status, error) {
@@ -180,7 +180,7 @@ async function postRemoteGame() {
         console.log("WebSocket connection established successfully.");
         console.log(ws);
       };
-      ws.onmessage = function (e) {
+      ws.onmessage = async function (e) {
         const data = JSON.parse(e.data);
         console.log("I'm here");
         console.log(data.message);
@@ -188,8 +188,9 @@ async function postRemoteGame() {
         if (data.message === "A player joined the game!") {
           playerCount++;
           if (playerCount === 1){
+            localStorage.setItem("gameInfo", JSON.stringify(gameData));
             window.history.pushState({}, "", `/pong`);
-            locationHandler("content");
+            await locationHandler();
           }
           console.log(`Player count: ${playerCount}`);
           if (playerCount === 2) {
@@ -302,8 +303,9 @@ async function enterGame(gameID) {
         const data = JSON.parse(event.data);
         console.log("Message received:", data.message);
         if (data.message === "A player joined the game!"){
+          localStorage.setItem("gameInfo", JSON.stringify(gameData));
           window.history.pushState({}, "", `/pong`);
-          await locationHandler("content");
+          await locationHandler();
           const game = new RemoteGame(gameID, ws, false, gameDataCanvas);
           //5 4 3 2 1
           game.initGame();
