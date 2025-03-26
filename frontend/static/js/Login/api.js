@@ -15,8 +15,8 @@ async function sendLogin() {
 			await loginSuccess(data);
 		},
 		error: function (xhr) {
-			const data = xhr.responseJSON;
-			$("#login-message").text(data.error || "Login failed.");
+			const data = JSON.parse(xhr.responseJSON);
+			$("#customLogin-message").text(data.detail || "Login failed.");
 		},
 	});
 }
@@ -673,6 +673,10 @@ async function resetPassword() {
   const token = urlParams.get("token");
   const password = $("#newPassword").val();
   const confirm_password = $("#confirmPassword").val();
+  if (password !== confirm_password) {
+    document.getElementById("resetPwd-message").textContent = "Passwords do not match.";
+    return;
+  }
   const apiUrl = "/authapi";
   $.ajax({
     type: "POST",
@@ -681,12 +685,18 @@ async function resetPassword() {
     headers: { Accept: "application/json" },
     data: JSON.stringify({ uid, token, password, confirm_password }),
     success: function (data) {
-      //renderizar aqui o form de reset password
-      console.log("Token validated successfully");
+      window.history.pushState({}, "", "/login");
+      locationHandler();
     },
-    error: function (xhr) {
+    error: function (xhr, status, error) {
       const data = xhr.responseJSON;
-      console.log("token failed validation");
+      document.getElementById("resetPwd-message").textContent = data.error || "Reset password failed.";
+      console.log("Reset password failed:", data.error || "Reset password failed.");
     },
   });
+}
+
+
+async function submitResetPwd() {
+
 }

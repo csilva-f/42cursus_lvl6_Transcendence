@@ -43,6 +43,7 @@ function getForms() {
           else if (form.id == "signup-form") sendSignup(form);
           else if (form.id == "forgotPwd-form") forgotPwd();
           else if (form.id == "nicknameModal-form") finishProfile();
+          else if (form.id == "resetPwd-form") resetPassword();
           // else if (form.id == "resendCode-form")
           // 	sendCode();
           // else if (form.id == "resetPwd-form")
