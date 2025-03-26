@@ -25,8 +25,7 @@ async function fetchUserNotificationGame() {
           const notificationDropdownMenu = document.getElementById(
             "notificationDropdownMenu"
           );
-          //if (res.requests.length > 1)
-            notificationDropdownMenu.innerHTML = "";
+          notificationDropdownMenu.innerHTML = "";
           const currentNotifications = [];
           res.requests.forEach((element) => {
             if (element.statusID == 1) {
@@ -89,8 +88,13 @@ async function respondFriendRequest(friendID, statusID) {
       Authorization: `Bearer ${accessToken}`,
     },
     data: JSON.stringify(body),
-    success: function (res) {
-      showSuccessToast(langData, langData.friendAccepted);
+    success: async function (res) {
+      if (statusID == 2) {
+        showSuccessToast(langData, langData.friendAccepted);
+        await fetchHomeFriends();
+      }
+      else if (statusID == 3)
+        showSuccessToast(langData, langData.friendDennied);
       fetchUserNotificationGame();
     },
     error: function (xhr, status, error) {
@@ -113,6 +117,5 @@ async function notificationAccept(ID) {
 }
 
 async function notificationDeny(ID) {
-  console.log("Deny")
-  console.log("ID: ", ID)
+  await respondFriendRequest(ID, 3)
 }
