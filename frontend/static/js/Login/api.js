@@ -164,7 +164,7 @@ async function sendSignup(form) {
 	const retyped = $("#signupPassword2").val();
 	const first_name = $("#signupFirstname").val();
 	const last_name = $("#signupLastname").val();
-	const phone = $("#signupPhone").val();
+	const phone_number = $("#signupPhone").val();
 	const apiUrl = "/authapi/register/";
 	$.ajax({
 		type: "POST",
@@ -176,7 +176,7 @@ async function sendSignup(form) {
 			password,
 			first_name,
 			last_name,
-			phone,
+			phone_number,
 		}),
 		success: function (data) {
 			$("#signup-message").text("Signup successful! Validate your email");
