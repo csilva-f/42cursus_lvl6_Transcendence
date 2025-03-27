@@ -80,12 +80,10 @@ async function postGame() {
     success: function (res) {
       showSuccessToast(langData, langData.gamecreated);
       fetchGames(1);
-      resetModal();
       $("#createModal").modal("hide");
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
-      resetModal();
     },
   });
 }
@@ -111,7 +109,6 @@ async function postLocalGame() {
     data: JSON.stringify(gameData),
     success: async function (res) {
       showSuccessToast(langData, langData.gameEntered);
-      resetModal();
       $("#createModal").modal("hide");
       if(res.game.id){
         gameData["gameId"] = res.game.id;
@@ -160,7 +157,6 @@ async function postRemoteGame() {
     data: JSON.stringify(gameData),
     success: function (res) {
       showSuccessToast(langData, langData.gamecreated);
-      //resetModal();
       $("#createModal").modal("hide");
       console.log("Game Created Response:", res);
       const game = res.game;

@@ -8,7 +8,8 @@ services:
     ports:
       - "9001:8000"
     networks:
-      - backend
+      backend:
+        ipv4_address: 172.18.0.12
     init: true
     restart: on-failure
     env_file:
@@ -24,7 +25,8 @@ services:
     volumes:
       - auth-db-data:/var/lib/postgresql/data:rw
     networks:
-      - backend
+      backend:
+        ipv4_address: 172.18.0.2
     secrets:
       - postgres_user
       - postgres_password
@@ -36,8 +38,10 @@ services:
       #- auth-api-data:/code:rw
       - ./auth-api/code:/code:rw
     networks:
-      - backend
-      - frontend
+      backend:
+        ipv4_address: 172.18.0.3
+      frontend:
+        ipv4_address: 172.19.0.6
     ports:
       - "5556:8000"
     init: true
@@ -53,7 +57,8 @@ services:
     volumes:
       - vault-db-data:/var/lib/postgresql/data:rw
     networks:
-      - backend
+      backend:
+        ipv4_address: 172.18.0.4
     secrets:
       - postgres_user
       - postgres_password
@@ -67,7 +72,8 @@ services:
     cap_add:
       - IPC_LOCK
     networks:
-      - backend
+      backend:
+        ipv4_address: 172.18.0.5
     ports:
       - "8200:8200"
     init: true
@@ -86,8 +92,10 @@ services:
       #- backend-api-data:/code:rw
       - ./backend-api/code:/code:rw
     networks:
-      - backend
-      - frontend
+      backend:
+        ipv4_address: 172.18.0.6
+      frontend:
+        ipv4_address: 172.19.0.2
     ports:
       - "5555:8000"
     init: true
@@ -102,7 +110,8 @@ services:
       #- backend-data:/code:rw
       - ./backend/code:/code:rw
     networks:
-      - backend
+      backend:
+        ipv4_address: 172.18.0.7
     ports:
       - "9000:8002"
     init: true
@@ -119,7 +128,8 @@ services:
       #- channels-data:/code:rw
       - ./channels/code:/code:rw
     networks:
-      - frontend
+      frontend:
+        ipv4_address: 172.19.0.3
     ports:
       - "9010:8000"
     init: true
@@ -135,7 +145,8 @@ services:
     volumes:
       - backend-db-data:/var/lib/postgresql/data:rw
     networks:
-      - backend
+      backend:
+        ipv4_address: 172.18.0.8
     secrets:
       - postgres_user
       - postgres_password
@@ -149,7 +160,8 @@ services:
     ports:
       - "9005:8000"
     networks:
-      - backend
+      backend:
+        ipv4_address: 172.18.0.9
     init: true
     restart: on-failure
     env_file:
@@ -165,7 +177,8 @@ services:
     volumes:
       - email-db-data:/var/lib/postgresql/data:rw
     networks:
-      - backend
+      backend:
+        ipv4_address: 172.18.0.10
     secrets:
       - postgres_user
       - postgres_password
@@ -177,7 +190,8 @@ services:
       #- frontend-data:/frontend:rw
       - ./frontend:/frontend:rw
     networks:
-      - frontend
+      frontend:
+        ipv4_address: 172.19.0.4
     ports:
       - "8000:443"
     init: true
@@ -191,7 +205,8 @@ services:
     ports:
       - "6378:6379"
     networks:
-      - frontend
+      frontend:
+        ipv4_address: 172.19.0.5
 
 networks:
   backend:
