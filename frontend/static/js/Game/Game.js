@@ -36,7 +36,7 @@ class Game  {
         this.canvas = document.getElementById("pongGameCanvas")
         this.ctx = this.canvas.getContext('2d');
         this.objects = []
-        this.ballVelocity = 5;
+        this.ballVelocity = 8;
         this.ballRadius = 15;
         this.maxScore = 5;
         this.stopGame = false;

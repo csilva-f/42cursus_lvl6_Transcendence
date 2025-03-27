@@ -555,13 +555,15 @@ def post_update_game(request): #update statusID acording to user2 and winner var
             data = json.loads(request.body)
             game_id = data.get('gameID')
             if not game_id:
+                print("kjsgfjsagfjksag")
                 return JsonResponse({"error": "Game ID is required for update"}, status=400)
             try:
                 game = tGames.objects.get(game=game_id)
             except tGames.DoesNotExist:
+                print("632658236583265")
                 return JsonResponse({"error": "Game not found"}, status=404)
             user_id = data.get('uid')
-            #print(user_id)
+            print(user_id)
             is_join = str(data.get('isJoin')).lower() in ['true', '1', 'yes']
             status = data.get('statusID')
             if status is not None:
@@ -569,15 +571,21 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 if status == 3:
                     game.status_id = status
                     game.save()
+                    print("aqui 1")
                     return JsonResponse({"message": "Game updated successfully, forced finished was performed", "game_id": game.game}, status=201)
+                print("aqui 2")
                 return JsonResponse({"error": "Override status only allowed for finished"}, status=400)
             if not user_id and not is_join:
+                print("aqui 3")
                 return JsonResponse({"error": "User ID is required for update"}, status=400)
             if user_id == game.user1 and is_join:
+                print("aqui 4")
                 return JsonResponse({"error": "User2 must be different from User1"}, status=400)
             if is_join and not tUserExtension.objects.filter(user=user_id).exists():
+                print("aqui 5")
                 return JsonResponse({"error": f"User ID {user_id} does not exist in tUserExtension"}, status=404)
             if not is_join and user_id not in [game.user1, game.user2]:
+                print("aqui 6")
                 return JsonResponse({"error": "Winner must be either User1 or User2"}, status=400)
             if not is_join:
                 game.status_id = 3
@@ -587,15 +595,15 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 u2_points = data.get('user2_points')
                 u1_hits = data.get('user1_hits')
                 u2_hits = data.get('user2_hits')
-                if (not u1_points and u1_points != 0) or (not u2_points and u2_points != 0) or (not u1_hits and u1_hits != 0) or (not u2_hits and u2_hits != 0):
-                    return JsonResponse({"error": "Users game statistics are required for update"}, status=400)
-                if (game.user1 == user_id and u1_points < 5) or (game.user2 == user_id and u2_points < 5):
-                    return JsonResponse({"error": "Winner's points are not consistent"}, status=400)
                 game.user1_points = u1_points
                 game.user2_points = u2_points
                 game.user1_hits = u1_hits
                 game.user2_hits = u2_hits
                 game.winnerUser = game.user1 if int(game.user1_points) > int(game.user2_points) else game.user2
+                if (not u1_points and u1_points != 0) or (not u2_points and u2_points != 0) or (not u1_hits and u1_hits != 0) or (not u2_hits and u2_hits != 0):
+                    return JsonResponse({"error": "Users game statistics are required for update"}, status=400)
+                if (game.user1 == game.winnerUser and u1_points < 5) or (game.user2 == game.winnerUser and u2_points < 5):
+                    return JsonResponse({"error": "Winner's points are not consistent"}, status=400)
                 if game.user1 == user_id and game.user1 != -1:
                     tUserExtension.objects.filter(user=game.user1).update(ulevel=models.F('ulevel') + 0.2)
                     tUserExtension.objects.filter(user=game.user2).update(ulevel=models.F('ulevel') + 0.05)
@@ -659,13 +667,15 @@ def post_update_game(request): #update statusID acording to user2 and winner var
             game_data = {
                 "id": game.game,
                 "user1": game.user1,
-                "user1_nick": user1_nick,
                 "user2": game.user2,
+                "user1_nick": user1_nick,
                 "user2_nick": user2_nick,
+                "tournament": game.tournament,
                 "isLocal": game.isLocal,
             }
             return JsonResponse({"message": "Game updated successfully", "game": game_data}, status=201)
         except json.JSONDecodeError:
+            print("aqui 7")
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)

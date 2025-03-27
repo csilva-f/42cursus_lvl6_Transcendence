@@ -188,18 +188,18 @@ async function postRemoteGame() {
             localStorage.setItem("gameInfo", JSON.stringify(gameData));
             window.history.pushState({}, "", `/pong`);
             await locationHandler();
-            document.getElementById("leftPlayerName").innerHTML = await UserInfo.getUserNick();
+            document.getElementById("leftPlayerName").innerHTML = res.game.user1_nick;
             document.getElementById("rightPlayerName").innerHTML = "Waiting...";
           }
           console.log(`Player count: ${playerCount}`);
           if (playerCount === 2) {
             console.log("Both players connected. Opening the game page...");
-            //gameData["gameId"] = res.game.id;
-            gameData["P1"] = "lulu";
-            //gameData["P1_uid"] = res.game.user1;
+            gameData["gameId"] = res.game.id;
+            gameData["P1"] = res.game.user1_nick;
+            gameData["P1_uid"] = res.game.user1;
             gameData["P2"] = "lala";
             console.table(gameData)
-            const game = new RemoteGame(gameId, ws, true, gameData);
+            const game = new RemoteGame(gameData, ws, true);
             //5 4 3 2 1
             game.initGame();
           }
@@ -241,8 +241,6 @@ async function enterGame(gameID) {
 
   let gameData = {
     gameID: gameID,
-    P1: "host",
-    P2: "me",
     isJoin: true,
   };
 
@@ -281,6 +279,12 @@ async function enterGame(gameID) {
           localStorage.setItem("gameInfo", JSON.stringify(gameData));
           window.history.pushState({}, "", `/pong`);
           await locationHandler();
+          gameData["gameId"] = res.game.id;
+          gameData["P1"] = res.game.user1_nick;
+          gameData["P1_uid"] = res.game.user1;
+          gameData["P2"] = res.game.user2_nick;
+          gameData["P1_uid"] = res.game.user2;
+          gameData["islocal"] = res.game.isLocal;
           const game = new RemoteGame(gameData, ws, false);
           //5 4 3 2 1
           game.initGame();
