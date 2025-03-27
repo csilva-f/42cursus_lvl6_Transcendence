@@ -51,7 +51,7 @@ async function fetchGames(statusID) {
         },
         error: function (xhr, status, error) {
           console.error("Error Thrown:", error);
-          
+
           showErrorToast(APIurl, error, langData);
         },
       });
@@ -95,10 +95,9 @@ async function postLocalGame() {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/create-game/`;
+  let gameData = {};
   const accessToken = await JWT.getAccess();
-  let gameData = {
-    P1Color: document.getElementById("P1ColorInput").value,
-    P2Color: document.getElementById("P2ColorInput").value,
+  gameData = {
     islocal: true,
   };
   $.ajax({
@@ -120,10 +119,10 @@ async function postLocalGame() {
         gameData["P1_uid"] = res.game.user1;
         gameData["P2"] = res.game.user2_nick;
       }
+      localStorage.setItem("gameInfo", JSON.stringify(gameData));
       window.history.pushState({}, "", "/pong");
       await locationHandler();
       //const game = new Game(gameData);
-      localStorage.setItem("gameInfo", JSON.stringify(gameData));
       //game.initGame();
     },
     error: function (xhr, status, error) {
@@ -131,7 +130,7 @@ async function postLocalGame() {
       resetModal();
     },
   });
-  
+
 }
 
 // const ws = new WebSocket("wss://localhost:8000/channels/game_id/");
@@ -142,9 +141,9 @@ async function postRemoteGame() {
   const APIurl = `/api/create-game/`;
   let gameData = {
     P1: "Me",
-    P1Color: document.getElementById("P1ColorInput").value,
+    P1Color: "#482445",
     P2: "Waiting for player 1",
-    P2Color: document.getElementById("P2ColorInput").value,
+    P2Color: "#de94ad",
     islocal: false,
   };
   console.log("gameData: ", gameData);
@@ -161,7 +160,7 @@ async function postRemoteGame() {
     data: JSON.stringify(gameData),
     success: function (res) {
       showSuccessToast(langData, langData.gamecreated);
-      resetModal();
+      //resetModal();
       $("#createModal").modal("hide");
       console.log("Game Created Response:", res);
       const game = res.game;
@@ -180,7 +179,7 @@ async function postRemoteGame() {
         console.log("WebSocket connection established successfully.");
         console.log(ws);
       };
-      ws.onmessage = function (e) {
+      ws.onmessage = async function (e) {
         const data = JSON.parse(e.data);
         console.log("I'm here");
         console.log(data.message);
@@ -188,8 +187,9 @@ async function postRemoteGame() {
         if (data.message === "A player joined the game!") {
           playerCount++;
           if (playerCount === 1){
+            localStorage.setItem("gameInfo", JSON.stringify(gameData));
             window.history.pushState({}, "", `/pong`);
-            locationHandler("content");
+            await locationHandler();
           }
           console.log(`Player count: ${playerCount}`);
           if (playerCount === 2) {
@@ -302,8 +302,9 @@ async function enterGame(gameID) {
         const data = JSON.parse(event.data);
         console.log("Message received:", data.message);
         if (data.message === "A player joined the game!"){
+          localStorage.setItem("gameInfo", JSON.stringify(gameData));
           window.history.pushState({}, "", `/pong`);
-          await locationHandler("content");
+          await locationHandler();
           const game = new RemoteGame(gameID, ws, false, gameDataCanvas);
           //5 4 3 2 1
           game.initGame();
@@ -456,7 +457,7 @@ async function postLocalTournament() {
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/create-tournament/`;
   const todayDate = getCurrentDate();
-  
+
   let tournamentCreationData = {
     name: document.getElementById("localNameTournamentInput").value,
     beginDate: todayDate,

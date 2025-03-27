@@ -20,6 +20,16 @@ window.addEventListener('keyup', function (e) {
     keyPressed[e.keyCode] = false;
 })
 
+window.addEventListener("popstate", function (e) {
+    keyPressed["finishGame"] = true;
+    // Handle back button event (e.g., show a warning or log data)
+})
+
+window.addEventListener("beforeunload", function (e) {
+    keyPressed["finishGame"] = true;
+    //console.log("Aba ou navegador foi fechado!");
+});
+
 class Game  {
     constructor(gameData) {
         this.gameData = gameData
@@ -62,8 +72,8 @@ class Game  {
             //console.log(this.gameData)
             this.objects = [
                 new Ball(this.canvas.width / 2, this.canvas.height / 2, this.ballVelocity, this.ballVelocity, this.ballRadius),
-                new Paddle(1, paddleWidth, paddleHeight, this.gameData.P1Color, 30, (this.canvas.height / 2) - 75, paddleVelocity),
-                new Paddle(2, paddleWidth, paddleHeight, this.gameData.P2Color,  this.canvas.width - 50, (this.canvas.height / 2) - 75 , paddleVelocity)
+                new Paddle(1, paddleWidth, paddleHeight, "#482445", 30, (this.canvas.height / 2) - 75, paddleVelocity),
+                new Paddle(2, paddleWidth, paddleHeight, "#de94ad",  this.canvas.width - 50, (this.canvas.height / 2) - 75 , paddleVelocity)
             ]
             document.getElementById("leftPlayerName").innerHTML = this.gameData.P1;
             document.getElementById("rightPlayerName").innerHTML = this.gameData.P2;
@@ -72,11 +82,9 @@ class Game  {
         document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
         startTimer();
         this.gameLoop();
-        
-        
     }
 
-    async  gameLoop() {
+    async gameLoop() {
         // window.onresize = function() {
         //     this.resize();
         //     this.objects[1].setPaddleX(30);
@@ -84,13 +92,21 @@ class Game  {
         // }
         //let flag = 0;
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        if (!this.stopGame) {
+        if (!this.stopGame && !keyPressed["finishGame"]) {
             window.requestAnimationFrame(async () => this.gameLoop());
             this.gameUpdate();
             this.incScore();
             this.gameDraw();
+            //console.log("game on going");
+        }
+        else if (keyPressed["finishGame"]) {
+            keyPressed["finishGame"] = false;
+            await updateGameStatusForceFinish(this.gameData);
         } else {
+            //console.log("Normal finish!");
             showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes);
+            this.gameData["objects"] = this.objects;
+            await updateGameStatus(this.gameData);
         }
     }
 
@@ -108,7 +124,7 @@ class Game  {
             element.draw(this.ctx);
         });
     }
-    async incScore() {
+    incScore() {
         if (this.objects[0].ballX <= -this.objects[0].ballRadius){
             this.objects[2].paddleScore += 1;
             document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
@@ -129,11 +145,11 @@ class Game  {
                 stopTimer();
             }
         }
-        if (this.stopGame == true)
-        {
-            this.gameData["objects"] = this.objects;
-            await updateGameStatus(this.gameData);
-        }
+        // if (this.stopGame == true)
+        // {
+        //     this.gameData["objects"] = this.objects;
+        //     await updateGameStatus(this.gameData);
+        // }
     }
     respawnBall() {
         console.info("respawn")

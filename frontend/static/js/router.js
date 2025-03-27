@@ -224,12 +224,15 @@ async function changeToBig(location) {
 	} else if (location == "/pong") {
 		headerElement.setAttribute("data-i18n", "pong");
 		document.getElementById("topbar").classList.remove('d-none');
+		activateTopBar();
 		gameInfo = localStorage.getItem("gameInfo");
 		if (gameInfo) {
 			gameInfo = JSON.parse(gameInfo);
 			console.info("gameInfo: ", gameInfo);
-			game = new Game(gameInfo);
-			game.initGame();
+			if(gameInfo.islocal){
+				game = new Game(gameInfo);
+				game.initGame();
+			}
     	}
 	} else if (location == "/callback") {
 		headerElement.setAttribute("data-i18n", "callback");
@@ -403,6 +406,7 @@ const locationHandler = async () => {
       location = "401";
       route = routes[location];
     }
+  if (!location === "/pong") localStorage.removeItem("gameInfo");
   }
 
 	if (isProfile(location)) {

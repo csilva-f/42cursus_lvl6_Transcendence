@@ -2,46 +2,60 @@ let timer;
 let timerSeconds = 0;
 let timerActive = false;
 
+function goToHome() {
+  window.history.pushState({}, "", "/");
+  locationHandler();
+}
+
 
 function showGameStats(leftName, leftScore, leftColision, rightName, rightScore, rightColision) {
+    console.log(window.location.href);
     const pongGameDiv = document.getElementById('pongGameDiv');
     const mainGameScore = document.getElementById('mainGameScore');
     const finishedGame = document.getElementById('finishedGame');
+
     pongGameDiv.classList.add('d-none');
     mainGameScore.classList.add('d-none');
     finishedGame.classList.remove('d-none');
-    // Names
-    const leftPlayerNameFinished = document.getElementById('leftPlayerNameFinished');
-    const rightPlayerNameFinished = document.getElementById('rightPlayerNameFinished');
-    leftPlayerNameFinished.textContent = leftName;
-    rightPlayerNameFinished.textContent = rightName;
-    // Scores
-    const playerLeftScoreFinished = document.getElementById('playerLeftScoreFinished');
-    const playerRightScoreFinished = document.getElementById('playerRightScoreFinished');
+
+    // Nomes
+    document.getElementById('leftPlayerNameFinished').textContent = leftName;
+    document.getElementById('rightPlayerNameFinished').textContent = rightName;
+
+    // Pontuação
+    document.getElementById('playerLeftScoreFinished').textContent = leftScore;
+    document.getElementById('playerRightScoreFinished').textContent = rightScore;
+
     const scoreProgressLeft = document.getElementById('scoreProgressLeft');
     const scoreProgressRight = document.getElementById('scoreProgressRight');
-    playerLeftScoreFinished.textContent = leftScore;
-    playerRightScoreFinished.textContent = rightScore;
-    let leftProgress = parseFloat((leftScore * 100) / (leftScore + rightScore))
-    let rightProgress = parseFloat((rightScore * 100) / (leftScore + rightScore))
-    scoreProgressLeft.style.width = leftProgress + "%"
-    scoreProgressRight.style.width = rightProgress + "%"
-    // Colision
-    const playerLeftBalls = document.getElementById('playerLeftBalls');
-    const playerRightBalls = document.getElementById('playerRightBalls');
+
+    let totalScore = leftScore + rightScore;
+    let leftScoreProgress = totalScore > 0 ? (leftScore * 100) / totalScore : 50;
+    let rightScoreProgress = totalScore > 0 ? (rightScore * 100) / totalScore : 50;
+
+    scoreProgressLeft.style.width = leftScoreProgress + "%";
+    scoreProgressRight.style.width = rightScoreProgress + "%";
+
+    // Colisões
+    document.getElementById('playerLeftBalls').textContent = leftColision;
+    document.getElementById('playerRightBalls').textContent = rightColision;
+
     const colisionProgressLeft = document.getElementById('colisionProgressLeft');
     const colisionProgressRight = document.getElementById('colisionProgressRight');
-    playerLeftBalls.textContent = leftColision;
-    playerRightBalls.textContent = rightColision;
-    leftProgress = parseFloat((leftColision * 100) / (leftColision + rightColision))
-    rightProgress = parseFloat((rightColision * 100) / (leftColision + rightColision))
-    colisionProgressLeft.style.width = leftProgress + "%"
-    colisionProgressRight.style.width = rightProgress + "%"
-    // Time
+
+    let totalColision = leftColision + rightColision;
+    let leftColisionProgress = totalColision > 0 ? (leftColision * 100) / totalColision : 50;
+    let rightColisionProgress = totalColision > 0 ? (rightColision * 100) / totalColision : 50;
+
+    colisionProgressLeft.style.width = leftColisionProgress + "%";
+    colisionProgressRight.style.width = rightColisionProgress + "%";
+
+    // Tempo total da partida
     const matchTotalTime = document.getElementById('matchTotalTime');
-    matchTotalTime.textContent = formatTime(timerSeconds);
-    // Win Animaton
-    startWinAnimation()
+    matchTotalTime.textContent = formatTime(timerSeconds || 0); // Garante que timerSeconds seja um número válido
+
+    // Animação de vitória
+    startWinAnimation();
 }
 
 function startWinAnimation() {
@@ -87,12 +101,12 @@ async function updateGameStatus(gameData){
     const langData = await getLanguageData(userLang);
     const data = {
         uid: gameData.P1_uid,
-        gameID: gameData.gameId, 
+        gameID: gameData.gameId,
         user1_points : gameData.objects[1].paddleScore,
         user2_points: gameData.objects[2].paddleScore,
         user1_hits: gameData.objects[1].paddleColisionTimes,
         user2_hits: gameData.objects[2].paddleColisionTimes,
-    } 
+    }
     console.log(data);
     const APIurl = `/api/update-game/`;
     const accessToken = await JWT.getAccess();
@@ -111,5 +125,40 @@ async function updateGameStatus(gameData){
         error: function (xhr, status, error) {
             showErrorToast(APIurl, error, langData);
         },
-    });  
+    });
+    await UserInfo.refreshUser();
+    document.getElementById("topbar").classList.remove('d-none');
+    activateTopBar();
+}
+
+async function updateGameStatusForceFinish(gameData){
+    const userLang = localStorage.getItem("language") || "en";
+    const langData = await getLanguageData(userLang);
+    const data = {
+        uid: gameData.P1_uid,
+        gameID: gameData.gameId,
+        statusID: 3,
+    }
+    console.log(data);
+    const APIurl = `/api/update-game/`;
+    const accessToken = await JWT.getAccess();
+    $.ajax({
+        type: "POST",
+        url: APIurl,
+        Accept: "application/json",
+        contentType: "application/json",
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+        data: JSON.stringify(data),
+        success: async function (res) {
+            console.log(res);
+        },
+        error: function (xhr, status, error) {
+            showErrorToast(APIurl, error, langData);
+        },
+    });
+    await UserInfo.refreshUser();
+    document.getElementById("topbar").classList.remove('d-none');
+    activateTopBar();
 }

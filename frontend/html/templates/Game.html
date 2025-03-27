@@ -58,12 +58,12 @@
                 </div>
             </div>
             <div class="h-25 p-4 d-flex justify-content-end align-items-end">
-                <button id="editButton" class="btn d-flex align-items-center me-4 pop-hover-xs"
+                <button id="playAgainButton" class="btn d-flex align-items-center me-4 pop-hover-xs" onclick="postLocalGame();"
                     style="background-color: var(--primary); color: white; border: none; height: 3rem;">
                     <i class="fa-solid fa-table-tennis-paddle-ball fa-lg me-2"></i>
                     <span class="d-none d-xl-block" style="font-size: 0.9rem; font-weight: bold;">Play Again</span>
                 </button>
-                <button id="changePasswordButton" class="btn d-flex align-items-center pop-hover-xs"
+                <button id="homeButton" class="btn d-flex align-items-center pop-hover-xs" onclick="goToHome()"
                     style="background-color: var(--primary); color: white; border: none; height: 3rem;">
                     <i class="fa-solid fa-home fa-lg me-2"></i>
                     <span class="d-none d-xl-block" style="font-size: 0.9rem; font-weight: bold;">Home</span>
@@ -114,29 +114,3 @@
 <div class="w-100 d-flex justify-content-center align-items-center align-content-center" id="pongGameDiv" style="position: relative; height: 550px;">
     <canvas class="h-100 border border-3 border-black bg-dark" id="pongGameCanvas" style="position: relative; width: 1200px;"></canvas>
 </div>
-
-<script>
-    window.onload = function() {
-        console.log("onload");
-        const canvas = document.getElementById('pongGameCanvas');
-        const context = canvas.getContext('2d');
-
-        // Get the device pixel ratio (DPR)
-        const dpr = window.devicePixelRatio || 1;
-
-        // Set the logical canvas size (how big it should appear visually)
-        const width = 1200;
-        const height = 550;
-
-        // Set the actual canvas size (scale by the device pixel ratio)
-        canvas.width = width * dpr;
-        canvas.height = height * dpr;
-
-        // Scale the context to account for the device pixel ratio
-        context.scale(dpr, dpr);
-
-        // Now you can draw on the canvas and it should appear sharp and clear
-        context.fillStyle = 'white';
-        context.fillRect(10, 10, 100, 100); // Example drawing
-    };
-</script>
