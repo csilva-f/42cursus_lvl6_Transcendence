@@ -186,23 +186,23 @@ function insertInfo(newCard, element, statusID) {
 function insertTournamentInfo(newCard, element, statusID, allGames) {
     const tournamentTitle = newCard.querySelector("#tournamentTitle")
     tournamentTitle.textContent = element.name;
-    const tournamentBeginDate = newCard.querySelector("#tournamentBeginDate")
-    tournamentBeginDate.textContent = element.beginDate;
-    const tournamentEndDate = newCard.querySelector("#tournamentEndDate")
-    tournamentEndDate.textContent = element.endDate;
     const tournamentPlayers = newCard.querySelector("#tournamentPlayers")
     const enterBtn = newCard.querySelector("#enterLi");
     enterBtn.setAttribute("data-id", element.tournamentID);
-    let playerCount = 0;
-    allGames.forEach((game) => {
-        if ((game.tournamentID == element.tournamentID) && game.phaseID == 1) {
-            if (game.user1ID != null)
-                playerCount++;
-            if (game.user2ID != null)
-                playerCount++;
-        }
-    })
-    tournamentPlayers.textContent = playerCount;
+    tournamentPlayers.textContent = 4;
+    // const tournamentUser1ID = newCard.querySelector("#tournamentCreatedById")
+    // tournamentUser1ID.textContent = element.user1ID;
+    const tournamentUser1Nick = newCard.querySelector("#tournamentP1Nick")
+    tournamentUser1Nick.textContent = element.user1Nick;
+    const tournamentUser2Nick = newCard.querySelector("#tournamentP2Nick")
+    tournamentUser2Nick.textContent = element.user2Nick;
+    const tournamentUser3Nick = newCard.querySelector("#tournamentP3Nick")
+    tournamentUser3Nick.textContent = element.user3Nick;
+    const tournamentUser4Nick = newCard.querySelector("#tournamentP4Nick")
+    tournamentUser4Nick.textContent = element.user4Nick;
+    const tournamentCreatedOnDate = newCard.querySelector("#tournamentCreatedOn")
+    tournamentCreatedOnDate.textContent = element.createdOn;
+    newCard.innerHTML = newCard.innerHTML.replaceAll("{{TOURNAMENT_ID}}", element.tournamentID);
 }
 
 function reloadInformation(statusID) {
@@ -212,11 +212,6 @@ function reloadInformation(statusID) {
     else
         fetchTournaments(statusID);
 }
-
-
-
-
-
 
 /*
 ?    AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -229,7 +224,7 @@ function showGameForm(formID, tabOpenID, confirmBtnID, backBtnID) {
     const tab = document.getElementById(tabOpenID);
     tab.classList.add('d-none');
     const confirmBtn = document.getElementById(confirmBtnID);
-    confirmBtn.classList.remove('d-none');
+    // confirmBtn.classList.remove('d-none');
     const backBtb = document.getElementById(backBtnID);
     backBtb.classList.remove('d-none');
     backBtb.setAttribute("data-id", formID);
@@ -262,3 +257,41 @@ function closeGameForm(formIDs, tabID, confirmBtnID, backBtnID) {
         })
     })
 }
+
+function toggleTournamentGames(divID) {
+    const gamesDiv = document.getElementById(divID);
+  
+    if (!gamesDiv) return;
+  
+    if (gamesDiv.classList.contains("d-none")) {
+      gamesDiv.classList.remove("d-none");
+  
+      if (gamesDiv.innerHTML.trim() === "") {
+        const tournamentID = divID.split("-")[1];
+        loadTournamentGames(tournamentID, gamesDiv);
+      }
+    } else {
+      gamesDiv.classList.add("d-none");
+    }
+}
+
+function loadTournamentGames(tournamentID, containerDiv) {
+    const tournament = allGames.find(t => t.tournamentID === parseInt(tournamentID));
+  
+    if (!tournament || !tournament.games || tournament.games.length === 0) {
+      containerDiv.innerHTML = "<p class='text-muted'>No games found for this tournament.</p>";
+      return;
+    }
+  
+    tournament.games.forEach((game, index) => {
+      const gameDiv = document.createElement("div");
+      gameDiv.classList.add("p-2", "my-2", "rounded", "shadow-sm", "bg-light");
+      gameDiv.innerHTML = `
+        <strong>Game ${index + 1}</strong><br>
+        Players: ${game.players.join(" | ")}<br>
+        Status: ${game.status}
+      `;
+      containerDiv.appendChild(gameDiv);
+    });
+}
+  

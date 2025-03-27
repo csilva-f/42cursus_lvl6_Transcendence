@@ -381,6 +381,7 @@ async function fetchTournaments(statusID) {
     })
     .then((data) => {
       const APIurl = `/api/get-tournaments/?statusID=${statusID}`;
+      console.log(APIurl)
       $.ajax({
         type: "GET",
         url: APIurl,
@@ -392,6 +393,7 @@ async function fetchTournaments(statusID) {
           divElement.innerHTML = "";
           console.log(res);
           console.log(allGames);
+          console.log(res)
           res.tournaments.forEach((element) => {
             const newCard = document.createElement("div");
             newCard.innerHTML = data;
@@ -413,35 +415,40 @@ async function fetchTournaments(statusID) {
 
 //TODO resetTournamentModal
 //? POST - /api/create-tournament/
-async function postTournament() {
-  const userLang = localStorage.getItem("language") || "en";
-  const langData = await getLanguageData(userLang);
-  const APIurl = `/api/create-tournament/`;
-  let tournamentData = {
-    name: document.getElementById("nameTournamentInput").value,
-    beginDate: document.getElementById("beginDateInput").value,
-    endDate: document.getElementById("endDateInput").value,
-    createdByUser: 1,
-  };
-  console.log("tournamentData: ", tournamentData);
-  $.ajax({
-    type: "POST",
-    url: APIurl,
-    contentType: "application/json",
-    headers: { Accept: "application/json" },
-    data: JSON.stringify(tournamentData),
-    success: function (res) {
-      showSuccessToast(langData, langData.tournamentcreated);
-      fetchTournaments(1);
-      resetModal();
-      $("#createTournamentModal").modal("hide");
-    },
-    error: function (xhr, status, error) {
-      showErrorToast(APIurl, error, langData);
-      resetModal();
-    },
-  });
-}
+// async function postTournament() {
+//   const userLang = localStorage.getItem("language") || "en";
+//   const langData = await getLanguageData(userLang);
+//   const APIurl = `/api/create-tournament/`;
+//   console.log("AQUI CARALHO")
+//   let tournamentData = {
+//     name: document.getElementById("nameTournamentInput").value,
+//     nick2: document.getElementById("P2NickInput").value,
+//     nick3: document.getElementById("P3NickInput").value,
+//     nick4: document.getElementById("P4NickInput").value,
+//   };
+//   console.log("tournamentData: ", tournamentData);
+//   const accessToken = await JWT.getAccess();
+//   $.ajax({
+//     type: "POST",
+//     url: APIurl,
+//     Accept: "application/json",
+//     contentType: "application/json",
+//     headers: {
+//       Authorization: `Bearer ${accessToken}`,
+//     },
+//     data: JSON.stringify(tournamentData),
+//     success: function (res) {
+//       showSuccessToast(langData, langData.tournamentcreated);
+//       fetchTournaments(1);
+//       resetModal();
+//       $("#createTournamentModal").modal("hide");
+//     },
+//     error: function (xhr, status, error) {
+//       showErrorToast(APIurl, error, langData);
+//       resetModal();
+//     },
+//   });
+// }
 
 function getCurrentDate() {
   const today = new Date();
@@ -456,26 +463,31 @@ async function postLocalTournament() {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/create-tournament/`;
-  const todayDate = getCurrentDate();
-
-  let tournamentCreationData = {
+  
+  let tournamentData = {
     name: document.getElementById("localNameTournamentInput").value,
-    beginDate: todayDate,
-    endDate: todayDate,
-    createdByUser: 1,
+    nick2: document.getElementById("P2NickInputTourn").value,
+    nick3: document.getElementById("P3NickInput").value,
+    nick4: document.getElementById("P4NickInput").value,
   };
-
+  const accessToken = await JWT.getAccess();
+  console.log(tournamentData);
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "POST",
       url: APIurl,
+      Accept: "application/json",
       contentType: "application/json",
-      headers: { Accept: "application/json" },
-      data: JSON.stringify(tournamentCreationData),
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: JSON.stringify(tournamentData),
       success: function (res) {
         showSuccessToast(langData, langData.tournamentcreated);
-        console.log("res.tournament_id", res.tournament_id);
-        resolve(res.tournament_id); // Resolve the promise with the tournament ID
+        console.log(res);
+        console.log("res.tournament", res.tournament);
+        resetModal();
+        resolve(res.tournament); // Resolve the promise with the tournament ID
       },
       error: function (xhr, status, error) {
         showErrorToast(APIurl, error, langData);
@@ -492,6 +504,7 @@ async function enterTournament(gameID) {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/get-games/?tournamentID=${gameID}`;
+  console.log(APIurl)
   let gameData = {};
   $.ajax({
     type: "GET",
@@ -511,7 +524,7 @@ async function enterTournament(gameID) {
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
-      resetModal();
+      // resetModal();
     },
   });
 }
@@ -519,14 +532,16 @@ async function enterTournament(gameID) {
 async function fetchTournamentGames(tournamentID) {
   const accessToken = await JWT.getAccess();
   const APIurl = `/api/get-games/?tournamentID=${tournamentID}`;
+  console.log(APIurl)
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "GET",
-      url: APIurl,
-      contentType: "application/json",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+        url: APIurl,
+        Accept: "application/json",
+        contentType: "application/json",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       success: function (res) {
         resolve(res.games); // Resolve the promise with the tournament ID
       },
