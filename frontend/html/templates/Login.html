@@ -104,10 +104,19 @@
 								<span class="input-group-text" style="border: none; background: white;">
 									<i class="fas fa-envelope" style="color: var(--primary);"></i></span>
 								<input type="email" class="form-control" id="signupEmail" required placeholder="Email"
-									style="border:none;">
+									style="border:none;"
+									oninput="validateEmail('signupEmail', 'validateEmail', 'checkEmail')">
 								<div class="invalid-feedback" id="emailInvalid">
 								</div>
 							</div>
+							<small id="validateEmail" class="form-text text-muted d-none">
+								<ul>
+									<li id="checkEmail" class="requirement">
+										<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+										Invalid e-mail
+									</li>
+								</ul>
+							</small>
 						</div>
 
 						<div class="mb-3">
@@ -171,7 +180,9 @@
 						<div class="mb-3">
 							<div class="input-group">
 								<input type="tel" class="form-control" id="signupPhone" required
-									placeholder="Phone number" oninput="validatePhoneNumber('signupPhone', 'validateNumber', 'checkNum')" style="border: none; width: 567px">
+									placeholder="Phone number"
+									oninput="validatePhoneNumber('signupPhone', 'validateNumber', 'checkNum')"
+									style="border: none; width: 567px">
 							</div>
 							<small id="validateNumber" class="form-text text-muted d-none">
 								<ul>
@@ -182,6 +193,7 @@
 								</ul>
 							</small>
 						</div>
+
 						<button type="submit" class="btn"
 							style="background-color: var(--primary); color: white; width: 100%;">Sign up</button>
 					</form>
