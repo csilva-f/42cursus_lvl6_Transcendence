@@ -260,38 +260,80 @@ function closeGameForm(formIDs, tabID, confirmBtnID, backBtnID) {
 
 function toggleTournamentGames(divID) {
     const gamesDiv = document.getElementById(divID);
+    console.log(gamesDiv);
+    console.log("aqui");
   
     if (!gamesDiv) return;
-  
+    console.log("aqui2");
     if (gamesDiv.classList.contains("d-none")) {
-      gamesDiv.classList.remove("d-none");
-  
-      if (gamesDiv.innerHTML.trim() === "") {
+        gamesDiv.classList.remove("d-none");
+        console.log("aqui6");
+        
         const tournamentID = divID.split("-")[1];
+        console.log(tournamentID);
         loadTournamentGames(tournamentID, gamesDiv);
-      }
     } else {
-      gamesDiv.classList.add("d-none");
+        console.log("aqui4");
+        gamesDiv.classList.add("d-none");
     }
 }
 
-function loadTournamentGames(tournamentID, containerDiv) {
-    const tournament = allGames.find(t => t.tournamentID === parseInt(tournamentID));
-  
-    if (!tournament || !tournament.games || tournament.games.length === 0) {
-      containerDiv.innerHTML = "<p class='text-muted'>No games found for this tournament.</p>";
-      return;
+function insertTournamentGameInfo(newCard, game) {
+    const tournGameNbr = newCard.querySelector("#tournGameNumber")
+    tournGameNbr.textContent = game.phase;
+    const tournP1 = newCard.querySelector("#tournGamePlayer1")
+    if (game.user1Nick) {
+        tournP1.textContent = game.user1Nick;
+    } else {
+        tournP1.textContent = "(To be be defined)";
     }
-  
-    tournament.games.forEach((game, index) => {
-      const gameDiv = document.createElement("div");
-      gameDiv.classList.add("p-2", "my-2", "rounded", "shadow-sm", "bg-light");
-      gameDiv.innerHTML = `
-        <strong>Game ${index + 1}</strong><br>
-        Players: ${game.players.join(" | ")}<br>
-        Status: ${game.status}
-      `;
-      containerDiv.appendChild(gameDiv);
-    });
+    const tournP2 = newCard.querySelector("#tournGamePlayer2")
+    if (game.user2Nick) {
+        tournP2.textContent = game.user2Nick;
+    } else {
+        tournP2.textContent = "(To be be defined)";
+    }
+    const tournGameStat = newCard.querySelector("#tournGameStatus")
+    tournGameStat.textContent = game.status;
 }
-  
+
+async function loadTournamentGames(tournamentID, containerDiv) {
+    try {
+        console.log("Loading games for tournament:", tournamentID);
+        const games = await fetchTournamentGames(tournamentID);
+        console.log("Fetched games:", games);
+        containerDiv.classList.remove("d-none");
+
+        if (!games || games.length === 0) {
+            const noGamesMsg = document.createElement("p");
+            noGamesMsg.classList.add("text-muted");
+            noGamesMsg.textContent = "No games found for this tournament.";
+            containerDiv.appendChild(noGamesMsg);
+            return;
+        }
+        fetch("/templates/Components/CardTournamentGame.html")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok " + response.statusText);
+                }
+                return response.text();
+            })
+            .then((data) => {
+                const divElement = document.getElementById(`gamesContainer-${tournamentID}`);
+                divElement.innerHTML = "";
+                games.forEach((element) => {
+                    console.log(element);
+                    const newCard = document.createElement("div");
+                    newCard.innerHTML = data;
+                    insertTournamentGameInfo(newCard, element);
+                    divElement.appendChild(newCard);
+                });
+            })
+            .catch((error) => {
+                console.error("There was a problem with the fetch operation:", error);
+            });
+    } catch (error) {
+        console.error("Error fetching games:", error);
+        containerDiv.innerHTML = "<p class='text-danger'>Error loading games.</p>";
+    }
+}

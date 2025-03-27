@@ -1,0 +1,31 @@
+<div id="tournamentGameCard" class="game-card p-3 mb-3 rounded-4"
+     style="background-color: var(--bodyBg);">
+    
+    <div class="d-flex align-items-center" style="min-height: 5rem;">
+         
+        <!-- Número do jogo -->
+        <div class="d-flex align-items-center justify-content-center" style="width: 8rem;">
+            <p class="h4 mb-0 ms-2"><strong>Game </strong><span id="tournGameNumber"></span></p>
+        </div>
+
+        <!-- Info dos jogadores e status -->
+        <div class="d-flex flex-column justify-content-center ms-4" style="flex: 1;">
+            <div class="d-flex align-items-center mb-1">
+                <i class="fa-solid fa-users fa-lg me-2"></i>
+                <p class="h6 mb-0">
+                    <strong>Players:</strong>
+                    <span id="tournGamePlayer1" class="ms-2"></span>
+                    <span class="mx-2">vs</span>
+                    <span id="tournGamePlayer2"></span>
+                </p>
+            </div>
+            <div class="d-flex align-items-center">
+                <i class="fa-solid fa-circle-info fa-lg me-2"></i>
+                <p class="h6 mb-0">
+                    <strong>Status:</strong>
+                    <span id="tournGameStatus" class="ms-2"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

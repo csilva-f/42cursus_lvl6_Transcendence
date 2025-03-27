@@ -521,6 +521,7 @@ async function enterTournament(gameID) {
           //Perguntar carolina se faz-se aqui a logica de entrar para user1 ou user2
         }
       });
+      updateContent(langData);
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
@@ -530,6 +531,7 @@ async function enterTournament(gameID) {
 }
 
 async function fetchTournamentGames(tournamentID) {
+  const userLang = localStorage.getItem("language") || "en";
   const accessToken = await JWT.getAccess();
   const APIurl = `/api/get-games/?tournamentID=${tournamentID}`;
   console.log(APIurl)
