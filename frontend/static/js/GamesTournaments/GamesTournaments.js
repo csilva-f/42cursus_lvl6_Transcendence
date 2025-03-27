@@ -176,23 +176,22 @@ function insertInfo(newCard, element, statusID) {
 function insertTournamentInfo(newCard, element, statusID, allGames) {
     const tournamentTitle = newCard.querySelector("#tournamentTitle")
     tournamentTitle.textContent = element.name;
-    const tournamentBeginDate = newCard.querySelector("#tournamentBeginDate")
-    tournamentBeginDate.textContent = element.beginDate;
-    const tournamentEndDate = newCard.querySelector("#tournamentEndDate")
-    tournamentEndDate.textContent = element.endDate;
     const tournamentPlayers = newCard.querySelector("#tournamentPlayers")
     const enterBtn = newCard.querySelector("#enterLi");
     enterBtn.setAttribute("data-id", element.tournamentID);
-    let playerCount = 0;
-    allGames.forEach((game) => {
-        if ((game.tournamentID == element.tournamentID) && game.phaseID == 2) {
-            if (game.user1ID != null)
-                playerCount++;
-            if (game.user2ID != null)
-                playerCount++;
-        }
-    })
-    tournamentPlayers.textContent = playerCount;
+    tournamentPlayers.textContent = 4;
+    // const tournamentUser1ID = newCard.querySelector("#tournamentCreatedById")
+    // tournamentUser1ID.textContent = element.user1ID;
+    const tournamentUser1Nick = newCard.querySelector("#tournamentP1Nick")
+    tournamentUser1Nick.textContent = element.user1Nick;
+    const tournamentUser2Nick = newCard.querySelector("#tournamentP2Nick")
+    tournamentUser2Nick.textContent = element.user2Nick;
+    const tournamentUser3Nick = newCard.querySelector("#tournamentP3Nick")
+    tournamentUser3Nick.textContent = element.user3Nick;
+    const tournamentUser4Nick = newCard.querySelector("#tournamentP4Nick")
+    tournamentUser4Nick.textContent = element.user4Nick;
+    const tournamentCreatedOnDate = newCard.querySelector("#tournamentCreatedOn")
+    tournamentCreatedOnDate.textContent = element.createdOn;
 }
 
 function reloadInformation(statusID) {

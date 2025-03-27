@@ -136,9 +136,9 @@ def get_games(request):
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
-            'user1Nick': user1_nick,
+            'user1Nick': game.user1_nick if game.tournament else user1_nick,
             'user2ID': game.user2,
-            'user2Nick': user2_nick,
+            'user2Nick': game.user2_nick if game.tournament else user2_nick,
             'winnerUserID': game.winnerUser,
             'user1_points': game.user1_points,
             'user2_points': game.user2_points,
@@ -363,6 +363,12 @@ def get_tournaments(request):
             'winnerUserID': tournament.winnerUser,
             'statusID': tournament.status.statusID, 
             'status': tournament.status.status,
+            'user1ID': tournament.createdByUser,
+            'user1Nick': tournament.nick1,
+            'user2Nick': tournament.nick2,
+            'user3Nick': tournament.nick3,
+            'user4Nick': tournament.nick4,
+            'createdOn': tournament.creationTS,
         }
         for tournament in tournaments
     ]
@@ -595,7 +601,7 @@ def post_create_tournament(request):
                     games.append(tGames(
                         tournament=tournament,
                         status=gstatus,
-                        isLocal=False,
+                        isLocal=True,
                         phase=gphase,
                         user1=uid1,
                         user2=uid2,
@@ -603,9 +609,17 @@ def post_create_tournament(request):
                         user2_nick=nickname2
                     ))
                 tGames.objects.bulk_create(games)
+
                 tournament.status = tauxStatus.objects.get(statusID=2)
                 tournament.save()
-            return JsonResponse({"message": "Tournament created successfully", "tournament": tournament.tournament}, status=201)
+                tournament_games = list(tGames.objects.filter(tournament=tournament).values())
+                print(tournament_games)
+            # return JsonResponse({"message": "Tournament created successfully", "tournament": tournament.tournament}, status=201)
+            return JsonResponse({
+                "message": "Tournament created successfully",
+                "tournament": tournament.tournament,
+                "games": tournament_games
+                }, status=201)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
         except Exception as e:

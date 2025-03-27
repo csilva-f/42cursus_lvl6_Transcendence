@@ -53,6 +53,7 @@ class tTournaments(models.Model):
     creationTS = models.DateField()
     createdByUser = models.IntegerField(null=True, blank=True)
     winnerUser = models.IntegerField(null=True, blank=True)
+    winnerNick = models.CharField(null=True, blank=True, max_length=255)
     status = models.ForeignKey(tauxStatus, on_delete=models.PROTECT, null=False, default=1)
     nick1 = models.CharField(null=True, blank=True, max_length=255)
     nick2 = models.CharField(null=True, blank=True, max_length=255)

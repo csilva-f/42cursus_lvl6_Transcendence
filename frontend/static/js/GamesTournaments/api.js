@@ -326,7 +326,6 @@ async function fetchTournaments(statusID) {
   setTimeout(() => {
     reloadIcon.classList.remove("rotate");
   }, 250);
-  console.log("aqui")
   const accessToken = await JWT.getAccess();
   fetch("/templates/Components/CardTournament.html")
     .then((response) => {
@@ -349,6 +348,7 @@ async function fetchTournaments(statusID) {
           divElement.innerHTML = "";
           console.log(res);
           console.log(allGames);
+          console.log(res)
           res.tournaments.forEach((element) => {
             const newCard = document.createElement("div");
             newCard.innerHTML = data;
