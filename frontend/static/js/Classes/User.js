@@ -6,6 +6,10 @@ class User {
     userGender = null;
     userBio = null;
     userAvatar = null;
+    userFirstName = null;
+    userLastName = null;
+    userPhoneNumber = null;
+    userEmail = null;
     isUpdating = false;
 
     constructor() { }
@@ -14,13 +18,19 @@ class User {
         console.log("[refreshUser]")
         if (!this.isUpdating) {
             this.isUpdating = true;
-            await this.fetchUserExtension();
+            try {
+                await Promise.all([this.fetchUserExtension(), this.fetchGetProfile()]);
+            } catch (error) {
+                console.error("Error refreshing user:", error);
+            } finally {
+                this.isUpdating = false;
+                console.log("[Finished refreshUser]");
+            }
         } else {
             while (this.isUpdating)
-                await new Promise((resolve) => setTimeout(resolve, 10))
+                await new Promise((resolve) => setTimeout(resolve, 10));
         }
     }
-
     async getUserID() {
         if (this.userID) return this.userID;
         return null;
@@ -49,9 +59,25 @@ class User {
         if (this.userAvatar) return this.userAvatar;
         return null;
     }
+    async getUserFirstName() {
+        if (this.userFirstName) return this.userFirstName;
+        return null;
+    }
+    async getUserLastName() {
+        if (this.userLastName) return this.userLastName;
+        return null;
+    }
+    async getUserPhoneNumber() {
+        if (this.userPhoneNumber) return this.userAvatar;
+        return null;
+    }
+    async getUserEmail() {
+        if (this.userEmail) return this.userEmail;
+        return null;
+    }
 
     async fetchUserExtension() {
-        const accessToken = await JWT.getAccess();  
+        const accessToken = await JWT.getAccess();
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "POST",
@@ -61,9 +87,8 @@ class User {
                     Authorization: `Bearer ${accessToken}`,
                 },
                 success: async (res) => {
-                    await this.insertUserInfo(res.user);
+                    await this.insertUserExtension(res.user);
                     this.isUpdating = false;
-                    console.log("[Finished refreshUser]")
                     resolve();
                 },
                 error: function (xhr, status, error) {
@@ -75,8 +100,32 @@ class User {
         });
     }
 
+    async fetchGetProfile() {
+        const accessToken = await JWT.getAccess()
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: "POST",
+                url: `/authapi/get-profile/`,
+                contentType: "application/json",
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                success: async (res) => {
+                    await this.insertGetProfile(res.data);
+                    this.isUpdating = false;
+                    resolve();
+                },
+                error: function (xhr, status, error) {
+                    console.log("error: ", error);
+                    this.isUpdating = false;
+                    reject(error);
+                },
+            })
+        })
+    }
 
-    async insertUserInfo(userInfo) {
+
+    async insertUserExtension(userInfo) {
         this.userID = userInfo.id;
         this.userNick = userInfo.nickname;
         this.userLvl = userInfo.level;
@@ -84,5 +133,26 @@ class User {
         this.userGender = userInfo.gender;
         this.userBio = userInfo.bio;
         this.userAvatar = userInfo.avatar;
+    }
+
+    async insertGetProfile(userInfo) {
+        this.userFirstName = userInfo.first_name;
+        this.userLastName = userInfo.last_name;
+        this.userPhoneNumber = userInfo.phone_number;
+        this.userEmail = userInfo.email;
+    }
+
+    async resetUser() {
+        this.userID = null;
+        this.userNick = null;
+        this.userLvl = null;
+        this.userBirthdate = null;
+        this.userGender = null;
+        this.userBio = null;
+        this.userAvatar = null;
+        this.userFirstName = null;
+        this.userLastName = null;
+        this.userPhoneNumber = null;
+        this.userEmail = null;
     }
 }

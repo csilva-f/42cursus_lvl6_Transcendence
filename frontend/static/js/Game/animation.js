@@ -3,7 +3,7 @@ function randomInRange(min, max) {
 }
 
 function fireworkAnimation() {
-    const duration = 30 * 1000,
+    const duration = 2 * 1000,
         animationEnd = Date.now() + duration,
         defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
@@ -34,7 +34,7 @@ function fireworkAnimation() {
 }
 
 function prideAnimation() {
-    const end = Date.now() + 15 * 1000;
+    const end = Date.now() + 2 * 1000;
     const colors = ["#482445", "#de94ad"];
     (function frame() {
         confetti({
@@ -84,7 +84,7 @@ function assAnimation() {
 
     setTimeout(shoot, 0);
     setTimeout(shoot, 250);
-    setTimeout(shoot, 500);
-    setTimeout(shoot, 750);
-    setTimeout(shoot, 1000);
+    //setTimeout(shoot, 500);
+    //setTimeout(shoot, 750);
+    //setTimeout(shoot, 1000);
 }

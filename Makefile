@@ -74,6 +74,8 @@ migrate:
 	@docker compose exec -it email python manage.py makemigrations
 	@docker compose exec -it email python manage.py migrate
 	@docker compose restart auth backend email
+	@sleep 2
+	@docker compose restart nginx
 
 clean:down
 	@echo "Cleaning up stopped containers and networks..."

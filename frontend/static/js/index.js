@@ -35,14 +35,15 @@ function getForms() {
           event.preventDefault();
           event.stopPropagation();
         } else {
-          if (form.id == "localFormID") postLocalGame();
-          else if (form.id == "remoteFormID") postRemoteGame();
-          else if (form.id == "localTournamentFormID") initLocalTournament();
+          //if (form.id == "localFormID") postLocalGame();
+          //if (form.id == "remoteFormID") postRemoteGame();
+          if (form.id == "localTournamentFormID") initLocalTournament();
           else if (form.id == "tournamentFormID") postTournament();
           else if (form.id == "login-form") sendLogin();
           else if (form.id == "signup-form") sendSignup(form);
           else if (form.id == "forgotPwd-form") forgotPwd();
           else if (form.id == "nicknameModal-form") finishProfile();
+          else if (form.id == "resetPwd-form") resetPassword();
           // else if (form.id == "resendCode-form")
           // 	sendCode();
           // else if (form.id == "resetPwd-form")
@@ -59,6 +60,7 @@ function getForms() {
 async function logOut() {
   localStorage.removeItem("jwt");
   JWT.deleteToken();
+  UserInfo.resetUser();
   window.history.pushState({}, "", "/mainPage");
   locationHandler();
 }
