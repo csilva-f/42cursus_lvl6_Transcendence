@@ -12,6 +12,7 @@
     "pt": "Portuguese",
     "fr": "French",
     "games": "Games",
+    "game": "Game",
     "tournaments": "Tournaments",
     "create": "Create",
     "searching": "Searching",
@@ -55,5 +56,8 @@
 	"resendCode": "",
 	"resetPassword": "",
 	"callback": "",
-    "overall": "Overall"
+    "overall": "Overall",
+    "status": "Status:",
+    "players": "PLayers:",
+    "users": "Users:"
 }

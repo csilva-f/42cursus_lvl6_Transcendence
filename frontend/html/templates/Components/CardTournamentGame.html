@@ -1,20 +1,22 @@
 <div id="tournamentGameCard" class="game-card p-3 mb-3 rounded-4"
      style="background-color: var(--bodyBg);">
     
+    <!-- Troque align-items-start por align-items-center -->
     <div class="d-flex align-items-center" style="min-height: 5rem;">
-         
-        <!-- Número do jogo -->
-        <div class="d-flex align-items-center justify-content-center" style="width: 8rem;">
-            <p class="h4 mb-0 ms-2"><strong>Game </strong><br><span id="tournGameNumber"></span></p>
+        
+        <!-- Coluna ESQUERDA: "Game" / "Semi final" -->
+        <div class="d-flex flex-column" style="width: 8rem;">
+            <p class="h4 mb-0" style="font-weight: bold" data-i18n="game"></p>
+            <p class="h5 mt-2 mb-0" id="tournGameNumber"></p>
         </div>
-
-        <!-- Info dos jogadores e status -->
-        <div class="d-flex flex-column justify-content-center ms-4 gap-3" style="flex: 1;">
-            <div class="d-flex align-items-center mb-1">
+        
+        <!-- Coluna DIREITA: "Players" / "Status" -->
+        <div class="d-flex flex-column ms-4" style="flex: 1;">
+            <div class="d-flex align-items-center mb-3">
                 <i class="fa-solid fa-users fa-lg me-2"></i>
                 <p class="h6 mb-0">
-                    <strong>Players:</strong>
-                    <span id="tournGamePlayer1" class="ms-2"></span>
+                    <span style="font-weight: bold" data-i18n="players"></span>
+                    <span class="ms-2" id="tournGamePlayer1"></span>
                     <span class="mx-2">vs</span>
                     <span id="tournGamePlayer2"></span>
                 </p>
@@ -22,8 +24,8 @@
             <div class="d-flex align-items-center">
                 <i class="fa-solid fa-circle-info fa-lg me-2"></i>
                 <p class="h6 mb-0">
-                    <strong>Status:</strong>
-                    <span id="tournGameStatus" class="ms-2"></span>
+                    <span style="font-weight: bold" data-i18n="status"></span>
+                    <span class="ms-2" id="tournGameStatus"></span>
                 </p>
             </div>
         </div>

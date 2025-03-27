@@ -261,19 +261,15 @@ function closeGameForm(formIDs, tabID, confirmBtnID, backBtnID) {
 function toggleTournamentGames(divID) {
     const gamesDiv = document.getElementById(divID);
     console.log(gamesDiv);
-    console.log("aqui");
   
     if (!gamesDiv) return;
-    console.log("aqui2");
     if (gamesDiv.classList.contains("d-none")) {
         gamesDiv.classList.remove("d-none");
-        console.log("aqui6");
         
         const tournamentID = divID.split("-")[1];
         console.log(tournamentID);
         loadTournamentGames(tournamentID, gamesDiv);
     } else {
-        console.log("aqui4");
         gamesDiv.classList.add("d-none");
     }
 }

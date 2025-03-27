@@ -54,7 +54,7 @@ up: directories
 	@echo "$(ROOT_TOKEN_FILE) contains a value!"
 	@docker compose up -d email auth-api auth backend backend-api channels redis
 	sleep 5
-	#@docker compose up -d nginx
+	@docker compose up -d nginx
 # Stop the Docker Compose setup
 down:
 	@echo "Stopping Docker Compose setup..."

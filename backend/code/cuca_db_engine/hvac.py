@@ -59,7 +59,7 @@ class VaultDatabaseCredentials:
         else:
             print("No lease ID available to renew.")
 
-    def is_lease_expiring_soon(self, buffer_time=500):
+    def is_lease_expiring_soon(self, buffer_time=1800):
         """Check if the lease is expiring soon (default is 5 minutes)."""
         print("Checking if lease is expiring soon...")
         if self.expiration_time:

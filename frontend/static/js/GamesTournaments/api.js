@@ -220,7 +220,6 @@ async function postRemoteGame() {
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
-      resetModal();
     },
   });
 }
@@ -527,7 +526,7 @@ async function enterTournament(gameID) {
 }
 
 async function fetchTournamentGames(tournamentID) {
-  const userLang = localStorage.getItem("language") || "en";
+  const langData = localStorage.getItem("language") || "en";
   const accessToken = await JWT.getAccess();
   const APIurl = `/api/get-games/?tournamentID=${tournamentID}`;
   console.log(APIurl)
@@ -541,7 +540,8 @@ async function fetchTournamentGames(tournamentID) {
           Authorization: `Bearer ${accessToken}`,
         },
       success: function (res) {
-        resolve(res.games); // Resolve the promise with the tournament ID
+        resolve(res.games); // Resolve the promise with the tournament ID\
+        updateContent(langData);
       },
       error: function (xhr, status, error) {
         reject(error); // Reject the promise on error
