@@ -48,12 +48,16 @@ class tUserExtension(models.Model):
 class tTournaments(models.Model):
     tournament = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
-    beginDate = models.DateField()
-    endDate = models.DateField()
+    beginDate = models.DateField(null=True, blank=True)
+    endDate = models.DateField(null=True, blank=True)
     creationTS = models.DateField()
     createdByUser = models.IntegerField(null=True, blank=True)
     winnerUser = models.IntegerField(null=True, blank=True)
     status = models.ForeignKey(tauxStatus, on_delete=models.PROTECT, null=False, default=1)
+    nick1 = models.CharField(null=True, blank=True, max_length=255)
+    nick2 = models.CharField(null=True, blank=True, max_length=255)
+    nick3 = models.CharField(null=True, blank=True, max_length=255)
+    nick4 = models.CharField(null=True, blank=True, max_length=255)
 
     def _str_(self):
         return f"Tournament {self.id} starting on {self.beginDate} until {self.endDate}"
@@ -69,13 +73,15 @@ class tGames(models.Model):
     user2_points = models.IntegerField(null=True, blank=True)
     user1_hits = models.IntegerField(null=True, blank=True)
     user2_hits = models.IntegerField(null=True, blank=True)
+    user1_nick = models.CharField(null=True, blank=True, max_length=255)
+    user2_nick = models.CharField(null=True, blank=True, max_length=255)
     isLocal = models.BooleanField(default=True)
     isInvitation = models.BooleanField(default=False)
     isInvitAccepted = models.BooleanField(default=False)
     winnerUser = models.IntegerField(null=True, blank=True)
     tournament = models.ForeignKey(tTournaments, on_delete=models.SET_NULL, null=True, blank=True)
     phase = models.ForeignKey(tauxPhase, on_delete=models.PROTECT, null=True, blank=True) 
-    status = models.ForeignKey(tauxStatus, on_delete=models.PROTECT, null=False, default=1) 
+    status = models.ForeignKey(tauxStatus, on_delete=models.PROTECT, null=False, default=1)
 
     def __str__(self):
         return f"Game {self.id} between {self.user1} and {self.user2} on {self.date}"

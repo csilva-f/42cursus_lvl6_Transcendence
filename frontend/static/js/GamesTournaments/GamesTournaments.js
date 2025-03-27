@@ -80,7 +80,7 @@ function resetModal() {
     document.getElementById('localForm').classList.add('d-none');
     document.getElementById('remoteForm').classList.add('d-none');
     document.getElementById('selectForm').classList.remove('d-none');
-    document.getElementById('goBackLi').classList.add('d-none');
+    // document.getElementById('goBackLi').classList.add('d-none');
 
     const localInputs = document.querySelectorAll('#localForm input[type="text"]');
     localInputs.forEach(input => {
@@ -185,7 +185,7 @@ function insertTournamentInfo(newCard, element, statusID, allGames) {
     enterBtn.setAttribute("data-id", element.tournamentID);
     let playerCount = 0;
     allGames.forEach((game) => {
-        if ((game.tournamentID == element.tournamentID) && game.phaseID == 1) {
+        if ((game.tournamentID == element.tournamentID) && game.phaseID == 2) {
             if (game.user1ID != null)
                 playerCount++;
             if (game.user2ID != null)
