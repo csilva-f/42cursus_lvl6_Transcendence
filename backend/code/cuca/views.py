@@ -582,7 +582,7 @@ def post_create_tournament(request):
                 )
                 phase2 = tauxPhase.objects.get(phase=2)
                 phase3 = tauxPhase.objects.get(phase=3)
-                gstatus = tauxStatus.objects.get(statusID=1)
+                gstatus = tauxStatus.objects.get(statusID=2)
                 games = []
                 for i in range(3):
                     if i == 0:
@@ -595,10 +595,16 @@ def post_create_tournament(request):
                         uid2 = -1
                         nickname1 = u3
                         nickname2 = u4
+                    else:
+                        uid1 = None
+                        uid2 = None
+                        nickname1 = None
+                        nickname2 = None
                     if i < 2:
                         gphase = phase2
                     else:
                         gphase = phase3
+                        gstatus = tauxStatus.objects.get(statusID=1)
                     games.append(tGames(
                         tournament=tournament,
                         status=gstatus,
@@ -1393,7 +1399,7 @@ def get_nonfriendslist(request):
 
 def get_topusers(request):
     try:
-        uextensions = tUserExtension.objects.all().order_by('-ulevel')[:3]
+        uextensions = tUserExtension.objects.exclude(user=-1).order_by('-ulevel')[:3]
 
     except ValidationError as e:
         return JsonResponse({"error": str(e)}, status=400)

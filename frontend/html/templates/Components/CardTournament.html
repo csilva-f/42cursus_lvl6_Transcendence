@@ -31,7 +31,7 @@
         </div>
         <div class="d-flex" style="width: 50rem; min-width: 10rem; height: 6rem;">
             <div class="d-flex align-items-center">
-                <p class="h4 mb-0"><strong>Users: </strong></p>
+                <p class="h4 mb-0" style="font-weight: bold" data-i18n="users"></p>
                 <p class="h5 mb-0 ms-2">(</p>
                 <p class="h5 mb-0" id="tournamentPlayers"></p>
                 <p class="h5 mb-0 ms-1 me-2">/4)</p>
@@ -51,16 +51,20 @@
                 <div class="col-7 align-content-center">
                     <ul class="nav nav-pills justify-content-end" style="height: 3rem">
                         <li class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-                            style="width: 3rem; cursor: pointer; background-color: white;" id="enterLi" href="/pong"
-                            onclick="enterTournament(this.dataset.id)">
-                            <i class="fa-solid fa-chevron-down fa-xl" style="color: black"></i>
+                            style="width: 3rem; cursor: pointer; background-color: white;" 
+                            id="enterLi"
+                            data-id=""
+                            onclick="toggleTournamentGames('gamesContainer-{{TOURNAMENT_ID}}')">
+                          <i class="fa-solid fa-chevron-down fa-xl" style="color: black"></i>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
-    <div id="gamesContainer-{{TOURNAMENT_ID}}" class="d-none p-3">
-        <!-- Os jogos serão inseridos aqui por JS -->
-    </div>
+    <div id="gamesContainer-{{TOURNAMENT_ID}}" class="d-none p-3 my-2 d-flex flex-column">
+        <strong id="gameTitle"></strong><br>
+        <span id="gamePlayers"></span><br>
+        <span id="gameStatus"></span>
+    </div>    
 </div>

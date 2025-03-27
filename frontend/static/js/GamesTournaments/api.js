@@ -80,12 +80,10 @@ async function postGame() {
     success: function (res) {
       showSuccessToast(langData, langData.gamecreated);
       fetchGames(1);
-      resetModal();
       $("#createModal").modal("hide");
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
-      resetModal();
     },
   });
 }
@@ -111,7 +109,6 @@ async function postLocalGame() {
     data: JSON.stringify(gameData),
     success: async function (res) {
       showSuccessToast(langData, langData.gameEntered);
-      resetModal();
       $("#createModal").modal("hide");
       if(res.game.id){
         gameData["gameId"] = res.game.id;
@@ -160,7 +157,6 @@ async function postRemoteGame() {
     data: JSON.stringify(gameData),
     success: function (res) {
       showSuccessToast(langData, langData.gamecreated);
-      //resetModal();
       $("#createModal").modal("hide");
       console.log("Game Created Response:", res);
       const game = res.game;
@@ -224,7 +220,6 @@ async function postRemoteGame() {
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
-      resetModal();
     },
   });
 }
@@ -521,6 +516,7 @@ async function enterTournament(gameID) {
           //Perguntar carolina se faz-se aqui a logica de entrar para user1 ou user2
         }
       });
+      updateContent(langData);
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
@@ -530,6 +526,7 @@ async function enterTournament(gameID) {
 }
 
 async function fetchTournamentGames(tournamentID) {
+  const langData = localStorage.getItem("language") || "en";
   const accessToken = await JWT.getAccess();
   const APIurl = `/api/get-games/?tournamentID=${tournamentID}`;
   console.log(APIurl)
@@ -543,7 +540,8 @@ async function fetchTournamentGames(tournamentID) {
           Authorization: `Bearer ${accessToken}`,
         },
       success: function (res) {
-        resolve(res.games); // Resolve the promise with the tournament ID
+        resolve(res.games); // Resolve the promise with the tournament ID\
+        updateContent(langData);
       },
       error: function (xhr, status, error) {
         reject(error); // Reject the promise on error
