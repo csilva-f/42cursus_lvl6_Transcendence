@@ -168,14 +168,19 @@
 								</ul>
 							</small>
 						</div>
-
 						<div class="mb-3">
 							<div class="input-group">
-								<span class="input-group-text" style="border: none; background: white;">
-									<i class="fas fa-phone" style="color: var(--primary);"></i></span>
 								<input type="tel" class="form-control" id="signupPhone" required
-									placeholder="Phone number" style="border: none;">
+									placeholder="Phone number" oninput="validatePhoneNumber('signupPhone', 'validateNumber', 'checkNum')" style="border: none; width: 567px">
 							</div>
+							<small id="validateNumber" class="form-text text-muted d-none">
+								<ul>
+									<li id="checkNum" class="requirement">
+										<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+										Invalid phone number
+									</li>
+								</ul>
+							</small>
 						</div>
 						<button type="submit" class="btn"
 							style="background-color: var(--primary); color: white; width: 100%;">Sign up</button>

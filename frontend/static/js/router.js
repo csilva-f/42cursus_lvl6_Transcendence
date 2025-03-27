@@ -177,6 +177,10 @@ async function changeToBig(location) {
 	}
 	else if (location == "/login") {
 		headerElement.setAttribute("data-i18n", "login");
+		const input = document.querySelector("#signupPhone");
+			window.intlTelInput(input, {
+				loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
+			});
 		disableTopBar();
 		getForms();
 	} else if (location == "/forgotPassword") {
@@ -385,7 +389,6 @@ const locationHandler = async (elementID) => {
 			return; // Exit the function to prevent further processing
 		}
 	}
-
 	// Handle other routes
 	const route = routes[location] || routes["404"];
 	const html = await fetch(route.template).then((response) => response.text());

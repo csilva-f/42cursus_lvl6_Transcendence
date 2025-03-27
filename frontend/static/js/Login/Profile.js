@@ -58,3 +58,7 @@ function previewImage(event) {
 		reader.readAsDataURL(file);
 	}
 }
+
+function appendDialCode() {
+	console.log("entra sim senhora");
+}

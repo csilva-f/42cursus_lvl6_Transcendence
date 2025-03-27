@@ -312,7 +312,6 @@ function verifyAccount() {
 		if (field)
 			code += field.value;
 	}
-	console.log('Code:', code);
 }
 
 // Password validate
@@ -370,6 +369,25 @@ function validateNewPassword(passwordId, validationId, confirmPassId) {
 	}
 }
 
+function validatePhoneNumber(phoneId, validationId, errorIcon) {
+	const phone = document.getElementById(phoneId);
+	const validationMessage = document.getElementById(validationId);
+	const icon = document.getElementById(errorIcon);
+
+	const isValidLength = phone.value.length === 9;
+	const isNumeric = /^\d+$/.test(phone.value);
+	if (isValidLength && isNumeric) {
+		validationMessage.classList.add('d-none');
+		validationMessage.classList.add('valid');
+		validationMessage.classList.remove('invalid');
+	} else {
+		icon.style.color = '#ff2600';
+		validationMessage.classList.remove('d-none');
+		validationMessage.classList.add('invalid');
+		validationMessage.classList.remove('valid');
+	}
+}
+
 function validatePasswordsMatch(passwordId1, passwordId2, validationId, iconId) {
 	const password1 = document.getElementById(passwordId1);
 	const password2 = document.getElementById(passwordId2);
@@ -377,13 +395,11 @@ function validatePasswordsMatch(passwordId1, passwordId2, validationId, iconId) 
 	const icon = document.getElementById(iconId);
 
 	validationMessage.classList.remove('d-none');
-
 	if (password1.value === password2.value && password1.value.length >= 8) {
 		validationMessage.classList.add('d-none');
 		validationMessage.classList.add('valid');
 		validationMessage.classList.remove('invalid');
 	} else {
-		// icon.className = 'fa-solid fa-xmark';
 		icon.style.color = '#ff2600';
 		validationMessage.classList.remove('d-none');
 		validationMessage.classList.add('invalid');
