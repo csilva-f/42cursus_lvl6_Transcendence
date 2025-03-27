@@ -41,15 +41,15 @@ async function loginSuccess(data) {
 		window.history.pushState({}, "", "/");
 		locationHandler();
 		let uid = await UserInfo.getUserID();
-		initializeWebSocket(() => {
-			if (uid && window.ws_os && window.ws_os.readyState === WebSocket.OPEN) {
-			  //console.log("User ID:", UserInfo.getUserID());
-				window.ws_os.send(JSON.stringify({ user_id: uid }));
-			}
-			// requestOnlineUsers(function (onlineUsers) {
-			//     console.log("Test: Online users list (login):", onlineUsers);
-			// });
-		});
+		// initializeWebSocket(() => {
+		// 	if (uid && window.ws_os && window.ws_os.readyState === WebSocket.OPEN) {
+		// 	  //console.log("User ID:", UserInfo.getUserID());
+		// 		window.ws_os.send(JSON.stringify({ user_id: uid }));
+		// 	}
+		// 	// requestOnlineUsers(function (onlineUsers) {
+		// 	//     console.log("Test: Online users list (login):", onlineUsers);
+		// 	// });
+		// });
 	}
 	$("#customlogin-message").text("Login successful!");
 }
