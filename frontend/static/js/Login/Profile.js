@@ -172,12 +172,14 @@ function validateEmail(emailId, validationId, checkId) {
 	const validationMessage = document.getElementById(validationId);
 	const checkIcon = document.getElementById(checkId);
 
+	const hasSingleAtSymbol = (email.value.match(/@/g) || []).length === 1;
 	const hasAtSymbol = email.value.includes('@');
 	const hasValidDomain = email.value.includes('.') && email.value.indexOf('.') < email.value.length - 1;
 	const hasCharactersBeforeAt = email.value.indexOf('@') > 0;
 	const hasCharactersAfterDot = email.value.indexOf('.') > email.value.indexOf('@') + 1;
 
-	if (hasAtSymbol && hasValidDomain && hasCharactersBeforeAt && hasCharactersAfterDot) {
+	if (hasSingleAtSymbol && hasAtSymbol && hasValidDomain && hasCharactersBeforeAt && hasCharactersAfterDot) {
+		checkIcon.style.color = 'green';
 		validationMessage.classList.add('d-none');
 		validationMessage.classList.add('valid');
 		validationMessage.classList.remove('invalid');
