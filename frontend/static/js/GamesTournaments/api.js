@@ -524,7 +524,7 @@ async function enterTournament(gameID) {
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
-      resetModal();
+      // resetModal();
     },
   });
 }
