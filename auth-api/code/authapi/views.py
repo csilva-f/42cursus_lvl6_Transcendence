@@ -31,7 +31,7 @@ class PostRegisterViewSet(viewsets.ViewSet):
             data = backend_response.json()
             return Response(data, status=status.HTTP_201_CREATED)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -56,7 +56,7 @@ class PostAuthViewSet(viewsets.ViewSet):
             data = backend_response.json()
             return Response(data, status=status.HTTP_201_CREATED)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -80,7 +80,7 @@ class PostRefreshViewSet(viewsets.ViewSet):
             data = backend_response.json()
             return Response(data, status=status.HTTP_201_CREATED)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -105,7 +105,7 @@ class EnableOTPViewSet(viewsets.ViewSet):
             data = backend_response.json()
             return Response(data, status=status.HTTP_201_CREATED)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -127,7 +127,7 @@ class SendOTPViewSet(viewsets.ViewSet):
             data = backend_response.json()
             return Response(data, status=status.HTTP_201_CREATED)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -149,7 +149,7 @@ class GetOTPStatusViewSet(viewsets.ViewSet):
             data = backend_response.json()
             return Response(data, status=status.HTTP_201_CREATED)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -190,7 +190,7 @@ class VerifyEmailViewSet(viewsets.ViewSet):
             data = backend_response.json()
             return Response(data, status=status.HTTP_201_CREATED)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -206,7 +206,7 @@ class ResetPasswordViewSet(viewsets.ViewSet):
             data = backend_response.json()
             return Response(data, status=status.HTTP_201_CREATED)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -228,7 +228,7 @@ class RecoverPasswordViewSet(viewsets.ViewSet):
             data = backend_response.json()
             return Response(data, status=status.HTTP_201_CREATED)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -252,7 +252,7 @@ class ValidateTokenViewSet(viewsets.ViewSet):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -280,7 +280,7 @@ class GetProfileViewSet(viewsets.ViewSet):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -307,7 +307,7 @@ class UpdateProfileViewSet(viewsets.ViewSet):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -332,7 +332,7 @@ class ChangePasswordViewSet(viewsets.ViewSet):
             data = backend_response.json()
             return Response(data, status=status.HTTP_201_CREATED)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err.response.text)}"}, status=http_err.response.status_code)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:

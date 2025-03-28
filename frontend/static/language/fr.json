@@ -12,6 +12,7 @@
     "pt": "Portugais",
     "fr": "Français",
     "games": "Jeux",
+    "game": "Jeu", 
     "tournaments": "Tournois",
     "create": "Créer",
     "searching": "Chercher",
@@ -53,5 +54,8 @@
 	"mfa": "",
 	"resendCode": "",
 	"resetPassword": "",
-    "overall": "dans l'ensemble"
+    "overall": "dans l'ensemble",
+    "status": "Statut:",
+    "players": "Joueurs:",
+    "users": "Utilisateurs:"
 }

@@ -13,6 +13,16 @@ class User {
     isUpdating = false;
 
     constructor() { }
+    async openWebSocket() {
+      let uid = this.userID;
+      initializeWebSocket(() => {
+			if (uid && window.ws_os && window.ws_os.readyState === WebSocket.OPEN) {
+			  //console.log("User ID:", UserInfo.getUserID());
+				window.ws_os.send(JSON.stringify({ user_id: uid }));
+    			}
+        }
+    	);
+    }
 
     async refreshUser() {
         console.log("[refreshUser]")
@@ -88,6 +98,7 @@ class User {
                 },
                 success: async (res) => {
                     await this.insertUserExtension(res.user);
+                    await this.openWebSocket();
                     this.isUpdating = false;
                     resolve();
                 },

@@ -367,7 +367,7 @@ async function changeActive(location) {
 			window.intlTelInput(input, {
 				loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
 			});
-			createQrCode();
+			//createQrCode();
 			break;
 		default:
 			console.log("default");
@@ -406,6 +406,7 @@ const locationHandler = async () => {
       location = "401";
       route = routes[location];
     }
+  if (!location === "/pong") localStorage.removeItem("gameInfo");
   }
 
 	if (isProfile(location)) {
