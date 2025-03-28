@@ -7,6 +7,7 @@ const keyPressed = [];
 const maxSpeed = 10;
 const maxScore = 5;
 const ballVelocity = 5;
+const ballVellocityIncreaseRate = 1.08;
 const ballRadius = 15;
 const paddleWidth = 20;
 const paddleHeight = 150;
@@ -116,10 +117,14 @@ class Game  {
         this.objects[0].colissionEdge(this.canvas);
         this.objects[1].update();
         this.objects[1].colissionEdge(this.canvas);
-        this.objects[1].leftColissionBall(this.objects[0]);
+        let colision_left = this.objects[1].leftColissionBall(this.objects[0]);
         this.objects[2].update();
         this.objects[2].colissionEdge(this.canvas);
-        this.objects[2].rightColissionBall(this.objects[0]);
+        let colision_right = this.objects[2].rightColissionBall(this.objects[0]);
+        if(colision_left || colision_right){
+            console.log("Update ball again");
+            this.objects[0].update();
+        }
     }
     gameDraw() {
         this.objects.forEach(element => {
