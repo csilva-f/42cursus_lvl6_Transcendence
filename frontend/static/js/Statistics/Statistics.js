@@ -27,31 +27,31 @@ function StatsSelect(elementID) {
 	}
 }
 
-function createChart(userStats, option) {
+async function createChart(userStats, option) {
+	const userLang = localStorage.getItem("language") || "en";
+  	const langData = await getLanguageData(userLang);
 	let xValues = [];
 	let yValues = [];
 	let victories = 0;
 	let losses = 0;
-	console.log(userStats)
 	switch (option) {
 		case 1:
-			xValues = ["Matches Victories", "Matches Lost"];
+			xValues = [langData.matchesWon, langData.matchesLost];
 			victories = parseInt(userStats.GameVictories) + parseInt(userStats.TournamentVictories);
 			losses = parseInt(userStats.GameLosses) + parseInt(userStats.TournamentLosses);
 			break;
 		case 2:
-			xValues = ["Games Victories", "Games Lost"];
+			xValues = [langData.gamesWon, langData.gamesLost];
 			victories = parseInt(userStats.GameVictories);
 			losses = parseInt(userStats.GameLosses);
 			break;
 		case 3:
-			xValues = ["Tournaments Victories", "Tournaments Lost"];
+			xValues = [langData.tournamentsWon, langData.tournamentsLost];
 			victories = parseInt(userStats.TournamentVictories);
 			losses = parseInt(userStats.TournamentLosses);
 			break;
 	}
 	yValues = [victories, losses];
-	console.log(yValues)
 	const barColors = ["#007f4ecc", "#e12729cc"];
 	if (myChart)
         myChart.destroy();
@@ -72,15 +72,15 @@ function createChart(userStats, option) {
 	myChart2 = new Chart("myChart2", {
 		type: "bar",
 		data: {
-			labels: ["Matches"],
+			labels: [langData.matches],
 			datasets: [
 				{
-					label: "Victories",
+					label: langData.victories,
 					backgroundColor: barColors[0],
 					data: [yValues[0]]
 				},
 				{
-					label: "Losses",
+					label: langData.losses,
 					backgroundColor: barColors[1],
 					data: [yValues[1]]
 				}

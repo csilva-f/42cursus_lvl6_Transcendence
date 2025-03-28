@@ -23,7 +23,6 @@ async function fetchMatchHistory() {
 				success: function (res) {
 					const divElement = document.getElementById("historyContent");
 					divElement.innerHTML = "";
-					console.log(res);
 					res.games.forEach((element) => {
 						const newCard = document.createElement("div");
 						newCard.innerHTML = data;
@@ -118,7 +117,6 @@ async function fetchTopUsers() {
 				success: function (res) {
 					const divElement = document.getElementById("topUsersContent");
 					divElement.innerHTML = "";
-					console.log("topusers res: ", res);
 				 	res.users.forEach((element) => {
 						const newCard = document.createElement("div");
 						newCard.classList.add("col-4", "d-flex", "justify-content-center", "align-items-center");
@@ -174,10 +172,9 @@ async function finishProfile() {
 		data: JSON.stringify(userData),
 		success: async function (res) {
 			$("#nickModal").modal("hide");
-			const userData = await checkUserExtension();
 			await UserInfo.refreshUser();
 			await activateTopBar();
-			//showSuccessToast(langData, langData.gameEntered);
+			fetchTopUsers();
 		},
 		error: function (xhr, status, error) {
 			//showErrorToast(APIurl, error, langData);

@@ -89,51 +89,41 @@
 					<div class="p-2 w-100 d-flex justify-content-end align-content-end">
 						<div class="dropdown-center">
 							<button class="btn btn-secondary justify-content-center me-5 mt-2" type="button"
-								data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" style="
-                                        background-color: white;
-                                        color: var(--primary);
-                                        border: none;
-                                        height: 3rem;
-                                        width: 3rem;
-                                    ">
+								data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
+								style="background-color: white;color: var(--primary);border: none;height: 3rem;width: 3rem;">
 								<i class="fa-solid fa-bell fa-xl" id="notificationIcon"></i>
 								<span class="d-none position-absolute me-5 mt-2 top-0 start-50 translate-middle badge"
 									style="background-color: var(--primary)" id="notificationCount">
 								</span>
 							</button>
-							<div class="dropdown-menu overflow-y-auto overflow-x-hidden" id="notificationDropdownMenu"
-								style="
-							max-width: 21rem;
-							min-width: 21rem;
-							height: 13rem;
-							max-height: 13rem;
-						">
-								<p
-									class="h5 d-flex justify-content-center align-items-center align-content-center fw-bold mt-2">
-									No notifications
-								</p>
+							<div class="dropdown-menu overflow-y-auto overflow-x-hidden"
+								style="max-width: 21rem;min-width: 21rem;height: 13rem;max-height: 13rem;">
+								<div id="notificationDropdownMenu"></div>
+								<p class="h5 d-flex justify-content-center align-items-center align-content-center fw-bold mt-2"
+									id="noNotificationP" data-i18n="noNotifications"></p>
 							</div>
 						</div>
 						<ul class="list-unstyled">
-							<li class="d-flex justify-content-end my-1" style="font-weight: bold; font-size: 1.2rem" id="personNickname">
+							<li class="d-flex justify-content-end my-1" style="font-weight: bold; font-size: 1.2rem"
+								id="personNickname">
 							</li>
 							<li>
-								<div class="progress mt-3" role="progressbar" aria-valuemax="100" style="height: 1.2rem; width: 10rem; background-color: white; position: relative;">
-									<div class="progress-bar" style="background-color: var(--primary);" id="personLvlProgress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+								<div class="progress mt-3" role="progressbar" aria-valuemax="100"
+									style="height: 1.2rem; width: 10rem; background-color: white; position: relative;">
+									<div class="progress-bar" style="background-color: var(--primary);"
+										id="personLvlProgress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+									</div>
 								</div>
 							</li>
 						</ul>
-						
+
 					</div>
 					<!-- End Notification and Info -->
 					<!-- Profile Picture -->
 					<div class="ms-1 justify-content-end align-content-end">
 						<a href="/profile" id="profilePicElement" onclick="goToProfile(null)">
-							<img src="/static/img/pfp1.jpeg" style="
-                                        object-fit: cover;
-                                        max-width: 5rem;
-                                        min-width: 5rem;
-                                    " class="img-fluid w-100 rounded-3" />
+							<img src="/static/img/pfp1.jpeg" style="object-fit: cover;max-width: 5rem;min-width: 5rem;"
+								class="img-fluid w-100 rounded-3" />
 						</a>
 					</div>
 					<!-- End Profile Picture -->
@@ -187,7 +177,7 @@
 							</a>
 						</li>
 					</ul>
-					<div class="btn-group dropup-center dropup mb-3" role="group">
+					<div class="btn-group dropup-center mb-3" role="group">
 						<button type="button" class="btn fa-solid fa-language fa-2xl noBorder" style="color: white"
 							data-bs-toggle="dropdown" aria-expanded="false"></button>
 						<ul class="dropdown-menu">
@@ -199,6 +189,12 @@
 							</li>
 							<li>
 								<i class="dropdown-item" onclick="changeLanguage('fr')" data-i18n="fr"></i>
+							</li>
+							<li>
+								<i class="dropdown-item" onclick="changeLanguage('es')" data-i18n="es"></i>
+							</li>
+							<li>
+								<i class="dropdown-item" onclick="changeLanguage('it')" data-i18n="it"></i>
 							</li>
 						</ul>
 					</div>
@@ -226,9 +222,7 @@
 					<div class="container-fluid">
 						<div class="row">
 							<div class="col-12 d-flex justify-content-center align-items-center">
-								<h5 class="h6 m-0 fw-bold text-center" style="color: white">
-									Confirm log out?
-								</h5>
+								<h5 class="h6 m-0 fw-bold text-center" style="color: white" data-i18n="confirmLogout"></h5>
 							</div>
 						</div>
 					</div>

@@ -11,7 +11,6 @@ const botImages = [
 ];
 
 function showErrorToast(APIurl, error, langData) {
-    console.log("showErrorToast()");
     fetch("/templates/Components/ToastError.html")
         .then((response) => {
             if (!response.ok) {

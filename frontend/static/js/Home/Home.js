@@ -30,3 +30,20 @@ function insertTopPlayerInfo(newCard, element) {
     newCard.querySelector('#topPlayerNickname').textContent = element.nickname;
     newCard.querySelector('#topPlayerLvl').textContent = element.level;
 }
+
+function searchFriend() {
+    const inputHomeSearchFriends = document.getElementById('inputHomeSearchFriends');
+    var filter = inputHomeSearchFriends.value.toUpperCase();
+    const usersCards = document.querySelectorAll("#friendsContent");
+    usersCards.forEach(card => {
+        var usersNick = card.querySelector('h4');
+        if (usersNick) {
+            let txtValue = usersNick.textContent || usersNick.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
+        }
+    });
+}

@@ -514,7 +514,6 @@ async function fetchProfileInfo(userID) {
 	const userLang = localStorage.getItem("language") || "en";
 	const langData = await getLanguageData(userLang);
 	const accessToken = await JWT.getAccess();
-	console.log("fetchProfileInfo, accessToken: ", accessToken)
 	let APIurl = `/api/get-userextensions/`
 	if (userID != null)
 		APIurl = `/api/get-userextensions/?userID=${userID}`

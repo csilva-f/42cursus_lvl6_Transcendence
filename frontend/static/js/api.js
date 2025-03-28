@@ -22,9 +22,7 @@ async function fetchUserNotificationGame() {
           Authorization: `Bearer ${accessToken}`,
         },
         success: function (res) {
-          const notificationDropdownMenu = document.getElementById(
-            "notificationDropdownMenu"
-          );
+          const notificationDropdownMenu = document.getElementById("notificationDropdownMenu");
           notificationDropdownMenu.innerHTML = "";
           const currentNotifications = [];
           res.requests.forEach((element) => {
@@ -37,12 +35,14 @@ async function fetchUserNotificationGame() {
             }
           });
           const notificationCount =
-                document.getElementById("notificationCount");
-              if (currentNotifications.length > 0) {
-                notificationCount.classList.remove("d-none");
-                notificationCount.textContent = currentNotifications.length;
-              } else {
-                notificationCount.classList.add("d-none");
+          document.getElementById("notificationCount");
+          if (currentNotifications.length > 0) {
+              notificationCount.classList.remove("d-none");
+              notificationCount.textContent = currentNotifications.length;
+              document.getElementById("noNotificationP").classList.add("d-none");
+            } else {
+              notificationCount.classList.add("d-none");
+              document.getElementById("noNotificationP").classList.remove("d-none");
               }
               const hasNewNotifications =
                 currentNotifications.length > 0 &&
@@ -91,7 +91,8 @@ async function respondFriendRequest(friendID, statusID) {
     success: async function (res) {
       if (statusID == 2) {
         showSuccessToast(langData, langData.friendAccepted);
-        await fetchHomeFriends();
+        if (window.location.pathname == "/" )
+          await fetchHomeFriends();
       }
       else if (statusID == 3)
         showSuccessToast(langData, langData.friendDennied);

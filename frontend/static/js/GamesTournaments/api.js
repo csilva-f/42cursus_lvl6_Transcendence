@@ -13,8 +13,6 @@ async function fetchGames(statusID) {
     reloadIcon.classList.remove("rotate");
   }, 250);
   const accessToken = await JWT.getAccess();
-  console.log("accessToken", accessToken)
-  console.log("statusID: ", statusID)
   fetch("/templates/Components/CardGame.html")
     .then((response) => {
       if (!response.ok) {
@@ -36,7 +34,6 @@ async function fetchGames(statusID) {
           const divElement = document.getElementById("gamesContent");
           divElement.innerHTML = "";
           allGames = res.games;
-          console.log("Games", allGames)
           res.games.forEach((element) => {
             if (element.tournamentID == null) {
               if (element.isInvitation == false) {
@@ -70,7 +67,6 @@ async function postGame() {
     user1ID: 1,
     islocal: false,
   };
-  console.log("gameData: ", gameData);
   $.ajax({
     type: "POST",
     url: APIurl,
@@ -101,7 +97,6 @@ async function postLocalGame() {
     P2: document.getElementById("P2NickInput").value,
     P2Color: document.getElementById("P2ColorInput").value,
   };
-  console.log("gameData: ", gameData);
   showSuccessToast(langData, langData.gameEntered);
   resetModal();
   $("#createModal").modal("hide");
@@ -120,9 +115,7 @@ async function postRemoteGame() {
   let gameData = {
     islocal: false,
   };
-  console.log("gameData: ", gameData);
   const accessToken = await JWT.getAccess();
-  console.log("accessToken", accessToken)
   $.ajax({
     type: "POST",
     url: APIurl,
@@ -215,10 +208,7 @@ async function enterGame(gameID) {
     isJoin: true,
   };
 
-  console.log("gameData: ", gameData);
   const accessToken = await JWT.getAccess();
-  console.log("accessToken", accessToken)
-
   $.ajax({
     type: "POST",
     url: APIurl,
@@ -345,8 +335,6 @@ async function fetchTournaments(statusID) {
         success: function (res) {
           const divElement = document.getElementById("gamesContent");
           divElement.innerHTML = "";
-          console.log(res);
-          console.log(allGames);
           res.tournaments.forEach((element) => {
             const newCard = document.createElement("div");
             newCard.innerHTML = data;
@@ -378,7 +366,6 @@ async function postTournament() {
     endDate: document.getElementById("endDateInput").value,
     createdByUser: 1,
   };
-  console.log("tournamentData: ", tournamentData);
   $.ajax({
     type: "POST",
     url: APIurl,
@@ -429,7 +416,6 @@ async function postLocalTournament() {
       data: JSON.stringify(tournamentCreationData),
       success: function (res) {
         showSuccessToast(langData, langData.tournamentcreated);
-        console.log("res.tournament_id", res.tournament_id);
         resolve(res.tournament_id); // Resolve the promise with the tournament ID
       },
       error: function (xhr, status, error) {
