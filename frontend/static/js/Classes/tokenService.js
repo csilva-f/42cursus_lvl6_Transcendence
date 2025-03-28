@@ -46,11 +46,7 @@ class tokenService {
   async getAccess() {
     let cookie = this.checkCookie(this.cookieAccessName);
     let cookieRefresh = this.checkCookie(this.cookieRefreshName);
-    console.log("tokenService: ", cookie);
-    if (cookie && this.token.access)
-    {
-      return this.token.access;
-    }
+    if (cookie && this.token.access) return this.token.access;
     if (!this.isUpdating && cookieRefresh) {
       this.isUpdating = true;
       try{

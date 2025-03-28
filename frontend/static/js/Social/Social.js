@@ -5,14 +5,23 @@ function GlobalFriendsSelect(elementID) {
         otherElement.classList.remove('iconActive');
         disableIcon(otherElement);
         activateIcon(element);
+        document.getElementById('reloadIconLi').setAttribute("data-id", 1);
         fetchUsers();
     } else if (elementID == "loadFriendUsers") {
         const otherElement = document.getElementById('loadGlobalUsers');
         otherElement.classList.remove('iconActive');
         disableIcon(otherElement);
         activateIcon(element);
+        document.getElementById('reloadIconLi').setAttribute("data-id", 2);
         fetchFriends();
     }
+}
+
+function reloadSocialInformation(ID) {
+    if (ID == '1')
+        fetchUsers();
+    else
+        fetchFriends();
 }
 
 function insertGlobalUserInfo(newCard, user, users_on) {

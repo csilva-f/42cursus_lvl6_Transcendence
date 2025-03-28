@@ -24,7 +24,6 @@ async function fetchUsers() {
           Authorization: `Bearer ${accessToken}`,
         },
         success: function (res) {
-          console.log("res: ", res)
           if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
             console.warn("WebSocket not found or closed. Reinitializing...");
             // initializeWebSocket(() => {
