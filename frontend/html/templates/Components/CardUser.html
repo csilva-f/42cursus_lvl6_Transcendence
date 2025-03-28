@@ -12,27 +12,8 @@
                     <p class="h5 mb-0 ms-1" id="userLvl"></p>
                 </div>
                 <div class="d-flex align-items-center">
+                    <span class="status-dot" id="userOnStatus"></span> <!-- Bolinha de status -->
                     <h4 class="mb-0"><strong id="userNick"></strong></h4>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex justify-content-center align-items-center ms-4"
-        style="width: 1rem; min-width: 1rem; height: 6rem;">
-            <p class="h1 mb-0">|</p>
-        </div>
-        <div class="d-flex" style="width: 10rem; min-width: 10rem; height: 6rem;">
-            <div class="w-100 h-100 d-flex flex-column justify-content-center ms-2">
-                <div class="d-flex align-items-center">
-                    <i class="fa-solid fa-medal fa-lg"></i>
-                    <div class="ms-2">
-                        <p class="h4 mb-0" style="width: 40px; text-align: left;" id="userGamesWon"></p>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center">
-                    <i class="fa-solid fa-trophy fa-lg"></i>
-                    <div class="ms-1">
-                        <p class="ms-1 h4 mb-0" style="width: 40px; text-align: left;" id="userTournamentsWon"></p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -45,12 +26,8 @@
                             <i class="fa-solid fa-user fa-xl" style="color: black" ></i>
                         </li>
                         <li class="pop-hover-s ms-4 menuLi nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-                            style="width: 3rem; cursor: pointer; background-color: white;" id="friendLi" onclick="friendshipPlayer(this.dataset.id)">
-                            <i class="fa-solid fa-user-plus fa-xl" style="color: black"></i>
-                        </li>
-                        <li class="pop-hover-s ms-4 menuLi nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-                            style="width: 3rem; cursor: pointer; background-color: white;" id="inviteLi" onclick="invitePlayer(this.dataset.id)">
-                            <i class="fa-solid fa-table-tennis-paddle-ball fa-xl" style="color: black"></i>
+                            style="width: 3rem; cursor: pointer; background-color: white;" id="friendLi" onclick="friendshipPlayer(this.dataset.id, this.dataset.type)">
+                            <i class="fa-solid fa-user-plus fa-xl" style="color: black" id="friendLiIcon"></i>
                         </li>
                     </ul>
                 </div>

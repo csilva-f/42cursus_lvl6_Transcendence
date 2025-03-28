@@ -6,4 +6,4 @@ class UserIdSerializer(serializers.Serializer):
     userId = serializers.IntegerField()
 
 class OTPSerializer(serializers.Serializer):
-    otp = serializers.CharField(max_length=6)
+    code = serializers.CharField(max_length=6)

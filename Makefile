@@ -2,8 +2,9 @@ NAME	= ft_transcendence
 BACKEND_DB_CONTAINER_NAME=backend-db
 AUTH_DB_CONTAINER_NAME=auth-db
 EMAIL_DB_CONTAINER_NAME = email-db
-ROOT_TOKEN_FILE = ./secrets/VAULT_ROOT_TOKEN.txt
 all: secrets build up migrate
+DATA_DIR = $(HOME)/ft_transcendence_data
+ROOT_TOKEN_FILE = ./secrets/VAULT_ROOT_TOKEN.txt
 
 secrets:
 	@echo "Creating secrets folder..."
@@ -18,7 +19,18 @@ build:
 	@echo "Building Docker Compose setup..."
 	@docker compose -p $(NAME) build
 
-up:
+directories:
+	@echo "Creating directories..."
+	@mkdir -p $(DATA_DIR)
+	@mkdir -p ./secrets
+	@mkdir -p $(DATA_DIR)/auth-db/data
+	@mkdir -p $(DATA_DIR)/backend-db/data
+	@mkdir -p $(DATA_DIR)/vault-db/data
+	@mkdir -p $(DATA_DIR)/email-db/data
+	@mkdir -p ./vault/data
+
+up: directories
+	@docker compose down
 	@echo "" > $(ROOT_TOKEN_FILE)
 	@echo "Running Docker Compose setup..."
 	@docker compose up -d auth-db vault-db backend-db email-db
@@ -40,7 +52,7 @@ up:
 		sleep 1; \
 	done
 	@echo "$(ROOT_TOKEN_FILE) contains a value!"
-	@docker compose up -d auth backend email auth-api backend-api channels redis
+	@docker compose up -d email auth-api auth backend backend-api channels redis
 	sleep 5
 	@docker compose up -d nginx
 # Stop the Docker Compose setup
@@ -62,6 +74,8 @@ migrate:
 	@docker compose exec -it email python manage.py makemigrations
 	@docker compose exec -it email python manage.py migrate
 	@docker compose restart auth backend email
+	@sleep 2
+	@docker compose up -d nginx
 
 clean:down
 	@echo "Cleaning up stopped containers and networks..."
@@ -74,19 +88,20 @@ fclean: clean
 
 
 fulldestroy: fclean
-	@rm -rf "./auth-db/data" -R
-	@rm -rf "./backend-db/data" -R
-	@rm -rf "./vault-db/data" -R
-	@rm -rf "./email-db/data" -R
+	@rm -rf "$(DATA_DIR)/auth-db/data" -R
+	@rm -rf "$(DATA_DIR)/backend-db/data" -R
+	@rm -rf "$(DATA_DIR)/vault-db/data" -R
+	@rm -rf "$(DATA_DIR)/email-db/data" -R
 	@rm -rf "./vault/data" -R
 	@echo "" > $(ROOT_TOKEN_FILE)
 
-destroy: down
-	@rm -rf "./auth-db/data" -R
-	@rm -rf "./backend-db/data" -R
-	@rm -rf "./vault-db/data" -R
-	@rm -rf "./email-db/data" -R
+db-clear:
+	@rm -rf "$(DATA_DIR)/auth-db/data" -R
+	@rm -rf "$(DATA_DIR)/backend-db/data" -R
+	@rm -rf "$(DATA_DIR)/vault-db/data" -R
+	@rm -rf "$(DATA_DIR)/email-db/data" -R
 	@rm -rf "./vault/data" -R
 	@echo "" > $(ROOT_TOKEN_FILE)
+
 
 re: fclean all

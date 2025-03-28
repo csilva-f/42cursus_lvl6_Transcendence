@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 from os import getenv
 from pathlib import Path
-from .hvac import get_database_credentials
+#from .hvac import get_database_credentials
 #from auth.code import two_factor
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -77,14 +77,12 @@ WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
 
 
 # Database
-DB_USERNAME, DB_PASSWORD = get_database_credentials()
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'cuca_db_engine',
         'NAME': getenv('POSTGRES_DB', ''),  # Default value if not set
-        'USER': DB_USERNAME,
-        'PASSWORD': DB_PASSWORD,
+        'USER': 'DB_USERNAME',
+        'PASSWORD': 'DB_PASSWORD',
         'HOST': getenv('DB_HOST', ''),  # Replace with your database host
         'PORT': getenv('DB_PORT', ''),     # Replace with your database port
     }

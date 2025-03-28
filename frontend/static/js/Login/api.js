@@ -1,3 +1,5 @@
+window.ws_os = null;
+
 async function sendLogin() {
 	// Login function
 	const email = $("#loginEmail").val();
@@ -10,30 +12,101 @@ async function sendLogin() {
 		headers: { Accept: "application/json" },
 		data: JSON.stringify({ email, password }),
 		success: async function (data) {
-			jwtToken = data.access; // Store the JWT token
-			const opt_status = await OTP_check_enable(jwtToken);
-			console.log(opt_status);
-			if (opt_status == true) {
-				OTP_send_email(jwtToken);
-				window.location.href = "/mfa";
-			} else {
-				if (jwtToken) {
-					localStorage.setItem("jwt", jwtToken);
-					console.log(data);
-					JWT.setToken(data);
-					console.log("Access: ", JWT.getAccess());
-					await checkUserExtension();
-				}
-				window.history.pushState({}, "", "/");
-				locationHandler("content");
-			}
-			$("#login-message").text("Login successful!");
+			await loginSuccess(data);
 		},
 		error: function (xhr) {
-			const data = xhr.responseJSON;
-			$("#login-message").text(data.error || "Login failed.");
+			const data = JSON.parse(xhr.responseJSON);
+			$("#customLogin-message").text(data.detail || "Login failed.");
 		},
 	});
+}
+
+async function loginSuccess(data) {
+	jwtToken = data.access; // Store the JWT token
+	const opt_status = await OTP_check_enable(jwtToken);
+	console.log(opt_status);
+
+	if (opt_status == true) {
+		//OTP_send_email(jwtToken);
+		await JWT.setTempToken(data);
+		window.history.pushState({}, "", "/mfa");
+		locationHandler("content");
+	} else {
+		if (jwtToken) {
+  		localStorage.setItem("jwt", jwtToken);
+  		await JWT.setToken(data);
+  		console.log("Access: ", await JWT.getAccess());
+		}
+		await UserInfo.refreshUser();
+		window.history.pushState({}, "", "/");
+		locationHandler();
+		let uid = await UserInfo.getUserID();
+		// initializeWebSocket(() => {
+		// 	if (uid && window.ws_os && window.ws_os.readyState === WebSocket.OPEN) {
+		// 	  //console.log("User ID:", UserInfo.getUserID());
+		// 		window.ws_os.send(JSON.stringify({ user_id: uid }));
+		// 	}
+		// 	// requestOnlineUsers(function (onlineUsers) {
+		// 	//     console.log("Test: Online users list (login):", onlineUsers);
+		// 	// });
+		// });
+	}
+	$("#customlogin-message").text("Login successful!");
+}
+
+
+
+function initializeWebSocket(callback = null) {
+    if (window.ws_os && window.ws_os.readyState === WebSocket.OPEN) {
+        console.log("WebSocket already open (no need for recreation).");
+        if (callback) callback();
+        return;
+    }
+
+    console.log("Initializing WebSocket...");
+    const wsUrl = `wss://${window.location.host}/onlineStatus/`;
+    window.ws_os = new WebSocket(wsUrl);
+
+    window.ws_os.onopen = function () {
+        console.log("WebSocket: user connection established successfully.");
+        if (callback) callback();
+    };
+
+	window.ws_os.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        if (data.online_users) {
+            console.log("Online users list:", data.online_users);
+            if (window.onlineUsersCallback) {
+                window.onlineUsersCallback(data.online_users);
+            }
+        } else {
+            console.log("Message received:", e.data);
+        }
+    };
+
+    window.ws_os.onerror = function (error) {
+        console.error("WebSocket error:", error);
+    };
+
+    window.ws_os.onclose = function (event) {
+        console.log("WebSocket connection closed:", event);
+    };
+}
+
+//document.addEventListener("DOMContentLoaded", function () {
+
+  //initializeWebSocket();
+  //});
+
+function requestOnlineUsers(callback) {
+	console.log(window.ws_os);
+    if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
+        console.error("WebSocket is not open. Cannot fetch online users.");
+        return;
+    }
+    window.ws_os.send(JSON.stringify({ action: "queryOnline" }));
+
+	window.onlineUsersCallback = callback;
 }
 
 async function checkUserExtension() {
@@ -75,7 +148,7 @@ async function forgotPwd() {
 			//element.classList.add("valid-feedback");
 		},
 		error: function (xhr) {
-			const data = xhr.responseJSON;
+			const data = JSON.parse(xhr.responseJSON);
 			$("#forgotPwd-message").text(data.error || "forgotPwd failed.");
 		},
 	});
@@ -91,7 +164,7 @@ async function sendSignup(form) {
 	const retyped = $("#signupPassword2").val();
 	const first_name = $("#signupFirstname").val();
 	const last_name = $("#signupLastname").val();
-	const phone = $("#signupPhone").val();
+	const phone_number = $("#signupPhone").val();
 	const apiUrl = "/authapi/register/";
 	$.ajax({
 		type: "POST",
@@ -103,7 +176,7 @@ async function sendSignup(form) {
 			password,
 			first_name,
 			last_name,
-			phone,
+			phone_number,
 		}),
 		success: function (data) {
 			$("#signup-message").text("Signup successful! Validate your email");
@@ -111,7 +184,7 @@ async function sendSignup(form) {
 			return true;
 		},
 		error: function (xhr, error) {
-			const data = xhr.responseJSON;
+			const data = JSON.parse(xhr.responseJSON);
 			const errorMsg = data.error.match(/"(.*?)"/);
 			$("#signup-message").text(data.error || "register failed.");
 
@@ -164,11 +237,11 @@ async function oauthLogin() {
 				console.log(url);
 				window.location.href = url;
 			}
-			$("#login-message").text("Login successful!");
+			$("#customlogin-message").text("Login successful!");
 		},
 		error: function (xhr) {
-			const data = xhr.responseJSON;
-			$("#login-message").text(data.error || "Login failed.");
+			const data = JSON.parse(xhr.responseJSON);
+			$("#customLogin-message").text(data["error_description"]  || "Login failed.");
 		},
 	});
 }
@@ -189,12 +262,13 @@ async function oauthCallback() {
 			success: function (data) {
 				console.log(data);
 				sendOAuthLogin(data);
-				$("#login-message").text("Login successful!");
+				$("#customlogin-message").text("Login successful!");
 				//window.location.href = '/';
 			},
 			error: function (xhr) {
-				const data = xhr.responseJSON;
-				$("#login-message").text(data.error || "Login failed.");
+				const data = JSON.parse(xhr.responseJSON);
+				console.log(data["error_description"]);
+				$("#customlogin-message").text(data["error_description"] || "Login failed.");
 			},
 		});
 	}
@@ -221,11 +295,11 @@ async function sendOAuthLogin(userdata) {
 			if (jwtToken) {
 				localStorage.setItem("jwt", jwtToken);
 			}
-			$("#login-message").text("Login successful!");
+			$("#customlogin-message").text("Login successful!");
 		},
 		error: function (xhr) {
-			const data = xhr.responseJSON;
-			$("#login-message").text(data.error || "Login failed.");
+			const data = JSON.parse(xhr.responseJSON);
+			$("#customlogin-message").text(data.error || "Login failed.");
 		},
 	});
 }
@@ -242,7 +316,7 @@ async function OTP_check_enable(jwtToken) {
 			data: JSON.stringify({ jwtToken }),
 			success: function (data) {
 				console.log(data);
-				var status = data.otp_enabled;
+				var status = data.is_2fa_enabled;
 				if (status == 1) {
 					resolve(true);
 				} else {
@@ -250,8 +324,8 @@ async function OTP_check_enable(jwtToken) {
 				}
 			},
 			error: function (xhr) {
-				const data = xhr.responseJSON;
-				$("#login-message").text(data.error || "Login failed.");
+				const data = JSON.parse(xhr.responseJSON);
+				$("#customlogin-message").text(data.error || "Login failed.");
 				reject(data.error || "Login failed.");
 			},
 		});
@@ -270,12 +344,172 @@ async function OTP_send_email(jwtToken) {
 			console.log("sucess");
 		},
 		error: function (xhr) {
-			const data = xhr.responseJSON;
-			$("#login-message").text(data.error || "Login failed.");
+			const data = JSON.parse(xhr.responseJSON);
+			$("#customlogin-message").text(data.error || "Login failed.");
 		},
 	});
 }
 
+function handleOTPInput(field) {
+	const currentId = parseInt(field.id.replace('otp', ''));
+	const nextField = document.getElementById(`otp${currentId + 1}`);
+	const prevField = document.getElementById(`otp${currentId - 1}`);
+
+  if (field.value && nextField) nextField.focus();
+
+  field.addEventListener("keydown", function (e) {
+
+    if (e.key === "Backspace" && !field.value && prevField) prevField.focus();
+  });
+
+  field.addEventListener("paste", function (e) {
+    e.preventDefault();
+    const pasteData = e.clipboardData.getData("text").split("");
+    let currentId = parseInt(field.id.replace("otp", ""));
+
+    pasteData.forEach((char) => {
+      const targetField = document.getElementById(`otp${currentId}`);
+      if (targetField) {
+        targetField.value = char;
+        currentId++;
+      }
+    });
+
+    const lastField = document.getElementById(`otp${currentId - 1}`);
+    if (lastField) lastField.focus();
+  });
+}
+
+
+
+
+async function verifyAccount() {
+	let code = '';
+	for (let i = 1; i <= 6; i++) {
+		const field = document.getElementById(`otp${i}`);
+		if (field)
+			code += field.value;
+	}
+	console.log('Code:', code);
+	const apiUrl = "/authapi";
+	let token = await JWT.getTempToken();
+	let access = await JWT.getTempAccess();
+	console.log('Token:', token);
+	console.log('Access:', access);
+	$.ajax({
+    type: "POST",
+    url: `${apiUrl}/otp-verify/`,
+    contentType: "application/json",
+    headers: { Accept: "application/json",
+              Authorization: `Bearer ${access}` },
+    data: JSON.stringify({ code }),
+    success: async function (data) {
+      console.log(data);
+      JWT.setToken(token);
+      await UserInfo.refreshUser();
+      let uid = await UserInfo.getUserID();
+     	initializeWebSocket(() => {
+      		if (uid && window.ws_os && window.ws_os.readyState === WebSocket.OPEN) {
+     			window.ws_os.send(JSON.stringify({ user_id: uid }));
+      		}
+      		// requestOnlineUsers(function (onlineUsers) {
+      		//     console.log("Test: Online users list (login):", onlineUsers);
+      		// });
+     	});
+      window.history.pushState({}, "", "/");
+      locationHandler("content");
+    },
+    error: function (xhr) {
+      const data = JSON.parse(xhr.responseJSON);
+      $("#mfa-message").text(data.error || "Login failed.");
+      for (let i = 1; i <= 6; i++) {
+  		const field = document.getElementById(`otp${i}`);
+  		document.getElementById(`otp${i}`).value = '';
+  	}
+    },
+  });
+
+}
+
+// Password validate
+function passwordVisibility(passwordFieldId, toggleIconId) {
+	const passwordInput = document.getElementById(passwordFieldId);
+	const passwordIcon = document.getElementById(toggleIconId).querySelector('i');
+
+	if (passwordInput.type === "password") {
+		passwordInput.type = "text";
+		passwordIcon.classList.remove("fa-eye-slash");
+		passwordIcon.classList.add("fa-eye");
+	} else {
+		passwordInput.type = "password";
+		passwordIcon.classList.remove("fa-eye");
+		passwordIcon.classList.add("fa-eye-slash");
+	}
+}
+
+function validateNewPassword(passwordId, validationId, iconId, confirmPassId) {
+	const password = document.getElementById(passwordId);
+	const validationMessage = document.getElementById(validationId);
+	const icon = document.getElementById(iconId);
+	const confirmPass = document.getElementById(confirmPassId);
+
+	confirmPass.value = '';
+	validationMessage.classList.remove('d-none');
+	if (password.value.length >= 8) {
+		validationMessage.classList.add('d-none');
+	} else {
+		icon.className = 'fa-solid fa-xmark';
+		icon.style.color = '#ff2600';
+	}
+}
+
+function validatePasswordsMatch(passwordId1, passwordId2, validationId, iconId) {
+	const password1 = document.getElementById(passwordId1);
+	const password2 = document.getElementById(passwordId2);
+	const validationMessage = document.getElementById(validationId);
+	const icon = document.getElementById(iconId);
+
+	validationMessage.classList.remove('d-none');
+
+	if (password1.value === password2.value && password1.value.length >= 8) {
+		validationMessage.classList.add('d-none');
+	} else {
+		icon.className = 'fa-solid fa-xmark';
+		icon.style.color = '#ff2600';
+	}
+}
+
+// change icon gender
+function updateIcon() {
+	const genderSelect = document.getElementById('gender');
+	const icon = document.getElementById('icon');
+
+	switch (genderSelect.value) {
+		case 'male':
+			icon.className = 'fa-solid fa-mars';
+			break;
+		case 'female':
+			icon.className = 'fa-solid fa-venus';
+			break;
+		case 'other':
+			icon.className = 'fa-solid fa-neuter';
+			break;
+		default:
+			icon.className = '';
+	}
+}
+
+function toggleSwitch(checkbox) {
+	const switchLabel = checkbox;
+	console.log(switchLabel);
+	if (checkbox.checked) {
+		switchLabel.style.backgroundColor = 'green';
+		switchLabel.style.borderColor = 'green';
+	} else {
+		switchLabel.style.backgroundColor = '';
+		switchLabel.style.borderColor = '';
+	}
+}
 async function EnableOTPViewSet(status) {
 	jwtToken = await JWT.getAccess();
 	console.log("JWT: ", jwtToken);
@@ -320,14 +554,123 @@ async function fetchProfileInfo(userID) {
 		},
 		success: function (res) {
 			console.log(res);
-			insertProfileInfo(res.users[0]), userID;
+
+			if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
+				console.warn("WebSocket not found or closed. Reinitializing...");
+				initializeWebSocket(() => {
+					requestOnlineUsers(function (onlineUsers) {
+						console.log("Updated online users list:", onlineUsers);
+						insertProfileInfo(res.users[0], onlineUsers);
+					});
+				});
+			} else {
+				requestOnlineUsers(function (onlineUsers) {
+					console.log("Updated online users list:", onlineUsers);
+					insertProfileInfo(res.users[0], onlineUsers);
+				});
+			}
 			updateContent(langData);
 		},
 		error: function (xhr, status, error) {
-			console.error("Error Thrown:", error);
+			console.error("Error thrown:", error);
 			showErrorToast(APIurl, error, langData);
 		},
 	});
+}
+
+// async function getUserExtensions(userID, accessToken) {
+//     const APIurl = userID ? `/api/get-userextensions/?userID=${userID}` : `/api/get-userextensions/`;
+//     try {
+//         const response = await $.ajax({
+//             type: "GET",
+//             url: APIurl,
+//             contentType: "application/json",
+//             headers: { Authorization: `Bearer ${accessToken}` },
+//         });
+//         console.log("Data get-userextension:", response);
+//         return response.users[0];
+//     } catch (error) {
+//         console.error("Error GET user extension:", error);
+//         return null;
+//     }
+// }
+
+// async function getUserProfile(accessToken) {
+//     const APIurl = `/api/get-profile/`;
+//     try {
+//         const response = await $.ajax({
+//             type: "GET",
+//             url: APIurl,
+//             contentType: "application/json",
+//             headers: { Authorization: `Bearer ${accessToken}` },
+//         });
+//         console.log("Data get-profile:", response);
+//         return response.data || response;
+//     } catch (error) {
+//         console.error("Error GET user profile:", error);
+//         return null;
+//     }
+// }
+
+// async function fetchProfileInfo(userID) {
+//     const userLang = localStorage.getItem("language") || "en";
+//     const langData = await getLanguageData(userLang);
+//     const accessToken = await JWT.getAccess();
+//     console.log("🔹 fetchProfileInfo() iniciado, accessToken:", accessToken);
+
+//     try {
+//         const [userExtensions, userProfile] = await Promise.all([
+//             getUserExtensions(userID, accessToken),
+//             getUserProfile(accessToken)
+//         ]);
+
+//         if (!userExtensions || !userProfile) {
+//             console.error("Error: incomplete data!");
+//             return;
+//         }
+
+//         const userData = { ...userExtensions, ...userProfile };
+//         console.log("Combined profile data:", userData);
+
+//         if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
+// 			console.warn("WebSocket not found or closed. Reinitializing...");
+// 			initializeWebSocket(() => {
+// 				requestOnlineUsers(function (onlineUsers) {
+// 					console.log("Updated online users list:", onlineUsers);
+// 					insertProfileInfo(userData, onlineUsers);
+// 				});
+// 			});
+// 		} else {
+// 			requestOnlineUsers(function (onlineUsers) {
+// 				console.log("Updated online users list:", onlineUsers);
+// 				insertProfileInfo(userData, onlineUsers);
+// 			});
+// 		}
+
+//         updateContent(langData);
+
+//     } catch (error) {
+//         console.error("Error profile data:", error);
+//         showErrorToast("Error loading profile", error, langData);
+//     }
+// }
+
+async function insertProfileInfo(UserElement, users_on) {
+	console.log(UserElement);
+	document.getElementById("birthdayText").textContent= UserElement.birthdate;
+	document.getElementById("genderText").textContent= UserElement.gender;
+	document.getElementById("phoneNumberText").textContent= UserElement.gender;
+	document.getElementById("nicknameText").textContent= UserElement.nick;
+	document.getElementById("bioText").textContent= UserElement.bio;
+
+	console.log(Number(UserElement.id));
+	console.log(users_on);
+	if (users_on.includes(Number(UserElement.id))) {
+        userOnStatus.style.backgroundColor = "green"; // Online
+    } else {
+        userOnStatus.style.backgroundColor = "white"; // Offline
+        userOnStatus.style.border = "1px solid gray";
+    }
 }
 
 async function validateEmail() {
@@ -336,19 +679,19 @@ async function validateEmail() {
   const token = urlParams.get("token");
   const apiUrl = "/authapi";
   $.ajax({
-	type: "POST",
-	url: `${apiUrl}/validate-email/`, // Adjust the endpoint as needed
-	contentType: "application/json",
-	headers: { Accept: "application/json" },
-	data: JSON.stringify({ uid, token }),
-	success: function (data) {
-	  console.log("email validated successfully");
-	},
-	error: function (xhr) {
-	  const data = xhr.responseJSON;
-	  console.log("email failed validation");
-	},
-});
+    type: "POST",
+    url: `${apiUrl}/validate-email/`, // Adjust the endpoint as needed
+    contentType: "application/json",
+    headers: { Accept: "application/json" },
+    data: JSON.stringify({ uid, token }),
+    success: function (data) {
+      console.log("email validated successfully");
+    },
+    error: function (xhr) {
+      const data = JSON.parse(xhr.responseJSON);
+      console.log("email failed validation");
+    },
+  });
 }
 
 async function resetPassword() {
@@ -357,6 +700,10 @@ async function resetPassword() {
   const token = urlParams.get("token");
   const password = $("#newPassword").val();
   const confirm_password = $("#confirmPassword").val();
+  if (password !== confirm_password) {
+    document.getElementById("resetPwd-message").textContent = "Passwords do not match.";
+    return;
+  }
   const apiUrl = "/authapi";
   $.ajax({
 	type: "POST",
@@ -369,8 +716,9 @@ async function resetPassword() {
 	  console.log("Token validated successfully");
 	},
 	error: function (xhr) {
-	  const data = xhr.responseJSON;
-	  console.log("token failed validation");
+		const data = JSON.parse(xhr.responseJSON);
+		document.getElementById("resetPwd-message").textContent = data.error || "Reset password failed.";
+		console.log("Reset password failed:", data.error || "Reset password failed.");
 	},
   });
 }
@@ -430,4 +778,9 @@ async function updateProfile() {
 			showErrorToast(apiUrl, error, langData);
 		}
 	});
+}
+
+
+async function submitResetPwd() {
+
 }

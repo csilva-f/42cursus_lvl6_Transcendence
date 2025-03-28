@@ -2,13 +2,19 @@ const KEY_ARROWUP = 38;
 const KEY_ARROWDOWN = 40;
 const KEY_W = 87;
 const KEY_S = 83;
+const F5 = 116;
 const keyPressed = [];
 const maxSpeed = 10;
 const maxScore = 5;
 const ballVelocity = 5;
+const ballVellocityIncreaseRate = 1.08;
 const ballRadius = 15;
+const paddleWidth = 20;
+const paddleHeight = 150;
+const paddleVelocity = 10;
 var stopGame = false;
 const wsConnections = {};
+var lastPlayer = 0;
 
 window.addEventListener('keydown', function (e) {
     keyPressed[e.keyCode] = true;
@@ -17,159 +23,60 @@ window.addEventListener('keyup', function (e) {
     keyPressed[e.keyCode] = false;
 })
 
-function respawnBall(canvas, objects) {
-    if (objects[0].ballVelocityX > 0) {
-        objects[0].ballX = canvas.width / 2;
-        objects[0].ballY = (Math.random() * (canvas.height - 200)) + 100;
-    }
-    if (objects[0].ballVelocityX < 0) {
-        objects[0].ballX = canvas.width / 2;
-        objects[0].ballY = (Math.random() * (canvas.height - 200)) + 100;
-    }
-    if(objects[0].ballVelocityX < 0)
-        objects[0].ballVelocityX = ballVelocity;
-    else
-        objects[0].ballVelocityX = -ballVelocity;
-    objects[0].ballVelocityY *= -1;
-}
+window.addEventListener("popstate", function (e) {
+    keyPressed["finishGame"] = true;
+    // Handle back button event (e.g., show a warning or log data)
+})
 
-function incScore(canvas, objects) {
-    if (objects[0].ballX <= -objects[0].ballRadius){
-        objects[2].paddleScore += 1;
-        document.getElementById("playerRightScore").innerHTML = objects[2].paddleScore;
-        if(objects[2].paddleScore < maxScore){
-            respawnBall(canvas, objects);
-        }
-        else {
-            stopGame = true;
-            stopTimer();
-
-        }
-    }
-    if (objects[0].ballX >= canvas.width + objects[0].ballRadius){
-        objects[1].paddleScore += 1;
-        document.getElementById("playerLeftScore").innerHTML = objects[1].paddleScore;
-        if(objects[1].paddleScore < maxScore){
-            respawnBall(canvas, objects);
-        }
-        else {
-            stopGame = true;
-            stopTimer();
-
-        }
-    }
-}
-
-function gameUpdate(canvas, objects) {
-    objects.forEach(element => {
-        element.update();
-        element.colissionEdge(canvas);
-        if (element instanceof Paddle)
-            element.colissionBall(objects[0], element);
-    });
-    incScore(canvas, objects);
-}
-
-function gameDraw(ctx, objects) {
-    objects.forEach(element => {
-        element.draw(ctx);
-    });
-}
-
-function resize(canvas){
-    const rootStyle = getComputedStyle(document.documentElement);
-    const remToPixels = parseFloat(rootStyle.fontSize);
-    const marginWidth = window.innerWidth * 0.3;
-    const marginHeight = window.innerHeight * 0.4;
-
-    canvas.width = window.innerWidth - marginWidth;
-    canvas.height = window.innerHeight - marginHeight;
-}
-
-function gameLoop(canvas, ctx, objects) {
-    window.onresize = function() {
-        resize(canvas);
-        objects[1].setPaddleX(30);
-        objects[2].setPaddleX(canvas.width - 50);
-    }
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    if (!stopGame) {
-        window.requestAnimationFrame(() => gameLoop(canvas, ctx, objects));
-        gameUpdate(canvas, objects);
-        gameDraw(ctx, objects);
-    } else
-        showGameStats("Shin", objects[1].paddleScore, objects[1].paddleColisionTimes, "Chan", objects[2].paddleScore, objects[2].paddleColisionTimes);
-}
-
-function initGame() {
-    const gameId = localStorage.getItem("currentGameId");
-    const isHost = localStorage.getItem("isHost") === "true";
-
-    /* Main Initializations */
-    const canvas = document.getElementById("pongGameCanvas");
-    const ctx = canvas.getContext('2d');
-    const gameData = JSON.parse(localStorage.getItem('gameData'));
-    var objects;
-
-    resize(canvas);
-
-    if (gameData == null) {
-        objects = [
-            new Ball(canvas.width / 2, canvas.height / 2, ballVelocity, ballVelocity, ballRadius),
-            new Paddle(1, 20, 150, "#AC3B61", 30, (canvas.height / 2) - 75, 10),
-            new Paddle(2, 20, 150, "#87709C", canvas.width - 50, (canvas.height / 2) - 75 , 10)
-        ];
-        document.getElementById("leftPlayerName").innerHTML = "Shin";
-        document.getElementById("rightPlayerName").innerHTML = "Chan";
-    } else {
-        objects = [
-            new Ball(canvas.width / 2, canvas.height / 2, ballVelocity, ballVelocity, ballRadius),
-            new Paddle(1, 20, 150, gameData.P1Color, 30, (canvas.height / 2) - 75, 10),
-            new Paddle(2, 20, 150, gameData.P2Color, canvas.width - 50, (canvas.height / 2) - 75, 10)
-        ];
-        document.getElementById("leftPlayerName").innerHTML = gameData.P1;
-        document.getElementById("rightPlayerName").innerHTML = gameData.P2;
-        localStorage.removeItem("gameData"); 
-    }
-    //* objects[0]: Ball
-    //* objects[1]: PaddleLeft
-    //* objects[2]: PaddleRight
-
-    document.getElementById("playerLeftScore").innerHTML = objects[1].paddleScore;
-    document.getElementById("playerRightScore").innerHTML = objects[2].paddleScore;
-    startTimer();
-    gameLoop(canvas, ctx, objects);
-}
+window.addEventListener("beforeunload", function (e) {
+    keyPressed["finishGame"] = true;
+    //console.log("Aba ou navegador foi fechado!");
+});
 
 class Game  {
-    constructor(gameID, gameData) {
-        this.gameID = gameID
+    constructor(gameData) {
         this.gameData = gameData
         this.canvas = document.getElementById("pongGameCanvas")
         this.ctx = this.canvas.getContext('2d');
         this.objects = []
-        this.ballVelocity = 5;
+        this.ballVelocity = ballVelocity;
         this.ballRadius = 15;
-        this.maxScore = 5;
+        this.maxScore = maxScore;
         this.stopGame = false;
     }
     initGame() {
-        this.resize();
+        console.info("onload");
+        //this.canvas = document.getElementById('pongGameCanvas');
+        //const context = canvas.getContext('2d');
+
+        // Get the device pixel ratio (DPR)
+        const dpr = window.devicePixelRatio || 1;
+
+        // Set the logical canvas size (how big it should appear visually)
+        const width = 1200;
+        const height = 550;
+
+        // Set the actual canvas size (scale by the device pixel ratio)
+        this.canvas.width = width * dpr;
+        this.canvas.height = height * dpr;
+
+        // Scale the context to account for the device pixel ratio
+        this.ctx.scale(dpr, dpr);
+
         if (this.gameData == null) {
             this.objects = [
                 new Ball(this.canvas.width / 2, this.canvas.height / 2, this.ballVelocity, this.ballVelocity, this.ballRadius),
-                new Paddle(1, 20, 150, "#482445", 30, (this.canvas.height / 2) - 75, 10),
-                new Paddle(2, 20, 150, "#de94ad",  this.canvas.width - 50, (this.canvas.height / 2) - 75 , 10)
+                new Paddle(1, paddleWidth, paddleHeight, "#482445", 30, (this.canvas.height / 2) - 75, 10),
+                new Paddle(2, paddleWidth, paddleHeight, "#de94ad",  this.canvas.width - 50, (this.canvas.height / 2) - 75 , 10)
             ]
             document.getElementById("leftPlayerName").innerHTML = "Shin";
             document.getElementById("rightPlayerName").innerHTML = "Chan";
         } else {
-            console.log(this.gameData)
+            //console.log(this.gameData)
             this.objects = [
                 new Ball(this.canvas.width / 2, this.canvas.height / 2, this.ballVelocity, this.ballVelocity, this.ballRadius),
-                new Paddle(1, 20, 150, this.gameData.P1Color, 30, (this.canvas.height / 2) - 75, 10),
-                new Paddle(2, 20, 150, this.gameData.P2Color,  this.canvas.width - 50, (this.canvas.height / 2) - 75 , 10)
+                new Paddle(1, paddleWidth, paddleHeight, "#482445", 30, (this.canvas.height / 2) - 75, paddleVelocity),
+                new Paddle(2, paddleWidth, paddleHeight, "#de94ad",  this.canvas.width - 50, (this.canvas.height / 2) - 75 , paddleVelocity)
             ]
             document.getElementById("leftPlayerName").innerHTML = this.gameData.P1;
             document.getElementById("rightPlayerName").innerHTML = this.gameData.P2;
@@ -179,28 +86,45 @@ class Game  {
         startTimer();
         this.gameLoop();
     }
-    gameLoop() {
-        window.onresize = function() {
-            this.resize();
-            this.objects[1].setPaddleX(30);
-            this.objects[2].setPaddleX(this.canvas.width - 50);
-        }
+
+    async gameLoop() {
+        // window.onresize = function() {
+        //     this.resize();
+        //     this.objects[1].setPaddleX(30);
+        //     this.objects[2].setPaddleX(this.canvas.width - 50);
+        // }
+        //let flag = 0;
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        if (!this.stopGame) {
-            window.requestAnimationFrame(() => this.gameLoop());
+        if (!this.stopGame && !keyPressed["finishGame"]) {
+            window.requestAnimationFrame(async () => this.gameLoop());
             this.gameUpdate();
+            this.incScore();
             this.gameDraw();
-        } else
-            showGameStats("Shin", this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, "Chan", this.objects[2].paddleScore, this.objects[2].paddleColisionTimes);
+            //console.log("game on going");
+        }
+        else if (keyPressed["finishGame"]) {
+            keyPressed["finishGame"] = false;
+            await updateGameStatusForceFinish(this.gameData);
+        } else {
+            //console.log("Normal finish!");
+            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes);
+            this.gameData["objects"] = this.objects;
+            await updateGameStatus(this.gameData);
+        }
     }
-    gameUpdate() {
-        this.objects.forEach(element => {
-            element.update();
-            element.colissionEdge(this.canvas);
-            if (element instanceof Paddle)
-                element.colissionBall(this.objects[0], element);
-        });
-        this.incScore();
+    gameUpdate(){   
+        this.objects[0].update();
+        this.objects[0].colissionEdge(this.canvas);
+        this.objects[1].update();
+        this.objects[1].colissionEdge(this.canvas);
+        let colision_left = this.objects[1].leftColissionBall(this.objects[0]);
+        this.objects[2].update();
+        this.objects[2].colissionEdge(this.canvas);
+        let colision_right = this.objects[2].rightColissionBall(this.objects[0]);
+        if(colision_left || colision_right){
+            console.log("Update ball again");
+            this.objects[0].update();
+        }
     }
     gameDraw() {
         this.objects.forEach(element => {
@@ -208,7 +132,8 @@ class Game  {
         });
     }
     incScore() {
-        if (this.objects[0].ballX <= -this.objects[0].ballRadius){
+        if (this.objects[0].ballX + this.objects[0].ballRadius < 0){
+            lastPlayer = 0;
             this.objects[2].paddleScore += 1;
             document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
             if(this.objects[2].paddleScore < this.maxScore)
@@ -218,7 +143,8 @@ class Game  {
                 stopTimer();
             }
         }
-        if (this.objects[0].ballX >= this.canvas.width + this.objects[0].ballRadius){
+        if (this.objects[0].ballX - this.objects[0].ballRadius > this.canvas.width){
+            lastPlayer = 0;
             this.objects[1].paddleScore += 1;
             document.getElementById("playerLeftScore").innerHTML = this.objects[1].paddleScore;
             if(this.objects[1].paddleScore < this.maxScore)
@@ -228,8 +154,14 @@ class Game  {
                 stopTimer();
             }
         }
+        // if (this.stopGame == true)
+        // {
+        //     this.gameData["objects"] = this.objects;
+        //     await updateGameStatus(this.gameData);
+        // }
     }
     respawnBall() {
+        console.info("respawn")
         if (this.objects[0].ballVelocityX > 0) {
             this.objects[0].ballX = this.canvas.width / 2;
             this.objects[0].ballY = (Math.random() * (this.canvas.height - 200)) + 100;
