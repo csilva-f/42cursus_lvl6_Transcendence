@@ -2,16 +2,19 @@ const KEY_ARROWUP = 38;
 const KEY_ARROWDOWN = 40;
 const KEY_W = 87;
 const KEY_S = 83;
+const F5 = 116;
 const keyPressed = [];
 const maxSpeed = 10;
 const maxScore = 5;
 const ballVelocity = 5;
+const ballVellocityIncreaseRate = 1.08;
 const ballRadius = 15;
 const paddleWidth = 20;
 const paddleHeight = 150;
 const paddleVelocity = 10;
 var stopGame = false;
 const wsConnections = {};
+var lastPlayer = 0;
 
 window.addEventListener('keydown', function (e) {
     keyPressed[e.keyCode] = true;
@@ -36,9 +39,9 @@ class Game  {
         this.canvas = document.getElementById("pongGameCanvas")
         this.ctx = this.canvas.getContext('2d');
         this.objects = []
-        this.ballVelocity = 5;
+        this.ballVelocity = ballVelocity;
         this.ballRadius = 15;
-        this.maxScore = 5;
+        this.maxScore = maxScore;
         this.stopGame = false;
     }
     initGame() {
@@ -109,15 +112,19 @@ class Game  {
             await updateGameStatus(this.gameData);
         }
     }
-
-
-    gameUpdate(){
-        this.objects.forEach(element => {
-            element.update();
-            element.colissionEdge(this.canvas);
-            if (element instanceof Paddle)
-                element.colissionBall(this.objects[0]);
-        });
+    gameUpdate(){   
+        this.objects[0].update();
+        this.objects[0].colissionEdge(this.canvas);
+        this.objects[1].update();
+        this.objects[1].colissionEdge(this.canvas);
+        let colision_left = this.objects[1].leftColissionBall(this.objects[0]);
+        this.objects[2].update();
+        this.objects[2].colissionEdge(this.canvas);
+        let colision_right = this.objects[2].rightColissionBall(this.objects[0]);
+        if(colision_left || colision_right){
+            console.log("Update ball again");
+            this.objects[0].update();
+        }
     }
     gameDraw() {
         this.objects.forEach(element => {
@@ -125,7 +132,8 @@ class Game  {
         });
     }
     incScore() {
-        if (this.objects[0].ballX <= -this.objects[0].ballRadius){
+        if (this.objects[0].ballX + this.objects[0].ballRadius < 0){
+            lastPlayer = 0;
             this.objects[2].paddleScore += 1;
             document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
             if(this.objects[2].paddleScore < this.maxScore)
@@ -135,7 +143,8 @@ class Game  {
                 stopTimer();
             }
         }
-        if (this.objects[0].ballX >= this.canvas.width + this.objects[0].ballRadius){
+        if (this.objects[0].ballX - this.objects[0].ballRadius > this.canvas.width){
+            lastPlayer = 0;
             this.objects[1].paddleScore += 1;
             document.getElementById("playerLeftScore").innerHTML = this.objects[1].paddleScore;
             if(this.objects[1].paddleScore < this.maxScore)

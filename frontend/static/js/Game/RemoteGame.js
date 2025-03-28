@@ -7,9 +7,18 @@ window.addEventListener('keyup', function (e) {
     keyPressed[e.keyCode] = false;
 })
 
+window.addEventListener("popstate", function (e) {
+    keyPressed["finishGame"] = true;
+    // Handle back button event (e.g., show a warning or log data)
+})
+
+window.addEventListener("beforeunload", function (e) {
+    keyPressed["finishGame"] = true;
+    //console.log("Aba ou navegador foi fechado!");
+});
+
 class RemoteGame  {
-    constructor(gameID, ws, isHost, gameData) {
-        this.gameID = gameID
+    constructor(gameData, ws, isHost) {
         this.gameData = gameData
         this.canvas = document.getElementById("pongGameCanvas")
         this.ctx = this.canvas.getContext('2d');
@@ -52,8 +61,8 @@ class RemoteGame  {
             console.log(this.gameData)
             this.objects = [
                 new Ball(this.canvas.width / 2, this.canvas.height / 2, this.ballVelocity, this.ballVelocity, this.ballRadius),
-                new Paddle(1, paddleWidth, paddleHeight, this.gameData.P1Color, 30, (this.canvas.height / 2) - 75, paddleVelocity),
-                new Paddle(2, paddleWidth, paddleHeight, this.gameData.P2Color,  this.canvas.width - 50, (this.canvas.height / 2) - 75 , paddleVelocity)
+                new Paddle(1, paddleWidth, paddleHeight, "#482445", 30, (this.canvas.height / 2) - 75, paddleVelocity),
+                new Paddle(2, paddleWidth, paddleHeight, "#de94ad",  this.canvas.width - 50, (this.canvas.height / 2) - 75 , paddleVelocity)
             ]
             document.getElementById("leftPlayerName").innerHTML = this.gameData.P1;
             document.getElementById("rightPlayerName").innerHTML = this.gameData.P2;
@@ -84,28 +93,24 @@ class RemoteGame  {
         };
         this.gameLoop();
     }
-    gameLoop() {
+    async gameLoop() {
         // window.onresize = function() {
         //     this.resize();
         //     this.objects[1].setPaddleX(30);
         //     this.objects[2].setPaddleX(this.canvas.width - 50);
         // }
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        if (!this.stopGame) {
+        if (!this.stopGame && !keyPressed["finishGame"]) {
             window.requestAnimationFrame(() => this.gameLoop());
             if(this.isHost)
                 this.hostGame();
             else
                 this.joinerGame();
-
-            // if (this.ws == null)
-            //     this.localGame()
-            // else if(this.isHost)
-            //     this.hostGame()
-            // else
-            //     this.joinerGame()
+        } else if (keyPressed["finishGame"]) {
+            keyPressed["finishGame"] = false;
+            await updateGameStatusForceFinish(this.gameData);
         } else
-            showGameStats("Shin", this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, "Chan", this.objects[2].paddleScore, this.objects[2].paddleColisionTimes);
+            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes);
     }
     hostGame(){
         this.gameUpdate();

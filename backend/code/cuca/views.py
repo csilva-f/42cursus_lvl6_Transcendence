@@ -640,10 +640,12 @@ def post_update_game(request): #update statusID acording to user2 and winner var
             data = json.loads(request.body)
             game_id = data.get('gameID')
             if not game_id:
+                print("kjsgfjsagfjksag")
                 return JsonResponse({"error": "Game ID is required for update"}, status=400)
             try:
                 game = tGames.objects.get(game=game_id)
             except tGames.DoesNotExist:
+                print("632658236583265")
                 return JsonResponse({"error": "Game not found"}, status=404)
             user_id = data.get('uid')
             print(user_id)
@@ -655,15 +657,21 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 if status == 3:
                     game.status = gstatus
                     game.save()
+                    print("aqui 1")
                     return JsonResponse({"message": "Game updated successfully, forced finished was performed", "game_id": game.game}, status=201)
+                print("aqui 2")
                 return JsonResponse({"error": "Override status only allowed for finished"}, status=400)
             if not user_id and not is_join:
+                print("aqui 3")
                 return JsonResponse({"error": "User ID is required for update"}, status=400)
             if user_id == game.user1 and is_join:
+                print("aqui 4")
                 return JsonResponse({"error": "User2 must be different from User1"}, status=400)
             if is_join and not tUserExtension.objects.filter(user=user_id).exists():
+                print("aqui 5")
                 return JsonResponse({"error": f"User ID {user_id} does not exist in tUserExtension"}, status=404)
             if not is_join and user_id not in [game.user1, game.user2]:
+                print("aqui 6")
                 return JsonResponse({"error": "Winner must be either User1 or User2"}, status=400)
             if not is_join:
                 gstatus = tauxStatus.objects.get(statusID=3)
@@ -742,8 +750,18 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 game.status = 2
                 game.startTS = now()
             game.save()
-            return JsonResponse({"message": "Game updated successfully", "game": game}, status=201)
+            game_data = {
+                "id": game.game,
+                "user1": game.user1,
+                "user2": game.user2,
+                "user1_nick": game.user1_nick,
+                "user2_nick": game.user2_nick,
+                "tournament": game.tournament,
+                "isLocal": game.isLocal,
+            }
+            return JsonResponse({"message": "Game updated successfully", "game": game_data}, status=201)
         except json.JSONDecodeError:
+            print("aqui 7")
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
