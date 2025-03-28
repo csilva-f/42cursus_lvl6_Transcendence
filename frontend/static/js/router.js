@@ -229,7 +229,16 @@ async function changeToBig(location) {
 	} else if (location == "/pong") {
 		headerElement.setAttribute("data-i18n", "pong");
 		document.getElementById("topbar").classList.remove('d-none');
-		//initGame();
+		activateTopBar();
+		gameInfo = localStorage.getItem("gameInfo");
+		if (gameInfo) {
+			gameInfo = JSON.parse(gameInfo);
+			console.info("gameInfo: ", gameInfo);
+			if(gameInfo.islocal){
+				game = new Game(gameInfo);
+				game.initGame();
+			}
+    	}
 	} else if (location == "/callback") {
 		headerElement.setAttribute("data-i18n", "callback");
 		disableTopBar();
@@ -414,15 +423,17 @@ const locationHandler = async () => {
 	let tempToken = await JWT.getTempToken();
 	console.log("[Location] ", location)
 	if (!(location === "/mfa" && (tempToken && !uid))) {
-		if ((isProfile(location) && !uid) || (route.needAuth == 1 && !uid)) {
-			location = "/mainPage";
-			route = routes[location];
-		}
-		if (route.needAuth == 2 && uid) {
-			location = "401";
-			route = routes[location];
-		}
-	}
+    if ((isProfile(location) && !uid) || (route.needAuth == 1 && !uid)){
+      location = "/mainPage";
+     	route = routes[location];
+    }
+    if (route.needAuth == 2 && uid) {
+      location = "401";
+      route = routes[location];
+    }
+  if (!location === "/pong") localStorage.removeItem("gameInfo");
+  }
+
 	if (isProfile(location)) {
 		route = routes["/profile/:userID"];
 		html = await fetch(route.template).then((response) => response.text());

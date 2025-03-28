@@ -42,6 +42,7 @@ class tokenService {
 
   getIsUpdating() { return this.isUpdating; }
 
+
   async getAccess() {
     let cookie = this.checkCookie(this.cookieAccessName);
     let cookieRefresh = this.checkCookie(this.cookieRefreshName);
@@ -68,7 +69,10 @@ class tokenService {
       }
     }
     cookie = this.checkCookie(this.cookieAccessName);
-    if (cookie) return this.token.access;
+    if (cookie)
+    {
+      return this.token.access;
+    }
     return null;
   }
 
@@ -86,6 +90,8 @@ class tokenService {
     }
     return this.token.access;
   }
+
+
 
   async updateToken() {
     console.log("[updateToken]")

@@ -26,11 +26,15 @@ async function fetchUsers() {
         success: function (res) {
           if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
             console.warn("WebSocket not found or closed. Reinitializing...");
-            initializeWebSocket(() => {
-                requestOnlineUsers(function (onlineUsers) {
-                    console.log("Updated online users list:", onlineUsers);
-                    renderUserCards(res.nonFriendsList, data, onlineUsers, 1);
-                });
+            // initializeWebSocket(() => {
+            //     requestOnlineUsers(function (onlineUsers) {
+            //         console.log("Updated online users list:", onlineUsers);
+            //         renderUserCards(res.nonFriendsList, data, onlineUsers, 1);
+            //     });
+            // });
+            requestOnlineUsers(function (onlineUsers) {
+                console.log("Updated online users list:", onlineUsers);
+                renderUserCards(res.nonFriendsList, data, onlineUsers, 1);
             });
           } else {
             requestOnlineUsers(function (onlineUsers) {

@@ -27,37 +27,38 @@ const tooltipList = [...tooltipTriggerList].map(
 );
 
 function getForms() {
-	"use strict";
-	//Only the forms with the needs-validation enter in this function
-	const forms = document.querySelectorAll(".needs-validation");
-	Array.from(forms).forEach((form) => {
-		form.addEventListener(
-			"submit",
-			(event) => {
-				form.classList.remove("was-validated");
-				if (!form.checkValidity()) {
-					event.preventDefault();
-					event.stopPropagation();
-				} else {
-					if (form.id == "localFormID") postLocalGame();
-					else if (form.id == "remoteFormID") postRemoteGame();
-					else if (form.id == "localTournamentFormID") initLocalTournament();
-					else if (form.id == "tournamentFormID") postTournament();
-					else if (form.id == "login-form") sendLogin();
-					else if (form.id == "signup-form") sendSignup(form);
-					else if (form.id == "forgotPwd-form") forgotPwd();
-					else if (form.id == "nicknameModal-form") finishProfile();
-					// else if (form.id == "resendCode-form")
-					// 	sendCode();
-					// else if (form.id == "resetPwd-form")
-					// 	resetPwd();
-					event.preventDefault();
-				}
-				form.classList.add("was-validated");
-			},
-			false,
-		);
-	});
+  "use strict";
+  //Only the forms with the needs-validation enter in this function
+  const forms = document.querySelectorAll(".needs-validation");
+  Array.from(forms).forEach((form) => {
+    form.addEventListener(
+      "submit",
+      (event) => {
+        form.classList.remove("was-validated");
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        } else {
+          //if (form.id == "localFormID") postLocalGame();
+          //if (form.id == "remoteFormID") postRemoteGame();
+          if (form.id == "localTournamentFormID") initLocalTournament();
+          else if (form.id == "tournamentFormID") postTournament();
+          else if (form.id == "login-form") sendLogin();
+          else if (form.id == "signup-form") sendSignup(form);
+          else if (form.id == "forgotPwd-form") forgotPwd();
+          else if (form.id == "nicknameModal-form") finishProfile();
+          else if (form.id == "resetPwd-form") resetPassword();
+          // else if (form.id == "resendCode-form")
+          // 	sendCode();
+          // else if (form.id == "resetPwd-form")
+          // 	resetPwd();
+          event.preventDefault();
+        }
+        form.classList.add("was-validated");
+      },
+      false,
+    );
+  });
 }
 
 async function logOut() {
