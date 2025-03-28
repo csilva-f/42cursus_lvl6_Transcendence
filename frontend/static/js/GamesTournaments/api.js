@@ -115,7 +115,7 @@ async function postLocalGame() {
       resetModal();
       $("#createModal").modal("hide");
       if(res.game.id){
-        gameData["gameId"] = res.game.id;
+        gameData["gameID"] = res.game.id;
         gameData["P1"] = res.game.user1_nick;
         gameData["P1_uid"] = res.game.user1;
         gameData["P2"] = res.game.user2_nick;
@@ -173,36 +173,29 @@ async function postRemoteGame() {
       let playerCount = 0;
       // let gameInterval;
 
-      ws.onopen = function () {
+      ws.onopen = async function () {
         console.log("WebSocket connection established successfully.");
         console.log(ws);
+        localStorage.setItem("gameInfo", JSON.stringify(gameData)); //se apagarmos o historico no fim de cada jogo podemos tirar isto
+        window.history.pushState({}, "", `/pong`);
+        await locationHandler();
+        document.getElementById("leftPlayerName").innerHTML = "Waiting...";
+        document.getElementById("rightPlayerName").innerHTML = res.game.user1_nick;
       };
       ws.onmessage = async function (e) {
         const data = JSON.parse(e.data);
-        console.log("I'm here");
         console.log(data.message);
-        //console.log("Message received:", e.data);
-        if (data.message === "A player joined the game!") {
-          playerCount++;
-          if (playerCount === 1){
-            localStorage.setItem("gameInfo", JSON.stringify(gameData));
-            window.history.pushState({}, "", `/pong`);
-            await locationHandler();
-            document.getElementById("leftPlayerName").innerHTML = res.game.user1_nick;
-            document.getElementById("rightPlayerName").innerHTML = "Waiting...";
-          }
-          console.log(`Player count: ${playerCount}`);
-          if (playerCount === 2) {
-            console.log("Both players connected. Opening the game page...");
-            gameData["gameId"] = res.game.id;
-            gameData["P1"] = res.game.user1_nick;
-            gameData["P1_uid"] = res.game.user1;
-            gameData["P2"] = "lala";
-            console.table(gameData)
-            const game = new RemoteGame(gameData, ws, true);
-            //5 4 3 2 1
-            game.initGame();
-          }
+        if(data.type == "join") {
+          console.log("Both players connected. Opening the game page...");
+          gameData["gameID"] = res.game.id;
+          gameData["P2"] = res.game.user1_nick;
+          gameData["P2_uid"] = res.game.user1;
+          gameData["P1"] = data.nick;
+          gameData["P1_uid"] = data.user_id;
+          console.table(gameData)
+          const game = new RemoteGame(gameData, ws, true);
+          //5 4 3 2 1
+          game.initGame();
         }
       };
 
@@ -262,33 +255,33 @@ async function enterGame(gameID) {
       showSuccessToast(langData, langData.gameEntered);
       fetchGames(1);
 
-      // Construir dinamicamente a URL do WebSocket com o gameID correto
       const socketUrl = `wss://${window.location.host}/channels/${gameID}/`;
-      console.log("Connecting to WebSocket:", socketUrl);
-
       const ws = new WebSocket(socketUrl);
 
-      ws.onopen = function () {
-        console.log("WebSocket connection established successfully.");
+      ws.onopen = async () => {
+        const message = JSON.stringify({
+            type: "join",
+            nick: res.game.user2_nick,
+            user_id: res.game.user2,
+        });
+        ws.send(message);
+        gameData["gameID"] = res.game.id;
+        gameData["P2"] = res.game.user1_nick;
+        gameData["P2_uid"] = res.game.user1;
+        gameData["P1"] = res.game.user2_nick;
+        gameData["P1_uid"] = res.game.user2;
+        gameData["islocal"] = res.game.isLocal;
+        localStorage.setItem("gameInfo", JSON.stringify(gameData)); //se apagarmos o historico no fim de cada jogo podemos tirar isto
+        window.history.pushState({}, "", `/pong`);
+        await locationHandler();
+        const game = new RemoteGame(gameData, ws, false);
+        //5 4 3 2 1
+        game.initGame();
       };
 
       ws.onmessage = async function (event) {
-        const data = JSON.parse(event.data);
-        console.log("Message received:", data.message);
-        if (data.message === "A player joined the game!"){
-          localStorage.setItem("gameInfo", JSON.stringify(gameData));
-          window.history.pushState({}, "", `/pong`);
-          await locationHandler();
-          gameData["gameId"] = res.game.id;
-          gameData["P1"] = res.game.user1_nick;
-          gameData["P1_uid"] = res.game.user1;
-          gameData["P2"] = res.game.user2_nick;
-          gameData["P1_uid"] = res.game.user2;
-          gameData["islocal"] = res.game.isLocal;
-          const game = new RemoteGame(gameData, ws, false);
-          //5 4 3 2 1
-          game.initGame();
-        }
+        const data = JSON.parse(e.data);
+        console.log(data);
       };
 
       ws.onerror = function (error) {

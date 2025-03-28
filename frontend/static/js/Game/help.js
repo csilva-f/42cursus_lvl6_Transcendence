@@ -96,7 +96,7 @@ async function updateGameStatus(gameData){
     const langData = await getLanguageData(userLang);
     const data = {
         uid: gameData.P1_uid,
-        gameID: gameData.gameId, 
+        gameID: gameData.gameID, 
         user1_points : gameData.objects[1].paddleScore,
         user2_points: gameData.objects[2].paddleScore,
         user1_hits: gameData.objects[1].paddleColisionTimes,
@@ -131,7 +131,7 @@ async function updateGameStatusForceFinish(gameData){
     const langData = await getLanguageData(userLang);
     const data = {
         uid: gameData.P1_uid,
-        gameID: gameData.gameId,
+        gameID: gameData.gameID,
         statusID: 3,
     } 
     console.log(data);
