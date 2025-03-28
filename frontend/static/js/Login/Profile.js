@@ -176,9 +176,8 @@ function validateEmail(emailId, validationId, checkId) {
 	const hasAtSymbol = email.value.includes('@');
 	const hasValidDomain = email.value.includes('.') && email.value.indexOf('.') < email.value.length - 1;
 	const hasCharactersBeforeAt = email.value.indexOf('@') > 0;
-	const hasCharactersAfterDot = email.value.indexOf('.') > email.value.indexOf('@') + 1;
 
-	if (hasSingleAtSymbol && hasAtSymbol && hasValidDomain && hasCharactersBeforeAt && hasCharactersAfterDot) {
+	if (hasSingleAtSymbol && hasAtSymbol && hasValidDomain && hasCharactersBeforeAt) {
 		checkIcon.style.color = 'green';
 		validationMessage.classList.add('d-none');
 		validationMessage.classList.add('valid');
