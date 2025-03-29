@@ -20,7 +20,7 @@ class CustomJWTAuthentication(JWTAuthentication):
             'Accept': 'application/json',
         })
         if response.status_code not in (200,201):
-            raise AuthenticationFailed('Invalid tokennnnnn')
+            raise AuthenticationFailed('Invalid token')
         # If the token is valid, return the user and token
         user = response.json().get('data')
         user_instance = CustomUser(user_id=user.get('user_id'), username=user.get('username'))

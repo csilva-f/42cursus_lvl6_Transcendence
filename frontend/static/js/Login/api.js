@@ -382,16 +382,30 @@ function handleOTPInput(field) {
 }
 
 
-
+function clearOTPFields() {
+  for (let i = 1; i <= 6; i++) {
+    const field = document.getElementById(`otp${i}`);
+    field.value = '';
+  }
+}
 
 async function verifyAccount() {
 	let code = '';
 	for (let i = 1; i <= 6; i++) {
 		const field = document.getElementById(`otp${i}`);
 		if (field)
+		  if (!Number.isInteger(parseInt(field.value))) {
+				$("#mfa-message").text("Invalid code.");
+				clearOTPFields();
+				return;
+      }
 			code += field.value;
 	}
-	console.log('Code:', code);
+	if (code.length < 6) {
+    $("#mfa-message").text("Invalid code.");
+    clearOTPFields();
+    return;
+  }
 	const apiUrl = "/authapi";
 	let token = await JWT.getTempToken();
 	let access = await JWT.getTempAccess();
@@ -413,9 +427,6 @@ async function verifyAccount() {
       		if (uid && window.ws_os && window.ws_os.readyState === WebSocket.OPEN) {
      			window.ws_os.send(JSON.stringify({ user_id: uid }));
       		}
-      		// requestOnlineUsers(function (onlineUsers) {
-      		//     console.log("Test: Online users list (login):", onlineUsers);
-      		// });
      	});
       window.history.pushState({}, "", "/");
       locationHandler("content");
@@ -423,10 +434,7 @@ async function verifyAccount() {
     error: function (xhr) {
       const data = JSON.parse(xhr.responseJSON);
       $("#mfa-message").text(data.error || "Login failed.");
-      for (let i = 1; i <= 6; i++) {
-  		const field = document.getElementById(`otp${i}`);
-  		document.getElementById(`otp${i}`).value = '';
-  	}
+      clearOTPFields();
     },
   });
 
@@ -554,7 +562,8 @@ async function fetchProfileInfo(userID) {
 		},
 		success: function (res) {
 			console.log(res);
-
+			if (userID != null)
+				insertUserLevel("profileLvlProgress", res.users[0].level);
 			if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
 				console.warn("WebSocket not found or closed. Reinitializing...");
 				initializeWebSocket(() => {

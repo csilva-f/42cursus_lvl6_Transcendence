@@ -26,15 +26,16 @@
 								</div>
 
 								<div class="progress mt-2" role="progressbar" aria-label="Basic example"
-									aria-valuenow="25" aria-valuemin="0" aria-valuemax="90" style="height: 8px;">
-									<div class="progress-bar" style="width: 25%; background-color: var(--primary);">
+								 aria-valuemax="100" style="height: 8px;">
+									<div class="progress-bar" style="background-color: var(--primary);"
+									id="profileLvlProgress">
 									</div>
 								</div>
 
 								<ul
 									style="display: flex; justify-content: space-between; font-weight: bold; list-style-type: none; padding: 0; margin: 0; color: black;">
-									<li>Lvl0</li>
-									<li>Lvl1</li>
+									<li id="profileLvlNow"></li>
+									<li id="profileNextLvl"></li>
 								</ul>
 
 								<!-- Bio -->
@@ -160,8 +161,17 @@
 									<span class="input-group-text" style="border: none; background: white;">
 										<i class="fa-solid fa-user" style="color: var(--primary);"></i>
 									</span>
-									<input type="text" class="form-control" id="firstName" style="border: none;" required>
+									<input type="text" class="form-control" id="firstName" style="border: none;" 
+									oninput="validateName('firstName', 'validateName', 'checkName')">
 								</div>
+								<small id="validateName" class="form-text text-muted d-none">
+									<ul>
+										<li id="checkName" class="requirement">
+											<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+											Invalid first name, too long
+										</li>
+									</ul>
+								</small>
 							</div>
 							<div class="col-md-6">
 								<label for="lastName" class="form-label">Last name</label>
@@ -169,16 +179,34 @@
 									<span class="input-group-text" style="border: none; background: white;">
 										<i class="fa-solid fa-user" style="color: var(--primary);"></i>
 									</span>
-									<input type="text" class="form-control" id="lastName" style="border: none;">
+									<input type="text" class="form-control" id="lastName" style="border: none;"
+									oninput="validateName('lastName', 'validateLast', 'checkLast')">
 								</div>
+								<small id="validateLast" class="form-text text-muted d-none">
+									<ul>
+										<li id="checkLast" class="requirement">
+											<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+											Invalid last name, too long
+										</li>
+									</ul>
+								</small>
 							</div>
 						</div>
 						<div class="row mb-3">
 							<div class="col-md-6">
 								<label for="phoneNumber" class="form-label">Phone number</label>
 								<div class="input-group">
-									<input type="tel" class="form-control" id="phoneNumber" style="border: none;">
+									<input type="tel" class="form-control" id="phoneNumber" style="border: none;"
+									oninput="validatePhoneNumber('phoneNumber', 'validateNumber', 'checkNumber')">
 								</div>
+								<small id="validateNumber" class="form-text text-muted d-none">
+									<ul>
+										<li id="checkNumber" class="requirement">
+											<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+											Invalid phone number
+										</li>
+									</ul>
+								</small>
 							</div>
 
 							<div class="col-md-6">
@@ -187,8 +215,17 @@
 									<span class="input-group-text" style="border: none; background: white;">
 										<i class="fa-solid fa-cake-candles" style="color: var(--primary);"></i>
 									</span>
-									<input type="date" class="form-control" id="birthday" style="border: none;">
+									<input type="date" class="form-control" id="birthday" style="border: none;"
+									oninput="validateBirth('birthday', 'validateBirth', 'checkBirth')">
 								</div>
+								<small id="validateBirth" class="form-text text-muted d-none">
+									<ul>
+										<li id="checkBirth" class="requirement">
+											<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+											Invalid birth date
+										</li>
+									</ul>
+								</small>
 							</div>
 						</div>
 
@@ -214,8 +251,17 @@
 						<div class="row mb-4">
 							<div class="col-md-12">
 								<label for="biography" class="form-label">Bio</label>
-								<textarea class="form-control" id="biography" rows="4"></textarea>
+								<textarea class="form-control" id="biography" rows="4" 
+								oninput="validateBio('biography', 'validateBio', 'checkBio')"></textarea>
 							</div>
+							<small id="validateBio" class="form-text text-muted d-none">
+								<ul>
+									<li id="checkBio" class="requirement">
+										<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+										Invalid bio, content is too long. Length must be less than or equal to 2000
+									</li>
+								</ul>
+							</small>
 						</div>
 
 						<div class="container mt-5">

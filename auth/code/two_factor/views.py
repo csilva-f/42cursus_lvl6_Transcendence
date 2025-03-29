@@ -77,7 +77,7 @@ class VerifyOTPView(generics.GenericAPIView):
         if totp.verify(otp, valid_window=3):
             return Response({'message': 'OTP verified successfully.'}, status=status.HTTP_200_OK)
         else:
-            return Response('Invalid OTP.', status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'Invalid OTP code'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class GetOtpStatus(APIView):
     serializer_class = UserIdSerializer

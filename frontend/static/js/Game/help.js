@@ -121,14 +121,13 @@ async function updateGameStatus(gameData){
         data: JSON.stringify(data),
         success: async function (res) {
             console.log(res);
+            await UserInfo.refreshUser();
+            activateTopBar();
         },
         error: function (xhr, status, error) {
             showErrorToast(APIurl, error, langData);
         },
     });
-    await UserInfo.refreshUser();
-    document.getElementById("topbar").classList.remove('d-none');
-    activateTopBar();
 }
 
 async function updateGameStatusForceFinish(gameData){

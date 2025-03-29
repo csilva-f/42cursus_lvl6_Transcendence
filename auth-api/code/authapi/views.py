@@ -172,7 +172,7 @@ class VerifyOTPViewSet(viewsets.ViewSet):
             return Response(data, status=status.HTTP_201_CREATED)
         except requests.exceptions.HTTPError as http_err:
             print(http_err.response.status_code)
-            return Response({"error": {str(http_err.response.text)}}, status=http_err.response.status_code)
+            return Response(data=str(http_err.response.text), status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:

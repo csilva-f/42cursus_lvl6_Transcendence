@@ -297,6 +297,8 @@ async function fetchTournaments(statusID) {
   setTimeout(() => {
     reloadIcon.classList.remove("rotate");
   }, 250);
+  const reloadBtn = document.getElementById("reloadBtn");
+  reloadBtn.setAttribute("data-id", statusID);
   const accessToken = await JWT.getAccess();
   fetch("/templates/Components/CardTournament.html")
     .then((response) => {

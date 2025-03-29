@@ -184,15 +184,28 @@ function resetNotifications() {
 	document.getElementById("noNotificationP").classList.remove("d-none")
 }
 
+async function insertUserLevel(element, otherUserLvl) {
+	var userLvl = null;
+	if (otherUserLvl == null)
+		userLvl = await UserInfo.getUserLvl();
+	else
+		userLvl = otherUserLvl;
+	lvlDecimal = userLvl.split(".")[1];
+	let lvlUnity = userLvl.split(".")[0];
+	let lvlProgress = parseFloat((lvlDecimal * 100) / (99))
+	document.getElementById(element).style.width = lvlProgress + "%"
+	if (element == "profileLvlProgress") {
+		document.getElementById('profileLvlNow').textContent = "Lvl " + lvlUnity
+		document.getElementById('profileNextLvl').textContent = "Lvl " + (parseInt(lvlUnity) + 1)
+	}
+}
+
 async function activateTopBar() {
 	const topbar = document.getElementById("topbar")
 	topbar.classList.remove('d-none')
 	document.getElementById("personNickname").textContent = await UserInfo.getUserNick();
 	document.getElementById("subMsg").textContent = `${await UserInfo.getUserFirstName()} ${await UserInfo.getUserLastName()}`;
-	let lvlDecimal = await UserInfo.getUserLvl();
-	lvlDecimal = lvlDecimal.split(".")[1];
-	let lvlProgress = parseFloat((lvlDecimal * 100) / (99))
-	document.getElementById("personLvlProgress").style.width = lvlProgress + "%"
+	await insertUserLevel("personLvlProgress", null)
 }
 
 async function changeToBig(location) {
@@ -227,6 +240,7 @@ async function changeToBig(location) {
 		disableTopBar();
 		getForms();
 	} else if (location == "/mfa") {
+	  let tempToken = await JWT.getTempToken();
 		headerElement.setAttribute("data-i18n", "mfa");
 		disableTopBar();
 		getForms();
@@ -391,6 +405,7 @@ async function changeActive(location) {
 			document.getElementById("subMsg").style.display = "none";
 			const statsEverythingIconProfile = document.getElementById("statsEverythingIcon");
 			activateIcon(statsEverythingIconProfile);
+			insertUserLevel("profileLvlProgress", null);
 			fetchProfileInfo(null);
 			fetchStatistics(null);
 			GetProfileView(null);
@@ -447,7 +462,13 @@ const locationHandler = async () => {
     }
   if (!location === "/pong") localStorage.removeItem("gameInfo");
   }
-
+  else {
+    if (location === "/mfa" && !tempToken.access)
+    {
+      location = "/login";
+      route = routes[location];
+    }
+  }
 	if (isProfile(location)) {
 		route = routes["/profile/:userID"];
 		html = await fetch(route.template).then((response) => response.text());

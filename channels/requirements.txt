@@ -4,3 +4,4 @@ requests
 channels==4.2.0
 daphne
 channels_redis
+Pillow
