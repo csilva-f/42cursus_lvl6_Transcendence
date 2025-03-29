@@ -31,7 +31,7 @@ function insertGlobalUserInfo(newCard, user, users_on) {
     const profileLi = newCard.querySelector("#profileLi");
     const userOnStatus = newCard.querySelector("#userOnStatus");
     userNick.textContent = user.userNick;
-    userLvl.textContent = user.userID;
+    userLvl.textContent = user.level;
     friendLi.setAttribute("data-id", user.userID);
     friendLi.setAttribute("data-type", 0);
     profileLi.setAttribute("data-id", user.userID);
@@ -46,7 +46,7 @@ function insertGlobalUserInfo(newCard, user, users_on) {
 
 function insertFriendInfo(newCard, user, users_on) {
     newCard.querySelector("#userNick").textContent = user.friendNick;
-    newCard.querySelector("#userLvl").textContent = user.friendID;
+    newCard.querySelector("#userLvl").textContent = user.friendLevel;
     newCard.querySelector("#friendLi").setAttribute("data-id", user.friendID);
     newCard.querySelector("#friendLi").setAttribute("data-type", 1);
     newCard.querySelector("#friendLiIcon").classList.remove("fa-user-plus")

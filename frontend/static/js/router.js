@@ -254,7 +254,7 @@ async function changeToBig(location) {
 	} else if (location == "/validate-email") {
 		headerElement.setAttribute("data-i18n", "validateEmail");
 		disableTopBar();
-		validateEmail();
+		validateVerifyEmail();
 	} else if (location == "/profile") {
 		console.log("router");
 		getForms();
@@ -368,6 +368,7 @@ async function changeActive(location) {
 					? activateSBIcon(element)
 					: disableSBIcon(element);
 			});
+			headerElement.classList.remove("d-none")
 			headerElement.setAttribute("data-i18n", "welcome");
 			insertPlaceholders("/", langData);
 			updateContent(langData);
@@ -398,7 +399,7 @@ async function changeActive(location) {
 			window.intlTelInput(input, {
 				loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
 			});
-			createQrCode();
+			//createQrCode();
 			break;
 		case "/profile/:userID":
 			iconsElements.forEach((element) => {
