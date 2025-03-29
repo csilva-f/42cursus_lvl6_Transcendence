@@ -213,7 +213,6 @@ function validateNick(nick, validationNick, checkId) {
 	const checkIcon = document.getElementById(checkId);
 
 	if (nickInput.value.length <= 20) {
-		checkIcon.style.color = 'green';
 		validationMessage.classList.add('d-none');
 		validationMessage.classList.add('valid');
 		validationMessage.classList.remove('invalid');
@@ -246,6 +245,25 @@ function validateBirth(birthDate, validationBirth, checkId) {
 		validationMessage.classList.remove('valid');
 	}
 }
+
+function validateBio(bioText, validationBio, checkId) {
+	const bioInput = document.getElementById(bioText);
+	const validationMessage = document.getElementById(validationBio);
+	const checkIcon = document.getElementById(checkId);
+
+	if (bioInput.value.length <= 2000) {
+		checkIcon.style.color = 'green';
+		validationMessage.classList.add('d-none');
+		validationMessage.classList.add('valid');
+		validationMessage.classList.remove('invalid');
+	} else {
+		checkIcon.style.color = 'red';
+		validationMessage.classList.remove('d-none');
+		validationMessage.classList.add('invalid');
+		validationMessage.classList.remove('valid');
+	}
+}
+
 
 // change icon gender 
 function updateIcon() {

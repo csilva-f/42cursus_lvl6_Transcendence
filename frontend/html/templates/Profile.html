@@ -214,8 +214,17 @@
 									<span class="input-group-text" style="border: none; background: white;">
 										<i class="fa-solid fa-cake-candles" style="color: var(--primary);"></i>
 									</span>
-									<input type="date" class="form-control" id="birthday" style="border: none;">
+									<input type="date" class="form-control" id="birthday" style="border: none;"
+									oninput="validateBirth('birthday', 'validateBirth', 'checkBirth')">
 								</div>
+								<small id="validateBirth" class="form-text text-muted d-none">
+									<ul>
+										<li id="checkBirth" class="requirement">
+											<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+											Invalid birth date
+										</li>
+									</ul>
+								</small>
 							</div>
 						</div>
 
@@ -241,8 +250,17 @@
 						<div class="row mb-4">
 							<div class="col-md-12">
 								<label for="biography" class="form-label">Bio</label>
-								<textarea class="form-control" id="biography" rows="4"></textarea>
+								<textarea class="form-control" id="biography" rows="4" 
+								oninput="validateBio('biography', 'validateBio', 'checkBio')"></textarea>
 							</div>
+							<small id="validateBio" class="form-text text-muted d-none">
+								<ul>
+									<li id="checkBio" class="requirement">
+										<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+										Invalid bio, content is too long. Length must be less than or equal to 2000
+									</li>
+								</ul>
+							</small>
 						</div>
 
 						<div class="container mt-5">
