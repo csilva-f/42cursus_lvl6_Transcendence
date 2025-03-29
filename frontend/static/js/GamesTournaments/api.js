@@ -280,7 +280,7 @@ async function enterGame(gameID) {
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
-      resetModal();
+      //resetModal();
     },
   });
 }

@@ -672,7 +672,7 @@ async function insertProfileInfo(UserElement, users_on) {
     }
 }
 
-async function validateEmail() {
+async function validateVerifyEmail() {
   const urlParams = new URLSearchParams(window.location.search);
   const uid = urlParams.get("uid");
   const token = urlParams.get("token");
