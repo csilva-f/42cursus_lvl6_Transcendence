@@ -259,9 +259,9 @@ async function oauthCallback() {
 			contentType: "application/json",
 			headers: { Accept: "application/json" },
 			//data: JSON.stringify({ code: code }),
-			success: function (data) {
+			success: async function (data) {
 				console.log(data);
-				sendOAuthLogin(data);
+				await sendOAuthLogin(data);
 				$("#customlogin-message").text("Login successful!");
 				//window.location.href = '/';
 			},
@@ -279,23 +279,24 @@ async function sendOAuthLogin(userdata) {
 	const email = userdata.email;
 	const first_name = userdata.first_name;
 	const last_name = userdata.last_name;
-	const phone = userdata.phone;
+	let phone = userdata.phone;
+	if (phone == "hidden") phone = "+351000000000";
 	$.ajax({
 		type: "POST",
 		url: `${apiUrl}/oauthlogin/`, // Adjust the endpoint as needed
 		contentType: "application/json",
 		headers: { Accept: "application/json" },
 		data: JSON.stringify({ email, first_name, last_name, phone }),
-		success: function (data) {
-			jwtToken = data.token; // Store the JWT token
-			redirect = data.redirect;
-			if (redirect) {
-				window.location.href = redirect;
-			}
+		success: async function (data) {
+			jwtToken = data.access; // Store the JWT token
 			if (jwtToken) {
-				localStorage.setItem("jwt", jwtToken);
+    		localStorage.setItem("jwt", jwtToken);
+    		await JWT.setToken(data);
 			}
 			$("#customlogin-message").text("Login successful!");
+			await UserInfo.refreshUser();
+			window.history.pushState({}, "", "/");
+			locationHandler();
 		},
 		error: function (xhr) {
 			const data = JSON.parse(xhr.responseJSON);
@@ -729,7 +730,7 @@ async function GetProfileView() {
 	const apiUrl = "/authapi";
  $.ajax({
 	 type: "POST",
-	 url: `${apiUrl}/get-profile/`, 
+	 url: `${apiUrl}/get-profile/`,
 	 contentType: "application/json",
 	 headers: {
 		 "Authorization": `Bearer ${accessToken}`
@@ -755,7 +756,7 @@ async function updateProfile() {
 	const firstName = document.getElementById("firstName").value;
 	const lastName = document.getElementById("lastName").value;
 	const number = document.getElementById("phoneNumber").value;
-	
+
 	const data = {
 		first_name: firstName,
 		last_name: lastName,

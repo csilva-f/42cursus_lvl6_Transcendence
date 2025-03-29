@@ -56,9 +56,17 @@
 							<div class="input-group has-validation">
 								<span class="input-group-text" style="border: none; background: white;">
 									<i class="fa-solid fa-id-card" style="color: var(--primary);"></i></span>
-								<input type="text" class="form-control" id="newNickname"
-									style="border: none;" required>
+								<input type="text" class="form-control" id="newNickname" required
+									style="border: none;" oninput="validateNick('newNickname', 'validateNick', 'checkNick')">
 							</div>
+							<small id="validateNick" class="form-text text-muted d-none">
+								<ul>
+									<li id="checkNick" class="requirement">
+										<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+										Invalid nickname, too long
+									</li>
+								</ul>
+							</small>
 						</div>
 						<div class="row mb-3">
 							<div class="col-md-6">
@@ -67,8 +75,16 @@
 									<span class="input-group-text" style="border: none; background: white;">
 										<i class="fa-solid fa-cake-candles" style="color: var(--primary);"></i>
 									</span>
-									<input type="date" class="form-control" id="newBirthday" style="border: none;" required>
+									<input type="date" class="form-control" id="newBirthday" required style="border: none;" oninput="validateBirth('newBirthday', 'validateBirth', 'checkBirth')">
 								</div>
+								<small id="validateBirth" class="form-text text-muted d-none">
+									<ul>
+										<li id="checkBirth" class="requirement">
+											<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+											Invalid birth date
+										</li>
+									</ul>
+								</small>
 							</div>
 							<div class="col-md-6">
 								<label for="gender" class="form-label" data-i18n="gender"></label>
