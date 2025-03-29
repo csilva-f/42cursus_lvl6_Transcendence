@@ -25,4 +25,5 @@ from django.urls import path
 
 urlpatterns = [
     path('testWebsocket', include("cuca.urls")),
+    path('fileUpload/', include("fileUpload.urls")),
 ]

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 from os import getenv
 from pathlib import Path
+import os
 
 #from auth.code import two_factor
 
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'rest_framework',
     'cuca',
+    'fileUpload',
 ]
 
 MIDDLEWARE = [
@@ -93,13 +95,13 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-#
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -152,3 +154,8 @@ USE_X_FORWARDED_HOST = True
 
 #EMAIL_BACKEND = "mailer.backend.DbBackend"
 #MAILER_EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+
+
+MEDIA_URL = '/images/'
+MEDIA_ROOT = os.path.join(BASE_DIR, '/images')
