@@ -456,22 +456,6 @@ function passwordVisibility(passwordFieldId, toggleIconId) {
 	}
 }
 
-function validateNewPassword(passwordId, validationId, iconId, confirmPassId) {
-	const password = document.getElementById(passwordId);
-	const validationMessage = document.getElementById(validationId);
-	const icon = document.getElementById(iconId);
-	const confirmPass = document.getElementById(confirmPassId);
-
-	confirmPass.value = '';
-	validationMessage.classList.remove('d-none');
-	if (password.value.length >= 8) {
-		validationMessage.classList.add('d-none');
-	} else {
-		icon.className = 'fa-solid fa-xmark';
-		icon.style.color = '#ff2600';
-	}
-}
-
 function validatePasswordsMatch(passwordId1, passwordId2, validationId, iconId) {
 	const password1 = document.getElementById(passwordId1);
 	const password2 = document.getElementById(passwordId2);

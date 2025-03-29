@@ -94,7 +94,7 @@ function validateNewPassword(passwordId, validationId, confirmPassId) {
 
 	const hasUpperCase = /[A-Z]/.test(password.value);
 	const hasNumbers = /\d/.test(password.value);
-	const hasSpecialChars = /[!@#_$%^&*(),.?":'`+-{}|<>]/.test(password.value);
+	const hasSpecialChars = /[!@#_$%^&*(),.?":+{}|<>]/.test(password.value);
 	const isValidLength = password.value.length >= 8;
 
 	lengthCheck.className = isValidLength ? 'requirement valid' : 'requirement invalid';
@@ -113,7 +113,12 @@ function validateNewPassword(passwordId, validationId, confirmPassId) {
 	document.getElementById('specialCharIcon').className = hasSpecialChars ? 'fa-solid fa-check' : 'fa-solid fa-xmark';
 	document.getElementById('specialCharIcon').style.color = hasSpecialChars ? 'green' : 'red';
 
+	console.log("isValidLength: ", isValidLength)
+	console.log("hasUpperCase: ", hasUpperCase)
+	console.log("hasNumbers: ", hasNumbers)
+	console.log("hasSpecialChars: ", hasSpecialChars)
 	if (isValidLength && hasUpperCase && hasNumbers && hasSpecialChars) {
+		console.log("Valido")
 		validationMessage.classList.add('d-none');
 	} else {
 		validationMessage.classList.remove('d-none');
