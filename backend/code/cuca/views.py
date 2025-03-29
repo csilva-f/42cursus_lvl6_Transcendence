@@ -639,6 +639,7 @@ def post_update_game(request): #update statusID acording to user2 and winner var
         try:
             data = json.loads(request.body)
             game_id = data.get('gameID')
+            print("GAME_ID: ", game_id)
             if not game_id:
                 print("kjsgfjsagfjksag")
                 return JsonResponse({"error": "Game ID is required for update"}, status=400)
