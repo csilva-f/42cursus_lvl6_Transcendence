@@ -103,7 +103,7 @@ function validateNewPassword(passwordId, validationId, confirmPassId) {
 
 	const hasUpperCase = /[A-Z]/.test(password.value);
 	const hasNumbers = /\d/.test(password.value);
-	const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password.value);
+	const hasSpecialChars = /[!@#_$%^&*(),.?":'`+-{}|<>]/.test(password.value);
 	const isValidLength = password.value.length >= 8;
 
 	lengthCheck.className = isValidLength ? 'requirement valid' : 'requirement invalid';
@@ -134,9 +134,8 @@ function validatePhoneNumber(phoneId, validationId, errorIcon) {
 	const validationMessage = document.getElementById(validationId);
 	const icon = document.getElementById(errorIcon);
 
-	const isValidLength = phone.value.length === 9;
 	const isNumeric = /^\d+$/.test(phone.value);
-	if (isValidLength && isNumeric) {
+	if (isNumeric && phone.value.length <= 20) {
 		validationMessage.classList.add('d-none');
 		validationMessage.classList.add('valid');
 		validationMessage.classList.remove('invalid');
@@ -177,8 +176,66 @@ function validateEmail(emailId, validationId, checkId) {
 	const hasValidDomain = email.value.includes('.') && email.value.indexOf('.') < email.value.length - 1;
 	const hasCharactersBeforeAt = email.value.indexOf('@') > 0;
 
-	if (hasSingleAtSymbol && hasAtSymbol && hasValidDomain && hasCharactersBeforeAt) {
+	if (hasSingleAtSymbol && hasAtSymbol && hasValidDomain && hasCharactersBeforeAt && email.value.length <= 50 ) {
 		checkIcon.style.color = 'green';
+		validationMessage.classList.add('d-none');
+		validationMessage.classList.add('valid');
+		validationMessage.classList.remove('invalid');
+	} else {
+		checkIcon.style.color = 'red';
+		validationMessage.classList.remove('d-none');
+		validationMessage.classList.add('invalid');
+		validationMessage.classList.remove('valid');
+	}
+}
+
+function validateName(name, validationName, checkId) {
+	const nameInput = document.getElementById(name);
+	const validationMessage = document.getElementById(validationName);
+	const checkIcon = document.getElementById(checkId);
+
+	if (nameInput.value.length <= 50) {
+		checkIcon.style.color = 'green';
+		validationMessage.classList.add('d-none');
+		validationMessage.classList.add('valid');
+		validationMessage.classList.remove('invalid');
+	} else {
+		checkIcon.style.color = 'red';
+		validationMessage.classList.remove('d-none');
+		validationMessage.classList.add('invalid');
+		validationMessage.classList.remove('valid');
+	}
+}
+
+function validateNick(nick, validationNick, checkId) {
+	const nickInput = document.getElementById(nick);
+	const validationMessage = document.getElementById(validationNick);
+	const checkIcon = document.getElementById(checkId);
+
+	if (nickInput.value.length <= 20) {
+		checkIcon.style.color = 'green';
+		validationMessage.classList.add('d-none');
+		validationMessage.classList.add('valid');
+		validationMessage.classList.remove('invalid');
+	} else {
+		checkIcon.style.color = 'red';
+		validationMessage.classList.remove('d-none');
+		validationMessage.classList.add('invalid');
+		validationMessage.classList.remove('valid');
+	}
+}
+
+function validateBirth(birthDate, validationBirth, checkId) {
+	const birthInput = document.getElementById(birthDate);
+	const validationMessage = document.getElementById(validationBirth);
+	const checkIcon = document.getElementById(checkId);
+
+	const birthValue = new Date(birthInput.value);
+	const currentDate = new Date();
+
+	currentDate.setHours(0, 0, 0, 0);
+
+	if (birthValue < currentDate) {
 		validationMessage.classList.add('d-none');
 		validationMessage.classList.add('valid');
 		validationMessage.classList.remove('invalid');
