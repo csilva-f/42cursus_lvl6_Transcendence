@@ -2,24 +2,28 @@ const JWT = new tokenService();
 const UserInfo = new User();
 
 const images = [
-  "/static/img/logos/buttLogo.svg",
-  "/static/img/logos/buttLogoMirror.svg",
+	"/static/img/logos/buttLogo.svg",
+	"/static/img/logos/buttLogoMirror.svg",
 ];
 
 let incrementImg = 0;
 
-function spankShinChan() {
-  const imgElement = document.getElementById("logoImg");
-  incrementImg++;
-  imgElement.src = images[incrementImg % 2];
+async function spankShinChan() {
+	const imgElement = document.getElementById("logoImg");
+	incrementImg++;
+	imgElement.src = images[incrementImg % 2];
+	if (window.location.pathname != "/" ) {
+		window.history.pushState({}, "", "/");
+		await locationHandler();
+	}
 }
 
 //* Initialization of the tooltips
 const tooltipTriggerList = document.querySelectorAll(
-  '[data-bs-toggle="tooltip"]',
+	'[data-bs-toggle="tooltip"]',
 );
 const tooltipList = [...tooltipTriggerList].map(
-  (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl),
+	(tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl),
 );
 
 function getForms() {
@@ -43,6 +47,13 @@ function getForms() {
           else if (form.id == "signup-form") sendSignup(form);
           else if (form.id == "forgotPwd-form") forgotPwd();
           else if (form.id == "nicknameModal-form") finishProfile();
+		  else if (form.id == "editProfileForm"){
+			  const firstName = document.getElementById("firstName").value;
+			  const lastName = document.getElementById("lastName").value;
+			  const phoneNumber = document.getElementById("phoneNumber").value;
+			console.log("last Name", lastName);
+			updateProfile(firstName, lastName, phoneNumber);
+		}
           else if (form.id == "resetPwd-form") resetPassword();
           // else if (form.id == "resendCode-form")
           // 	sendCode();
@@ -58,19 +69,17 @@ function getForms() {
 }
 
 async function logOut() {
-  localStorage.removeItem("jwt");
-  JWT.deleteToken();
-  UserInfo.resetUser();
-  window.history.pushState({}, "", "/mainPage");
-  locationHandler();
+	localStorage.removeItem("jwt");
+	JWT.deleteToken();
+	UserInfo.resetUser();
+	window.history.pushState({}, "", "/mainPage");
+	locationHandler();
 }
 
 async function notificationLoad() {
-  var token = await JWT.getAccess();
-  if (token) {
-    await fetchUserNotificationGame();
-    setTimeout(notificationLoad, 10000);
-  }
+	if (await UserInfo.getUserID())
+		await fetchUserNotificationGame();
+	setTimeout(notificationLoad, 5000);
 }
 
-setTimeout(notificationLoad, 5000);
+setTimeout(notificationLoad, 2500);

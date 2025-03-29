@@ -510,12 +510,37 @@ function toggleSwitch(checkbox) {
 		switchLabel.style.borderColor = '';
 	}
 }
+async function EnableOTPViewSet(status) {
+	jwtToken = await JWT.getAccess();
+	console.log("JWT: ", jwtToken);
+	const apiUrl = "/authapi";
+	$.ajax({
+	  type: "POST",
+	  url: `${apiUrl}/otp-enable/`,
+	  contentType: "application/json",
+	  headers: {
+		Accept: "application/json",
+		Authorization: `Bearer ${jwtToken}`,
+	  },
+	  data: JSON.stringify({ status }),
+	  success: function (data) {
+		console.log("Sucess");
+		if (status == 1) {
+		  createQrCode(data.otpauth_uri);
+		  let modal = new bootstrap.Modal(document.getElementById("codeModal"));
+		  modal.show();
+		}
+	  },
+	  error: function (xhr) {
+		$("#login-message").text(data.error || "Error");
+	  },
+	});
+  }
 
 async function fetchProfileInfo(userID) {
 	const userLang = localStorage.getItem("language") || "en";
 	const langData = await getLanguageData(userLang);
 	const accessToken = await JWT.getAccess();
-	console.log("fetchProfileInfo, accessToken: ", accessToken)
 	let APIurl = `/api/get-userextensions/`
 	if (userID != null)
 		APIurl = `/api/get-userextensions/?userID=${userID}`
@@ -680,21 +705,78 @@ async function resetPassword() {
   }
   const apiUrl = "/authapi";
   $.ajax({
-    type: "POST",
-    url: `${apiUrl}/reset-password/`, // Adjust the endpoint as needed
-    contentType: "application/json",
-    headers: { Accept: "application/json" },
-    data: JSON.stringify({ uid, token, password, confirm_password }),
-    success: function (data) {
-      window.history.pushState({}, "", "/login");
-      locationHandler();
-    },
-    error: function (xhr, status, error) {
-      const data = JSON.parse(xhr.responseJSON);
-      document.getElementById("resetPwd-message").textContent = data.error || "Reset password failed.";
-      console.log("Reset password failed:", data.error || "Reset password failed.");
-    },
+	type: "POST",
+	url: `${apiUrl}/reset-password/`, // Adjust the endpoint as needed
+	contentType: "application/json",
+	headers: { Accept: "application/json" },
+	data: JSON.stringify({ uid, token, password, confirm_password }),
+	success: function (data) {
+	  //renderizar aqui o form de reset password
+	  console.log("Token validated successfully");
+	},
+	error: function (xhr) {
+		const data = JSON.parse(xhr.responseJSON);
+		document.getElementById("resetPwd-message").textContent = data.error || "Reset password failed.";
+		console.log("Reset password failed:", data.error || "Reset password failed.");
+	},
   });
+}
+
+async function GetProfileView() {
+	const userLang = localStorage.getItem("language") || "en";
+	const langData = await getLanguageData(userLang);
+	const accessToken = await JWT.getAccess();
+	const apiUrl = "/authapi";
+ $.ajax({
+	 type: "POST",
+	 url: `${apiUrl}/get-profile/`, 
+	 contentType: "application/json",
+	 headers: {
+		 "Authorization": `Bearer ${accessToken}`
+	 },
+	 data: "",
+	 success: function (res) {
+		 insertProfileData(res.data);
+		 //updateContent(langData);
+		 console.log("data do get: " ,res);
+	 },
+	 error: function (xhr, status, error) {
+		console.error("Error Thrown:", error);
+		showErrorToast(APIurl, error, langData);
+	 }
+ });
+}
+
+async function updateProfile() {
+	const userLang = localStorage.getItem("language") || "en";
+	const langData = getLanguageData(userLang);
+	const accessToken = await JWT.getAccess();
+	const apiUrl = "/authapi";
+	const firstName = document.getElementById("firstName").value;
+	const lastName = document.getElementById("lastName").value;
+	const number = document.getElementById("phoneNumber").value;
+	
+	const data = {
+		first_name: firstName,
+		last_name: lastName,
+		phone_number: number
+	};
+	$.ajax({
+		type: "POST",
+		url: `${apiUrl}/update-profile/`,
+		contentType: "application/json",
+		headers: {
+			"Authorization": `Bearer ${accessToken}`
+		},
+		data: JSON.stringify(data),
+		success: function(res) {
+			console.log(res.message);
+		},
+		error: function(xhr, status, error) {
+			console.error("Error Thrown:", error);
+			showErrorToast(apiUrl, error, langData);
+		}
+	});
 }
 
 

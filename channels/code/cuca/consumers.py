@@ -45,30 +45,19 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         # Send the raw JSON data directly to WebSocket clients
         await self.send(text_data=event["raw_data"])
 
+    #Versao que protege contra jsons mal formataos
     # async def receive(self, text_data):
     #     try:
-    #         data = json.loads(text_data)
-    #         element = data.get("element", "No element provided")
-    #         paddleSide = data.get("paddleSide", "No paddle side provided") 
-
-    #         # Send the message to all clients in the group
+    #         data = json.loads(text_data)  # Tentar converter para JSON
     #         await self.channel_layer.group_send(
     #             self.room_group_name,
     #             {
-    #                 "type": "send_message",
-    #                 "element": element,
-    #                 "paddleSide": paddleSide
+    #                 "type": "send_raw_message",
+    #                 "raw_data": json.dumps(data)  # Reenviar como JSON válido
     #             }
     #         )
     #     except json.JSONDecodeError:
-    #         await self.send(text_data=json.dumps({"error": "Invalid JSON"}))
-
-    # async def send_message(self, event):
-    #     element = event["element"]
-    #     paddleSide = event["paddleSide"]
-
-    #     # Send message with username
-    #     await self.send(text_data=json.dumps({"element": element, "paddleSide": paddleSide}))
+    #         print("Mensagem inválida recebida:", text_data) 
 
     async def disconnect(self, close_code):
         # Avisar o grupo que um jogador saiu

@@ -31,7 +31,7 @@
 			<div class="col shadow rounded-4 px-0 d-flex flex-column h-100" style="background-color: var(--layoutBg);">
 				<p class="h1 px-4 pt-2" style="font-weight: bold;" data-i18n="friends"></p>
 				<form class="d-flex px-4 pb-2" role="search">
-					<input class="form-control rounded-3" type="search" placeholder="Search" aria-label="Search">
+					<input class="form-control rounded-3" type="search" id="inputHomeSearchFriends" onkeyup="searchFriend()">
 				</form>
 				<div class="px-4 pb-2 overflow-y-scroll noScrollBar" id="friendsContent">
 				</div>
@@ -47,7 +47,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content" style="background-color: var(--bodyBg);">
 			<div class="modal-header" style="background-color: var(--primary); justify-content: center;">
-				<h5 class="h5 m-0 fw-bold mb-2" style="color: white" id="nickModalLabel">Complete your profile!</h5>
+				<h5 class="h5 m-0 fw-bold mb-2" style="color: white" id="nickModalLabel" data-i18n="completeProfile"></h5>
 			</div>
 			<div class="modal-body">
 				<div class="tab-pane fade show active" id="nicknameModal" role="tabpanel" aria-labelledby="login-tab">
@@ -56,13 +56,13 @@
 							<div class="input-group has-validation">
 								<span class="input-group-text" style="border: none; background: white;">
 									<i class="fa-solid fa-id-card" style="color: var(--primary);"></i></span>
-								<input type="text" class="form-control" id="newNickname" placeholder="Nickname"
+								<input type="text" class="form-control" id="newNickname"
 									style="border: none;" required>
 							</div>
 						</div>
 						<div class="row mb-3">
 							<div class="col-md-6">
-								<label for="birthday" class="form-label">Birthday</label>
+								<label for="birthday" class="form-label" data-i18n="birthday"></label>
 								<div class="input-group has-validation">
 									<span class="input-group-text" style="border: none; background: white;">
 										<i class="fa-solid fa-cake-candles" style="color: var(--primary);"></i>
@@ -71,7 +71,7 @@
 								</div>
 							</div>
 							<div class="col-md-6">
-								<label for="gender" class="form-label">Gender</label>
+								<label for="gender" class="form-label" data-i18n="gender"></label>
 								<div class="input-group has-validation">
 									<span id="gender-icon" class="input-group-text"
 										style="border: none; background: white;">
@@ -79,17 +79,17 @@
 									</span>
 									<select class="form-select" id="gender" style="border: none;"
 										onchange="updateIcon()" required>
-										<option value="" selected disabled> Select gender </option>
-										<option value="male">Male</option>
-										<option value="female">Female</option>
-										<option value="other">Other</option>
+										<option value="" selected disabled data-i18n="selectGender"></option>
+										<option value="male" data-i18n="male"></option>
+										<option value="female" data-i18n="female"></option>
+										<option value="other" data-i18n="other"></option>
 									</select>
 								</div>
 							</div>
 						</div>
 						<div class="col-md-12 text-end">
 							<button class="btn" style="background-color: var(--primary); color: white;"
-								id="saveButton" type="submit">Send</button>
+								id="saveButton" type="submit" data-i18n="submit"></button>
 						</div>
 					</form>
 				</div>

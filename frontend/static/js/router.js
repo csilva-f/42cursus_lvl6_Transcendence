@@ -132,7 +132,9 @@ const bigScreenLocation = [
 	"/resendCode",
 	"/resetPassword",
 	"/tournament",
-	"/testWebSocket"
+	"/404",
+	"/401",
+	"/testWebSocket",
 ];
 
 const route = (event) => {
@@ -174,7 +176,12 @@ function disableTopBar() {
 	topbar.classList.add('d-none')
 	document.getElementById("personNickname").textContent = "";
 	document.getElementById("subMsg").textContent = "";
-    document.getElementById("personLvlProgress").style.width = "0%"
+	document.getElementById("personLvlProgress").style.width = "0%"
+}
+
+function resetNotifications() {
+	document.getElementById("notificationDropdownMenu").innerHTML = "";
+	document.getElementById("noNotificationP").classList.remove("d-none")
 }
 
 async function activateTopBar() {
@@ -183,9 +190,9 @@ async function activateTopBar() {
 	document.getElementById("personNickname").textContent = await UserInfo.getUserNick();
 	document.getElementById("subMsg").textContent = `${await UserInfo.getUserFirstName()} ${await UserInfo.getUserLastName()}`;
 	let lvlDecimal = await UserInfo.getUserLvl();
-    lvlDecimal = lvlDecimal.split(".")[1];
+	lvlDecimal = lvlDecimal.split(".")[1];
 	let lvlProgress = parseFloat((lvlDecimal * 100) / (99))
-    document.getElementById("personLvlProgress").style.width = lvlProgress + "%"
+	document.getElementById("personLvlProgress").style.width = lvlProgress + "%"
 }
 
 async function changeToBig(location) {
@@ -200,12 +207,19 @@ async function changeToBig(location) {
 	if (location == "/mainPage") {
 		headerElement.setAttribute("data-i18n", "noContent");
 		disableTopBar();
+		resetNotifications();
 	}
+	else if (location == "/401" || location == "/404")
+		disableTopBar();
 	else if (location == "/tournament") {
 		allContent.style.cssText += 'height: calc(100vh - 7rem); overflow-x: auto;';
 	}
 	else if (location == "/login") {
 		headerElement.setAttribute("data-i18n", "login");
+		const input = document.querySelector("#signupPhone");
+			window.intlTelInput(input, {
+				loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
+			});
 		disableTopBar();
 		getForms();
 	} else if (location == "/forgotPassword") {
@@ -219,7 +233,6 @@ async function changeToBig(location) {
 	} else if (location == "/resetPassword") {
 		headerElement.setAttribute("data-i18n", "resetPassword");
 		disableTopBar();
-		console.log("resetPassword");
 		getForms();
 	} else if (location == "/pong") {
 		headerElement.setAttribute("data-i18n", "pong");
@@ -242,11 +255,13 @@ async function changeToBig(location) {
 		headerElement.setAttribute("data-i18n", "validateEmail");
 		disableTopBar();
 		validateEmail();
+	} else if (location == "/profile") {
+		console.log("router");
+		getForms();
 	}
 
 	updateContent(langData);
 	document.getElementById("subMsg").style.display = "none";
-
 	document.getElementById("content").classList.add('d-none');
 	document.getElementById("sidebar").classList.add('d-none');
 	mainDiv.classList.add("loginActive");
@@ -263,8 +278,20 @@ async function changeToSmall(location) {
 	content.classList.remove('d-none')
 }
 
+function insertPlaceholders(location, langData) {
+	switch (location) {
+		case "/":
+			document.getElementById('inputHomeSearchFriends').placeholder = langData.search;
+			document.getElementById('newNickname').placeholder = langData.nickname;
+			break;
+		case "/social":
+			document.getElementById('userSearchInput').placeholder = langData.search;
+			break;
+	}
+}
+
 async function changeActive(location) {
-	while (UserInfo.getUserID() == null || UserInfo.getUserID() === undefined){
+	while (UserInfo.getUserID() == null || UserInfo.getUserID() === undefined) {
 		setTimeout(10)
 	}
 	const iconsElements = [
@@ -317,9 +344,11 @@ async function changeActive(location) {
 					: disableSBIcon(element);
 			});
 			headerElement.setAttribute("data-i18n", "socialhub");
+			insertPlaceholders("/social", langData);
 			updateContent(langData);
 			document.getElementById("subMsg").style.display = "none";
 			const UserElement = document.getElementById("loadGlobalUsers");
+			document.getElementById('reloadIconLi').setAttribute("data-id", 1);
 			activateIcon(UserElement);
 			fetchUsers();
 			break;
@@ -340,6 +369,7 @@ async function changeActive(location) {
 					: disableSBIcon(element);
 			});
 			headerElement.setAttribute("data-i18n", "welcome");
+			insertPlaceholders("/", langData);
 			updateContent(langData);
 			document.getElementById("subMsg").style.display = "block";
 			getForms();
@@ -352,7 +382,6 @@ async function changeActive(location) {
 			fetchTopUsers();
 			break;
 		case "/profile":
-			console.log("Profile: ")
 			iconsElements.forEach((element) => {
 				disableSBIcon(element);
 			});
@@ -363,14 +392,25 @@ async function changeActive(location) {
 			activateIcon(statsEverythingIconProfile);
 			fetchProfileInfo(null);
 			fetchStatistics(null);
+			GetProfileView(null);
+			getForms();
 			const input = document.querySelector("#phoneNumber");
 			window.intlTelInput(input, {
 				loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
 			});
-			//createQrCode();
+			createQrCode();
+			break;
+		case "/profile/:userID":
+			iconsElements.forEach((element) => {
+				disableSBIcon(element);
+			});
+			headerElement.classList.add("d-none");
+			document.getElementById("subMsg").style.display = "none";
+			const statsIcon = document.getElementById("statsEverythingIcon");
+			activateIcon(statsIcon);
+			loadProfileFromURL();
 			break;
 		default:
-			console.log("default");
 			iconsElements.forEach((element) => {
 				disableSBIcon(element);
 			});
@@ -382,10 +422,8 @@ async function changeActive(location) {
 
 function isProfile(location) {
 	const profileMatch = location.match(/\/profile\/(\w+)/);
-	if (profileMatch) {
-		console.log('profileMatch :>> ', profileMatch);
+	if (profileMatch)
 		return true;
-	}
 	return false;
 }
 
@@ -394,9 +432,9 @@ const locationHandler = async () => {
 	let location = window.location.pathname;
 	if (location.length == 0) location = "/";
 	route = routes[location] || routes["404"];
-	console.log("locationHandler: ", route);
 	let uid = await UserInfo.getUserID();
 	let tempToken = await JWT.getTempToken();
+	console.log("[Location] ", location)
 	if (!(location === "/mfa" && (tempToken && !uid))) {
     if ((isProfile(location) && !uid) || (route.needAuth == 1 && !uid)){
       location = "/mainPage";
@@ -410,14 +448,15 @@ const locationHandler = async () => {
   }
 
 	if (isProfile(location)) {
-		console.log("isProfile")
 		route = routes["/profile/:userID"];
-		//FALTA METER AQUI PENSAR MELHOR NA LOGICA
 		html = await fetch(route.template).then((response) => response.text());
 		document.title = route.title;
 		document.getElementById("content").innerHTML = html;
-		changeActive(location);
-		loadProfileFromURL();
+		changeToSmall(location);
+		document
+			.querySelector('meta[name="description"]')
+			.setAttribute("content", route.description);
+		changeActive("/profile/:userID");
 		return;
 	}
 
@@ -448,10 +487,12 @@ document.addEventListener("click", (e) => {
 });
 
 function loadProfileFromURL() {
+	console.log("[loadProfileFromURL]")
 	const path = window.location.pathname;
 	const match = path.match(/\/profile\/(\w+)/);
 	if (match) {
 		const userID = match[1];
+		console.log("userID >> ", userID)
 		//document.getElementById("editButton").classList.add('d-none')
 		//document.getElementById("changePasswordButton").classList.add('d-none')
 		fetchProfileInfo(userID);
@@ -459,18 +500,15 @@ function loadProfileFromURL() {
 	}
 }
 
-window.onload = loadProfileFromURL;
-window.addEventListener("popstate", loadProfileFromURL);
-
 async function reloadPage() {
-  let location = window.location.pathname;
-  let route = routes[location] || routes["404"];
+	let location = window.location.pathname;
+	let route = routes[location] || routes["404"];
 
 	await JWT.reloadPage();
 	if (await JWT.getAccess())
 		await UserInfo.refreshUser();
 	if (!UserInfo.getUserID())
-	  initializeWebSocket();
+		initializeWebSocket();
 	locationHandler();
 }
 

@@ -13,8 +13,6 @@ async function fetchGames(statusID) {
     reloadIcon.classList.remove("rotate");
   }, 250);
   const accessToken = await JWT.getAccess();
-  console.log("accessToken", accessToken)
-  console.log("statusID: ", statusID)
   fetch("/templates/Components/CardGame.html")
     .then((response) => {
       if (!response.ok) {
@@ -36,7 +34,6 @@ async function fetchGames(statusID) {
           const divElement = document.getElementById("gamesContent");
           divElement.innerHTML = "";
           allGames = res.games;
-          console.log("Games", allGames)
           res.games.forEach((element) => {
             if (element.tournamentID == null) {
               if (element.isInvitation == false) {
@@ -70,7 +67,6 @@ async function postGame() {
     user1ID: 1,
     islocal: false,
   };
-  console.log("gameData: ", gameData);
   $.ajax({
     type: "POST",
     url: APIurl,
@@ -111,7 +107,7 @@ async function postLocalGame() {
       showSuccessToast(langData, langData.gameEntered);
       $("#createModal").modal("hide");
       if(res.game.id){
-        gameData["gameId"] = res.game.id;
+        gameData["gameID"] = res.game.id;
         gameData["P1"] = res.game.user1_nick;
         gameData["P1_uid"] = res.game.user1;
         gameData["P2"] = res.game.user2_nick;
@@ -137,15 +133,9 @@ async function postRemoteGame() {
   const langData = await getLanguageData(userLang);
   const APIurl = `/api/create-game/`;
   let gameData = {
-    P1: "Me",
-    P1Color: "#482445",
-    P2: "Waiting for player 1",
-    P2Color: "#de94ad",
     islocal: false,
   };
-  console.log("gameData: ", gameData);
   const accessToken = await JWT.getAccess();
-  console.log("accessToken", accessToken)
   $.ajax({
     type: "POST",
     url: APIurl,
@@ -156,6 +146,7 @@ async function postRemoteGame() {
     },
     data: JSON.stringify(gameData),
     success: function (res) {
+      console.log("Enter game: ", res);
       showSuccessToast(langData, langData.gamecreated);
       $("#createModal").modal("hide");
       console.log("Game Created Response:", res);
@@ -171,39 +162,29 @@ async function postRemoteGame() {
       let playerCount = 0;
       // let gameInterval;
 
-      ws.onopen = function () {
+      ws.onopen = async function () {
         console.log("WebSocket connection established successfully.");
         console.log(ws);
+        localStorage.setItem("gameInfo", JSON.stringify(gameData)); //se apagarmos o historico no fim de cada jogo podemos tirar isto
+        window.history.pushState({}, "", `/pong`);
+        await locationHandler();
+        document.getElementById("leftPlayerName").innerHTML = "Waiting...";
+        document.getElementById("rightPlayerName").innerHTML = res.game.user1_nick;
       };
       ws.onmessage = async function (e) {
         const data = JSON.parse(e.data);
-        console.log("I'm here");
         console.log(data.message);
-        //console.log("Message received:", e.data);
-        if (data.message === "A player joined the game!") {
-          playerCount++;
-          if (playerCount === 1){
-            localStorage.setItem("gameInfo", JSON.stringify(gameData));
-            window.history.pushState({}, "", `/pong`);
-            await locationHandler();
-          }
-          console.log(`Player count: ${playerCount}`);
-          if (playerCount === 2) {
-            console.log("Both players connected. Opening the game page...");
-            console.table(gameData)
-            const game = new RemoteGame(gameId, ws, true, gameData);
-            //5 4 3 2 1
-            game.initGame();
-          //   gameInterval = setInterval(() => {
-          //     if (typeof getCurrentGameState === "function") {  // Verifica se a função existe
-          //         const gameState = getCurrentGameState();
-          //         ws.send(JSON.stringify({
-          //             type: "game_state",
-          //             ...gameState
-          //         }));
-          //     }
-          // }, 50);
-          }
+        if(data.type == "join") {
+          console.log("Both players connected. Opening the game page...");
+          gameData["gameID"] = res.game.id;
+          gameData["P2"] = res.game.user1_nick;
+          gameData["P2_uid"] = res.game.user1;
+          gameData["P1"] = data.nick;
+          gameData["P1_uid"] = data.user_id;
+          console.table(gameData)
+          const game = new RemoteGame(gameData, ws, true);
+          //5 4 3 2 1
+          game.initGame();
         }
       };
 
@@ -244,17 +225,7 @@ async function enterGame(gameID) {
     isJoin: true,
   };
 
-  let gameDataCanvas = {
-    P1: "host",
-    P1Color: document.getElementById("P1ColorInput").value,
-    P2: "me",
-    P2Color: document.getElementById("P2ColorInput").value,
-  };
-
-  console.log("gameData: ", gameData);
   const accessToken = await JWT.getAccess();
-  console.log("accessToken", accessToken)
-
   $.ajax({
     type: "POST",
     url: APIurl,
@@ -265,45 +236,37 @@ async function enterGame(gameID) {
     },
     data: JSON.stringify(gameData),
     success: async function (res) {
+      console.log("Enter game: ", res);
       showSuccessToast(langData, langData.gameEntered);
       fetchGames(1);
 
-      // Construir dinamicamente a URL do WebSocket com o gameID correto
       const socketUrl = `wss://${window.location.host}/channels/${gameID}/`;
-      console.log("Connecting to WebSocket:", socketUrl);
-
       const ws = new WebSocket(socketUrl);
 
-      ws.onopen = function () {
-        console.log("WebSocket connection established successfully.");
-        // const paddle2 = objects[2];
-
-        // document.addEventListener("keydown", function (event) {
-        //   if (event.key === "ArrowUp") {  // Seta para cima
-        //     paddle2.paddleY = Math.max(0, paddle2.paddleY - 10);  // Move para cima
-        //   } else if (event.key === "ArrowDown") {  // Seta para baixo
-        //     paddle2.paddleY = Math.min(canvas.height - paddle2.height, paddle2.paddleY + 10);  // Move para baixo
-        //   }
-        //   // 🟢 Envia a nova posição do paddle para `user1` via WebSocket
-        //   socket.send(JSON.stringify({
-        //     type: "paddle_move",
-        //     paddle: 2,  // Indica que é o paddle do `user2`
-        //     position: paddle2.paddleY  // Envia a nova posição Y do paddle
-        //   }));
-        // });
+      ws.onopen = async () => {
+        const message = JSON.stringify({
+            type: "join",
+            nick: res.game.user2_nick,
+            user_id: res.game.user2,
+        });
+        ws.send(message);
+        gameData["gameID"] = res.game.id;
+        gameData["P2"] = res.game.user1_nick;
+        gameData["P2_uid"] = res.game.user1;
+        gameData["P1"] = res.game.user2_nick;
+        gameData["P1_uid"] = res.game.user2;
+        gameData["islocal"] = res.game.isLocal;
+        localStorage.setItem("gameInfo", JSON.stringify(gameData)); //se apagarmos o historico no fim de cada jogo podemos tirar isto
+        window.history.pushState({}, "", `/pong`);
+        await locationHandler();
+        const game = new RemoteGame(gameData, ws, false);
+        //5 4 3 2 1
+        game.initGame();
       };
 
       ws.onmessage = async function (event) {
-        const data = JSON.parse(event.data);
-        console.log("Message received:", data.message);
-        if (data.message === "A player joined the game!"){
-          localStorage.setItem("gameInfo", JSON.stringify(gameData));
-          window.history.pushState({}, "", `/pong`);
-          await locationHandler();
-          const game = new RemoteGame(gameID, ws, false, gameDataCanvas);
-          //5 4 3 2 1
-          game.initGame();
-        }
+        const data = JSON.parse(e.data);
+        console.log(data);
       };
 
       ws.onerror = function (error) {
@@ -313,40 +276,6 @@ async function enterGame(gameID) {
       ws.onclose = function (event) {
         console.log("WebSocket connection closed:", event);
       };
-
-    },
-    error: function (xhr, status, error) {
-      showErrorToast(APIurl, error, langData);
-      resetModal();
-    },
-  });
-}
-
-//TODO getUserID
-//? POST - /api/update-game/
-async function finishGame(gameID) {
-  const userLang = localStorage.getItem("language") || "en";
-  const langData = await getLanguageData(userLang);
-  const APIurl = `/api/update-game/`;
-
-  let gameData = {
-    gameID: gameID,
-    isJoin: false,
-  };
-  console.log("gameData: ", gameData);
-
-  $.ajax({
-    type: "POST",
-    url: APIurl,
-    Accept: "application/json",
-    contentType: "application/json",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-    },
-    data: JSON.stringify(gameData),
-    success: function (res) {
-      showSuccessToast(langData, langData.gameEntered);
-      fetchGames(1);
 
     },
     error: function (xhr, status, error) {
@@ -386,9 +315,6 @@ async function fetchTournaments(statusID) {
         success: function (res) {
           const divElement = document.getElementById("gamesContent");
           divElement.innerHTML = "";
-          console.log(res);
-          console.log(allGames);
-          console.log(res)
           res.tournaments.forEach((element) => {
             const newCard = document.createElement("div");
             newCard.innerHTML = data;
