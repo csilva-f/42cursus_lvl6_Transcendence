@@ -639,6 +639,8 @@ def post_update_game(request): #update statusID acording to user2 and winner var
         try:
             data = json.loads(request.body)
             game_id = data.get('gameID')
+            print("GAME_ID: ", game_id)
+            print(data)
             if not game_id:
                 print("kjsgfjsagfjksag")
                 return JsonResponse({"error": "Game ID is required for update"}, status=400)
@@ -648,7 +650,7 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 print("632658236583265")
                 return JsonResponse({"error": "Game not found"}, status=404)
             user_id = data.get('uid')
-            print(user_id)
+            print("UID:", user_id)
             is_join = str(data.get('isJoin')).lower() in ['true', '1', 'yes']
             status = data.get('statusID')
             if status is not None:
@@ -674,6 +676,7 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 print("aqui 6")
                 return JsonResponse({"error": "Winner must be either User1 or User2"}, status=400)
             if not is_join:
+                print("aqui not join")
                 gstatus = tauxStatus.objects.get(statusID=3)
                 game.status = gstatus
                 game.endTS = now() 
@@ -743,13 +746,21 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                             ulevel=models.F('ulevel') + 0.1
                         )
             else:
+                print("aqui else")
                 uext = tUserExtension.objects.get(user=user_id)
+                print("aqui 42")
                 game.user2 = uext.user
+                print("aqui 43")
                 game.user2_nick = uext.nick
+                print("aqui 44")
                 gstatus = tauxStatus.objects.get(statusID=2)
-                game.status = 2
+                print("aqui 45")
+                game.status = gstatus
+                print("aqui 46")
                 game.startTS = now()
+            print("aqui 47")
             game.save()
+            print("aqui 48")
             game_data = {
                 "id": game.game,
                 "user1": game.user1,
@@ -759,11 +770,13 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 "tournament": game.tournament,
                 "isLocal": game.isLocal,
             }
+            print("aqui 20")
             return JsonResponse({"message": "Game updated successfully", "game": game_data}, status=201)
         except json.JSONDecodeError:
             print("aqui 7")
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
         except Exception as e:
+            print("aqui is 500")
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method"}, status=405)
 

@@ -5,6 +5,7 @@ class Ball {
         this.ballRadius = ballRadius;
         this.ballVelocityX = ballVelocityX;
         this.ballVelocityY = ballVelocityY;
+        this.lastColision = 0;
     }
     toJSON() {
         return {
@@ -13,7 +14,8 @@ class Ball {
             ballY: this.ballY,
             ballVelocityX: this.ballVelocityX,
             ballVelocityY: this.ballVelocityY,
-        };
+            lastColision: this.lastColision,
+        }
     }
     update() {
         this.ballX += this.ballVelocityX;
@@ -32,7 +34,7 @@ class Ball {
         ctx.beginPath();
         ctx.arc(this.ballX, this.ballY, this.ballRadius, 0, Math.PI * 2);
         ctx.fill();
-        //if (lastPlayer = 2)
+        //if (ball.lastColision = 2)
         //   console.log("ball x: ", this.ballX, " | ball Y: ", this.ballY, " | velocity: ", this.ballVelocityX);
     }
     colissionEdge(canvas) {
@@ -159,11 +161,10 @@ class Paddle {
         let ballTop = ball.ballY - ball.ballRadius + 0.01;
         let ballBottom = ball.ballY + ball.ballRadius + 0.01;
         
-        if (lastPlayer == 1)
+        if (ball.lastColision == 1)
             return;
         if (ball.ballVelocityX < 0 && ballLeftSide <= paddleRightSide && ballRightSide > paddleRightSide && ballBottom >= paddleTop && ballTop <= paddleBottom){ //Colisao com o lado direito do paddle
             console.log("colisao com o lado");
-            lastPlayer = 1;
             // console.log("Left paddle");
             // console.table(ball);
             // console.table(this);
@@ -191,18 +192,17 @@ class Paddle {
             if (ball.ballVelocityY > 0 && ballBottom >= paddleTop && ballTop <= paddleTop){ //Colisao com o topo do paddle
                 console.log("colisao com o topo");
                 ball.ballVelocityY *= -1;
-                lastPlayer = 1;
                 this.paddleColisionTimes++;
                 return true;
             }
             if (ball.ballVelocityY < 0 && ballTop <= paddleBottom && ballBottom >= paddleBottom){ //Colisao com a base do paddle
                 console.log("colisao com a base"); 
                 ball.ballVelocityY *= -1;
-                lastPlayer = 1;
                 this.paddleColisionTimes++;
                 return true;
             }
         }
+        return false;
     }
 
     rightColissionBall(ball) {
@@ -215,11 +215,10 @@ class Paddle {
         let ballTop = ball.ballY - ball.ballRadius + 0.01;
         let ballBottom = ball.ballY + ball.ballRadius + 0.01;
         
-        if (lastPlayer == 2)
-            return;
+        if (ball.lastColision == 2)
+            return false;
         if (ball.ballVelocityX > 0 && ballRightSide >= paddleLeftSide && ballLeftSide < paddleLeftSide && ballBottom >= paddleTop && ballTop <= paddleBottom){ //Colisao com o lado esquerdo do paddle
             console.log("colisao com o lado");
-            lastPlayer = 2;
             if (ball.ballVelocityX < maxSpeed)
                 ball.ballVelocityX *= -ballVellocityIncreaseRate;
             else
@@ -246,18 +245,17 @@ class Paddle {
             if (ball.ballVelocityY > 0 && ballBottom >= paddleTop && ballTop <= paddleTop){ //Colisao com o topo do paddle
                 console.log("colisao com o topo");
                 ball.ballVelocityY *= -1;
-                lastPlayer = 2;
                 this.paddleColisionTimes++;
                 return true;
             }
             if (ball.ballVelocityY < 0 && ballTop <= paddleBottom && ballBottom >= paddleBottom){ //Colisao com a base do paddle
                 console.log("colisao com a base");
                 ball.ballVelocityY *= -1;
-                lastPlayer = 2;
                 this.paddleColisionTimes++;
                 return true;
             }
         }
+        return false;
     }
 
 
@@ -289,11 +287,11 @@ class Paddle {
             if (this.paddleSide == 2 && sendMsg){
                 let msg = JSON.stringify(ball.toJSON());
                 ws.send(msg);
-           }
-           if (this.paddleSide == 1){
-               let msg = JSON.stringify(ball.toJSON());
-               ws.send(msg);
-          }
+            }
+            if (this.paddleSide == 1){
+                let msg = JSON.stringify(ball.toJSON());
+                ws.send(msg);
+            }
         }
     }
 }

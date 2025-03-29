@@ -265,14 +265,16 @@ async function enterGame(gameID) {
       };
 
       ws.onmessage = async function (event) {
-        const data = JSON.parse(e.data);
+        const data = JSON.parse(event.data);
         console.log(data);
-      };
+      }
 
+      //talvez isto precise de um parse do erro
       ws.onerror = function (error) {
         console.error("WebSocket error:", error);
       };
 
+      //talvez isto precise de um parse do event
       ws.onclose = function (event) {
         console.log("WebSocket connection closed:", event);
       };

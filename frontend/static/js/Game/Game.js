@@ -14,7 +14,6 @@ const paddleHeight = 150;
 const paddleVelocity = 10;
 var stopGame = false;
 const wsConnections = {};
-var lastPlayer = 0;
 
 window.addEventListener('keydown', function (e) {
     keyPressed[e.keyCode] = true;
@@ -88,12 +87,6 @@ class Game  {
     }
 
     async gameLoop() {
-        // window.onresize = function() {
-        //     this.resize();
-        //     this.objects[1].setPaddleX(30);
-        //     this.objects[2].setPaddleX(this.canvas.width - 50);
-        // }
-        //let flag = 0;
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (!this.stopGame && !keyPressed["finishGame"]) {
             window.requestAnimationFrame(async () => this.gameLoop());
@@ -112,17 +105,32 @@ class Game  {
             await updateGameStatus(this.gameData);
         }
     }
-    gameUpdate(){   
+    gameUpdate(){
+        this.ballUpdate();
+        this.paddleUpdateLeft();
+        this.paddleUpdateRight();
+    }
+    ballUpdate(){
         this.objects[0].update();
         this.objects[0].colissionEdge(this.canvas);
+    }
+    paddleUpdateLeft(){
         this.objects[1].update();
         this.objects[1].colissionEdge(this.canvas);
-        let colision_left = this.objects[1].leftColissionBall(this.objects[0]);
+        let colision = this.objects[1].leftColissionBall(this.objects[0]);
+        if(colision){
+            console.log("Colision left: update ball again");
+            this.objects[0].lastColision = 1;
+            this.objects[0].update();
+        }
+    }
+    paddleUpdateRight(){
         this.objects[2].update();
         this.objects[2].colissionEdge(this.canvas);
-        let colision_right = this.objects[2].rightColissionBall(this.objects[0]);
-        if(colision_left || colision_right){
-            console.log("Update ball again");
+        let colision = this.objects[2].rightColissionBall(this.objects[0]);
+        if(colision){
+            console.log("Colision right: update ball again");
+            this.objects[0].lastColision = 2;
             this.objects[0].update();
         }
     }
@@ -133,7 +141,7 @@ class Game  {
     }
     incScore() {
         if (this.objects[0].ballX + this.objects[0].ballRadius < 0){
-            lastPlayer = 0;
+            this.objects[0].lastColision = 0;
             this.objects[2].paddleScore += 1;
             document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
             if(this.objects[2].paddleScore < this.maxScore)
@@ -144,7 +152,7 @@ class Game  {
             }
         }
         if (this.objects[0].ballX - this.objects[0].ballRadius > this.canvas.width){
-            lastPlayer = 0;
+            this.objects[0].lastColision = 0;
             this.objects[1].paddleScore += 1;
             document.getElementById("playerLeftScore").innerHTML = this.objects[1].paddleScore;
             if(this.objects[1].paddleScore < this.maxScore)
@@ -154,11 +162,6 @@ class Game  {
                 stopTimer();
             }
         }
-        // if (this.stopGame == true)
-        // {
-        //     this.gameData["objects"] = this.objects;
-        //     await updateGameStatus(this.gameData);
-        // }
     }
     respawnBall() {
         console.info("respawn")
@@ -175,11 +178,5 @@ class Game  {
         else
             this.objects[0].ballVelocityX = -ballVelocity;
         this.objects[0].ballVelocityY *= -1;
-    }
-    resize() {
-        const marginWidth = window.innerWidth * 0.3;
-        const marginHeight = window.innerHeight * 0.4;
-        this.canvas.width = window.innerWidth - marginWidth;
-        this.canvas.height = window.innerHeight - marginHeight;
     }
 }
