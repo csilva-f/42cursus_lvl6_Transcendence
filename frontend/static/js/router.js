@@ -306,6 +306,10 @@ async function changeActive(location) {
 	const langData = await getLanguageData(userLang);
 	const allContent = document.getElementById("allContent")
 	allContent.classList.add('d-none');
+	if (await UserInfo.getUserNick() == null) {
+		let nickModal = new bootstrap.Modal(document.getElementById('nickModal'));
+		nickModal.show();
+	}
 	await activateTopBar();
 	switch (location) {
 		case "/games":
@@ -374,10 +378,6 @@ async function changeActive(location) {
 			updateContent(langData);
 			document.getElementById("subMsg").style.display = "block";
 			getForms();
-			if (await UserInfo.getUserNick() == null) {
-				let nickModal = new bootstrap.Modal(document.getElementById('nickModal'));
-				nickModal.show();
-			}
 			fetchMatchHistory();
 			fetchHomeFriends();
 			fetchTopUsers();

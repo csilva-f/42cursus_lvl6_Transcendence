@@ -1,6 +1,6 @@
 Django==5.1.2
 djangorestframework==3.15.2
 requests
-channels
+channels==4.2.0
 daphne
 channels_redis

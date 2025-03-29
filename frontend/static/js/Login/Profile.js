@@ -65,15 +65,6 @@ function handleOTPInput(field) {
   });
 }
 
-function verifyAccount() {
-	let code = '';
-	for (let i = 1; i <= 6; i++) {
-		const field = document.getElementById(`otp${i}`);
-		if (field)
-			code += field.value;
-	}
-}
-
 // Password validate
 function passwordVisibility(passwordFieldId, toggleIconId) {
 	const passwordInput = document.getElementById(passwordFieldId);
@@ -103,7 +94,7 @@ function validateNewPassword(passwordId, validationId, confirmPassId) {
 
 	const hasUpperCase = /[A-Z]/.test(password.value);
 	const hasNumbers = /\d/.test(password.value);
-	const hasSpecialChars = /[!@#_$%^&*(),.?":'`+-{}|<>]/.test(password.value);
+	const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password.value);
 	const isValidLength = password.value.length >= 8;
 
 	lengthCheck.className = isValidLength ? 'requirement valid' : 'requirement invalid';
@@ -171,15 +162,11 @@ function validateEmail(emailId, validationId, checkId) {
 	const validationMessage = document.getElementById(validationId);
 	const checkIcon = document.getElementById(checkId);
 
-	const hasSingleAtSymbol = (email.value.match(/@/g) || []).length === 1;
-	const hasAtSymbol = email.value.includes('@');
-	const hasValidDomain = email.value.includes('.') && email.value.indexOf('.') < email.value.length - 1;
-	const hasCharactersBeforeAt = email.value.indexOf('@') > 0;
+	const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/;
+	const isValid = emailRegex.test(email.value);
 
-	if (hasSingleAtSymbol && hasAtSymbol && hasValidDomain && hasCharactersBeforeAt && email.value.length <= 50 ) {
-		checkIcon.style.color = 'green';
-		validationMessage.classList.add('d-none');
-		validationMessage.classList.add('valid');
+	if (isValid) {
+		validationMessage.classList.add('d-none', 'valid');
 		validationMessage.classList.remove('invalid');
 	} else {
 		checkIcon.style.color = 'red';
@@ -195,7 +182,6 @@ function validateName(name, validationName, checkId) {
 	const checkIcon = document.getElementById(checkId);
 
 	if (nameInput.value.length <= 50) {
-		checkIcon.style.color = 'green';
 		validationMessage.classList.add('d-none');
 		validationMessage.classList.add('valid');
 		validationMessage.classList.remove('invalid');
@@ -252,7 +238,6 @@ function validateBio(bioText, validationBio, checkId) {
 	const checkIcon = document.getElementById(checkId);
 
 	if (bioInput.value.length <= 2000) {
-		checkIcon.style.color = 'green';
 		validationMessage.classList.add('d-none');
 		validationMessage.classList.add('valid');
 		validationMessage.classList.remove('invalid');
@@ -263,7 +248,6 @@ function validateBio(bioText, validationBio, checkId) {
 		validationMessage.classList.remove('valid');
 	}
 }
-
 
 // change icon gender 
 function updateIcon() {

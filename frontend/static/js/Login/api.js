@@ -181,6 +181,7 @@ async function sendSignup(form) {
 		success: function (data) {
 			$("#signup-message").text("Signup successful! Validate your email");
 			showSuccessToast(langData, langData.signUpSuccess);
+			form.reset();
 			return true;
 		},
 		error: function (xhr, error) {
@@ -448,22 +449,6 @@ function passwordVisibility(passwordFieldId, toggleIconId) {
 	}
 }
 
-function validateNewPassword(passwordId, validationId, iconId, confirmPassId) {
-	const password = document.getElementById(passwordId);
-	const validationMessage = document.getElementById(validationId);
-	const icon = document.getElementById(iconId);
-	const confirmPass = document.getElementById(confirmPassId);
-
-	confirmPass.value = '';
-	validationMessage.classList.remove('d-none');
-	if (password.value.length >= 8) {
-		validationMessage.classList.add('d-none');
-	} else {
-		icon.className = 'fa-solid fa-xmark';
-		icon.style.color = '#ff2600';
-	}
-}
-
 function validatePasswordsMatch(passwordId1, passwordId2, validationId, iconId) {
 	const password1 = document.getElementById(passwordId1);
 	const password2 = document.getElementById(passwordId2);
@@ -511,6 +496,7 @@ function toggleSwitch(checkbox) {
 		switchLabel.style.borderColor = '';
 	}
 }
+
 async function EnableOTPViewSet(status) {
 	jwtToken = await JWT.getAccess();
 	console.log("JWT: ", jwtToken);
@@ -655,14 +641,15 @@ async function fetchProfileInfo(userID) {
 //     }
 // }
 
-async function insertProfileInfo(UserElement, users_on) {
+/*async function insertProfileInfo(UserElement, users_on) {
 	console.log(UserElement);
 	document.getElementById("birthdayText").textContent= UserElement.birthdate;
 	document.getElementById("genderText").textContent= UserElement.gender;
-	document.getElementById("phoneNumberText").textContent= UserElement.gender;
+	const gender = document.getElementById("phoneNumberText").textContent= UserElement.gender;
 	document.getElementById("nicknameText").textContent= UserElement.nick;
 	document.getElementById("bioText").textContent= UserElement.bio;
 
+	console.log("gender: " , gender);
 	console.log(Number(UserElement.id));
 	console.log(users_on);
 	if (users_on.includes(Number(UserElement.id))) {
@@ -671,7 +658,7 @@ async function insertProfileInfo(UserElement, users_on) {
         userOnStatus.style.backgroundColor = "white"; // Offline
         userOnStatus.style.border = "1px solid gray";
     }
-}
+}*/
 
 async function validateVerifyEmail() {
   const urlParams = new URLSearchParams(window.location.search);
