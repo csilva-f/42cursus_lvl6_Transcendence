@@ -65,15 +65,6 @@ function handleOTPInput(field) {
   });
 }
 
-function verifyAccount() {
-	let code = '';
-	for (let i = 1; i <= 6; i++) {
-		const field = document.getElementById(`otp${i}`);
-		if (field)
-			code += field.value;
-	}
-}
-
 // Password validate
 function passwordVisibility(passwordFieldId, toggleIconId) {
 	const passwordInput = document.getElementById(passwordFieldId);
@@ -190,7 +181,7 @@ function validateEmail(emailId, validationId, checkId) {
 	}
 }
 
-// change icon gender 
+// change icon gender
 function updateIcon() {
 	const genderSelect = document.getElementById('gender');
 	const icon = document.getElementById('icon');
@@ -233,12 +224,12 @@ async function insertProfileInfo(UserElement, userID) {
 
 	let genderSelect = document.getElementById("gender");
 	if (UserElement.gender) {
-		genderSelect.value = UserElement.gender.toLowerCase(); 
+		genderSelect.value = UserElement.gender.toLowerCase();
 		updateIcon();
 	}
 	if (userID != null)
 		document.getElementById("fullNameText").classList.add=("d-none");
-		
+
 }
 
 async function insertProfileData(UserElement) {

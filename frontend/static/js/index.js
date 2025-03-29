@@ -47,7 +47,8 @@ function getForms() {
           else if (form.id == "signup-form") sendSignup(form);
           else if (form.id == "forgotPwd-form") forgotPwd();
           else if (form.id == "nicknameModal-form") finishProfile();
-		  else if (form.id == "editProfileForm"){
+            //else if (form.id == "mfa-form") verifyAccount();
+          else if (form.id == "editProfileForm"){
 			  const firstName = document.getElementById("firstName").value;
 			  const lastName = document.getElementById("lastName").value;
 			  const phoneNumber = document.getElementById("phoneNumber").value;

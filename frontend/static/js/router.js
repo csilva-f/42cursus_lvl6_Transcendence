@@ -227,6 +227,7 @@ async function changeToBig(location) {
 		disableTopBar();
 		getForms();
 	} else if (location == "/mfa") {
+	  let tempToken = await JWT.getTempToken();
 		headerElement.setAttribute("data-i18n", "mfa");
 		disableTopBar();
 		getForms();
@@ -447,7 +448,13 @@ const locationHandler = async () => {
     }
   if (!location === "/pong") localStorage.removeItem("gameInfo");
   }
-
+  else {
+    if (location === "/mfa" && !tempToken.access)
+    {
+      location = "/login";
+      route = routes[location];
+    }
+  }
 	if (isProfile(location)) {
 		route = routes["/profile/:userID"];
 		html = await fetch(route.template).then((response) => response.text());
