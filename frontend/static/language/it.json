@@ -85,5 +85,9 @@
     "tournamentsLost": "Tornei Persi",
     "victories": "Vittorie",
     "losses": "Sconfitte",
-    "matches": "Partite"
+    "matches": "Partite",
+    "status": "Stato:",
+    "players": "Giocatori:",
+    "users": "Utenti:",
+    "winner": "Vincitore"
 }

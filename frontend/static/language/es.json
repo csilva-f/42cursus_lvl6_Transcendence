@@ -85,5 +85,9 @@
     "tournamentsLost": "Torneos Perdidos",
     "victories": "Victorias",
     "losses": "Derrotas",
-    "matches": "Partidas"
+    "matches": "Partidas",
+    "status": "Estado:",
+    "players": "Jugadores:",
+    "users": "Usuarios:",
+    "winner": "Ganador"
 }

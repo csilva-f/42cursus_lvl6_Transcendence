@@ -412,7 +412,6 @@ async function postLocalTournament() {
       },
       error: function (xhr, status, error) {
         showErrorToast(APIurl, error, langData);
-        resetModal();
         reject(error); // Reject the promise on error
       },
     });
@@ -473,5 +472,39 @@ async function fetchTournamentGames(tournamentID) {
         reject(error); // Reject the promise on error
       },
     });
+  });
+}
+
+async function enterTournamentGame(gameID) {
+  const userLang = localStorage.getItem("language") || "en";
+  const langData = await getLanguageData(userLang);
+  const accessToken = await JWT.getAccess();
+  const APIurl = `/api/get-games/?gameID=${gameID}`;
+  $.ajax({
+    type: "GET",
+    url: APIurl,
+    Accept: "application/json",
+    contentType: "application/json",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    success: function (res) {
+      const divElement = document.getElementById("gamesContent");
+      divElement.innerHTML = "";
+      game = res.games[0];
+      gameData["gameID"] = game.id;
+      gameData["P1"] = game.user1_nick;
+      gameData["P1_uid"] = game.user1;
+      gameData["P2"] = game.user2_nick;
+      gameData["P2_uid"] = game.user2;
+      localStorage.setItem("gameInfo", JSON.stringify(gameData));
+      window.history.pushState({}, "", "/pong");
+      locationHandler();
+      updateContent(langData);
+    },
+    error: function (xhr, status, error) {
+      console.error("Error Thrown:", error);
+      showErrorToast(APIurl, error, langData);
+    },
   });
 }

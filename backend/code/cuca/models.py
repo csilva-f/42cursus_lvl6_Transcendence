@@ -80,6 +80,7 @@ class tGames(models.Model):
     isInvitation = models.BooleanField(default=False)
     isInvitAccepted = models.BooleanField(default=False)
     winnerUser = models.IntegerField(null=True, blank=True)
+    winnerNick = models.CharField(null=True, blank=True, max_length=255)
     tournament = models.ForeignKey(tTournaments, on_delete=models.SET_NULL, null=True, blank=True)
     phase = models.ForeignKey(tauxPhase, on_delete=models.PROTECT, null=True, blank=True) 
     status = models.ForeignKey(tauxStatus, on_delete=models.PROTECT, null=False, default=1)

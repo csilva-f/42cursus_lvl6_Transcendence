@@ -212,10 +212,6 @@ function reloadInformation(statusID) {
         fetchTournaments(statusID);
 }
 
-/*
-?    AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-*/
-
 //* Function to show Forms
 function showGameForm(formID, tabOpenID, confirmBtnID, backBtnID) {
     const form = document.getElementById(formID);
@@ -257,6 +253,7 @@ function closeGameForm(formIDs, tabID, confirmBtnID, backBtnID) {
     })
 }
 
+//* Function to expand or retract the games section of each tournament
 function toggleTournamentGames(divID) {
     const gamesDiv = document.getElementById(divID);
     console.log(gamesDiv);
@@ -273,7 +270,9 @@ function toggleTournamentGames(divID) {
     }
 }
 
+//* Function to insert in frontend the info regarding its games
 function insertTournamentGameInfo(newCard, game) {
+    console.log(game);
     const tournGameNbr = newCard.querySelector("#tournGameNumber")
     tournGameNbr.textContent = game.phase;
     const tournP1 = newCard.querySelector("#tournGamePlayer1")
@@ -288,10 +287,28 @@ function insertTournamentGameInfo(newCard, game) {
     } else {
         tournP2.textContent = "(To be be defined)";
     }
+    const enterBtn = newCard.querySelector("#enterLi");
+    enterBtn.setAttribute("data-id", game.gameID);
+    if (game.user1Nick && game.user2Nick && game.statusID == 2) {
+        console.log("aqui");
+        const buttonDiv = document.querySelector('.col-7.align-content-center');
+        console.log(buttonDiv);
+        buttonDiv.classList.remove('d-none');
+        console.log(buttonDiv);
+    }
     const tournGameStat = newCard.querySelector("#tournGameStatus")
     tournGameStat.textContent = game.status;
+    // if (game.winnerUserID) {
+    //     const tournGameWinner = newCard.querySelector("#tournGameWinner")
+    //     tournGameNbr.textContent = game.winnerNick;
+    //     const element1 = document.querySelector('.d-flex.justify-content-center.align-items-center.ms-1.d-none');
+    //     if (element1) element1.classList.remove('d-none');
+    //     const element2 = document.querySelector('.d-flex.flex-column.d-none');
+    //     if (element2) element2.classList.remove('d-none');
+    // }
 }
 
+//* Function to laod the tournament games
 async function loadTournamentGames(tournamentID, containerDiv) {
     try {
         console.log("Loading games for tournament:", tournamentID);
