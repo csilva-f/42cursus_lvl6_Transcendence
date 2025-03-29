@@ -143,7 +143,7 @@ class RemoteGame  {
             console.log("Colision with paddle LEFT! Update ball again");
             this.objects[0].lastColision = 1;
             this.objects[0].update();
-            let msg = JSON.stringify(ball.toJSON()); 
+            let msg = JSON.stringify(this.objects[0].toJSON()); 
             this.ws.send(msg);
         }
         if(colision_right){
@@ -151,7 +151,7 @@ class RemoteGame  {
             this.objects[0].lastColision = 2;
             this.objects[0].update();
             if(this.isHost){
-                let msg = JSON.stringify(ball.toJSON());
+                let msg = JSON.stringify(this.objects[0].toJSON());
                 this.ws.send(msg);
             }
         }
@@ -181,7 +181,7 @@ class RemoteGame  {
             console.log("Colision with paddle LEFT! Update ball again");
             this.objects[0].lastColision = 1;
             this.objects[0].update();
-            let msg = JSON.stringify(ball.toJSON());
+            let msg = JSON.stringify(this.objects[0].toJSON());
             this.ws.send(msg);
         }
     }
@@ -194,7 +194,7 @@ class RemoteGame  {
             this.objects[0].lastColision = 2;
             this.objects[0].update();
             if(this.isHost){
-                let msg = JSON.stringify(ball.toJSON());
+                let msg = JSON.stringify(this.objects[0].toJSON());
                 this.ws.send(msg);
             }
         }
@@ -233,7 +233,7 @@ class RemoteGame  {
                 paddleSide: 2,
                 paddleScore: this.objects[2].paddleScore,
             }
-            this.ws.send(msg);
+            this.ws.send(JSON.stringify(msg));
             //document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
             if(this.objects[2].paddleScore < this.maxScore)
                 this.respawnBall();
@@ -250,7 +250,7 @@ class RemoteGame  {
                 paddleSide: 1,
                 paddleScore: this.objects[1].paddleScore,
             }
-            this.ws.send(msg);
+            this.ws.send(JSON.stringify(msg));
             //document.getElementById("playerLeftScore").innerHTML = this.objects[1].paddleScore;
             if(this.objects[1].paddleScore < this.maxScore)
                 this.respawnBall();
