@@ -85,5 +85,6 @@
     "tournamentsLost": "Tornei Persi",
     "victories": "Vittorie",
     "losses": "Sconfitte",
-    "matches": "Partite"
+    "matches": "Partite",
+	"globalStatistics": "Statistiche globali"
 }

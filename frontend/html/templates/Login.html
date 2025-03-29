@@ -87,8 +87,16 @@
 								<span class="input-group-text" style="border: none; background: white;">
 									<i class="fa-solid fa-user" style="color: var(--primary);"></i></span>
 								<input type="text" class="form-control" id="signupFirstname" required
-									placeholder="First name" style="border: none;">
+									placeholder="First name" style="border: none;" oninput="validateName('signupFirstname', 'validateFirst', 'checkFirst')">
 							</div>
+							<small id="validateFirst" class="form-text text-muted d-none">
+								<ul>
+									<li id="checkFirst" class="requirement">
+										<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+										Invalid first name, too long
+									</li>
+								</ul>
+							</small>
 						</div>
 
 						<div class="mb-3">
@@ -96,8 +104,16 @@
 								<span class="input-group-text" style="border: none; background: white;">
 									<i class="fa-solid fa-user" style="color: var(--primary);"></i></span>
 								<input type="text" class="form-control" id="signupLastname" required
-									placeholder="Last name" style="border:none;">
+									placeholder="Last name" style="border:none;" oninput="validateName('signupLastname', 'validateLast', 'checkLast')">
 							</div>
+							<small id="validateLast" class="form-text text-muted d-none">
+								<ul>
+									<li id="checkLast" class="requirement">
+										<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+										Invalid last name, too long
+									</li>
+								</ul>
+							</small>
 						</div>
 
 						<div class="mb-3">

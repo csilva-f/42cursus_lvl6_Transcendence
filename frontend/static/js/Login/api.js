@@ -562,7 +562,8 @@ async function fetchProfileInfo(userID) {
 		},
 		success: function (res) {
 			console.log(res);
-
+			if (userID != null)
+				insertUserLevel("profileLvlProgress", res.users[0].level);
 			if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
 				console.warn("WebSocket not found or closed. Reinitializing...");
 				initializeWebSocket(() => {

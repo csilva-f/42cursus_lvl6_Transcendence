@@ -31,7 +31,7 @@ function insertGlobalUserInfo(newCard, user, users_on) {
     const profileLi = newCard.querySelector("#profileLi");
     const userOnStatus = newCard.querySelector("#userOnStatus");
     userNick.textContent = user.userNick;
-    userLvl.textContent = user.level;
+    userLvl.textContent = user.userLevel;
     friendLi.setAttribute("data-id", user.userID);
     friendLi.setAttribute("data-type", 0);
     profileLi.setAttribute("data-id", user.userID);
