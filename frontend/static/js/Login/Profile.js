@@ -103,7 +103,7 @@ function validateNewPassword(passwordId, validationId, confirmPassId) {
 
 	const hasUpperCase = /[A-Z]/.test(password.value);
 	const hasNumbers = /\d/.test(password.value);
-	const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password.value);
+	const hasSpecialChars = /[!_-'@#$%^&*(),.?":{}|<>]/.test(password.value);
 	const isValidLength = password.value.length >= 8;
 
 	lengthCheck.className = isValidLength ? 'requirement valid' : 'requirement invalid';
@@ -134,9 +134,8 @@ function validatePhoneNumber(phoneId, validationId, errorIcon) {
 	const validationMessage = document.getElementById(validationId);
 	const icon = document.getElementById(errorIcon);
 
-	const isValidLength = phone.value.length === 9;
 	const isNumeric = /^\d+$/.test(phone.value);
-	if (isValidLength && isNumeric) {
+	if (isNumeric) {
 		validationMessage.classList.add('d-none');
 		validationMessage.classList.add('valid');
 		validationMessage.classList.remove('invalid');
@@ -178,7 +177,6 @@ function validateEmail(emailId, validationId, checkId) {
 	const hasCharactersBeforeAt = email.value.indexOf('@') > 0;
 
 	if (hasSingleAtSymbol && hasAtSymbol && hasValidDomain && hasCharactersBeforeAt) {
-		checkIcon.style.color = 'green';
 		validationMessage.classList.add('d-none');
 		validationMessage.classList.add('valid');
 		validationMessage.classList.remove('invalid');

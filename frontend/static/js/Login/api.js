@@ -475,7 +475,7 @@ function validatePasswordsMatch(passwordId1, passwordId2, validationId, iconId) 
 		validationMessage.classList.add('d-none');
 	} else {
 		icon.className = 'fa-solid fa-xmark';
-		icon.style.color = '#ff2600';
+		icon.style.color = 'red';
 	}
 }
 
