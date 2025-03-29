@@ -89,5 +89,6 @@
     "tournamentsLost": "Tournaments Lost",
     "victories": "Victories",
     "losses": "Losses",
-    "matches": "Matches"
+    "matches": "Matches",
+	"globalStatistics": "Global Statistics"
 }

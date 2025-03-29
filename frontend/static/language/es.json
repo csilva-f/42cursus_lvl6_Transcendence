@@ -85,5 +85,6 @@
     "tournamentsLost": "Torneos Perdidos",
     "victories": "Victorias",
     "losses": "Derrotas",
-    "matches": "Partidas"
+    "matches": "Partidas",
+	"globalStatistics": "Estadísticas globales"
 }

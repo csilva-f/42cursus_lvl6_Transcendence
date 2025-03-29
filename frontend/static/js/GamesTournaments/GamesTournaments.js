@@ -105,6 +105,14 @@ function GamesTournamentsMatches(elementID) {
     const happeningLi = document.getElementById('happeningLi');
     const finishedLi = document.getElementById('finishedLi');
     if (searchingIDCheck.includes(elementID)) {
+        if (!document.getElementById('createTournamentBtn').classList.contains('d-none')) {
+            searchingLi.classList.add('d-none')
+            searchingLi.classList.remove('ms-2')
+        } else {
+            searchingLi.classList.remove('d-none')
+            searchingLi.classList.add('ms-2')
+            disableIcon(searchingLi);
+        }
         disableIcon(happeningLi);
         disableIcon(finishedLi);
         activateIcon(searchingLi);
@@ -113,7 +121,14 @@ function GamesTournamentsMatches(elementID) {
         else
             fetchTournaments(1);
     } else if (happeningIDCheck.includes(elementID)) {
-        disableIcon(searchingLi);
+        if (!document.getElementById('createTournamentBtn').classList.contains('d-none')) {
+            searchingLi.classList.add('d-none')
+            searchingLi.classList.remove('ms-2')
+        } else {
+            searchingLi.classList.remove('d-none')
+            searchingLi.classList.add('ms-2')
+            disableIcon(searchingLi);
+        }
         disableIcon(finishedLi);
         activateIcon(happeningLi);
         if (searchElement.classList.contains('iconActive'))
@@ -137,18 +152,18 @@ function GamesTournamentsSelect(elementID) {
         const otherElement = document.getElementById('loadGamesIcon');
         disableIcon(otherElement);
         activateIcon(element);
-        GamesTournamentsMatches('searchingLi');
-        fetchTournaments(1);
         document.getElementById('createTournamentBtn').classList.remove('d-none');
         document.getElementById('createGameBtn').classList.add('d-none');
+        GamesTournamentsMatches('happeningLi');
+        fetchTournaments(2);
     } else if (elementID == "loadGamesIcon") {
         const otherElement = document.getElementById('loadTournamentsIcon');
         disableIcon(otherElement);
         activateIcon(element);
+        document.getElementById('createGameBtn').classList.remove('d-none');    
+        document.getElementById('createTournamentBtn').classList.add('d-none');
         GamesTournamentsMatches('searchingLi');
         fetchGames(1);
-        document.getElementById('createGameBtn').classList.remove('d-none');
-        document.getElementById('createTournamentBtn').classList.add('d-none');
     }
 }
 

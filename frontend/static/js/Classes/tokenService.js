@@ -132,8 +132,8 @@ class tokenService {
   setCookie() {
     this.date.setTime(this.date.getTime() + this.cookieExpiricy);
     let expires = "expires=" + this.date.toUTCString();
-    document.cookie = this.cookieRefreshName + "=" + this.token.refresh;
-    document.cookie = this.cookieAccessName + "=CucaBeludo;" + expires;
+    document.cookie = this.cookieRefreshName + "=" + this.token.refresh + "; path=/";
+    document.cookie = this.cookieAccessName + "=CucaBeludo;" + expires + "; path=/";
   }
 
   checkCookie(cookieName) {
