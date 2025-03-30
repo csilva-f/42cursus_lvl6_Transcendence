@@ -10,8 +10,13 @@ class imageUpload(generics.GenericAPIView):
     permission_classes = [AllowAny]
     def post(self, request):
         try:
-            ProfileImage.objects.get_or_create(name=request.data['user'], image=request.FILES['image'])
-            return Response({'message': 'Image uploaded successfully!'}, status=status.HTTP_200_OK)
+            user = ProfileImage.objects.update_or_create(name=request.data['user'], image=request.FILES['image'])
+            count = ProfileImage.objects.filter(name=request.data['user']).count()
+            print(count)
+            image = ProfileImage.objects.filter(name=request.data['user']).order_by('-created_at').first()
+            extension = image.image.url.split('.')[-1]
+            filename = request.data['user'] + '.' + extension
+            return Response({'message': 'Image uploaded successfully!', 'filename' : filename}, status=status.HTTP_200_OK)
         except(TypeError, ValueError, OverflowError):
             return Response({'error': 'Invalid form data!'}, status=status.HTTP_400_BAD_REQUEST)
             #except (TypeError, ValueError, OverflowError):

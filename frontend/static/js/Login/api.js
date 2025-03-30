@@ -587,90 +587,14 @@ async function fetchProfileInfo(userID) {
 	});
 }
 
-// async function getUserExtensions(userID, accessToken) {
-//     const APIurl = userID ? `/api/get-userextensions/?userID=${userID}` : `/api/get-userextensions/`;
-//     try {
-//         const response = await $.ajax({
-//             type: "GET",
-//             url: APIurl,
-//             contentType: "application/json",
-//             headers: { Authorization: `Bearer ${accessToken}` },
-//         });
-//         console.log("Data get-userextension:", response);
-//         return response.users[0];
-//     } catch (error) {
-//         console.error("Error GET user extension:", error);
-//         return null;
-//     }
-// }
-
-// async function getUserProfile(accessToken) {
-//     const APIurl = `/api/get-profile/`;
-//     try {
-//         const response = await $.ajax({
-//             type: "GET",
-//             url: APIurl,
-//             contentType: "application/json",
-//             headers: { Authorization: `Bearer ${accessToken}` },
-//         });
-//         console.log("Data get-profile:", response);
-//         return response.data || response;
-//     } catch (error) {
-//         console.error("Error GET user profile:", error);
-//         return null;
-//     }
-// }
-
-// async function fetchProfileInfo(userID) {
-//     const userLang = localStorage.getItem("language") || "en";
-//     const langData = await getLanguageData(userLang);
-//     const accessToken = await JWT.getAccess();
-//     console.log("🔹 fetchProfileInfo() iniciado, accessToken:", accessToken);
-
-//     try {
-//         const [userExtensions, userProfile] = await Promise.all([
-//             getUserExtensions(userID, accessToken),
-//             getUserProfile(accessToken)
-//         ]);
-
-//         if (!userExtensions || !userProfile) {
-//             console.error("Error: incomplete data!");
-//             return;
-//         }
-
-//         const userData = { ...userExtensions, ...userProfile };
-//         console.log("Combined profile data:", userData);
-
-//         if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
-// 			console.warn("WebSocket not found or closed. Reinitializing...");
-// 			initializeWebSocket(() => {
-// 				requestOnlineUsers(function (onlineUsers) {
-// 					console.log("Updated online users list:", onlineUsers);
-// 					insertProfileInfo(userData, onlineUsers);
-// 				});
-// 			});
-// 		} else {
-// 			requestOnlineUsers(function (onlineUsers) {
-// 				console.log("Updated online users list:", onlineUsers);
-// 				insertProfileInfo(userData, onlineUsers);
-// 			});
-// 		}
-
-//         updateContent(langData);
-
-//     } catch (error) {
-//         console.error("Error profile data:", error);
-//         showErrorToast("Error loading profile", error, langData);
-//     }
-// }
-
 async function insertProfileInfo(UserElement, users_on) {
-	console.log(UserElement);
+	console.log("[insertProfileInfo]")
 	document.getElementById("birthdayText").textContent= UserElement.birthdate;
 	document.getElementById("genderText").textContent= UserElement.gender;
-	document.getElementById("phoneNumberText").textContent= UserElement.gender;
 	document.getElementById("nicknameText").textContent= UserElement.nick;
 	document.getElementById("bioText").textContent= UserElement.bio;
+	document.getElementById("avatarPreview").src= `/static/img/profilePic/${UserElement.avatar}`;
+	document.getElementById("phoneNumberText").textContent = "PRIVATE";
 
 	console.log(Number(UserElement.id));
 	console.log(users_on);
@@ -732,61 +656,22 @@ async function resetPassword() {
   });
 }
 
-async function GetProfileView() {
-	const userLang = localStorage.getItem("language") || "en";
-	const langData = await getLanguageData(userLang);
-	const accessToken = await JWT.getAccess();
-	const apiUrl = "/authapi";
- $.ajax({
-	 type: "POST",
-	 url: `${apiUrl}/get-profile/`,
-	 contentType: "application/json",
-	 headers: {
-		 "Authorization": `Bearer ${accessToken}`
-	 },
-	 data: "",
-	 success: function (res) {
-		 insertProfileData(res.data);
-		 //updateContent(langData);
-		 console.log("data do get: " ,res);
-	 },
-	 error: function (xhr, status, error) {
-		console.error("Error Thrown:", error);
-		showErrorToast(APIurl, error, langData);
-	 }
- });
-}
-
 async function updateProfile() {
-	const userLang = localStorage.getItem("language") || "en";
-	const langData = getLanguageData(userLang);
-	const accessToken = await JWT.getAccess();
-	const apiUrl = "/authapi";
-	const firstName = document.getElementById("firstName").value;
-	const lastName = document.getElementById("lastName").value;
-	const number = document.getElementById("phoneNumber").value;
-
-	const data = {
-		first_name: firstName,
-		last_name: lastName,
-		phone_number: number
-	};
-	$.ajax({
-		type: "POST",
-		url: `${apiUrl}/update-profile/`,
-		contentType: "application/json",
-		headers: {
-			"Authorization": `Bearer ${accessToken}`
-		},
-		data: JSON.stringify(data),
-		success: function(res) {
-			console.log(res.message);
-		},
-		error: function(xhr, status, error) {
-			console.error("Error Thrown:", error);
-			showErrorToast(apiUrl, error, langData);
-		}
-	});
+	UserInfo.updateFirstName(document.getElementById("firstName").value);
+	UserInfo.updateLastName(document.getElementById("lastName").value);
+	UserInfo.updatePhoneNumber(document.getElementById("phoneNumber").value);
+	UserInfo.updateBirthdate(document.getElementById("birthday").value);
+	let gender = document.getElementById("gender").value;
+	if (gender == "male")
+	   UserInfo.updateGender(1);
+	else if (gender == "female")
+	   UserInfo.updateGender(2);
+  else
+     UserInfo.updateGender(3);
+	UserInfo.updateBio(document.getElementById("biography").value);
+	await UserInfo.updateProfile();
+	await UserInfo.updateUserExtension();
+	insertOwnProfileInfo();
 }
 
 

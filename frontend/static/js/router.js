@@ -205,6 +205,7 @@ async function activateTopBar() {
 	topbar.classList.remove('d-none')
 	document.getElementById("personNickname").textContent = await UserInfo.getUserNick();
 	document.getElementById("subMsg").textContent = `${await UserInfo.getUserFirstName()} ${await UserInfo.getUserLastName()}`;
+	document.getElementById("userProfilePic").src = await UserInfo.getUserAvatarPath();
 	await insertUserLevel("personLvlProgress", null)
 }
 
@@ -405,10 +406,9 @@ async function changeActive(location) {
 			document.getElementById("subMsg").style.display = "none";
 			const statsEverythingIconProfile = document.getElementById("statsEverythingIcon");
 			activateIcon(statsEverythingIconProfile);
+			insertOwnProfileInfo();
 			insertUserLevel("profileLvlProgress", null);
-			fetchProfileInfo(null);
 			fetchStatistics(null);
-			GetProfileView(null);
 			getForms();
 			const input = document.querySelector("#phoneNumber");
 			window.intlTelInput(input, {
