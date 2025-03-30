@@ -137,17 +137,6 @@ async function fetchTopUsers() {
 		});
 }
 
-function renderHomeFriends(usersList, cardTemplate, users_on) {
-	const divElement = document.getElementById("friendsContent");
-	divElement.innerHTML = "";
-	usersList.forEach(element => {
-		const newCard = document.createElement("div");
-		newCard.innerHTML = cardTemplate;
-		insertHomeFriendInfo(newCard, element, users_on);
-		divElement.appendChild(newCard);
-	});
-}
-
 async function finishProfile() {
 	const APIurl = `/api/update-userextension/`;
 	const accessToken = await JWT.getAccess();
@@ -175,31 +164,6 @@ async function finishProfile() {
 			await UserInfo.refreshUser();
 			await activateTopBar();
 			fetchTopUsers();
-		},
-		error: function (xhr, status, error) {
-			//showErrorToast(APIurl, error, langData);
-		},
-	});
-}
-
-async function uploadAvatar() {
-	const APIurl = `/api/update-userextension/`;
-	const accessToken = await JWT.getAccess();
-
-	let userData = {
-		// avatar: aqui o path
-	};
-	$.ajax({
-		type: "POST",
-		url: APIurl,
-		Accept: "application/json",
-		contentType: "application/json",
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-		},
-		data: JSON.stringify(userData),
-		success: function (res) {
-			//showSuccessToast(langData, langData.gameEntered);
 		},
 		error: function (xhr, status, error) {
 			//showErrorToast(APIurl, error, langData);

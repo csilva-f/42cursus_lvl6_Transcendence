@@ -114,18 +114,28 @@ def get_games(request):
     games_data = []
     for game in games:
         user1_nick = None
+        user1_avatar = None
         user2_nick = None
+        user2_avatar = None
 
         if game.user1:
             try:
                 user1_nick = tUserExtension.objects.get(user=game.user1).nick
             except tUserExtension.DoesNotExist:
                 user1_nick = None
+            try:
+                user1_avatar = tUserExtension.objects.get(user=game.user1).avatar
+            except tUserExtension.DoesNotExist:
+                user1_avatar = None
         if game.user2:
             try:
                 user2_nick = tUserExtension.objects.get(user=game.user2).nick
             except tUserExtension.DoesNotExist:
                 user2_nick = None
+            try:
+                user2_avatar = tUserExtension.objects.get(user=game.user2).avatar
+            except tUserExtension.DoesNotExist:
+                user2_avatar = None
 
         games_data.append({
             'userID': u_id if u_id else None,
@@ -137,8 +147,10 @@ def get_games(request):
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
             'user1Nick': game.user1_nick if game.tournament else user1_nick,
+            'user1Avatar': game.user1_avatar if game.tournament else user1_avatar,
             'user2ID': game.user2,
             'user2Nick': game.user2_nick if game.tournament else user2_nick,
+            'user2Avatar': game.user2_avatar if game.tournament else user2_avatar,
             'winnerUserID': game.winnerUser,
             'user1_points': game.user1_points,
             'user2_points': game.user2_points,
@@ -284,18 +296,28 @@ def get_usergames(request):
     games_data = []
     for game in games:
         user1_nick = None
+        user1_avatar = None
         user2_nick = None
+        user2_avatar = None
 
         if game.user1:
             try:
                 user1_nick = tUserExtension.objects.get(user=game.user1).nick
             except tUserExtension.DoesNotExist:
                 user1_nick = None
+            try:
+                user1_avatar = tUserExtension.objects.get(user=game.user1).avatar
+            except tUserExtension.DoesNotExist:
+                user1_avatar = None
         if game.user2:
             try:
                 user2_nick = tUserExtension.objects.get(user=game.user2).nick
             except tUserExtension.DoesNotExist:
                 user2_nick = None
+            try:
+                user2_avatar = tUserExtension.objects.get(user=game.user2).avatar
+            except tUserExtension.DoesNotExist:
+                user2_avatar = None
 
         games_data.append({
             'userID': user_id if user_id else None,
@@ -307,8 +329,10 @@ def get_usergames(request):
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
             'user1Nick': user1_nick,
+            'user1Avatar': user1_avatar,
             'user2ID': game.user2,
             'user2Nick': user2_nick,
+            'user2Avatar': user2_avatar,
             'winnerUserID': game.winnerUser,
             'user1_points': game.user1_points,
             'user2_points': game.user2_points,
@@ -1184,6 +1208,7 @@ def get_friendships(request):
                     'friendID': friends.user2.user if int(friends.user1.user) == int(user_id) else friends.user1.user,
                     'friendNick': friends.user2.nick if int(friends.user1.user) == int(user_id) else friends.user1.nick,
                     'friendLevel': friends.user2.ulevel if int(friends.user1.user) == int(user_id) else friends.user1.ulevel,
+                    'friendAvatar': friends.user2.avatar if int(friends.user1.user) == int(user_id) else friends.user1.avatar,
                     'statusID': friends.requestStatus.status,
                     'statusLabel': friends.requestStatus.label
                 }
@@ -1208,6 +1233,7 @@ def get_friendships(request):
                     'friendID': friends.user2.user if int(friends.user1.user) == int(u_id) else friends.user1.user,
                     'friendNick': friends.user2.nick if int(friends.user1.user) == int(u_id) else friends.user1.nick,
                     'friendLevel': friends.user2.ulevel if int(friends.user1.user) == int(u_id) else friends.user1.ulevel,
+                    'friendAvatar': friends.user2.avatar if int(friends.user1.user) == int(u_id) else friends.user1.avatar,
                     'statusID': friends.requestStatus.status,
                     'statusLabel': friends.requestStatus.label
                 }
@@ -1233,8 +1259,10 @@ def get_friendships(request):
         {
             'user1ID': friends.user1.user,
             'user1Nick': friends.user1.nick,
+            'user2Avatar': friends.user1.avatar,
             'user2ID': friends.user2.user,
             'user2Nick': friends.user2.nick,
+            'user2Avatar': friends.user2.avatar,
             'requesterID': friends.requester.user,
             'requesterNick': friends.requester.nick,
             'statusID': friends.requestStatus.status,
@@ -1404,7 +1432,8 @@ def get_nonfriendslist(request):
                 {
                     'userID': user.user,
                     'userNick': user.nick,
-                    'userLevel': user.ulevel
+                    'userLevel': user.ulevel,
+                    'userAvatar': user.avatar
                 }
                 for user in non_friends
             ]

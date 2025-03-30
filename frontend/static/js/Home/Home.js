@@ -16,6 +16,7 @@ async function insertHistoryInfo(newCard, element) {
 
 function insertHomeFriendInfo(newCard, element, users_on) {
     newCard.querySelector('#friendNick').textContent = element.friendNick;
+    newCard.querySelector('#friendImg').textContent = `/static/img/profilePic/${element.friendAvatar}`;
     const userOnStatus = newCard.querySelector("#userOnStatus");
 
     if (users_on.includes(Number(element.friendID))) {
@@ -29,6 +30,7 @@ function insertHomeFriendInfo(newCard, element, users_on) {
 function insertTopPlayerInfo(newCard, element) {
     newCard.querySelector('#topPlayerNickname').textContent = element.nickname;
     newCard.querySelector('#topPlayerLvl').textContent = element.level;
+    newCard.querySelector('#topPlayerAvatar').src = `/static/img/profilePic/${element.avatar}`;
 }
 
 function searchFriend() {
@@ -46,4 +48,15 @@ function searchFriend() {
             }
         }
     });
+}
+
+function renderHomeFriends(usersList, cardTemplate, users_on) {
+	const divElement = document.getElementById("friendsContent");
+	divElement.innerHTML = "";
+	usersList.forEach(element => {
+		const newCard = document.createElement("div");
+		newCard.innerHTML = cardTemplate;
+		insertHomeFriendInfo(newCard, element, users_on);
+		divElement.appendChild(newCard);
+	});
 }

@@ -58,7 +58,6 @@ async function fetchGames(statusID) {
 }
 
 //? POST - /api/create-game/
-//! FAZER A CENA PARA PARA CRIAR JOGOS LOCAIS NO API
 async function postGame() {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
@@ -335,43 +334,6 @@ async function fetchTournaments(statusID) {
       console.error("There was a problem with the fetch operation:", error);
     });
 }
-
-//TODO resetTournamentModal
-//? POST - /api/create-tournament/
-// async function postTournament() {
-//   const userLang = localStorage.getItem("language") || "en";
-//   const langData = await getLanguageData(userLang);
-//   const APIurl = `/api/create-tournament/`;
-//   console.log("AQUI CARALHO")
-//   let tournamentData = {
-//     name: document.getElementById("nameTournamentInput").value,
-//     nick2: document.getElementById("P2NickInput").value,
-//     nick3: document.getElementById("P3NickInput").value,
-//     nick4: document.getElementById("P4NickInput").value,
-//   };
-//   console.log("tournamentData: ", tournamentData);
-//   const accessToken = await JWT.getAccess();
-//   $.ajax({
-//     type: "POST",
-//     url: APIurl,
-//     Accept: "application/json",
-//     contentType: "application/json",
-//     headers: {
-//       Authorization: `Bearer ${accessToken}`,
-//     },
-//     data: JSON.stringify(tournamentData),
-//     success: function (res) {
-//       showSuccessToast(langData, langData.tournamentcreated);
-//       fetchTournaments(1);
-//       resetModal();
-//       $("#createTournamentModal").modal("hide");
-//     },
-//     error: function (xhr, status, error) {
-//       showErrorToast(APIurl, error, langData);
-//       resetModal();
-//     },
-//   });
-// }
 
 function getCurrentDate() {
   const today = new Date();

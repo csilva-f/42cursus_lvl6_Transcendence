@@ -200,7 +200,12 @@ async function insertUserLevel(element, otherUserLvl) {
 	}
 }
 
+async function changeTopBarImg(newImg) {
+	document.getElementById("userProfilePic").src = newImg;
+}
+
 async function activateTopBar() {
+	console.log("[activateTopBar]")
 	const topbar = document.getElementById("topbar")
 	topbar.classList.remove('d-none')
 	document.getElementById("personNickname").textContent = await UserInfo.getUserNick();

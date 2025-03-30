@@ -250,6 +250,7 @@ class User {
     this.userGender = null;
     this.userBio = null;
     this.userAvatar = null;
+    this.userAvatarPath = null;
     this.userFirstName = null;
     this.userLastName = null;
     this.userPhoneNumber = null;

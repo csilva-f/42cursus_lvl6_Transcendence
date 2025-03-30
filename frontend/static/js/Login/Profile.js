@@ -52,7 +52,7 @@ async function previewImage(event) {
         response = JSON.parse(response);
         await UserInfo.updateAvatar(response.filename);
         await UserInfo.updateUserExtension();
-        await activateTopBar();
+        await changeTopBarImg(e.target.result);
         imgElement.src = e.target.result;
       });
     };
