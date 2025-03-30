@@ -88,8 +88,8 @@ if ! vault secrets list | grep -q "database/roles/role-auth-db"; then
         db_name=config-auth-db \
         creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}'; \
                             GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
-        default_ttl="2h" \
-        max_ttl="24h"
+        default_ttl="24h" \
+        max_ttl="30d"
 fi
 
 if ! vault secrets list | grep -q "database/roles/role-backend-db"; then
@@ -97,8 +97,8 @@ if ! vault secrets list | grep -q "database/roles/role-backend-db"; then
         db_name=config-backend-db \
         creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}'; \
 							GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
-        default_ttl="2h" \
-        max_ttl="24h"
+        default_ttl="24h" \
+        max_ttl="30d"
 fi
 
 if ! vault secrets list | grep -q "database/roles/role-email-db"; then
@@ -106,8 +106,8 @@ if ! vault secrets list | grep -q "database/roles/role-email-db"; then
         db_name=config-email-db \
         creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}'; \
 							 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
-        default_ttl="2h" \
-        max_ttl="24h"
+        default_ttl="24h" \
+        max_ttl="30d"
 fi
 
 vault write -f database/rotate-root/config-auth-db

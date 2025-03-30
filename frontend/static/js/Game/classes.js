@@ -164,7 +164,7 @@ class Paddle {
         if (ball.lastColision == 1)
             return;
         if (ball.ballVelocityX < 0 && ballLeftSide <= paddleRightSide && ballRightSide > paddleRightSide && ballBottom >= paddleTop && ballTop <= paddleBottom){ //Colisao com o lado direito do paddle
-            console.log("colisao com o lado");
+            //console.log("colisao com o lado");
             // console.log("Left paddle");
             // console.table(ball);
             // console.table(this);
@@ -177,12 +177,12 @@ class Paddle {
             else
                 ball.ballVelocityX *= -1;
             if (ball.ballY > paddleBottom && ball.ballVelocityY < 0){ //colisao com o vertice da base
-                console.log("inverte y");
+                //console.log("inverte y");
                 ball.ballVelocityY *= -1;
             }
             //colisao com o topo
             if (ball.ballY < paddleTop && ball.ballVelocityY > 0 ){ // colisao com o vertice do topo
-                console.log("inverte y");
+                //console.log("inverte y");
                 ball.ballVelocityY *= -1;
             }
             this.paddleColisionTimes++;
@@ -190,13 +190,13 @@ class Paddle {
         }
         if (ball.ballVelocityX < 0 && ballLeftSide <= paddleRightSide) { //Se a bola passar o lado direito do paddle verifica-se colisao com topo e base
             if (ball.ballVelocityY > 0 && ballBottom >= paddleTop && ballTop <= paddleTop){ //Colisao com o topo do paddle
-                console.log("colisao com o topo");
+                //console.log("colisao com o topo");
                 ball.ballVelocityY *= -1;
                 this.paddleColisionTimes++;
                 return true;
             }
             if (ball.ballVelocityY < 0 && ballTop <= paddleBottom && ballBottom >= paddleBottom){ //Colisao com a base do paddle
-                console.log("colisao com a base"); 
+                //console.log("colisao com a base"); 
                 ball.ballVelocityY *= -1;
                 this.paddleColisionTimes++;
                 return true;
@@ -218,7 +218,7 @@ class Paddle {
         if (ball.lastColision == 2)
             return false;
         if (ball.ballVelocityX > 0 && ballRightSide >= paddleLeftSide && ballLeftSide < paddleLeftSide && ballBottom >= paddleTop && ballTop <= paddleBottom){ //Colisao com o lado esquerdo do paddle
-            console.log("colisao com o lado");
+            //console.log("colisao com o lado");
             if (ball.ballVelocityX < maxSpeed)
                 ball.ballVelocityX *= -ballVellocityIncreaseRate;
             else
@@ -231,11 +231,11 @@ class Paddle {
             // console.log("Ball top", ballTop);
             // console.log("Paddle top: ", paddleTop);
             if (ball.ballY > paddleBottom && ball.ballVelocityY < 0){ //colisao com o vertice da base
-                console.log("inverte y");
+                //console.log("inverte y");
                 ball.ballVelocityY *= -1;
             }
             if (ball.ballY < paddleTop && ball.ballVelocityY > 0){ //colisao com o vertice do topo
-                console.log("inverte y");
+                //console.log("inverte y");
                 ball.ballVelocityY *= -1;
             }
             this.paddleColisionTimes++;
@@ -243,13 +243,13 @@ class Paddle {
         }
         if (ball.ballVelocityX > 0 && ballRightSide >= paddleLeftSide) { //Se a bola passar o lado esuqerdo do paddle verifica-se colisao com topo e base
             if (ball.ballVelocityY > 0 && ballBottom >= paddleTop && ballTop <= paddleTop){ //Colisao com o topo do paddle
-                console.log("colisao com o topo");
+                //console.log("colisao com o topo");
                 ball.ballVelocityY *= -1;
                 this.paddleColisionTimes++;
                 return true;
             }
             if (ball.ballVelocityY < 0 && ballTop <= paddleBottom && ballBottom >= paddleBottom){ //Colisao com a base do paddle
-                console.log("colisao com a base");
+                //console.log("colisao com a base");
                 ball.ballVelocityY *= -1;
                 this.paddleColisionTimes++;
                 return true;
@@ -258,40 +258,4 @@ class Paddle {
         return false;
     }
 
-
-    remoteColissionBall(ball, ws, sendMsg) {
-        let dX = ball.ballX - this.getCenterWidth();
-        let dY = ball.ballY - this.getCenterHeight();
-        let absDX = Math.abs(dX);
-        let absDY = Math.abs(dY);
-
-        if (absDX <= (ball.ballRadius + this.getHalfWidth()) && absDY <= (ball.ballRadius + this.getHalfHeight())) {
-            // Colisão na frente do paddle
-            if (absDX > this.getHalfWidth()) {
-                this.paddleColisionTimes++;
-                if (ball.ballVelocityX < maxSpeed)
-                    ball.ballVelocityX *= -1.08;
-                else
-                    ball.ballVelocityX *= -1;
-                ball.ballX = (dX < 0)
-                    ? this.getCenterWidth() - this.getHalfWidth() - ball.ballRadius
-                    : this.getCenterWidth() + this.getHalfWidth() + ball.ballRadius;
-            }
-            // Colisão no topo ou na base
-            if (absDY > this.getHalfHeight()) {
-                ball.ballVelocityY *= -1; // Reverte a direção vertical
-                ball.ballY = (dY < 0)
-                    ? this.getCenterHeight() - this.getHalfHeight() - ball.ballRadius
-                    : this.getCenterHeight() + this.getHalfHeight() + ball.ballRadius;
-            }
-            if (this.paddleSide == 2 && sendMsg){
-                let msg = JSON.stringify(ball.toJSON());
-                ws.send(msg);
-            }
-            if (this.paddleSide == 1){
-                let msg = JSON.stringify(ball.toJSON());
-                ws.send(msg);
-            }
-        }
-    }
 }
