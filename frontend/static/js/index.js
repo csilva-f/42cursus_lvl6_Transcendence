@@ -48,13 +48,6 @@ function getForms() {
           else if (form.id == "forgotPwd-form") forgotPwd();
           else if (form.id == "nicknameModal-form") finishProfile();
             //else if (form.id == "mfa-form") verifyAccount();
-          else if (form.id == "editProfileForm"){
-			  const firstName = document.getElementById("firstName").value;
-			  const lastName = document.getElementById("lastName").value;
-			  const phoneNumber = document.getElementById("phoneNumber").value;
-			console.log("last Name", lastName);
-			updateProfile(firstName, lastName, phoneNumber);
-		}
           else if (form.id == "resetPwd-form") resetPassword();
           // else if (form.id == "resendCode-form")
           // 	sendCode();
