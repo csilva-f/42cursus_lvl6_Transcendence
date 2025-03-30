@@ -27,11 +27,13 @@ function reloadSocialInformation(ID) {
 function insertGlobalUserInfo(newCard, user, users_on) {
     const userNick = newCard.querySelector("#userNick");
     const userLvl = newCard.querySelector("#userLvl");
+    const userAvatar = newCard.querySelector("#userAvatar");
     const friendLi = newCard.querySelector("#friendLi");
     const profileLi = newCard.querySelector("#profileLi");
     const userOnStatus = newCard.querySelector("#userOnStatus");
     userNick.textContent = user.userNick;
     userLvl.textContent = user.userLevel;
+    userAvatar.src = `/static/img/profilePic/${user.userAvatar}`;
     friendLi.setAttribute("data-id", user.userID);
     friendLi.setAttribute("data-type", 0);
     profileLi.setAttribute("data-id", user.userID);
@@ -47,6 +49,7 @@ function insertGlobalUserInfo(newCard, user, users_on) {
 function insertFriendInfo(newCard, user, users_on) {
     newCard.querySelector("#userNick").textContent = user.friendNick;
     newCard.querySelector("#userLvl").textContent = user.friendLevel;
+    newCard.querySelector("#userAvatar").src = `/static/img/profilePic/${user.userAvatar}`;
     newCard.querySelector("#friendLi").setAttribute("data-id", user.friendID);
     newCard.querySelector("#friendLi").setAttribute("data-type", 1);
     newCard.querySelector("#friendLiIcon").classList.remove("fa-user-plus")

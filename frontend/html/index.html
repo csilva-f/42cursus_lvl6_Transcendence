@@ -14,11 +14,11 @@
 	<link rel="stylesheet" type="text/css" href="/static/css/icons.css" />
 	<link rel="stylesheet" type="text/css" href="/static/css/Games&Tournaments/Games&Tournaments.css" />
 	<link rel="stylesheet" type="text/css" href="/static/css/TournamentBracket.css" />
-	<script src="/static/js/jquery-3.7.1.min.js"></script>
+	<script src="/static/js/Libraries/jquery-3.7.1.min.js"></script>
 	<!-- Bootstrap Imports -->
-	<script src="/static/js/core@1.6.8.js"></script>
-	<script src="/static/js/dom@1.6.12.js"></script>
-	<script src="/static/js/bootstrap.bundle.min.js"></script>
+	<script src="/static/js/Libraries/core@1.6.8.js"></script>
+	<script src="/static/js/Libraries/dom@1.6.12.js"></script>
+	<script src="/static/js/Libraries/bootstrap.bundle.min.js"></script>
 	<script type="text/javascript" src="/static/js/language.js"></script>
 	<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
 	<!-- FontAwesome Imports -->
@@ -31,14 +31,21 @@
 	<!-- Font Imports -->
 	<link rel="stylesheet" href="/static/css/font.css" />
 	<!-- QRCODE -->
-	<script type="text/javascript" src="/static/js/qrcode.js"></script>
+	<script type="text/javascript" src="/static/js/Libraries/qrcode.js"></script>
 	<script type="text/javascript" src="/static/js/Classes/tokenService.js"></script>
 	<script type="text/javascript" src="/static/js/Classes/User.js"></script>
 	<script type="text/javascript" src="/static/js/index.js"></script>
+	<script type="text/javascript" src="/static/js/webSocket.js"></script>
 	<script type="text/javascript" src="/static/js/api.js"></script>
-	<script type="text/javascript" src="/static/js/Login/api.js"></script>
-	<script type="text/javascript" src="/static/js/Login/Profile.js"></script>
+	<script type="text/javascript" src="/static/js/Register/api.js"></script>
+	<script type="text/javascript" src="/static/js/Register/Login.js"></script>
+	<script type="text/javascript" src="/static/js/Register/Signup.js"></script>
+	<script type="text/javascript" src="/static/js/Register/forgotPassword.js"></script>
+	<script type="text/javascript" src="/static/js/Register/MFA.js"></script>
+	<script type="text/javascript" src="/static/js/Register/temp.js"></script>
 	<script type="text/javascript" src="/static/js/mainPage/mainPage.js"></script>
+	<script type="text/javascript" src="/static/js/Profile/Profile.js"></script>
+	<script type="text/javascript" src="/static/js/Profile/api.js"></script>
 	<script type="text/javascript" src="/static/js/Home/Home.js"></script>
 	<script type="text/javascript" src="/static/js/Home/api.js"></script>
 	<script type="text/javascript" src="/static/js/Game/Game.js"></script>
@@ -54,7 +61,7 @@
 	<script type="text/javascript" src="/static/js/Statistics/api.js"></script>
 	<script type="text/javascript" src="/static/js/Social/Social.js"></script>
 	<script type="text/javascript" src="/static/js/Social/api.js"></script>
-	<script src="/static/js/intlTelInput.min.js"></script>
+	<script src="/static/js/Libraries/intlTelInput.min.js"></script>
 	<link rel="stylesheet" href="/static/css/intlTelInput.css" />
 </head>
 
@@ -223,7 +230,8 @@
 					<div class="container-fluid">
 						<div class="row">
 							<div class="col-12 d-flex justify-content-center align-items-center">
-								<h5 class="h6 m-0 fw-bold text-center" style="color: white" data-i18n="confirmLogout"></h5>
+								<h5 class="h6 m-0 fw-bold text-center" style="color: white" data-i18n="confirmLogout">
+								</h5>
 							</div>
 						</div>
 					</div>
@@ -251,61 +259,84 @@
 			</div>
 		</div>
 	</div>
+
 	<div class="modal fade" id="nickModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-	aria-labelledby="nickModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content" style="background-color: var(--bodyBg);">
-			<div class="modal-header" style="background-color: var(--primary); justify-content: center;">
-				<h5 class="h5 m-0 fw-bold mb-2" style="color: white" id="nickModalLabel" data-i18n="completeProfile"></h5>
-			</div>
-			<div class="modal-body">
-				<div class="tab-pane fade show active" id="nicknameModal" role="tabpanel" aria-labelledby="login-tab">
-					<form class="mt-3 needs-validation" id="nicknameModal-form" novalidate>
-						<div class="mb-3">
-							<div class="input-group has-validation">
-								<span class="input-group-text" style="border: none; background: white;">
-									<i class="fa-solid fa-id-card" style="color: var(--primary);"></i></span>
-								<input type="text" class="form-control" id="newNickname"
-									style="border: none;" required>
-							</div>
-						</div>
-						<div class="row mb-3">
-							<div class="col-md-6">
-								<label for="birthday" class="form-label" data-i18n="birthday"></label>
+		aria-labelledby="nickModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content" style="background-color: var(--bodyBg);">
+				<div class="modal-header" style="background-color: var(--primary); justify-content: center;">
+					<h5 class="h5 m-0 fw-bold mb-2" style="color: white" id="nickModalLabel"
+						data-i18n="completeProfile"></h5>
+				</div>
+				<div class="modal-body">
+					<div class="tab-pane fade show active" id="nicknameModal" role="tabpanel"
+						aria-labelledby="login-tab">
+						<form class="mt-3 needs-validation" id="nicknameModal-form" novalidate>
+							<div class="mb-3">
 								<div class="input-group has-validation">
 									<span class="input-group-text" style="border: none; background: white;">
-										<i class="fa-solid fa-cake-candles" style="color: var(--primary);"></i>
-									</span>
-									<input type="date" class="form-control" id="newBirthday" style="border: none;" required>
+										<i class="fa-solid fa-id-card" style="color: var(--primary);"></i></span>
+									<input type="text" class="form-control" id="newNickname" required
+										style="border: none;"
+										oninput="validateNick('newNickname', 'validateNick', 'checkNick')">
+								</div>
+								<small id="validateNick" class="form-text text-muted d-none">
+									<ul>
+										<li id="checkNick" class="requirement">
+											<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+											Invalid nickname, too long
+										</li>
+									</ul>
+								</small>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label for="birthday" class="form-label" data-i18n="birthday"></label>
+									<div class="input-group has-validation">
+										<span class="input-group-text" style="border: none; background: white;">
+											<i class="fa-solid fa-cake-candles" style="color: var(--primary);"></i>
+										</span>
+										<input type="date" class="form-control" id="newBirthday" required
+											style="border: none;"
+											oninput="validateBirth('newBirthday', 'validateBirth', 'checkBirth')">
+									</div>
+									<small id="validateBirth" class="form-text text-muted d-none">
+										<ul>
+											<li id="checkBirth" class="requirement">
+												<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+												Invalid birth date
+											</li>
+										</ul>
+									</small>
+								</div>
+								<div class="col-md-6">
+									<label for="gender" class="form-label" data-i18n="gender"></label>
+									<div class="input-group has-validation">
+										<span id="gender-icon" class="input-group-text"
+											style="border: none; background: white;">
+											<i class="" style="color: var(--primary);" id="icon"></i>
+										</span>
+										<select class="form-select" id="gender" style="border: none;"
+											onchange="updateIcon()" required>
+											<option value="" selected disabled data-i18n="selectGender"></option>
+											<option value="male" data-i18n="male"></option>
+											<option value="female" data-i18n="female"></option>
+											<option value="other" data-i18n="other"></option>
+										</select>
+									</div>
 								</div>
 							</div>
-							<div class="col-md-6">
-								<label for="gender" class="form-label" data-i18n="gender"></label>
-								<div class="input-group has-validation">
-									<span id="gender-icon" class="input-group-text"
-										style="border: none; background: white;">
-										<i class="" style="color: var(--primary);" id="icon"></i>
-									</span>
-									<select class="form-select" id="gender" style="border: none;"
-										onchange="updateIcon()" required>
-										<option value="" selected disabled data-i18n="selectGender"></option>
-										<option value="male" data-i18n="male"></option>
-										<option value="female" data-i18n="female"></option>
-										<option value="other" data-i18n="other"></option>
-									</select>
-								</div>
+							<div class="col-md-12 text-end">
+								<button class="btn" style="background-color: var(--primary); color: white;"
+									id="saveButton" type="submit" data-i18n="submit"></button>
 							</div>
-						</div>
-						<div class="col-md-12 text-end">
-							<button class="btn" style="background-color: var(--primary); color: white;"
-								id="saveButton" type="submit" data-i18n="submit"></button>
-						</div>
-					</form>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
+
 	<script type="text/javascript" src="/static/js/router.js"></script>
 	<!-- End Sidebar and Content -->
 </body>
