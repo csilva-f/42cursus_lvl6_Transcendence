@@ -200,11 +200,17 @@ async function insertUserLevel(element, otherUserLvl) {
 	}
 }
 
+async function changeTopBarImg(newImg) {
+	document.getElementById("userProfilePic").src = newImg;
+}
+
 async function activateTopBar() {
+	console.log("[activateTopBar]")
 	const topbar = document.getElementById("topbar")
 	topbar.classList.remove('d-none')
 	document.getElementById("personNickname").textContent = await UserInfo.getUserNick();
 	document.getElementById("subMsg").textContent = `${await UserInfo.getUserFirstName()} ${await UserInfo.getUserLastName()}`;
+	document.getElementById("userProfilePic").src = await UserInfo.getUserAvatarPath();
 	await insertUserLevel("personLvlProgress", null)
 }
 
@@ -320,6 +326,10 @@ async function changeActive(location) {
 	const langData = await getLanguageData(userLang);
 	const allContent = document.getElementById("allContent")
 	allContent.classList.add('d-none');
+	if (await UserInfo.getUserNick() == null) {
+		let nickModal = new bootstrap.Modal(document.getElementById('nickModal'));
+		nickModal.show();
+	}
 	await activateTopBar();
 	switch (location) {
 		case "/games":
@@ -388,10 +398,6 @@ async function changeActive(location) {
 			updateContent(langData);
 			document.getElementById("subMsg").style.display = "block";
 			getForms();
-			if (await UserInfo.getUserNick() == null) {
-				let nickModal = new bootstrap.Modal(document.getElementById('nickModal'));
-				nickModal.show();
-			}
 			fetchMatchHistory();
 			fetchHomeFriends();
 			fetchTopUsers();
@@ -405,10 +411,9 @@ async function changeActive(location) {
 			document.getElementById("subMsg").style.display = "none";
 			const statsEverythingIconProfile = document.getElementById("statsEverythingIcon");
 			activateIcon(statsEverythingIconProfile);
+			insertOwnProfileInfo();
 			insertUserLevel("profileLvlProgress", null);
-			fetchProfileInfo(null);
 			fetchStatistics(null);
-			GetProfileView(null);
 			getForms();
 			const input = document.querySelector("#phoneNumber");
 			window.intlTelInput(input, {

@@ -71,9 +71,11 @@ migrate:
 	@docker compose exec -it auth python manage.py migrate
 	@docker compose exec -it backend python manage.py makemigrations
 	@docker compose exec -it backend python manage.py migrate
+	@docker compose exec -it channels python manage.py makemigrations
+	@docker compose exec -it channels python manage.py migrate
 	@docker compose exec -it email python manage.py makemigrations
 	@docker compose exec -it email python manage.py migrate
-	@docker compose restart auth backend email
+	@docker compose restart auth backend email channels
 	@sleep 2
 	@docker compose up -d nginx
 

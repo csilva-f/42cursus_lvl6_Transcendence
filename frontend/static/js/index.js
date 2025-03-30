@@ -8,6 +8,55 @@ const images = [
 
 let incrementImg = 0;
 
+function showErrorToast(APIurl, error, langData) {
+  fetch("/templates/Components/ToastError.html")
+      .then((response) => {
+          if (!response.ok) {
+              throw new Error("Network response was not ok " + response.statusText);
+          }
+          return response.text();
+      })
+      .then((data) => {
+          const bodyElement = document.getElementById("body");
+          const newToast = document.createElement("div");
+          newToast.innerHTML = data;
+          const errorToast = newToast.querySelector('#errorToast')
+          const toastShow = bootstrap.Toast.getOrCreateInstance(errorToast)
+          const errorMsg = newToast.querySelector('#errorMsg')
+          const urlAPIElement = newToast.querySelector('#urlAPI')
+          if (error == null)
+              errorMsg.textContent = "Unknown Error";
+          else
+              errorMsg.textContent = error;
+          urlAPIElement.textContent = APIurl;
+          bodyElement.appendChild(newToast);
+          updateContent(langData);
+          toastShow.show()
+      })
+}
+
+function showSuccessToast(langData, type) {
+  fetch("/templates/Components/ToastSuccess.html")
+      .then((response) => {
+          if (!response.ok) {
+              throw new Error("Network response was not ok " + response.statusText);
+          }
+          return response.text();
+      })
+      .then((data) => {
+          const bodyElement = document.getElementById("body");
+          const newToast = document.createElement("div");
+          newToast.innerHTML = data;
+          const successToast = newToast.querySelector('#successToast')
+          const toastShow = bootstrap.Toast.getOrCreateInstance(successToast)
+          const successMsg = newToast.querySelector('#successMsg')
+          successMsg.textContent = type;
+          bodyElement.appendChild(newToast);
+          updateContent(langData);
+          toastShow.show()
+      })
+}
+
 async function spankShinChan() {
 	const imgElement = document.getElementById("logoImg");
 	incrementImg++;
@@ -48,13 +97,6 @@ function getForms() {
           else if (form.id == "forgotPwd-form") forgotPwd();
           else if (form.id == "nicknameModal-form") finishProfile();
             //else if (form.id == "mfa-form") verifyAccount();
-          else if (form.id == "editProfileForm"){
-			  const firstName = document.getElementById("firstName").value;
-			  const lastName = document.getElementById("lastName").value;
-			  const phoneNumber = document.getElementById("phoneNumber").value;
-			console.log("last Name", lastName);
-			updateProfile(firstName, lastName, phoneNumber);
-		}
           else if (form.id == "resetPwd-form") resetPassword();
           // else if (form.id == "resendCode-form")
           // 	sendCode();
