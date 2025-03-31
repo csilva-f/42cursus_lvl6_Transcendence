@@ -684,6 +684,38 @@ def post_update_game(request): #update statusID acording to user2 and winner var
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 @csrf_exempt
+def post_update_gameTS(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            game_id = data.get('gameID')
+            if not game_id:
+                return JsonResponse({"error": "Game ID is required for update"}, status=400)
+            try:
+                game = tGames.objects.get(game=game_id)
+            except tGames.DoesNotExist:
+                return JsonResponse({"error": "Game not found"}, status=404)
+            user_id = data.get('uid')
+            if not user_id:
+                return JsonResponse({"error": "User ID is required for update"}, status=400)
+            game.startTS = now()
+            game.save()
+            game_data = {
+                "gameID": game.game,
+                "user1ID": game.user1,
+                "user2ID": game.user2,
+                "user1Nick": game.user1_nick,
+                "user2Nick": game.user2_nick,
+                "isLocal": game.isLocal
+            }
+            return JsonResponse({"message": "Game start time updated successfully", "game": game_data}, status=201)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON data"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    return JsonResponse({"error": "Invalid request method"}, status=405)
+
+@csrf_exempt
 def post_create_userextension(request):
     if request.method == 'POST':
         try:

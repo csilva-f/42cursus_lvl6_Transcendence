@@ -123,7 +123,6 @@ async function postLocalGame() {
       resetModal();
     },
   });
-
 }
 
 // const ws = new WebSocket("wss://localhost:8000/channels/game_id/");
@@ -479,29 +478,32 @@ async function enterTournamentGame(gameID) {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
   const accessToken = await JWT.getAccess();
-  const APIurl = `/api/get-games/?gameID=${gameID}`;
+  const APIurl = `/api/update-gameTS/`;
+  let gameData = {
+    gameID: gameID
+  };
+
   $.ajax({
-    type: "GET",
+    type: "POST",
     url: APIurl,
     Accept: "application/json",
     contentType: "application/json",
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
+    data: JSON.stringify(gameData),
     success: async function (res) {
       const divElement = document.getElementById("gamesContent");
       divElement.innerHTML = "";
-      game = res.games[0];
-      let gameData = {};
-      gameData["gameID"] = game.gameID;
-      gameData["islocal"] = game.isLocal;
-      gameData["P1"] = game.user1Nick;
-      gameData["P1_uid"] = game.user1ID;
-      gameData["P2"] = game.user2Nick;
-      gameData["P2_uid"] = game.user2ID;
-      localStorage.setItem("gameInfo", JSON.stringify(gameData));
-      console.log("gameData: ");
-      console.log(gameData);
+      game = res.game;
+      let gameInfo = {};
+      gameInfo["gameID"] = game.gameID;
+      gameInfo["islocal"] = game.isLocal;
+      gameInfo["P1"] = game.user1Nick;
+      gameInfo["P1_uid"] = game.user1ID;
+      gameInfo["P2"] = game.user2Nick;
+      gameInfo["P2_uid"] = game.user2ID;
+      localStorage.setItem("gameInfo", JSON.stringify(gameInfo));
       window.history.pushState({}, "", "/pong");
       await locationHandler();
       updateContent(langData);
