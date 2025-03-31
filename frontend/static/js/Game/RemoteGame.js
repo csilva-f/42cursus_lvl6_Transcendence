@@ -25,7 +25,7 @@ class RemoteGame  {
         this.canvas = document.getElementById("pongGameCanvas")
         this.ctx = this.canvas.getContext('2d');
         this.objects = []
-        this.ballVelocity = 5;
+        this.ballVelocity = ballVelocity;
         this.ballRadius = 15;
         this.maxScore = 5;
         this.stopGame = false;
@@ -72,6 +72,8 @@ class RemoteGame  {
         document.getElementById("playerLeftScore").innerHTML = this.objects[1].paddleScore;
         document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
         startTimer();
+        //so o left player atualiza a bola e o paddle right by value
+        //so o right player (host) atualiza o paddle left by value
         this.ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
             // console.log("Element:", data.element);
@@ -80,13 +82,14 @@ class RemoteGame  {
             // console.log("Y:", data.paddleY);
             //NOTE - 1 - Atualizar a bola
             if (data.element == 0) { //saber se e a a minha bola faz sentido? o nuno diz que nao
-                this.ballUpdateByValue(data.ballX, data.ballY, data.ballVelocityX, data.ballVelocityY);
+                if(!this.isHost) //verificar se isto e util
+                    this.ballUpdateByValue(data.ballX, data.ballY, data.ballVelocityX, data.ballVelocityY, data.lastColision);
             }
             //NOTE - 2 - Atualizar o paddle
             if (data.element == 1) {
-                if(data.paddleSide == 1)
+                if(data.paddleSide == 1 && this.isHost)
                     this.paddleUpdateByValueLeft(data.paddleY);
-                if(data.paddleSide == 2)
+                if(data.paddleSide == 2 && !this.isHost)
                     this.paddleUpdateByValueRight(data.paddleY);
             }
             //NOTE - 3 - Atualizar o score (golo)
@@ -101,6 +104,50 @@ class RemoteGame  {
             }
         };
         this.gameLoop();
+    }
+    ballUpdateByValue(x, y, velocityX, velocityY, lastColision){
+        console.log("=>> Ball update by value")
+        this.objects[0].updateByValue(x, y, velocityX, velocityY, lastColision);
+        this.objects[0].colissionEdge(this.canvas);
+        // let colision_left = this.objects[1].leftColissionBall(this.objects[0]);
+        // let colision_right = this.objects[2].rightColissionBall(this.objects[0]);
+        // if(colision_left){
+        //     console.log("=>> Ball update by value")
+        //     console.log("Colision with paddle LEFT! Update ball again");
+        //     this.objects[0].lastColision = 1;
+        //     this.objects[0].update();
+        // }
+        // if(colision_right){
+        //     console.log("=>> Ball update by value")
+        //     console.log("Colision with paddle RIGHT! Update ball again");
+        //     this.objects[0].lastColision = 2;
+        //     this.objects[0].update();
+        // }
+    }
+    paddleUpdateByValueRight(y){
+        this.objects[2].paddleY = y;
+        this.objects[2].colissionEdge(this.canvas);
+        this.objects[2].rightColissionBall(this.objects[0]);
+        if(colision){
+            console.log("==> paddle update by right")
+        }
+        //if(colision && this.isHost)
+        //    this.objects[1].paddleColisionTimes++;
+    }
+    paddleUpdateByValueLeft(y){
+        this.objects[1].paddleY = y;
+        this.objects[1].colissionEdge(this.canvas);
+        let colision = this.objects[1].leftColissionBall(this.objects[0]);
+        if(colision){
+            console.log("==> paddle update by left")
+        }
+        if(colision && this.isHost)
+            this.objects[1].paddleColisionTimes++;
+        //     console.log("=>> Paddle pdate by value left")
+        //     console.log("Colision with paddle LEFT! Update ball again");
+        //     this.objects[0].lastColision = 1;
+        //     this.objects[0].update();
+        // }
     }
     async gameLoop() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -163,12 +210,12 @@ class RemoteGame  {
         this.objects[1].updateRemote(this.isHost, this.ws);
         this.objects[1].colissionEdge(this.canvas);
         let colision = this.objects[1].leftColissionBall(this.objects[0]);
-        if(this.isHost && colision){
+        if(colision){
             console.log("=>> Paddle update left")
             console.log("Colision with paddle LEFT! Update ball again");
-            this.objects[0].lastColision = 1;
             this.objects[0].update();
             if(this.isHost){
+                this.objects[1].paddleColisionTimes++;
                 let msg = JSON.stringify(this.objects[0].toJSON());
                 this.ws.send(msg);
             }
@@ -181,53 +228,13 @@ class RemoteGame  {
         if(colision){
             console.log("=>> Paddle update right")
             console.log("Colision with paddle RIGHT! Update ball again");
-            this.objects[0].lastColision = 2;
             this.objects[0].update();
             if(this.isHost){
+                this.objects[2].paddleColisionTimes++;
                 let msg = JSON.stringify(this.objects[0].toJSON());
                 this.ws.send(msg);
             }
         }
-    }
-    ballUpdateByValue(x, y, velocityX, velocityY){
-        this.objects[0].updateByValue(x, y, velocityX, velocityY);
-        this.objects[0].colissionEdge(this.canvas);
-        // let colision_left = this.objects[1].leftColissionBall(this.objects[0]);
-        // let colision_right = this.objects[2].rightColissionBall(this.objects[0]);
-        // if(colision_left){
-        //     console.log("=>> Ball update by value")
-        //     console.log("Colision with paddle LEFT! Update ball again");
-        //     this.objects[0].lastColision = 1;
-        //     this.objects[0].update();
-        // }
-        // if(colision_right){
-        //     console.log("=>> Ball update by value")
-        //     console.log("Colision with paddle RIGHT! Update ball again");
-        //     this.objects[0].lastColision = 2;
-        //     this.objects[0].update();
-        // }
-    }
-    paddleUpdateByValueRight(y){
-        this.objects[2].paddleY = y;
-        this.objects[2].colissionEdge(this.canvas);
-        let colision = this.objects[2].rightColissionBall(this.objects[0]);
-        // if(colision){
-        //     console.log("=>> Paddle update by value right")
-        //     console.log("Colision with paddle RIGHT! Update ball again");
-        //     this.objects[0].lastColision = 2;
-        //     this.objects[0].update();
-        // }
-    }
-    paddleUpdateByValueLeft(y){
-        this.objects[1].paddleY = y;
-        this.objects[1].colissionEdge(this.canvas);
-        let colision = this.objects[1].leftColissionBall(this.objects[0]);
-        // if(colision){
-        //     console.log("=>> Paddle pdate by value left")
-        //     console.log("Colision with paddle LEFT! Update ball again");
-        //     this.objects[0].lastColision = 1;
-        //     this.objects[0].update();
-        // }
     }
     gameDraw() {
         this.objects.forEach(element => {
@@ -235,7 +242,7 @@ class RemoteGame  {
         });
     }
     incScore() {
-        if (this.objects[0].ballX <= -this.objects[0].ballRadius){
+        if (this.objects[0].ballX + this.objects[0].ballRadius < -4){
             this.objects[0].lastColision = 0;
             this.objects[2].paddleScore += 1;
             let msg = {
@@ -252,7 +259,7 @@ class RemoteGame  {
                 stopTimer();
             }
         }
-        if (this.objects[0].ballX >= this.canvas.width + this.objects[0].ballRadius){
+        if (this.objects[0].ballX - this.objects[0].ballRadius > this.canvas.width + 4){
             this.objects[0].lastColision = 0;
             this.objects[1].paddleScore += 1;
             let msg = {
