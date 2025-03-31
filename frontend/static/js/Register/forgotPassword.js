@@ -1,6 +1,8 @@
 //? /authapi/recover-password/
 async function forgotPwd() {
 	// Forgot Password function
+	const userLang = localStorage.getItem("language") || "en";
+	const langData = await getLanguageData(userLang);
 	const email = $("#ForgotPwdEmail").val();
 	const apiUrl = "/authapi";
 	$.ajax({
@@ -12,7 +14,8 @@ async function forgotPwd() {
 		success: function (data) {
 			element = document.getElementById("forgotPwd-message");
 			element.classList.remove("invalid-feedback");
-			element.textContent = "E-mail send successfully";
+			$("#signup-message").text("E-mail send successfully");
+			showSuccessToast(langData, langData.ResetPasswordSuccess);
 			//element.classList.add("valid-feedback");
 		},
 		error: function (xhr) {

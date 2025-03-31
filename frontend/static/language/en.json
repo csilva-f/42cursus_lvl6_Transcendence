@@ -45,6 +45,7 @@
     "tournamentcreated": "Tournament created successfully",
     "gameEntered": "Game entered successfully",
     "signUpSuccess": "User registered successfully, please check your email",
+    "ResetPasswordSuccess": "Check your email to reset your password",
     "gameInvited": "Invitation was successful, wait for the other user to accept",
     "friendshipInvited": "Friend Request sent successfully",
     "friendRequest": "Friend Request",

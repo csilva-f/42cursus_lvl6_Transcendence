@@ -26,9 +26,8 @@ function validateEmail(emailId, validationId, checkId) {
     const validationMessage = document.getElementById(validationId);
     const checkIcon = document.getElementById(checkId);
 
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/;
+    const emailRegex =/^[a-zA-Z0-9]+([._-][a-zA-Z0-9]+)*@[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+$/;
     const isValid = emailRegex.test(email.value);
-
     if (isValid) {
         validationMessage.classList.add('d-none', 'valid');
         validationMessage.classList.remove('invalid');
