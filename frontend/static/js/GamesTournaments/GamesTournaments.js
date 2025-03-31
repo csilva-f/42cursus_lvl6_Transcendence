@@ -168,7 +168,7 @@ function insertInfo(newCard, element, statusID) {
     const enterBtn = newCard.querySelector("#enterLi");
     enterBtn.setAttribute("data-id", element.gameID);
     if (statusID != 1)
-            enterBtn.classList.add('d-none');
+        enterBtn.classList.add('d-none');
     user1Level.textContent = element.user1ID;
     user1Nick.textContent = element.user1Nick;
     if (element.user2ID == null) {
@@ -183,25 +183,36 @@ function insertInfo(newCard, element, statusID) {
 }
 
 function insertTournamentInfo(newCard, element, statusID, allGames) {
+    newCard.innerHTML = newCard.innerHTML.replaceAll("{{TOURNAMENT_ID}}", element.tournamentID);
     const tournamentTitle = newCard.querySelector("#tournamentTitle")
     tournamentTitle.textContent = element.name;
-    const tournamentPlayers = newCard.querySelector("#tournamentPlayers")
     const enterBtn = newCard.querySelector("#enterLi");
     enterBtn.setAttribute("data-id", element.tournamentID);
-    tournamentPlayers.textContent = 4;
-    // const tournamentUser1ID = newCard.querySelector("#tournamentCreatedById")
-    // tournamentUser1ID.textContent = element.user1ID;
-    const tournamentUser1Nick = newCard.querySelector("#tournamentP1Nick")
-    tournamentUser1Nick.textContent = element.user1Nick;
-    const tournamentUser2Nick = newCard.querySelector("#tournamentP2Nick")
-    tournamentUser2Nick.textContent = element.user2Nick;
-    const tournamentUser3Nick = newCard.querySelector("#tournamentP3Nick")
-    tournamentUser3Nick.textContent = element.user3Nick;
-    const tournamentUser4Nick = newCard.querySelector("#tournamentP4Nick")
-    tournamentUser4Nick.textContent = element.user4Nick;
+    if (element.statusID == 3) {
+        const tournamenWinner = newCard.querySelector("#tournWinnerNick")
+        tournamenWinner.textContent = element.winnerNick;
+        const divElement = newCard.querySelector('#tournWinner');
+        divElement.classList.remove('d-none');
+        const divElement2 = newCard.querySelector('#tournUsers');
+        divElement2.classList.add('d-none');
+    } else {
+        const tournamentPlayers = newCard.querySelector("#tournamentPlayers")
+        tournamentPlayers.textContent = 4;
+        const tournamentUser1Nick = newCard.querySelector("#tournamentP1Nick")
+        tournamentUser1Nick.textContent = element.user1Nick;
+        const tournamentUser2Nick = newCard.querySelector("#tournamentP2Nick")
+        tournamentUser2Nick.textContent = element.user2Nick;
+        const tournamentUser3Nick = newCard.querySelector("#tournamentP3Nick")
+        tournamentUser3Nick.textContent = element.user3Nick;
+        const tournamentUser4Nick = newCard.querySelector("#tournamentP4Nick")
+        tournamentUser4Nick.textContent = element.user4Nick;
+        const divElement3 = newCard.querySelector('#tournWinner');
+        divElement3.classList.add('d-none');
+        const divElement4 = newCard.querySelector('#tournUsers');
+        divElement4.classList.remove('d-none');
+    }
     const tournamentCreatedOnDate = newCard.querySelector("#tournamentCreatedOn")
     tournamentCreatedOnDate.textContent = element.createdOn;
-    newCard.innerHTML = newCard.innerHTML.replaceAll("{{TOURNAMENT_ID}}", element.tournamentID);
 }
 
 function reloadInformation(statusID) {
@@ -295,14 +306,12 @@ function insertTournamentGameInfo(newCard, game) {
     }
     const tournGameStat = newCard.querySelector("#tournGameStatus")
     tournGameStat.textContent = game.status;
-    // if (game.winnerUserID) {
-    //     const tournGameWinner = newCard.querySelector("#tournGameWinner")
-    //     tournGameNbr.textContent = game.winnerNick;
-    //     const element1 = document.querySelector('.d-flex.justify-content-center.align-items-center.ms-1.d-none');
-    //     if (element1) element1.classList.remove('d-none');
-    //     const element2 = document.querySelector('.d-flex.flex-column.d-none');
-    //     if (element2) element2.classList.remove('d-none');
-    // }
+    if (game.statusID == 3) {
+        const tournGameWinner = newCard.querySelector("#tournGameWinner")
+        tournGameWinner.textContent = game.winnerNick;
+        const element2 = document.querySelector('#tournGameWinnerText');
+        if (element2) element2.classList.remove('d-none');
+    }
 }
 
 //* Function to laod the tournament games

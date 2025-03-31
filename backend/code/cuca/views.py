@@ -364,6 +364,7 @@ def get_tournaments(request):
             'tournamentID': tournament.tournament,
             'name': tournament.name,
             'winnerUserID': tournament.winnerUser,
+            'winnerNick': tournament.winnerNick,
             'statusID': tournament.status.statusID, 
             'status': tournament.status.status,
             'user1ID': tournament.createdByUser,
@@ -384,7 +385,6 @@ def post_create_game(request):
         try:
             data = json.loads(request.body)
             user1_id = data.get('uid')
-            print(user1_id)
             if not user1_id:
                 return JsonResponse({"error": "User1 ID is required"}, status=400)
             if not tUserExtension.objects.filter(user=user1_id).exists():
@@ -401,6 +401,7 @@ def post_create_game(request):
                 return JsonResponse({"error": f"Status ID {gstatus} does not exist in tauxStatus"}, status=404)
             user2_id = None
             user2nick = None
+            gstart = now()
             if ginvit:
                 user2_id = data.get('user2ID')
                 if not user2_id:
@@ -431,7 +432,8 @@ def post_create_game(request):
                 tournament=tournament_id,
                 status=status_instance,
                 isLocal=glocal,
-                isInvitation = ginvit
+                isInvitation = ginvit,
+                startTS = gstart
             )
             game_data = {
                 "id": game.game,
@@ -475,79 +477,6 @@ def post_accept_game_invit(request):
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
-#validar torneios com status 1 ou 2 com nomes iguais
-#substituir random_stuff pelo randomizer (que tem que validar os nomes against torneios com status 1 ou 2)
-# @csrf_exempt
-# def post_create_tournament(request):
-#     if request.method == 'POST':
-#         try:
-#             data = json.loads(request.body)
-#             init_str = data.get('beginDate')
-#             end_str = data.get('endDate')
-#             save_name = data.get('name')
-#             # if save_name is None: #validates missing key
-#             #     save_name = "random_stuff"
-#             if not save_name:  #validates empty value
-#                 return JsonResponse({"error": "name can't be empty"}, status=400)
-#             existing_tournament = tTournaments.objects.filter(name=save_name, status__in=[1, 2]).exists()
-#             if existing_tournament:
-#                 return JsonResponse({"error": "Tournament name must be different from an active tournament"}, status=400)
-#             created_by = data.get('uid')
-#             if not created_by:
-#                 return JsonResponse({"error": "Created by user ID is required"}, status=400)
-#             if not tUserExtension.objects.filter(user=created_by).exists():
-#                 return JsonResponse({"error": f"User ID {created_by} does not exist in tUserExtension"}, status=404)
-#             creation_ts = date.today()
-#             if not init_str or init_str is None or not end_str or end_str is None: #validates missing key and empty value
-#                 return JsonResponse({"error": "init and end dates are required"}, status=400)
-#             try:
-#                 init = datetime.strptime(init_str, "%Y-%m-%d").date()
-#                 end = datetime.strptime(end_str, "%Y-%m-%d").date()
-#             except ValueError: 
-#                 return JsonResponse({"error": "Date is wrongly formatted. Use YYYY-MM-DD."}, status=400)
-#             if init < date.today() or end < date.today():
-#                 return JsonResponse({"error": "begin and end dates must be present or future"}, status=400)
-#             if init > end:
-#                 return JsonResponse({"error": "init date must be prior to end date"}, status=400)
-#             elif init == end:
-#                 now = datetime.now()
-#                 end_of_day = datetime.combine(datetime.today(), datetime.max.time())
-#                 time_left = end_of_day - now
-#                 if time_left < timedelta(hours = 2):
-#                     return JsonResponse({"error": "There's not enough time to host a tournament today"}, status=400)
-#             with transaction.atomic():
-#                 tournament = tTournaments.objects.create(
-#                     name = save_name,
-#                     beginDate=init,
-#                     endDate=end,
-#                     creationTS = creation_ts,
-#                     createdByUser = created_by
-#                 )
-#                 phase1 = tauxPhase.objects.get(phase=1)
-#                 phase2 = tauxPhase.objects.get(phase=2)
-#                 phase3 = tauxPhase.objects.get(phase=3)
-#                 games = []
-#                 for i in range(7):
-#                     if i < 4:
-#                         gphase = phase1
-#                     elif i < 6:
-#                         gphase = phase2
-#                     else:
-#                         gphase = phase3
-#                     games.append(tGames(
-#                         tournament=tournament,
-#                         status_id=1,
-#                         isLocal=False,
-#                         phase=gphase
-#                     ))
-#                 tGames.objects.bulk_create(games)
-#             return JsonResponse({"message": "Tournament created successfully", "tournament_id": tournament.tournament}, status=201)
-#         except json.JSONDecodeError:
-#             return JsonResponse({"error": "Invalid JSON data"}, status=400)
-#         except Exception as e:
-#             return JsonResponse({"error": str(e)}, status=500)
-#     return JsonResponse({"error": "Invalid request method"}, status=405)
-
 @csrf_exempt
 def post_create_tournament(request):
     if request.method == 'POST':
@@ -570,8 +499,9 @@ def post_create_tournament(request):
                 return JsonResponse({"error": f"User ID {created_by} does not exist in tUserExtension"}, status=404)
             if not u2 or not u3 or not u4:
                 return JsonResponse({"error": "Tournament players' alias must be provided"}, status=400)
-
             uext1 = tUserExtension.objects.get(user=created_by)
+            if u2 in [u3, u4, uext1.nick] or u3 in [u4, uext1.nick] or u4 == uext1.nick:
+                return JsonResponse({"error": "Tournament players' alias must be different"}, status=400)
             creation_ts = date.today()
             with transaction.atomic():
                 tournament = tTournaments.objects.create(
@@ -667,23 +597,20 @@ def post_update_game(request): #update statusID acording to user2 and winner var
             if not is_join and user_id not in [game.user1, game.user2] and not game.tournament:
                 return JsonResponse({"error": "Winner must be either User1 or User2"}, status=400)
             if not is_join:
-                print("aqui5")
                 gstatus = tauxStatus.objects.get(statusID=3)
                 game.status = gstatus
-                game.endTS = now() 
+                game.endTS = now()
 
                 u1_points = data.get('user1_points')
                 u2_points = data.get('user2_points')
                 u1_hits = data.get('user1_hits')
                 u2_hits = data.get('user2_hits')
-                print("aqui6")
                 game.user1_points = u1_points
                 game.user2_points = u2_points
                 game.user1_hits = u1_hits
                 game.user2_hits = u2_hits
                 game.winnerUser = game.user1 if int(game.user1_points) > int(game.user2_points) else game.user2
                 game.winnerNick = game.user1_nick if int(game.user1_points) > int(game.user2_points) else game.user2_nick
-                print("aqui1")
                 if (not u1_points and u1_points != 0) or (not u2_points and u2_points != 0) or (not u1_hits and u1_hits != 0) or (not u2_hits and u2_hits != 0):
                     return JsonResponse({"error": "Users game statistics are required for update"}, status=400)
                 if (game.user1_nick == game.winnerNick and u1_points < 5) or (game.user2_nick == game.winnerNick and u2_points < 5):
@@ -698,17 +625,13 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                         tUserExtension.objects.filter(user=game.user1).update(ulevel=models.F('ulevel') + 0.05)
                     elif game.user2 != -1:
                         tUserExtension.objects.filter(user=game.user2).update(ulevel=models.F('ulevel') + 0.2)
-                print("aqui2")
                 if game.tournament and game.phase:
-                    print("aqui3")
                     if game.phase.phase == 2:
                         next_phase_id = game.phase.phase + 1
                         next_game = tGames.objects.filter(tournament=game.tournament, phase_id=next_phase_id).filter(
                             models.Q(user1__isnull=True) | models.Q(user2__isnull=True)
                             ).first()
-                        print("aqui4")
                         if not next_game:
-                            print("aqui7")
                             return JsonResponse({"error": "No game found with available spot in the next phase."}, status=400)
                         if next_game.user1 is None:
                             next_game.user1 = game.winnerUser
@@ -719,7 +642,6 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                             gstatus2 = tauxStatus.objects.get(statusID=2)
                             next_game.status = gstatus2
                         next_game.save()
-                        print("aqui8")
                     elif game.phase.phase == 3:
                         tournament = game.tournament
                         if tournament:
@@ -727,13 +649,9 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                             tournament.winnerUser = game.winnerUser
                             tournament.winnerNick = game.winnerNick
                             tournament.save()
-                            print("aqui10")
                         if game.winnerUser != -1:
                             tUserExtension.objects.filter(user=game.winnerUser).update(ulevel=models.F('ulevel') + 0.5)
-                            print("aqui11")
-                        print("aqui12")
                         participating_users = tGames.objects.filter(tournament=game.tournament).values_list('user1', 'user2', flat=False)
-                        print("aqui9")
                         user_ids = set()
                         for user1, user2 in participating_users:
                             if user1 and user1 != -1 and user1 not in user_ids:
@@ -742,7 +660,6 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                                 user_ids.add(user2)
                         user_ids.discard(game.winnerUser)
                         tUserExtension.objects.filter(user__in=user_ids).update(ulevel=models.F('ulevel') + 0.1)
-                    print("aqui13")
             else:
                 uext = tUserExtension.objects.get(user=user_id)
                 game.user2 = uext.user
@@ -750,7 +667,6 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 gstatus = tauxStatus.objects.get(statusID=2)
                 game.status = gstatus
                 game.startTS = now()
-            print("aqui14")
             game.save()
             game_data = {
                 "id": game.game,
@@ -758,10 +674,8 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 "user2": game.user2,
                 "user1_nick": game.user1_nick,
                 "user2_nick": game.user2_nick,
-                "tournament": game.tournament.tournament,
                 "isLocal": game.isLocal
             }
-            print("aqui15")
             return JsonResponse({"message": "Game updated successfully", "game": game_data}, status=201)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)

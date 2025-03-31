@@ -90,5 +90,6 @@
     "victories": "Victories",
     "losses": "Losses",
     "matches": "Matches",
-    "winner": "Winner"
+    "winner": "Winner",
+    "winnerT": "Winner:"
 }
