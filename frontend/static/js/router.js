@@ -242,6 +242,7 @@ async function changeToBig(location) {
 		if (gameInfo) {
 			gameInfo = JSON.parse(gameInfo);
 			console.info("gameInfo: ", gameInfo);
+			console.log(gameInfo);
 			if(gameInfo.islocal){
 				game = new Game(gameInfo);
 				game.initGame();

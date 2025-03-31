@@ -287,14 +287,11 @@ function insertTournamentGameInfo(newCard, game) {
     } else {
         tournP2.textContent = "(To be be defined)";
     }
-    const enterBtn = newCard.querySelector("#enterLi");
-    enterBtn.setAttribute("data-id", game.gameID);
+    const enterTournGameBtn = newCard.querySelector("#enterLi");
+    enterTournGameBtn.setAttribute("data-id", game.gameID);
     if (game.user1Nick && game.user2Nick && game.statusID == 2) {
-        console.log("aqui");
-        const buttonDiv = document.querySelector('.col-7.align-content-center');
-        console.log(buttonDiv);
-        buttonDiv.classList.remove('d-none');
-        console.log(buttonDiv);
+        const element = newCard.querySelector('#tournGameBtn');
+        element.classList.remove('d-none');
     }
     const tournGameStat = newCard.querySelector("#tournGameStatus")
     tournGameStat.textContent = game.status;
@@ -334,7 +331,6 @@ async function loadTournamentGames(tournamentID, containerDiv) {
                 const divElement = document.getElementById(`gamesContainer-${tournamentID}`);
                 divElement.innerHTML = "";
                 games.forEach((element) => {
-                    console.log(element);
                     const newCard = document.createElement("div");
                     newCard.innerHTML = data;
                     insertTournamentGameInfo(newCard, element);

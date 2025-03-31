@@ -407,7 +407,7 @@ async function postLocalTournament() {
         showSuccessToast(langData, langData.tournamentcreated);
         console.log(res);
         console.log("res.tournament", res.tournament);
-        resetModal();
+        // resetModal();
         resolve(res.tournament); // Resolve the promise with the tournament ID
       },
       error: function (xhr, status, error) {
@@ -488,18 +488,22 @@ async function enterTournamentGame(gameID) {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
-    success: function (res) {
+    success: async function (res) {
       const divElement = document.getElementById("gamesContent");
       divElement.innerHTML = "";
       game = res.games[0];
-      gameData["gameID"] = game.id;
-      gameData["P1"] = game.user1_nick;
-      gameData["P1_uid"] = game.user1;
-      gameData["P2"] = game.user2_nick;
-      gameData["P2_uid"] = game.user2;
+      let gameData = {};
+      gameData["gameID"] = game.gameID;
+      gameData["islocal"] = game.isLocal;
+      gameData["P1"] = game.user1Nick;
+      gameData["P1_uid"] = game.user1ID;
+      gameData["P2"] = game.user2Nick;
+      gameData["P2_uid"] = game.user2ID;
       localStorage.setItem("gameInfo", JSON.stringify(gameData));
+      console.log("gameData: ");
+      console.log(gameData);
       window.history.pushState({}, "", "/pong");
-      locationHandler();
+      await locationHandler();
       updateContent(langData);
     },
     error: function (xhr, status, error) {
