@@ -152,6 +152,12 @@ class Paddle {
             this.paddleY = 0;
     }
 
+    distBetweenTwoPoints(a, b){
+        let x = (b[0] - a[0]) * (b[0] - a[0]);
+        let y = (b[1] - a[1]) * (b[1] - a[1]);
+        return Math.sqrt(x + y);
+    }
+
     leftColissionBall(ball) {
         let paddleRightSide = this.paddleX + this.paddleWidth + 0.01;
         let paddleLeftSide = this.paddleX + 0.01;
@@ -161,12 +167,28 @@ class Paddle {
         let ballLeftSide = ball.ballX - ball.ballRadius + 0.01;
         let ballTop = ball.ballY - ball.ballRadius + 0.01;
         let ballBottom = ball.ballY + ball.ballRadius + 0.01;
+
+        //Pontos
+        // const ballCenter = [ball.BallX, ball.BallY];
+        // const PaddleTopRightCornner = [paddleRightSide, paddleTop];
+        // const PaddleTopLeftCornner = [paddleLeftSide, paddleTop];
+        // const PaddleBottomRightCornner = [paddleRightSide, paddleBottom];
+        // const PaddleBottomLeftCornner = [paddleLeftSide, paddleBottom];
+
+        // let dist_BallCenter_PaddleTopLeftCornner = this.distBetweenTwoPoints(ballCenter, PaddleTopLeftCornner);
+        // let dist_BallCenter_PaddleBottomLeftCornner = this.distBetweenTwoPoints(ballCenter, PaddleBottomLeftCornner);
+        // let dist_BallCenter_PaddleBottomRightCornner = this.distBetweenTwoPoints(ballCenter, PaddleBottomRightCornner);
+        // let dist_BallCenter_PaddleTopRightCornner = this.distBetweenTwoPoints(ballCenter, PaddleTopRightCornner);
         
         if (ball.lastColision == 1){
             console.log("AI DA ESQUERDA");
             return false;
         }
         if (ball.ballVelocityX < 0 && ballLeftSide <= paddleRightSide && ballRightSide > paddleRightSide && ballBottom >= paddleTop && ballTop <= paddleBottom){ //Colisao com o lado direito do paddle
+            // if(ball.ballY > paddleBottom && dist_BallCenter_PaddleBottomRightCornner > ballRadius) //corrigir colisao com o canto de baixo
+            //     return false;
+            // if(ball.ballY < paddleTop && dist_BallCenter_PaddleTopRightCornner > ballRadius) //corrigir colisao com o canto de cima
+            //     return false;
             console.log("colisao com o lado");
             // console.log("Left paddle");
             // console.table(ball);
@@ -192,14 +214,18 @@ class Paddle {
             ball.lastColision = 1;
             return true;
         }
-        if (ball.ballVelocityX < 0 && ballLeftSide <= paddleRightSide) { //Se a bola passar o lado direito do paddle verifica-se colisao com topo e base
-            if (ball.ballVelocityY > 0 && ballBottom >= paddleTop && ballTop <= paddleTop){ //Colisao com o topo do paddle
+        if (ball.ballVelocityX < 0 && ballLeftSide <= paddleRightSide && ballRightSide >= paddleLeftSide) { //Se a bola passar o lado direito do paddle verifica-se colisao com topo e base
+            // if(ball.ballY > paddleBottom && dist_BallCenter_PaddleBottomLeftCornner > ballRadius) //corrigir colisao com o canto de baixo
+            //     return false;
+            // if(ball.ballY < paddleTop && dist_BallCenter_PaddleTopLeftCornner > ballRadius) //corrigir colisao com o canto de cima
+            //     return false;
+            if (ball.ballVelocityY > 0 && ballBottom > paddleTop && ballTop < paddleTop){ //Colisao com o topo do paddle
                 console.log("colisao com o topo");
                 ball.ballVelocityY *= -1;
                 ball.lastColision = 1;
                 return true;
             }
-            if (ball.ballVelocityY < 0 && ballTop <= paddleBottom && ballBottom >= paddleBottom){ //Colisao com a base do paddle
+            if (ball.ballVelocityY < 0 && ballTop < paddleBottom && ballBottom > paddleBottom){ //Colisao com a base do paddle
                 console.log("colisao com a base"); 
                 ball.ballVelocityY *= -1;
                 ball.lastColision = 1;
@@ -218,12 +244,30 @@ class Paddle {
         let ballLeftSide = ball.ballX - ball.ballRadius + 0.01;
         let ballTop = ball.ballY - ball.ballRadius + 0.01;
         let ballBottom = ball.ballY + ball.ballRadius + 0.01;
-        
+        //distancia entre o centro da bola e o canto do paddle
+
+        //Pontos
+        // const ballCenter = [ball.BallX, ball.BallY];
+        // const PaddleTopRightCornner = [paddleRightSide, paddleTop];
+        // const PaddleTopLeftCornner = [paddleLeftSide, paddleTop];
+        // const PaddleBottomRightCornner = [paddleRightSide, paddleBottom];
+        // const PaddleBottomLeftCornner = [paddleLeftSide, paddleBottom];
+
+        // let dist_BallCenter_PaddleTopLeftCornner = this.distBetweenTwoPoints(ballCenter, PaddleTopLeftCornner);
+        // let dist_BallCenter_PaddleBottomLeftCornner = this.distBetweenTwoPoints(ballCenter, PaddleBottomLeftCornner);
+        // let dist_BallCenter_PaddleBottomRightCornner = this.distBetweenTwoPoints(ballCenter, PaddleBottomRightCornner);
+        // let dist_BallCenter_PaddleTopRightCornner = this.distBetweenTwoPoints(ballCenter, PaddleTopRightCornner);
+
         if (ball.lastColision == 2){
             console.log("AAAAII");
             return false;
         }
         if (ball.ballVelocityX > 0 && ballRightSide >= paddleLeftSide && ballLeftSide < paddleLeftSide && ballBottom >= paddleTop && ballTop <= paddleBottom){ //Colisao com o lado esquerdo do paddle
+            //porque a bola nao e um quadrado
+            // if(ball.ballY > paddleBottom && dist_BallCenter_PaddleBottomLeftCornner > ballRadius) //corrigir colisao com o canto de baixo
+            //     return false;
+            // if(ball.ballY < paddleTop && dist_BallCenter_PaddleTopLeftCornner > ballRadius) //corrigir colisao com o canto de cima
+            //     return false;
             console.log("colisao com o lado");
             if (Math.abs(ball.ballVelocityX) < maxSpeed)
                 ball.ballVelocityX *= -ballVellocityIncreaseRate;
@@ -236,25 +280,30 @@ class Paddle {
             // console.log("Paddle bottom: ", paddleBottom);
             // console.log("Ball top", ballTop);
             // console.log("Paddle top: ", paddleTop);
-            if (ball.ballY > paddleBottom && ball.ballVelocityY < 0){ //colisao com o vertice da base
+            if (ball.ballY > paddleBottom && ball.ballVelocityY < 0){ //inverter a velocidade do y na colisao com o vertice da base
                 //console.log("inverte y");
                 ball.ballVelocityY *= -1;
             }
-            if (ball.ballY < paddleTop && ball.ballVelocityY > 0){ //colisao com o vertice do topo
+            if (ball.ballY < paddleTop && ball.ballVelocityY > 0){ //inverter a velocidade do y na colisao com o vertice do topo
                 //console.log("inverte y");
                 ball.ballVelocityY *= -1;
             }
             ball.lastColision = 2;
             return true;
         }
-        if (ball.ballVelocityX > 0 && ballRightSide >= paddleLeftSide) { //Se a bola passar o lado esuqerdo do paddle verifica-se colisao com topo e base
-            if (ball.ballVelocityY > 0 && ballBottom >= paddleTop && ballTop <= paddleTop){ //Colisao com o topo do paddle
+        if (ball.ballVelocityX > 0 && ballRightSide >= paddleLeftSide && ballLeftSide <= paddleRightSide) { //Se a bola passar o lado esquerdo do paddle verifica-se colisao com topo e base
+            //porque a bola nao e um quadrado
+            // if(ball.ballY > paddleBottom && dist_BallCenter_PaddleBottomRightCornner > ballRadius) //corrigir colisao com o canto de baixo
+            //     return false;
+            // if(ball.ballY < paddleTop && dist_BallCenter_PaddleTopRightCornner > ballRadius) //corrigir colisao com o canto de cima
+            //     return false;
+            if (ball.ballVelocityY > 0 && ballBottom > paddleTop && ballTop < paddleTop){ //Colisao com o topo do paddle
                 console.log("colisao com o topo");
                 ball.ballVelocityY *= -1;
                 ball.lastColision = 2;
                 return true;
             }
-            if (ball.ballVelocityY < 0 && ballTop <= paddleBottom && ballBottom >= paddleBottom){ //Colisao com a base do paddle
+            if (ball.ballVelocityY < 0 && ballTop < paddleBottom && ballBottom > paddleBottom){ //Colisao com a base do paddle
                 console.log("colisao com a base");
                 ball.ballVelocityY *= -1;
                 ball.lastColision = 2;
@@ -263,5 +312,4 @@ class Paddle {
         }
         return false;
     }
-
 }

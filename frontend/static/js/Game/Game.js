@@ -106,9 +106,9 @@ class Game  {
         }
     }
     gameUpdate(){
-        this.ballUpdate();
         this.paddleUpdateLeft();
         this.paddleUpdateRight();
+        this.ballUpdate();
     }
     ballUpdate(){
         this.objects[0].update();
@@ -120,8 +120,9 @@ class Game  {
         let colision = this.objects[1].leftColissionBall(this.objects[0]);
         if(colision){
             console.log("Colision left: update ball again");
+            this.objects[1].paddleColisionTimes++;
             this.objects[0].lastColision = 1;
-            this.objects[0].update();
+            //this.objects[0].update();
         }
     }
     paddleUpdateRight(){
@@ -130,8 +131,9 @@ class Game  {
         let colision = this.objects[2].rightColissionBall(this.objects[0]);
         if(colision){
             console.log("Colision right: update ball again");
+            this.objects[2].paddleColisionTimes++;
             this.objects[0].lastColision = 2;
-            this.objects[0].update();
+            //this.objects[0].update();
         }
     }
     gameDraw() {
