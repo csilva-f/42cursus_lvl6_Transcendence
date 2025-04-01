@@ -7,17 +7,40 @@ window.addEventListener('keyup', function (e) {
     keyPressed[e.keyCode] = false;
 })
 
-window.addEventListener("popstate", function (e) {
-    keyPressed["finishGame"] = true;
-    // Handle back button event (e.g., show a warning or log data)
-})
+// window.addEventListener("popstate", function (e) {
+//     keyPressed["finishGame"] = true;
+//     // Handle back button event (e.g., show a warning or log data)
+// })
 
-window.addEventListener("beforeunload", function (e) {
-    keyPressed["finishGame"] = true;
-    //console.log("Aba ou navegador foi fechado!");
+//F5 or other refreh type
+// window.addEventListener("load", function () {
+//     const entries = performance.getEntriesByType("navigation");
+//     if (entries.length > 0 && entries[0].type == "back_forward") {
+//         console.log("Voltar para trás!");
+//         keyPressed["finishGame"] = true;
+//     }
+// });
+
+// //back button
+// window.addEventListener("load", function () {
+//     const entries = performance.getEntriesByType("navigation");
+//     if (entries.length > 0 && entries[0].type == "reload") {
+//         console.log("A página foi recarregada!");
+//         keyPressed["finishGame"] = true;
+//     }
+// });
+
+//reaload and close tab/browser
+window.addEventListener("beforeunload", function () {
+    keyPressed["finish"] = true; // Marca que o jogo terminou
 });
 
-//add f5 ao finishGame
+//back button
+window.addEventListener("popstate", function () {
+    //console.log("Usuário clicou no botão Voltar do navegador!");
+    keyPressed["finish"] = true;
+});
+
 
 class RemoteGame  {
     constructor(gameData, ws, isHost) {
@@ -102,6 +125,12 @@ class RemoteGame  {
                 if(data.paddleSide == 2)
                     document.getElementById("playerRightScore").innerHTML = data.paddleScore;
             }
+            if (data.element == 4){
+                this.stopGame = true;
+            }
+            if(data.element == 5){
+                keyPressed["finishGame"] = true;
+            }
         };
         this.gameLoop();
     }
@@ -149,7 +178,15 @@ class RemoteGame  {
         //     this.objects[0].update();
         // }
     }
+    isWinner(){
+        if(this.isHost && this.objects[2].paddleScore > this.objects[1].paddleScore)
+            return true;
+        if(!this.isHost && this.objects[1].paddleScore > this.objects[2].paddleScore)
+            return true;
+        return false;
+    }
     async gameLoop() {
+        detectExit();
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (!this.stopGame && !keyPressed["finishGame"]) {
             window.requestAnimationFrame(() => this.gameLoop());
@@ -159,10 +196,23 @@ class RemoteGame  {
                 this.joinerGame();
         } else if (keyPressed["finishGame"]) {
             keyPressed["finishGame"] = false;
-            //mandar msg; fechar socket
+            let msg = {
+                element: 5,
+            }
+            this.ws.send(JSON.stringify(msg));
+            //close socket
             await updateGameStatusForceFinish(this.gameData);
-        } else
+            window.history.pushState({}, "", `/games`);
+            await locationHandler();
+        } else {
+            stopTimer();
             showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes);
+            if(this.isWinner())
+                startWinAnimation();
+            this.gameData["objects"] = this.objects;
+            //close socket
+            await updateGameStatus(this.gameData);
+        }
     }
     hostGame(){
         this.gameUpdate();
@@ -256,7 +306,10 @@ class RemoteGame  {
                 this.respawnBall();
             else {
                 this.stopGame = true;
-                stopTimer();
+                let msg = {
+                    element: 4,
+                }
+                this.ws.send(JSON.stringify(msg));
             }
         }
         if (this.objects[0].ballX - this.objects[0].ballRadius > this.canvas.width + 4){
@@ -273,7 +326,10 @@ class RemoteGame  {
                 this.respawnBall();
             else {
                 this.stopGame = true;
-                stopTimer();
+                let msg = {
+                    element: 4,
+                }
+                this.ws.send(JSON.stringify(msg));
             }
         }
     }

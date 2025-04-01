@@ -53,9 +53,6 @@ function showGameStats(leftName, leftScore, leftColision, rightName, rightScore,
     // Tempo total da partida
     const matchTotalTime = document.getElementById('matchTotalTime');
     matchTotalTime.textContent = formatTime(timerSeconds || 0); // Garante que timerSeconds seja um número válido
-
-    // Animação de vitória
-    startWinAnimation();
 }
 
 function startWinAnimation() {
@@ -128,6 +125,7 @@ async function updateGameStatus(gameData){
             showErrorToast(APIurl, error, langData);
         },
     });
+    localStorage.clear()
 }
 
 async function updateGameStatusForceFinish(gameData){
@@ -160,4 +158,5 @@ async function updateGameStatusForceFinish(gameData){
     await UserInfo.refreshUser();
     document.getElementById("topbar").classList.remove('d-none');
     activateTopBar();
+    localStorage.clear()
 }

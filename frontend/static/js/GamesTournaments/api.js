@@ -154,8 +154,8 @@ async function postRemoteGame() {
           throw new Error("Game not found in API response.");
       }
       const gameId = game.id;
-      localStorage.setItem("isHost", "true");
-      localStorage.setItem("currentGameId", gameId);
+      //localStorage.setItem("isHost", "true");
+      //localStorage.setItem("currentGameId", gameId);
       const wsUrl = `wss://${window.location.host}/channels/${gameId}/`;
       const ws = new WebSocket(wsUrl);
       let playerCount = 0;

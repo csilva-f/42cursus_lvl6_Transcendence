@@ -23,14 +23,23 @@ window.addEventListener('keyup', function (e) {
 })
 
 window.addEventListener("popstate", function (e) {
-    keyPressed["finishGame"] = true;
+    keyPressed["back"] = true;
+
     // Handle back button event (e.g., show a warning or log data)
 })
 
 window.addEventListener("beforeunload", function (e) {
-    keyPressed["finishGame"] = true;
+    keyPressed["close"] = true;
     //console.log("Aba ou navegador foi fechado!");
 });
+
+// window.addEventListener("load", function () {
+//     const entries = performance.getEntriesByType("navigation");
+//     if (entries.length > 0 && entries[0].type === "reload") {
+//         console.log("A página foi recarregada!");
+//         keyPressed["finishGame"] = true;
+//     }
+// });
 
 class Game  {
     constructor(gameData) {
@@ -95,12 +104,17 @@ class Game  {
             this.gameDraw();
             //console.log("game on going");
         }
-        else if (keyPressed["finishGame"]) {
-            keyPressed["finishGame"] = false;
+        else if (keyPressed["close"] || keyPressed["back"]) {
+            //keyPressed["finishGame"] = false;
             await updateGameStatusForceFinish(this.gameData);
+            if (keyPressed["back"]){
+                window.history.pushState({}, "", `/games`);
+                await locationHandler();
+            }
         } else {
             //console.log("Normal finish!");
             showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes);
+            startWinAnimation();
             this.gameData["objects"] = this.objects;
             await updateGameStatus(this.gameData);
         }
