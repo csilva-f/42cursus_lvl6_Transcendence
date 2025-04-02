@@ -133,6 +133,8 @@ async function validateVerifyEmail() {
 //? /authapi/reset-password/
 async function resetPassword() {
     const urlParams = new URLSearchParams(window.location.search);
+    const userLang = localStorage.getItem("language") || "en";
+	const langData = await getLanguageData(userLang);
     const uid = urlParams.get("uid");
     const token = urlParams.get("token");
     const password = $("#newPassword").val();
@@ -150,7 +152,9 @@ async function resetPassword() {
         data: JSON.stringify({ uid, token, password, confirm_password }),
         success: function (data) {
             //renderizar aqui o form de reset password
-            console.log("Token validated successfully");
+            // console.log("Token validated successfully");
+            $("#signup-message").text("Reset password successfully");
+			showSuccessToast(langData, langData.ResetPasswordSuccess);
         },
         error: function (xhr) {
             const data = JSON.parse(xhr.responseJSON);
