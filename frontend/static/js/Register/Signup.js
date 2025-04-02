@@ -27,6 +27,7 @@ async function sendSignup(form) {
 			$("#signup-message").text("Signup successful! Validate your email");
 			showSuccessToast(langData, langData.signUpSuccess);
 			form.reset();
+			clearForm(form);
 			return true;
 		},
 		error: function (xhr, error) {

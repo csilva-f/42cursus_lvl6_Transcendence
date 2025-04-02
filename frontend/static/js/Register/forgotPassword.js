@@ -15,7 +15,7 @@ async function forgotPwd() {
 			element = document.getElementById("forgotPwd-message");
 			element.classList.remove("invalid-feedback");
 			$("#signup-message").text("E-mail send successfully");
-			showSuccessToast(langData, langData.ResetPasswordSuccess);
+			showSuccessToast(langData, langData.RecoverPasswordSuccess);
 			//element.classList.add("valid-feedback");
 		},
 		error: function (xhr) {
