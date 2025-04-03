@@ -302,16 +302,15 @@ function insertTournamentGameInfo(newCard, game) {
     enterTournGameBtn.setAttribute("data-id", game.gameID);
     if (game.user1Nick && game.user2Nick && game.statusID == 2) {
         const element = newCard.querySelector('#tournGameBtn');
-        element.classList.remove('d-none');
+        if (element) element.classList.remove('d-none');
+    } else if (game.statusID == 3) {
+        const element2 = newCard.querySelector('#tournGameWinnerText');
+        if (element2) element2.classList.remove('d-none');
+        const tournGameWinner = newCard.querySelector("#tournGameWinner")
+        tournGameWinner.textContent = game.winnerNick;
     }
     const tournGameStat = newCard.querySelector("#tournGameStatus")
     tournGameStat.textContent = game.status;
-    if (game.statusID == 3) {
-        const tournGameWinner = newCard.querySelector("#tournGameWinner")
-        tournGameWinner.textContent = game.winnerNick;
-        const element2 = document.querySelector('#tournGameWinnerText');
-        if (element2) element2.classList.remove('d-none');
-    }
 }
 
 //* Function to laod the tournament games

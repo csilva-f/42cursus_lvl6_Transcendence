@@ -474,6 +474,44 @@ async function fetchTournamentGames(tournamentID) {
   });
 }
 
+// async function enterTournamentGame(gameID) {
+//   const userLang = localStorage.getItem("language") || "en";
+//   const langData = await getLanguageData(userLang);
+//   const accessToken = await JWT.getAccess();
+//   const APIurl = `/api/get-games/?gameID=${gameID}`;
+//   $.ajax({
+//     type: "GET",
+//     url: APIurl,
+//     Accept: "application/json",
+//     contentType: "application/json",
+//     headers: {
+//       Authorization: `Bearer ${accessToken}`,
+//     },
+//     success: async function (res) {
+//       const divElement = document.getElementById("gamesContent");
+//       divElement.innerHTML = "";
+//       game = res.games[0];
+//       let gameData = {};
+//       gameData["gameID"] = game.gameID;
+//       gameData["islocal"] = game.isLocal;
+//       gameData["P1"] = game.user1Nick;
+//       gameData["P1_uid"] = game.user1ID;
+//       gameData["P2"] = game.user2Nick;
+//       gameData["P2_uid"] = game.user2ID;
+//       localStorage.setItem("gameInfo", JSON.stringify(gameData));
+//       console.log("gameData: ");
+//       console.log(gameData);
+//       window.history.pushState({}, "", "/pong");
+//       await locationHandler();
+//       updateContent(langData);
+//     },
+//     error: function (xhr, status, error) {
+//       console.error("Error Thrown:", error);
+//       showErrorToast(APIurl, error, langData);
+//     },
+//   });
+// }
+
 async function enterTournamentGame(gameID) {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
