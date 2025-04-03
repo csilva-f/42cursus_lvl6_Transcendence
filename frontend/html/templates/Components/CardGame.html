@@ -44,5 +44,27 @@
                 </div>
             </div>
         </div>
+        <div id="statsDropdownBtn" class="container-fluid d-none">
+            <div class="row" style="min-height: 6rem">
+                <div class="col-5">
+                </div>
+                <div class="col-7 align-content-center">
+                    <ul class="nav nav-pills justify-content-end" style="height: 3rem">
+                        <li class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+                            style="width: 3rem; cursor: pointer; background-color: white;" 
+                            id="enterLi"
+                            data-id=""
+                            onclick="toggleGameStats('gameStatContainer-{{GAME_ID}}')">
+                          <i class="fa-solid fa-chevron-down fa-xl" style="color: black"></i>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="gameStatContainer-{{GAME_ID}}" class="d-none p-3 my-2 d-flex flex-column">
+        <strong id="gamePoints"></strong><br>
+        <span id="gameHits"></span><br>
+        <span id="gameDuration"></span>
     </div>
 </div>

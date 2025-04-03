@@ -89,5 +89,8 @@
     "status": "Stato:",
     "players": "Giocatori:",
     "users": "Utenti:",
-    "winner": "Vincitore"
+    "winner": "Vincitore",
+    "points": "Punti:",
+    "hits": "Palle colpiscono:",
+    "duration": "Durata:"
 }

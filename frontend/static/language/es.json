@@ -89,5 +89,8 @@
     "status": "Estado:",
     "players": "Jugadores:",
     "users": "Usuarios:",
-    "winner": "Ganador"
+    "winner": "Ganador",
+    "points": "Puntos:",
+    "hits": "Bolas golpeadas:",
+    "duration": "Duración:"
 }

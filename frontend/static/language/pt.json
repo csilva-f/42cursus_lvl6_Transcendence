@@ -90,5 +90,8 @@
     "victories": "Vitórias",
     "losses": "Derrotas",
     "matches": "Partidas",
-    "winner": "Vencedor"
+    "winner": "Vencedor",
+    "points": "Pontos:",
+    "hits": "Bolas batidas:",
+    "duration": "Duração:"
 }

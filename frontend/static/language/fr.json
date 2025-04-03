@@ -87,5 +87,8 @@
 	"victories": "Victoires",
 	"losses": "Défaites",
 	"matches": "Matchs",
-	"winner": "Gagnant"
+	"winner": "Gagnant",
+    "points": "Points:",
+    "hits": "Balles frappées:",
+    "duration": "Durée:"
 }

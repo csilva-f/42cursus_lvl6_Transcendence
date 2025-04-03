@@ -91,5 +91,8 @@
     "losses": "Losses",
     "matches": "Matches",
     "winner": "Winner",
-    "winnerT": "Winner:"
+    "winnerT": "Winner:",
+    "points": "Points:",
+    "hits": "Balls hit:",
+    "duration": "Duration:"
 }

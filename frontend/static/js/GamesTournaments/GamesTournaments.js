@@ -158,6 +158,7 @@ function setRandomImage(imgElement) {
 }
 
 function insertInfo(newCard, element, statusID) {
+    newCard.innerHTML = newCard.innerHTML.replaceAll("{{GAME_ID}}", element.gameID);
     console.log("statusID: ", statusID)
     const user1Level = newCard.querySelector("#user1Level");
     const user1Nick = newCard.querySelector("#user1Nick");
@@ -166,9 +167,12 @@ function insertInfo(newCard, element, statusID) {
     const user2Level = newCard.querySelector("#user2Level");
     const user2Nick = newCard.querySelector("#user2Nick");
     const enterBtn = newCard.querySelector("#enterLi");
+    const statsBtn = newCard.querySelector("#statsDropdownBtn");
     enterBtn.setAttribute("data-id", element.gameID);
     if (statusID != 1)
         enterBtn.classList.add('d-none');
+        if (statusID == 3)
+            statsBtn.classList.remove('d-none');
     user1Level.textContent = element.user1ID;
     user1Nick.textContent = element.user1Nick;
     if (element.user2ID == null) {
@@ -281,7 +285,7 @@ function toggleTournamentGames(divID) {
     }
 }
 
-//* Function to insert in frontend the info regarding its games
+//* Function to insert in frontend the info regarding a tournament's games
 function insertTournamentGameInfo(newCard, game) {
     console.log(game);
     const tournGameNbr = newCard.querySelector("#tournGameNumber")
@@ -352,4 +356,84 @@ async function loadTournamentGames(tournamentID, containerDiv) {
         console.error("Error fetching games:", error);
         containerDiv.innerHTML = "<p class='text-danger'>Error loading games.</p>";
     }
+}
+
+function toggleGameStats(divID) {
+    const gameStatsDiv = document.getElementById(divID);
+    console.log(gameStatsDiv);
+  
+    if (!gameStatsDiv) return;
+    if (gameStatsDiv.classList.contains("d-none")) {
+        gameStatsDiv.classList.remove("d-none");
+        
+        const gameID = divID.split("-")[1];
+        console.log(gameID);
+        loadGameStats(gameID, gameStatsDiv);
+    } else {
+        gameStatsDiv.classList.add("d-none");
+    }
+}
+
+//* Function to laod the game statistics
+async function loadGameStats(gameID, containerDiv) {
+    try {
+        const statistics = await fetchGameStatistics(gameID);
+        console.log("Fetched statistics:", statistics);
+        containerDiv.classList.remove("d-none");
+
+        if (!statistics || statistics.length === 0) {
+            const noStatsMsg = document.createElement("p");
+            noStatsMsg.classList.add("text-muted");
+            noStatsMsg.textContent = "No statistics found for this game.";
+            containerDiv.appendChild(noStatsMsg);
+            return;
+        }
+        fetch("/templates/Components/CardGameStatistics.html")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok " + response.statusText);
+                }
+                return response.text();
+            })
+            .then((data) => {
+                const divElement = document.getElementById(`gameStatContainer-${gameID}`);
+                divElement.innerHTML = "";
+                statistics.forEach((element) => {
+                    const newCard = document.createElement("div");
+                    newCard.innerHTML = data;
+                    insertGameStatInfo(newCard, element);
+                    divElement.appendChild(newCard);
+                });
+            })
+            .catch((error) => {
+                console.error("There was a problem with the fetch operation:", error);
+            });
+    } catch (error) {
+        console.error("Error fetching game statistics:", error);
+        containerDiv.innerHTML = "<p class='text-danger'>Error loading game statistics.</p>";
+    }
+}
+
+//* Function to insert in frontend the info regarding game stats
+function insertGameStatInfo(newCard, game) {
+    const gameCreatedOnDate = newCard.querySelector("#gameCreatedOn")
+    gameCreatedOnDate.textContent = game.creationTS.split(" ")[0];
+    const p1 = newCard.querySelector("#gamePlayer1")
+    p1.textContent = game.user1Nick;
+    const pointsP1 = newCard.querySelector("#pointsP1")
+    pointsP1.textContent = game.user1_points;
+    const hitsP1 = newCard.querySelector("#hitsP1")
+    hitsP1.textContent = game.user1_hits;
+    const p2 = newCard.querySelector("#gamePlayer2")
+    p2.textContent = game.user2Nick;
+    const pointsP2 = newCard.querySelector("#pointsP2")
+    pointsP2.textContent = game.user2_points;
+    const hitsP2 = newCard.querySelector("#hitsP2")
+    hitsP2.textContent = game.user2_hits;
+    const element2 = newCard.querySelector('#gameWinnerText');
+    if (element2) element2.classList.remove('d-none');
+    const gameWinner = newCard.querySelector("#gameWinner")
+    gameWinner.textContent = game.winnerNick;
+    const gameDuration = newCard.querySelector("#gameDuration")
+    gameDuration.textContent = game.duration.split(".")[0];
 }

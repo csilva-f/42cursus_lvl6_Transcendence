@@ -1,0 +1,57 @@
+<div id="gameStatContainer-{{GAME_ID}}" class="game-card p-3 mb-3 rounded-4">
+    <div id="gameStatisticsCard" class="game-card p-3 mb-3 rounded-4" style="background-color: var(--bodyBg);">
+      <div class="d-flex align-items-center" style="min-height: 5rem;">
+        
+        <div class="d-flex flex-column" style="width: 10rem;">
+          <p class="h4 mb-0 fw-bold" data-i18n="statistics"></p>
+          <div class="d-flex align-items-center mt-2">
+            <i class="fa-solid fa-calendar-check me-2" style="font-size: 16px;"></i>
+            <span class="h6 mb-0" id="gameCreatedOn"></span>
+          </div>
+          <div class="d-flex align-items-center mt-1">
+            <i class="fa-solid fa-clock me-2" style="font-size: 16px;"></i>
+            <span class="h6 mb-0" id="gameDuration"></span>
+          </div>
+        </div>
+        
+        <!-- Players -->
+        <div class="d-flex flex-column ms-4" style="flex: 1;">
+          <!-- Grid Player 1 -->
+          <div class="player-stats-grid mb-3" 
+               style="display: grid; grid-template-columns: 30px 90px 30px 70px 20px 30px 100px 40px; align-items: center; gap: 2px;">
+            <div>
+                <i class="fa-solid fa-user fa-lg me-2"></i>
+            </div>
+            <div class="fw-bold" id="gamePlayer1"></div>
+            <div class="text-center" style="min-width:10px;">|</div>
+            <div class="fw-bold" data-i18n="points"></div>
+            <div id="pointsP1" style="white-space: nowrap;"></div>
+            <div class="text-center" style="min-width:10px;">|</div>
+            <div class="fw-bold" data-i18n="hits"></div>
+            <div id="hitsP1" style="white-space: nowrap;"></div>
+          </div>
+          <!-- Grid Player 2 -->
+          <div class="player-stats-grid" 
+               style="display: grid; grid-template-columns: 30px 90px 30px 70px 20px 30px 100px 40px; align-items: center; gap: 2px;">
+            <div>
+                <i class="fa-solid fa-user fa-lg me-2"></i>
+            </div>
+            <div class="fw-bold" id="gamePlayer2"></div>
+            <div class="text-center" style="min-width:10px;">|</div>
+            <div class="fw-bold" data-i18n="points"></div>
+            <div id="pointsP2" style="white-space: nowrap;"></div>
+            <div class="text-center" style="min-width:10px;">|</div>
+            <div class="fw-bold" data-i18n="hits"></div>
+            <div id="hitsP2" style="white-space: nowrap;"></div>
+          </div>
+        </div>
+
+        <div id="gameWinnerText" class="d-flex flex-column" style="width: 8rem;">
+          <p class="h4 mb-0 fw-bold" data-i18n="winner"></p>
+          <p class="h5 mt-2 mb-0" id="gameWinner"></p>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
