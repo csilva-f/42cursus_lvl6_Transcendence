@@ -17,13 +17,19 @@ class User {
       let uid = this.userID;
       initializeWebSocket(() => {
 			if (uid && window.ws_os && window.ws_os.readyState === WebSocket.OPEN) {
-			  //console.log("User ID:", UserInfo.getUserID());
-				window.ws_os.send(JSON.stringify({ user_id: uid }));
-    			}
+                //console.log("User ID:", UserInfo.getUserID());
+                window.ws_os.send(JSON.stringify({ user_id: uid }));
+            }
         }
     	);
     }
 
+    async closeWebSocket() {
+        if (window.ws_os && window.ws_os.readyState === WebSocket.OPEN) {
+            window.ws_os.close();
+        }
+    }
+    
     async refreshUser() {
         console.log("[refreshUser]")
         if (!this.isUpdating) {
