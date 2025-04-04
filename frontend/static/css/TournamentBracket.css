@@ -1,0 +1,54 @@
+.line {
+    width: 5px;
+    height: 100px;
+    background-color: black;
+    position: absolute;
+}
+
+#line1 {
+    top: 12rem;
+    left: 16rem;
+    height: 24.8rem;
+}
+
+#line2 {
+    top: calc((100vh - 2rem) / 2.4);
+    left: 16.9rem;
+    height: 1.7rem;
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+}
+
+#line3 {
+    top: calc((100vh - 1rem) / 2.5);
+    left: 40.45rem;
+    height: 3.45rem;
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+}
+
+#line4 {
+    top: calc((100vh - 1rem) / 2.5);
+    right: 40.45rem;
+    height: 3.45rem;
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+}
+
+#line5 {
+    top: calc((100vh - 2rem) / 2.4);
+    right: 16.9rem;
+    height: 1.7rem;
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+}
+
+#line6 {
+    top: 12rem;
+    right: 16rem;
+    height: 24.8rem;
+}

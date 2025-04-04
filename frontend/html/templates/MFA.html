@@ -1,0 +1,48 @@
+<div class="container mt-5">
+	<div class="row justify-content-center">
+		<div class="p-3 shadow rounded" style="background-color: var(--cardBg); width: 600px;">
+			<p class="h4 text-center" style="font-weight: bold; color: #000;">Check your e-mail to get the code</p>
+			<p class="h7 text-center" style="color: #000;">We sent a six-character code to your e-mail.</p>
+			<div class="tab-pane fade show active" id="mfa" role="tabpanel" aria-labelledby="mfa-tab">
+				<form class="mt-3" id="mfa-form">
+					<div class="mb-3">
+						<div class="input-group">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp1" autocomplete="off" autofocus oninput="handleOTPInput(this)">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp2" autocomplete="off" oninput="handleOTPInput(this)">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp3" autocomplete="off" oninput="handleOTPInput(this)">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp4" autocomplete="off" oninput="handleOTPInput(this)">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp5" autocomplete="off" oninput="handleOTPInput(this)">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp6" autocomplete="off" oninput="handleOTPInput(this)">
+						</div>
+					</div>
+					<button type="button" class="btn" onClick="verifyAccount();" style="background-color: var(--primary); color: white; width: 100%;">Verify account</button>
+				</form>
+				<p id="mfa-message"></p>
+				<div class="text-center mt-3">
+					<p style="color: #000;">Didn't receive code? <a href="resendCode" id="resendEmail" style="color: var(--primary); text-decoration: none;">Resend</a></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.otp-field {
+		width: 60px;
+		height: 60px;
+		text-align: center;
+		font-size: 1.5rem;
+		margin-right: 5px;
+		border-radius: 5px;
+		border: 1px solid #ccc;
+		box-sizing: border-box;
+	}
+	.otp-field:focus {
+		outline: none;
+		border-color: var(--primary);
+	}
+	.input-group {
+		display: flex;
+		justify-content: center;
+	}
+</style>

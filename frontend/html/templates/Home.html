@@ -1,0 +1,43 @@
+<div class="h-100">
+	<div class="container-fluid h-100">
+		<!-- First Row -->
+		<div class="row h-50 gap-3">
+			<!-- Welcome -->
+			<div class="col-lg-8 col-md-7 col-sm-12 shadow rounded-4"
+				style="background-color: var(--layoutBg); height: 100%;">
+				<img src="/static/img/banner/welcomeBanner2.svg" class="d-block w-100 h-100 py-2"
+					style="overflow: hidden;" alt="Welcome Banner">
+			</div>
+			<!-- End Welcome -->
+			<!-- Game History -->
+			<div class="col shadow rounded-4 px-0 d-flex flex-column h-100" style="background-color: var(--layoutBg);">
+				<p class="h1 px-4 pt-2" style="font-weight: bold;" data-i18n="matchHistory"></p>
+				<div class="px-4 pb-2 overflow-y-scroll noScrollBar" id="historyContent">
+				</div>
+			</div>
+			<!-- End Game History -->
+		</div>
+		<!-- End First Row -->
+		<!-- Second Row -->
+		<div class="row h-50 gap-3 pt-3">
+			<!-- Stats and Top Players -->
+			<div class="col-lg-8 col-md-7 col-sm-12 shadow rounded-4" style="background-color: var(--layoutBg);">
+				<p class="h1 px-4 pt-2" style="font-weight: bold;" data-i18n="topPlayers"></p>
+				<div class="row h-75 px-4" id="topUsersContent">
+				</div>
+			</div>
+			<!-- End Stats and Top Players -->
+			<!-- Friends List -->
+			<div class="col shadow rounded-4 px-0 d-flex flex-column h-100" style="background-color: var(--layoutBg);">
+				<p class="h1 px-4 pt-2" style="font-weight: bold;" data-i18n="friends"></p>
+				<form class="d-flex px-4 pb-2" role="search">
+					<input class="form-control rounded-3" type="search" id="inputHomeSearchFriends" onkeyup="searchFriend()">
+				</form>
+				<div class="px-4 pb-2 overflow-y-scroll noScrollBar" id="friendsContent">
+				</div>
+			</div>
+			<!-- End Friends List -->
+		</div>
+		<!-- End Second Row -->
+	</div>
+</div>
