@@ -1344,7 +1344,7 @@ def get_nonfriendslist(request):
 
             non_friends = tUserExtension.objects.filter(
                 ~Q(user__in=friends_ids)
-            ).exclude(user=user_id).exclude(user=-1)
+            ).exclude(user=user_id).exclude(user=-1).exclude(nick__isnull=True)
 
             non_friends_data = [
                 {
@@ -1362,27 +1362,6 @@ def get_nonfriendslist(request):
         return JsonResponse({"error": str(e)}, status=400)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
-
-# def get_topusers(request):
-#     try:
-#         uextensions = tUserExtension.objects.exclude(user=-1).order_by('-ulevel')[:3]
-
-#     except ValidationError as e:
-#         return JsonResponse({"error": str(e)}, status=400)
-
-#     userext_data = [
-#         {
-#             "id": userext.user,
-#             "nickname": userext.nick,
-#             'level': userext.ulevel,
-#             "birthdate": str(userext.birthdate) if userext.birthdate else None,
-#             "gender": userext.gender.gender if userext.gender else None,
-#             "avatar": userext.avatar,
-#             "bio": userext.bio
-#         }
-#         for userext in uextensions
-#     ]
-#     return JsonResponse({'users': userext_data}, safe=False, status=200)
 
 def get_topusers(request):
     try:

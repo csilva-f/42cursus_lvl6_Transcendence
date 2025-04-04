@@ -92,5 +92,7 @@
     "winner": "Ganador",
     "points": "Puntos:",
     "hits": "Bolas golpeadas:",
-    "duration": "Duración:"
+    "duration": "Duración:",
+    "errorNick": "Los alias de los jugadores del torneo deben ser todos diferentes",
+    "errorName": "El nombre del torneo debe ser diferente al de otros torneos activos"
 }

@@ -90,5 +90,7 @@
 	"winner": "Gagnant",
     "points": "Points:",
     "hits": "Balles frappées:",
-    "duration": "Durée:"
+    "duration": "Durée:",
+    "errorNick": "Les alias des joueurs du tournoi doivent tous être différents",
+    "errorName": "Le nom du tournoi doit être différent des autres tournois actifs"
 }

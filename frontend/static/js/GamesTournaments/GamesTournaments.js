@@ -247,7 +247,7 @@ function hideGameForm(formOpenID, tabID, confirmBtnID, backBtnID) {
     const tab = document.getElementById(tabID);
     tab.classList.remove('d-none');
     const confirmBtn = document.getElementById(confirmBtnID);
-    confirmBtn.classList.add('d-none');
+    if (confirmBtn) confirmBtn.classList.add('d-none');
     const backBtn = document.getElementById(backBtnID);
     backBtn.classList.add('d-none');
     backBtn.removeAttribute("data-id");
@@ -255,6 +255,13 @@ function hideGameForm(formOpenID, tabID, confirmBtnID, backBtnID) {
 
 //* Function to cancel and reset Forms
 function closeGameForm(formIDs, tabID, confirmBtnID, backBtnID) {
+    console.log("closeeeee");
+    const tournErrorSection = document.querySelector('#tournErrorSection');
+    if (tournErrorSection) tournErrorSection.classList.add('d-none');
+    const tournErrorNick = document.querySelector('#tournErrorNick');
+    if (tournErrorNick) tournErrorSection.classList.add('d-none');
+    const tournErrorName = document.querySelector('#tournErrorName');
+    if (tournErrorName) tournErrorSection.classList.add('d-none');
     const backBtn = document.getElementById(backBtnID);
     let formOpenID = backBtn.getAttribute("data-id")
     if (formOpenID != null)
@@ -436,4 +443,17 @@ function insertGameStatInfo(newCard, game) {
     gameWinner.textContent = game.winnerNick;
     const gameDuration = newCard.querySelector("#gameDuration")
     gameDuration.textContent = game.duration.split(".")[0];
+}
+
+//* Function to insert in frontend the tournament form error message
+function insertTournErrorMsg(type) {
+    const tournErrorSection = document.querySelector('#tournErrorSection');
+    tournErrorSection.classList.remove('d-none');
+    const msgNick = document.querySelector('#tournErrorNick');
+    const msgName = document.querySelector('#tournErrorName');
+    if (type == 1) {
+        msgNick.classList.remove('d-none');
+    } else if (type == 2) {
+        msgName.classList.remove('d-none');
+    }
 }

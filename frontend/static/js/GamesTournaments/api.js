@@ -390,6 +390,24 @@ async function postLocalTournament() {
     nick3: document.getElementById("P3NickInput").value,
     nick4: document.getElementById("P4NickInput").value,
   };
+  if (UserInfo.userNick == tournamentData.nick2 || 
+    UserInfo.userNick == tournamentData.nick3 || 
+    UserInfo.userNick == tournamentData.nick4 || 
+    tournamentData.nick2 == tournamentData.nick3 ||
+    tournamentData.nick2 == tournamentData.nick4 ||
+    tournamentData.nick3 == tournamentData.nick4
+  ) {
+    return insertTournErrorMsg(1);
+  }
+
+  const tourns = await fetchActiveTournaments();
+  console.log(tourns);
+  console.log(tourns.tournaments);
+  if (tourns && tourns.some(tourn => tourn.name == tournamentData.name)) {
+    console.log("aqui");
+    return insertTournErrorMsg(2);
+  }
+
   const accessToken = await JWT.getAccess();
   console.log(tournamentData);
   return new Promise((resolve, reject) => {
@@ -454,6 +472,8 @@ async function fetchTournamentGames(tournamentID) {
   const accessToken = await JWT.getAccess();
   const APIurl = `/api/get-games/?tournamentID=${tournamentID}`;
   console.log(APIurl)
+  if (!tournamentID)
+    return Promise.resolve([]);
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "GET",
@@ -535,6 +555,30 @@ async function fetchGameStatistics(gameID) {
       },
       error: function (xhr, status, error) {
         reject(error); // Reject the promise on error
+      },
+    });
+  });
+}
+
+async function fetchActiveTournaments() {
+  const langData = localStorage.getItem("language") || "en";
+  const accessToken = await JWT.getAccess();
+  const APIurl = `/api/get-tournaments/?statusID=2`;
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+        url: APIurl,
+        Accept: "application/json",
+        contentType: "application/json",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      success: function (res) {
+        resolve(res.tournaments);
+        updateContent(langData);
+      },
+      error: function (xhr, status, error) {
+        reject(error);
       },
     });
   });

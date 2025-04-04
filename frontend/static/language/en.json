@@ -94,5 +94,7 @@
     "winnerT": "Winner:",
     "points": "Points:",
     "hits": "Balls hit:",
-    "duration": "Duration:"
+    "duration": "Duration:",
+    "errorNick": "Tournament players alias must all be different",
+    "errorName": "Tournament name must be different from other active tournaments"
 }
