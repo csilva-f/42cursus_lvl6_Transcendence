@@ -44,6 +44,8 @@ services:
     restart: on-failure
     env_file:
       - ./auth-api/.env
+    secrets:
+      - vault_root_token
 
   vault-db:
     container_name: vault-db
@@ -94,6 +96,8 @@ services:
     restart: on-failure
     env_file:
       - ./backend-api/.env
+    secrets:
+      - vault_root_token
 
   backend:
     container_name: backend
@@ -122,12 +126,15 @@ services:
       - ./channels/code:/code:rw
     networks:
       - frontend
+      - backend
     ports:
       - "9010:8000"
     init: true
     restart: on-failure
     env_file:
       - ./channels/.env
+    secrets:
+      - vault_root_token
 
   backend-db:
     container_name: backend-db

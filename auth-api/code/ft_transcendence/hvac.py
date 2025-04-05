@@ -14,7 +14,7 @@ def read_docker_secret(secret_name):
 def get_secret_key():
     token=read_docker_secret('VAULT_ROOT_TOKEN')
     client = hvac.Client(url=os.getenv('VAULT_ADDR'), token=token)
-    secret_path = 'django-auth'
+    secret_path = 'django-auth-api'
     try:
         secret = client.secrets.kv.read_secret_version(path=secret_path)
         key = secret['data']['data']['secret_key']
