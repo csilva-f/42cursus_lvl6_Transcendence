@@ -501,7 +501,6 @@ async function enterTournamentGame(gameID) {
 }
 
 async function fetchGameStatistics(gameID) {
-  const langData = localStorage.getItem("language") || "en";
   const accessToken = await JWT.getAccess();
   const APIurl = `/api/get-games/?gameID=${gameID}`;
   console.log(APIurl)
@@ -516,7 +515,6 @@ async function fetchGameStatistics(gameID) {
         },
       success: function (res) {
         resolve(res.games); // Resolve the promise with the tournament ID\
-        updateContent(langData);
       },
       error: function (xhr, status, error) {
         reject(error); // Reject the promise on error

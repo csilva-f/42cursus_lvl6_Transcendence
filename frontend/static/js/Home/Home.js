@@ -6,37 +6,27 @@ async function insertHistoryInfo(newCard, element) {
     const resTextL = newCard.querySelector("#matchWinner");
     const resTextW = newCard.querySelector("#matchOpponent");
     const tsDate = newCard.querySelector("#gameHCreatedOn");
-    tsDate.textContent = element.creationTS.split(" ")[0];
+    element.tournamentID ? tsDate.textContent = element.createdOn.split(" ")[0] : tsDate.textContent = element.creationTS.split(" ")[0];
     if (element.winnerUserID != await UserInfo.getUserID()) {
+        winnerNick.textContent = element.winnerNick
+        if (element.user2ID == -1)
+            winnerImg.src = '/static/img/bot/guest.svg';
         element.tournamentID == null ? matchResult.textContent = "Defeat" : matchResult.textContent = "Tournament Defeat";
         divDefeat.classList.remove("d-none");
-        resTextL.classList.remove("d-none");
-        winnerNick.textContent = element.winnerNick;
-        if (element.winnerUserID == element.user1ID) {
-            winnerImg.src = `/static/img/profilePic/${element.user1Avatar}`;
-        } else {
-            winnerImg.src = `/static/img/profilePic/${element.user2Avatar}`;
-        }
+        resTextW.classList.remove("d-none");
     } else {
+        winnerNick.textContent = element.user2Nick
         element.tournamentID == null ? matchResult.textContent = "Win" : matchResult.textContent = "Tournament Win";
         divDefeat.classList.remove("d-none");
-        if (!element.tournamentID) {
-            resTextW.classList.remove("d-none");
-            if (element.winnerUserID == element.user1ID) {
-                winnerNick.textContent = element.user2Nick;
-                winnerImg.src = `/static/img/profilePic/${element.user1Avatar}`;
-            } else {
-                winnerNick.textContent = element.user1Nick;
-                winnerImg.src = `/static/img/profilePic/${element.user2Avatar}`;
-            }
-        }
-        
+        if (!element.tournamentID) resTextL.classList.remove("d-none");
+        const userAvatarPath = await UserInfo.getUserAvatarPath();
+        winnerImg.src = `${userAvatarPath}`;
     }
 }
 
 function insertHomeFriendInfo(newCard, element, users_on) {
     newCard.querySelector('#friendNick').textContent = element.friendNick;
-    newCard.querySelector('#friendImg').textContent = `/static/img/profilePic/${element.friendAvatar}`;
+    newCard.querySelector('#friendImg').src = `/static/img/profilePic/${element.friendAvatar}`;
     const userOnStatus = newCard.querySelector("#userOnStatus");
 
     if (users_on.includes(Number(element.friendID))) {
@@ -71,12 +61,12 @@ function searchFriend() {
 }
 
 function renderHomeFriends(usersList, cardTemplate, users_on) {
-	const divElement = document.getElementById("friendsContent");
-	if (divElement) divElement.innerHTML = "";
-	usersList.forEach(element => {
-		const newCard = document.createElement("div");
-		newCard.innerHTML = cardTemplate;
-		insertHomeFriendInfo(newCard, element, users_on);
-		divElement.appendChild(newCard);
-	});
+    const divElement = document.getElementById("friendsContent");
+    if (divElement) divElement.innerHTML = "";
+    usersList.forEach(element => {
+        const newCard = document.createElement("div");
+        newCard.innerHTML = cardTemplate;
+        insertHomeFriendInfo(newCard, element, users_on);
+        divElement.appendChild(newCard);
+    });
 }

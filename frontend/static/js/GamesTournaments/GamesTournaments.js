@@ -133,9 +133,14 @@ function insertInfo(newCard, element, statusID) {
         //user2Nick.setAttribute("data-i18n", "waiting");
         user2Nick.textContent = element.gameID
     } else {
-        user2Level.textContent = element.user2ID;
         user2Nick.textContent = element.user2Nick;
-        user2Img.src = `/static/img/profilePic/${element.user2Avatar}`;
+        if (element.user2ID != -1) {
+            user2Level.textContent = element.user2ID;
+            user2Img.src = `/static/img/profilePic/${element.user2Avatar}`;
+        } else {
+            user2LvlLabel.classList.add('d-none');
+            user2Img.src = `/static/img/bot/guest.svg`
+        }
     }
 }
 
@@ -340,7 +345,6 @@ async function loadGameStats(gameID, containerDiv) {
         const statistics = await fetchGameStatistics(gameID);
         console.log("Fetched statistics:", statistics);
         containerDiv.classList.remove("d-none");
-
         if (!statistics || statistics.length === 0) {
             const noStatsMsg = document.createElement("p");
             noStatsMsg.classList.add("text-muted");
@@ -348,6 +352,8 @@ async function loadGameStats(gameID, containerDiv) {
             containerDiv.appendChild(noStatsMsg);
             return;
         }
+        const userLang = localStorage.getItem("language") || "en";
+        const langData = await getLanguageData(userLang);
         fetch("/templates/Components/CardGameStatistics.html")
             .then((response) => {
                 if (!response.ok) {
@@ -364,6 +370,7 @@ async function loadGameStats(gameID, containerDiv) {
                     insertGameStatInfo(newCard, element);
                     divElement.appendChild(newCard);
                 });
+                updateContent(langData);
             })
             .catch((error) => {
                 console.error("There was a problem with the fetch operation:", error);
