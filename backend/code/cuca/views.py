@@ -23,7 +23,6 @@ def validate_filters_tournament(request):
     if extra_keys:
         raise ValidationError(f"Invalid parameter(s): {', '.join(extra_keys)}")
 
-
 def validate_filters_games(request):
     extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_GAMES
     if extra_keys:
@@ -76,7 +75,6 @@ def get_games(request):
         winner_id = request.GET.get('winnerID')
         tournament_id = request.GET.get('tournamentID')
         u_id = request.GET.get('uid')
-
         if any(param == "" for param in [game_id, status_id, winner_id, tournament_id]):
             return JsonResponse({"error": "Filter can't be empty."}, status=400)
         u_ext = None
@@ -107,36 +105,23 @@ def get_games(request):
                 games = games.filter(tournament__tournament__isnull=True)
             else:
                 games = games.filter(tournament__tournament=tournament_id)
-
     except ValidationError as e:
         return JsonResponse({"error": str(e)}, status=400)
-
     games_data = []
     for game in games:
-        user1_nick = None
-        user1_avatar = None
-        user2_nick = None
-        user2_avatar = None
+        user1 = None
+        user2 = None
 
         if game.user1:
             try:
-                user1_nick = tUserExtension.objects.get(user=game.user1).nick
+                user1 = tUserExtension.objects.get(user=game.user1)
             except tUserExtension.DoesNotExist:
-                user1_nick = None
-            try:
-                user1_avatar = tUserExtension.objects.get(user=game.user1).avatar
-            except tUserExtension.DoesNotExist:
-                user1_avatar = None
+                user1 = None
         if game.user2:
             try:
-                user2_nick = tUserExtension.objects.get(user=game.user2).nick
+                user2 = tUserExtension.objects.get(user=game.user2)
             except tUserExtension.DoesNotExist:
-                user2_nick = None
-            try:
-                user2_avatar = tUserExtension.objects.get(user=game.user2).avatar
-            except tUserExtension.DoesNotExist:
-                user2_avatar = None
-
+                user2 = None
         games_data.append({
             'userID': u_id if u_id else None,
             'userNick': u_ext.nick if u_ext else None,
@@ -146,9 +131,11 @@ def get_games(request):
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
-            'user1Nick': game.user1_nick if game.tournament else user1_nick,
+            'user1Nick': game.user1_nick if game.tournament else user1.nick,
+            'user1Avatar': user1.avatar if user1 else None,
             'user2ID': game.user2,
-            'user2Nick': game.user2_nick if game.tournament else user2_nick,
+            'user2Nick': game.user2_nick if game.tournament else user2.nick,
+            'user1Avatar': user2.avatar if user2 else None,
             'winnerUserID': game.winnerUser,
             'winnerNick': game.winnerNick,
             'user1_points': game.user1_points,
@@ -164,8 +151,6 @@ def get_games(request):
             'isInvitation': game.isInvitation,
             'isInvitAccepted': game.isInvitAccepted
         })
-        # 'user1Avatar': game.user1_avatar if game.tournament else user1_avatar,
-        #'user2Avatar': game.user2_avatar if game.tournament else user2_avatar,
     return JsonResponse({"games": games_data}, status=200)
 
 @csrf_exempt
@@ -190,19 +175,19 @@ def get_gameinvitations(request):
 
     games_data = []
     for game in games:
-        user1_nick = None
-        user2_nick = None
+        user1 = None
+        user2 = None
 
         if game.user1:
             try:
-                user1_nick = tUserExtension.objects.get(user=game.user1).nick
+                user1 = tUserExtension.objects.get(user=game.user1)
             except tUserExtension.DoesNotExist:
-                user1_nick = None
+                user1 = None
         if game.user2:
             try:
-                user2_nick = tUserExtension.objects.get(user=game.user2).nick
+                user2 = tUserExtension.objects.get(user=game.user2)
             except tUserExtension.DoesNotExist:
-                user2_nick = None
+                user2 = None
 
         games_data.append({
             'userID': user_id if user_id else None,
@@ -213,9 +198,11 @@ def get_gameinvitations(request):
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
-            'user1Nick': user1_nick,
+            'user1Nick': game.user1_nick if game.tournament else user1.nick,
+            'user1Avatar': user1.avatar if user1 else None,
             'user2ID': game.user2,
-            'user2Nick': user2_nick,
+            'user2Nick': game.user2_nick if game.tournament else user2.nick,
+            'user2Avatar': user2.avatar if user2 else None,
             'winnerUserID': game.winnerUser,
             'winnerNick': game.winnerNick,
             'user1_points': game.user1_points,
@@ -288,10 +275,14 @@ def get_usergames(request):
         if status_id and status_id == 3:
             games = games.filter(
                 (Q(isInvitation=False) | Q(isInvitation=True, isInvitAccepted=True)) &
-                Q(winnerUser__isnull=False)
-                )
+                Q(winnerUser__isnull=False) &
+                (Q(tournament__isnull=True) | Q(tournament__isnull=False, phase__phase=3))
+            )
         else:
-            games = games.filter(models.Q(isInvitation=False) | models.Q(isInvitation=True, isInvitAccepted=True))
+            games = games.filter(
+                (Q(isInvitation=False) | Q(isInvitation=True, isInvitAccepted=True)) &
+                (Q(tournament__isnull=True) | Q(tournament__isnull=False, phase__phase=3))
+            )
         try:
             u_ext = tUserExtension.objects.get(user=user_id)
         except tUserExtension.DoesNotExist:
@@ -302,29 +293,19 @@ def get_usergames(request):
 
     games_data = []
     for game in games:
-        user1_nick = None
-        user1_avatar = None
-        user2_nick = None
-        user2_avatar = None
+        user1 = None
+        user2 = None
 
         if game.user1:
             try:
-                user1_nick = tUserExtension.objects.get(user=game.user1).nick
+                user1 = tUserExtension.objects.get(user=game.user1)
             except tUserExtension.DoesNotExist:
-                user1_nick = None
-            try:
-                user1_avatar = tUserExtension.objects.get(user=game.user1).avatar
-            except tUserExtension.DoesNotExist:
-                user1_avatar = None
+                user1 = None
         if game.user2:
             try:
-                user2_nick = tUserExtension.objects.get(user=game.user2).nick
+                user2 = tUserExtension.objects.get(user=game.user2)
             except tUserExtension.DoesNotExist:
-                user2_nick = None
-            try:
-                user2_avatar = tUserExtension.objects.get(user=game.user2).avatar
-            except tUserExtension.DoesNotExist:
-                user2_avatar = None
+                user2 = None
 
         games_data.append({
             'userID': user_id if user_id else None,
@@ -335,11 +316,11 @@ def get_usergames(request):
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
-            'user1Nick': user1_nick,
-            'user1Avatar': user1_avatar,
+            'user1Nick': game.user1_nick if game.tournament else user1.nick,
+            'user1Avatar': user1.avatar if user1 else None,
             'user2ID': game.user2,
-            'user2Nick': user2_nick,
-            'user2Avatar': user2_avatar,
+            'user2Nick': game.user2_nick if game.tournament else user2.nick,
+            'user2Avatar': user2.avatar if user2 else None,
             'winnerUserID': game.winnerUser,
             'winnerNick': game.winnerNick,
             'user1_points': game.user1_points,
@@ -1065,7 +1046,9 @@ def get_userstatistics(request):
 
         # Game victories/losses
         total_games_played = tGames.objects.filter(
-            (Q(user1=userext.user) | Q(user2=userext.user)) & ~Q(status__statusID__in=ongoing_statuses)
+            (Q(user1=userext.user) | Q(user2=userext.user)) &
+            ~Q(status__statusID__in=ongoing_statuses) &
+            Q(winnerUser__isnull=False)
         ).count()
 
         game_victories = tGames.objects.filter(

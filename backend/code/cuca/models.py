@@ -39,8 +39,9 @@ class tUserExtension(models.Model):
     birthdate = models.DateField(null=True, blank=True)
     ulevel = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, default=Decimal("0.00"))
     gender = models.ForeignKey(tauxGender, on_delete=models.PROTECT, null=True)
-    avatar = models.CharField(max_length=1000, null=True, blank=True)
+    avatar = models.CharField(max_length=1000, default="backk.jpg")
     bio = models.CharField(max_length=2000, null=True, blank=True)
+    lang = models.CharField(max_length=2, default="en")
 
     def __str__(self):
         return f"UserExtension {self.user}"
