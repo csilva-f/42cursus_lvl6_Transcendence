@@ -339,6 +339,7 @@ async function changeActive(location) {
 			});
 			headerElement.setAttribute("data-i18n", "games&tournaments");
 			updateContent(langData);
+			console.log("[router == /games]")
 			document.getElementById("subMsg").style.display = "none";
 			const iconElement = document.getElementById("loadGamesIcon");
 			activateIcon(iconElement);
@@ -481,7 +482,7 @@ const locationHandler = async () => {
 		document
 			.querySelector('meta[name="description"]')
 			.setAttribute("content", route.description);
-		changeActive("/profile/:userID");
+		await changeActive("/profile/:userID");
 		return;
 	}
 
@@ -499,7 +500,7 @@ const locationHandler = async () => {
 		document
 			.querySelector('meta[name="description"]')
 			.setAttribute("content", route.description);
-		changeActive(location);
+		await changeActive(location);
 	}
 };
 

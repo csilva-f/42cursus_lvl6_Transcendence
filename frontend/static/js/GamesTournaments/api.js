@@ -1,4 +1,6 @@
 let allGames = [];
+let backButton = false;
+
 
 //* GAMES
 //? GET - /api/get-games/?statusID=
@@ -109,6 +111,7 @@ async function postLocalGame() {
         gameData["P1"] = res.game.user1_nick;
         gameData["P1_uid"] = res.game.user1;
         gameData["P2"] = res.game.user2_nick;
+        gameData["P2_uid"] = res.game.user2;
         gameData["isTournament"] = false;
       }
       localStorage.setItem("gameInfo", JSON.stringify(gameData));
@@ -143,7 +146,7 @@ async function postRemoteGame() {
       Authorization: `Bearer ${accessToken}`,
     },
     data: JSON.stringify(gameData),
-    success: function (res) {
+    success: async function (res) {
       console.log("Enter game: ", res);
       showSuccessToast(langData, langData.gamecreated);
       $("#createModal").modal("hide");
@@ -159,7 +162,7 @@ async function postRemoteGame() {
       const ws = new WebSocket(wsUrl);
       let playerCount = 0;
       // let gameInterval;
-
+      let myAvatar = await UserInfo.getUserAvatarPath();
       ws.onopen = async function () {
         console.log("WebSocket connection established successfully.");
         console.log(ws);
@@ -167,7 +170,9 @@ async function postRemoteGame() {
         window.history.pushState({}, "", `/pong`);
         await locationHandler();
         document.getElementById("leftPlayerName").innerHTML = "Waiting...";
+        document.getElementById("leftPlayerGameImg").src = `/static/img/bot/guest.svg`;
         document.getElementById("rightPlayerName").innerHTML = res.game.user1_nick;
+        document.getElementById("rightPlayerGameImg").src = myAvatar;
       };
       ws.onmessage = async function (e) {
         const data = JSON.parse(e.data);
@@ -179,6 +184,8 @@ async function postRemoteGame() {
           gameData["P2_uid"] = res.game.user1;
           gameData["P1"] = data.nick;
           gameData["P1_uid"] = data.user_id;
+          gameData["imgLeft"] = data.img;
+          gameData["imgRight"] = myAvatar;
           console.table(gameData)
           const game = new RemoteGame(gameData, ws, true);
           //5 4 3 2 1
@@ -246,6 +253,7 @@ async function enterGame(gameID) {
             type: "join",
             nick: res.game.user2_nick,
             user_id: res.game.user2,
+            img: await UserInfo.getUserAvatarPath(),
         });
         ws.send(message);
         gameData["gameID"] = res.game.id;
@@ -254,6 +262,8 @@ async function enterGame(gameID) {
         gameData["P1"] = res.game.user2_nick;
         gameData["P1_uid"] = res.game.user2;
         gameData["islocal"] = res.game.isLocal;
+        gameData["imgLeft"] = await UserInfo.getUserAvatarPath();
+        gameData["imgRight"] = await fetchUserAvatar(res.game.user1); 
         //localStorage.setItem("gameInfo", JSON.stringify(gameData)); //se apagarmos o historico no fim de cada jogo podemos tirar isto
         window.history.pushState({}, "", `/pong`);
         await locationHandler();
@@ -282,6 +292,29 @@ async function enterGame(gameID) {
       showErrorToast(APIurl, error, langData);
       //resetModal();
     },
+  });
+}
+
+async function fetchUserAvatar(userID) {
+  const APIurl = `/api/get-userextensions/?userID=${userID}`
+  const accessToken = await JWT.getAccess();
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: APIurl,
+      Accept: "application/json",
+      contentType: "application/json",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      success: function (res) {
+        resolve(`/static/img/profilePic/${res.users[0].avatar}`);
+      },
+      error: function (xhr, status, error) {
+        showErrorToast(APIurl, error, langData);
+        reject(-1);
+      },
+    });
   });
 }
 
@@ -449,7 +482,6 @@ async function fetchTournamentGames(tournamentID) {
         },
       success: function (res) {
         resolve(res.games); // Resolve the promise with the tournament ID\
-        updateContent(langData);
       },
       error: function (xhr, status, error) {
         reject(error); // Reject the promise on error

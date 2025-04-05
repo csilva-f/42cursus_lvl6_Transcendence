@@ -7,21 +7,42 @@ function goToHome() {
   locationHandler();
 }
 
+async function goToScreen(isTournament) {
+    window.history.pushState({}, "", "/games");
+    await locationHandler();
+    if (isTournament == '0') {
+        console.log("[isTournament == 0]")
+        const iconElement = document.getElementById("loadGamesIcon");
+		disableIcon(iconElement);
+		const iconStatusElement = document.getElementById("searchingLi");
+		disableIcon(iconStatusElement);
+        GamesTournamentsSelect('loadTournamentsIcon')
+    }
+}
+
 //trocar home por games
 //tirar botao de play again nos jogos remotos e de torneios
-function showGameStats(leftName, leftScore, leftColision, rightName, rightScore, rightColision, removePlayAgain) {
+async function showGameStats(leftName, leftScore, leftColision, rightName, rightScore, rightColision, removePlayAgain, imgLeft, imgRight, isTournament) {
     console.log(window.location.href);
     const pongGameDiv = document.getElementById('pongGameDiv');
     const mainGameScore = document.getElementById('mainGameScore');
     const finishedGame = document.getElementById('finishedGame');
     const playAgain = document.getElementById('playAgainButton');
+    const homeButton = document.getElementById('homeButton');
 
     pongGameDiv.classList.add('d-none');
     mainGameScore.classList.add('d-none');
     finishedGame.classList.remove('d-none');
     if(removePlayAgain)
         playAgain.classList.add('d-none');
+    if(isTournament)
+        homeButton.setAttribute("data-id", 0);
+    else
+        homeButton.setAttribute("data-id", 1);
 
+    // Imagens
+    document.getElementById("leftPlayerImg").src = imgLeft;
+    document.getElementById("rightPlayerImg").src = imgRight;
 
     // Nomes
     document.getElementById('leftPlayerNameFinished').textContent = leftName;

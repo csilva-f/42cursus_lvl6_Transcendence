@@ -14,6 +14,7 @@ const paddleHeight = 150;
 const paddleVelocity = 10;
 var stopGame = false;
 const wsConnections = {};
+var imgLeft, imgRight;
 
 window.addEventListener('keydown', function (e) {
     keyPressed[e.keyCode] = true;
@@ -43,7 +44,7 @@ class Game  {
         this.maxScore = maxScore;
         this.stopGame = false;
     }
-    initGame() {
+    async initGame() {
         console.info("onload");
         //this.canvas = document.getElementById('pongGameCanvas');
         //const context = canvas.getContext('2d');
@@ -65,7 +66,7 @@ class Game  {
         if (this.gameData == null) {
             this.objects = [
                 new Ball(this.canvas.width / 2, this.canvas.height / 2, this.ballVelocity, this.ballVelocity, this.ballRadius),
-                new Paddle(1, paddleWidth, paddleHeight, "#482445", 30, (this.canvas.height / 2) - 75, 10),
+                new Paddle(1, paddleWidth, paddleHeight, "#94DEC5", 30, (this.canvas.height / 2) - 75, 10),
                 new Paddle(2, paddleWidth, paddleHeight, "#de94ad",  this.canvas.width - 50, (this.canvas.height / 2) - 75 , 10)
             ]
             document.getElementById("leftPlayerName").innerHTML = "Shin";
@@ -74,16 +75,29 @@ class Game  {
             //console.log(this.gameData)
             this.objects = [
                 new Ball(this.canvas.width / 2, this.canvas.height / 2, this.ballVelocity, this.ballVelocity, this.ballRadius),
-                new Paddle(1, paddleWidth, paddleHeight, "#482445", 30, (this.canvas.height / 2) - 75, paddleVelocity),
+                new Paddle(1, paddleWidth, paddleHeight, "#94DEC5", 30, (this.canvas.height / 2) - 75, paddleVelocity),
                 new Paddle(2, paddleWidth, paddleHeight, "#de94ad",  this.canvas.width - 50, (this.canvas.height / 2) - 75 , paddleVelocity)
             ]
-            document.getElementById("leftPlayerName").innerHTML = this.gameData.P1;
-            document.getElementById("rightPlayerName").innerHTML = this.gameData.P2;
+            await this.loadPageInfo();
         }
         document.getElementById("playerLeftScore").innerHTML = this.objects[1].paddleScore;
         document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
         startTimer();
         this.gameLoop();
+    }
+    async loadPageInfo() {
+        if(this.gameData.P1_uid == -1)
+            imgLeft = `/static/img/bot/guest.svg`;
+        else
+            imgLeft = await UserInfo.getUserAvatarPath();
+        if(this.gameData.P2_uid == -1)
+            imgRight = `/static/img/bot/guest.svg`;
+        else
+            imgRight = await UserInfo.getUserAvatarPath();
+        document.getElementById("leftPlayerName").innerHTML = this.gameData.P1;
+        document.getElementById("leftPlayerGameImg").src = imgLeft;
+        document.getElementById("rightPlayerName").innerHTML = this.gameData.P2;
+        document.getElementById("rightPlayerGameImg").src = imgRight;
     }
 
     async gameLoop() {
@@ -104,7 +118,8 @@ class Game  {
               }
         } else {
             //console.log("Normal finish!");
-            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, this.gameData.isTournament);
+            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, 
+                this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, this.gameData.isTournament, imgLeft, imgRight, this.gameData.isTournament);
             startWinAnimation();
             const data = {
                 uid: this.gameData.P1_uid,

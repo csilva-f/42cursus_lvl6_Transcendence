@@ -55,7 +55,7 @@ class RemoteGame  {
         if (this.gameData == null) {
             this.objects = [
                 new Ball(this.canvas.width / 2, this.canvas.height / 2, this.ballVelocity, this.ballVelocity, this.ballRadius),
-                new Paddle(1, paddleWidth, paddleHeight, "#482445", 30, (this.canvas.height / 2) - 75, 10),
+                new Paddle(1, paddleWidth, paddleHeight, "#94DEC5", 30, (this.canvas.height / 2) - 75, 10),
                 new Paddle(2, paddleWidth, paddleHeight, "#de94ad",  this.canvas.width - 50, (this.canvas.height / 2) - 75 , 10)
             ]
             document.getElementById("leftPlayerName").innerHTML = "Shin";
@@ -64,11 +64,13 @@ class RemoteGame  {
             console.log(this.gameData)
             this.objects = [
                 new Ball(this.canvas.width / 2, this.canvas.height / 2, this.ballVelocity, this.ballVelocity, this.ballRadius),
-                new Paddle(1, paddleWidth, paddleHeight, "#482445", 30, (this.canvas.height / 2) - 75, paddleVelocity),
+                new Paddle(1, paddleWidth, paddleHeight, "#94DEC5", 30, (this.canvas.height / 2) - 75, paddleVelocity),
                 new Paddle(2, paddleWidth, paddleHeight, "#de94ad",  this.canvas.width - 50, (this.canvas.height / 2) - 75 , paddleVelocity)
             ]
             document.getElementById("leftPlayerName").innerHTML = this.gameData.P1;
+            document.getElementById("leftPlayerGameImg").src = this.gameData.imgLeft;
             document.getElementById("rightPlayerName").innerHTML = this.gameData.P2;
+            document.getElementById("rightPlayerGameImg").src = this.gameData.imgRight;
         }
         document.getElementById("playerLeftScore").innerHTML = this.objects[1].paddleScore;
         document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
@@ -169,27 +171,28 @@ class RemoteGame  {
     }
     async gameLoop() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        if (!this.stopGame && !keyPressed["finishGame"]) {
+        if (!this.stopGame){ // && !keyPressed["finishGame"]) {
             window.requestAnimationFrame(() => this.gameLoop());
             if(this.isHost)
                 this.hostGame();
             else
                 this.joinerGame();
-        } else if (keyPressed["finishGame"]) {
-            console.log("force finish");
-            keyPressed["finishGame"] = false;
-            //fechar socket
-            let msg = {
-                element: 5,
-            }
-            this.ws.send(JSON.stringify(msg));
-            if(this.isHost)
-                await updateGameStatusForceFinish(this.gameData);
-            window.history.pushState({}, "", `/games`);
-            await locationHandler();
+        // } else if (keyPressed["finishGame"]) {
+        //     console.log("force finish");
+        //     keyPressed["finishGame"] = false;
+        //     //fechar socket
+        //     let msg = {
+        //         element: 5,
+        //     }
+        //     this.ws.send(JSON.stringify(msg));
+        //     if(this.isHost)
+        //         await updateGameStatusForceFinish(this.gameData);
+        //     window.history.pushState({}, "", `/games`);
+        //     await locationHandler();
         } else{
             stopTimer();
-            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, true);
+            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, 
+                this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, true, this.gameData.imgLeft, this.gameData.imgRight, false);
             if(this.isWinner())
                 startWinAnimation();
             const data = {
