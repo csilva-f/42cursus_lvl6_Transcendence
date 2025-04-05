@@ -104,7 +104,7 @@ class Game  {
               }
         } else {
             //console.log("Normal finish!");
-            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes);
+            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, this.gameData.isTournament);
             startWinAnimation();
             const data = {
                 uid: this.gameData.P1_uid,

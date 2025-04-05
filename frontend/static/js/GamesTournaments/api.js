@@ -110,6 +110,7 @@ async function postLocalGame() {
         gameData["P1"] = res.game.user1_nick;
         gameData["P1_uid"] = res.game.user1;
         gameData["P2"] = res.game.user2_nick;
+        gameData["isTournament"] = false;
       }
       localStorage.setItem("gameInfo", JSON.stringify(gameData));
       window.history.pushState({}, "", "/pong");
@@ -163,7 +164,7 @@ async function postRemoteGame() {
       ws.onopen = async function () {
         console.log("WebSocket connection established successfully.");
         console.log(ws);
-        localStorage.setItem("gameInfo", JSON.stringify(gameData)); //se apagarmos o historico no fim de cada jogo podemos tirar isto
+        //localStorage.setItem("gameInfo", JSON.stringify(gameData)); //se apagarmos o historico no fim de cada jogo podemos tirar isto
         window.history.pushState({}, "", `/pong`);
         await locationHandler();
         document.getElementById("leftPlayerName").innerHTML = "Waiting...";
@@ -254,7 +255,7 @@ async function enterGame(gameID) {
         gameData["P1"] = res.game.user2_nick;
         gameData["P1_uid"] = res.game.user2;
         gameData["islocal"] = res.game.isLocal;
-        localStorage.setItem("gameInfo", JSON.stringify(gameData)); //se apagarmos o historico no fim de cada jogo podemos tirar isto
+        //localStorage.setItem("gameInfo", JSON.stringify(gameData)); //se apagarmos o historico no fim de cada jogo podemos tirar isto
         window.history.pushState({}, "", `/pong`);
         await locationHandler();
         const game = new RemoteGame(gameData, ws, false);
@@ -489,6 +490,7 @@ async function enterTournamentGame(gameID) {
       gameInfo["P1_uid"] = game.user1ID;
       gameInfo["P2"] = game.user2Nick;
       gameInfo["P2_uid"] = game.user2ID;
+      gameInfo["isTournament"] = true;
       localStorage.setItem("gameInfo", JSON.stringify(gameInfo));
       window.history.pushState({}, "", "/pong");
       await locationHandler();

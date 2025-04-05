@@ -16,7 +16,6 @@ window.addEventListener("beforeunload", function (e) {
     keyPressed["finishGame"] = true;
     //console.log("Aba ou navegador foi fechado!");
 });
-
 //add f5 ao finishGame
 
 class RemoteGame  {
@@ -175,6 +174,7 @@ class RemoteGame  {
             else
                 this.joinerGame();
         } else if (keyPressed["finishGame"]) {
+            console.log("force finish");
             keyPressed["finishGame"] = false;
             //fechar socket
             let msg = {
@@ -187,7 +187,7 @@ class RemoteGame  {
             await locationHandler();
         } else{
             stopTimer();
-            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes);
+            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, true);
             if(this.isWinner())
                 startWinAnimation();
             const data = {

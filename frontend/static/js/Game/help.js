@@ -7,16 +7,21 @@ function goToHome() {
   locationHandler();
 }
 
-
-function showGameStats(leftName, leftScore, leftColision, rightName, rightScore, rightColision) {
+//trocar home por games
+//tirar botao de play again nos jogos remotos e de torneios
+function showGameStats(leftName, leftScore, leftColision, rightName, rightScore, rightColision, removePlayAgain) {
     console.log(window.location.href);
     const pongGameDiv = document.getElementById('pongGameDiv');
     const mainGameScore = document.getElementById('mainGameScore');
     const finishedGame = document.getElementById('finishedGame');
+    const playAgain = document.getElementById('playAgainButton');
 
     pongGameDiv.classList.add('d-none');
     mainGameScore.classList.add('d-none');
     finishedGame.classList.remove('d-none');
+    if(removePlayAgain)
+        playAgain.classList.add('d-none');
+
 
     // Nomes
     document.getElementById('leftPlayerNameFinished').textContent = leftName;

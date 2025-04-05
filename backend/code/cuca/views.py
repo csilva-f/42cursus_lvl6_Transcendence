@@ -147,10 +147,8 @@ def get_games(request):
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
             'user1Nick': game.user1_nick if game.tournament else user1_nick,
-            'user1Avatar': game.user1_avatar if game.tournament else user1_avatar,
             'user2ID': game.user2,
             'user2Nick': game.user2_nick if game.tournament else user2_nick,
-            'user2Avatar': game.user2_avatar if game.tournament else user2_avatar,
             'winnerUserID': game.winnerUser,
             'winnerNick': game.winnerNick,
             'user1_points': game.user1_points,
@@ -166,7 +164,8 @@ def get_games(request):
             'isInvitation': game.isInvitation,
             'isInvitAccepted': game.isInvitAccepted
         })
-
+        # 'user1Avatar': game.user1_avatar if game.tournament else user1_avatar,
+        #'user2Avatar': game.user2_avatar if game.tournament else user2_avatar,
     return JsonResponse({"games": games_data}, status=200)
 
 @csrf_exempt

@@ -262,11 +262,9 @@ async function changeToBig(location) {
 		if (gameInfo) {
 			gameInfo = JSON.parse(gameInfo);
 			console.info("gameInfo: ", gameInfo);
-			console.log(gameInfo);
-			if(gameInfo.islocal){
-				game = new Game(gameInfo);
-				game.initGame();
-			}
+			console.log("entra aqui?")
+			game = new Game(gameInfo);
+			game.initGame();
     	}
 	} else if (location == "/callback") {
 		headerElement.setAttribute("data-i18n", "callback");
@@ -462,19 +460,18 @@ const locationHandler = async () => {
       location = "/mainPage";
      	route = routes[location];
     }
+	if (!(location === "/pong")) localStorage.removeItem("gameInfo");
     if (route.needAuth == 2 && uid) {
       location = "401";
       route = routes[location];
     }
-  if (!location === "/pong") localStorage.removeItem("gameInfo");
-  }
-  else {
-    if (location === "/mfa" && !tempToken.access)
-    {
-      location = "/login";
-      route = routes[location];
-    }
-  }
+	else {
+		if (location === "/mfa" && !tempToken.access)
+		{
+		location = "/login";
+		route = routes[location];
+		}
+	}
 	if (isProfile(location)) {
 		route = routes["/profile/:userID"];
 		html = await fetch(route.template).then((response) => response.text());
@@ -505,6 +502,8 @@ const locationHandler = async () => {
 		changeActive(location);
 	}
 };
+
+}
 
 document.addEventListener("click", (e) => {
 	const { target } = e;
