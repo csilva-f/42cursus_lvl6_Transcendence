@@ -153,6 +153,8 @@ class User {
 
   async updateProfile(){
     const accessToken = await JWT.getAccess();
+    const userLang = localStorage.getItem("language") || "en";
+    const langData = await getLanguageData(userLang);
     let userData = {
       first_name: this.userFirstName,
       last_name: this.userLastName,
@@ -168,9 +170,13 @@ class User {
       data: JSON.stringify(userData),
       success: async (res) => {
         this.isUpdating = false;
+        $("#signup-message").text("Update profile successfully");
+			  showSuccessToast(langData, langData.UpdateProfileSuccess);
+        $("#editProfileModal").modal("hide");
       },
       error: function (xhr, status, error) {
         this.isUpdating = false;
+        // retornar erros!!
       },
     });
   }

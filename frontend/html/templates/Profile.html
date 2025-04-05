@@ -162,7 +162,7 @@
 										<i class="fa-solid fa-user" style="color: var(--primary);"></i>
 									</span>
 									<input type="text" class="form-control" id="firstName" style="border: none;"
-									oninput="validateName('firstName', 'validateName', 'checkName')">
+									oninput="validateName('firstName', 'validateName', 'checkName')"required>
 								</div>
 								<small id="validateName" class="form-text text-muted d-none">
 									<ul>
@@ -180,7 +180,7 @@
 										<i class="fa-solid fa-user" style="color: var(--primary);"></i>
 									</span>
 									<input type="text" class="form-control" id="lastName" style="border: none;"
-									oninput="validateName('lastName', 'validateLast', 'checkLast')">
+									oninput="validateName('lastName', 'validateLast', 'checkLast')" required>
 								</div>
 								<small id="validateLast" class="form-text text-muted d-none">
 									<ul>
@@ -197,7 +197,7 @@
 								<label for="phoneNumber" class="form-label">Phone number</label>
 								<div class="input-group">
 									<input type="tel" class="form-control" id="phoneNumber" style="border: none;"
-									oninput="validatePhoneNumber('phoneNumber', 'validateNumber', 'checkNumber')">
+									oninput="validatePhoneNumber('phoneNumber', 'validateNumber', 'checkNumber')" required>
 								</div>
 								<small id="validateNumber" class="form-text text-muted d-none">
 									<ul>
@@ -216,7 +216,7 @@
 										<i class="fa-solid fa-cake-candles" style="color: var(--primary);"></i>
 									</span>
 									<input type="date" class="form-control" id="birthday" style="border: none;"
-									oninput="validateBirth('birthday', 'validateBirth', 'checkBirth')">
+									oninput="validateBirth('birthday', 'validateBirth', 'checkBirth')" required>
 								</div>
 								<small id="validateBirth" class="form-text text-muted d-none">
 									<ul>
@@ -238,7 +238,7 @@
 										<i class="" style="color: var(--primary);" id="icon"></i>
 									</span>
 									<select class="form-select" id="gender" style="border: none;"
-										onchange="updateIcon()">
+										onchange="updateIcon()" required>
 										<option value="" selected disabled> Select gender </option>
 										<option value="male">Male</option>
 										<option value="female">Female</option>
@@ -284,7 +284,7 @@
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 							</div>
 							<div class="col-md-6 text-end">
-								<button class="btn" onclick="updateProfile()"
+								<button class="btn" type="submit"
 									style="background-color: var(--primary); color: white;"
 									id="saveButtonProfile">Save</button>
 							</div>

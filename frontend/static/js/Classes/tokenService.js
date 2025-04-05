@@ -6,6 +6,7 @@ class tokenService {
   tempToken = {};
   date = new Date();
   isUpdating = false;
+  OTPStatus = false;
 
 
   async redirectLogin() {
@@ -25,6 +26,10 @@ class tokenService {
     return this.tempToken.access;
   }
 
+  async getOTPStatus() {
+    return this.OTPStatus;
+  }
+
   async getTempToken() {
     return this.tempToken;
   }
@@ -32,6 +37,10 @@ class tokenService {
   async setTempToken(t) {
     console.log("setTempToken: ", t);
     this.tempToken = t;
+  }
+
+  async setOTPStatus(t) {
+    this.OTPStatus = t;
   }
 
   deleteToken() {

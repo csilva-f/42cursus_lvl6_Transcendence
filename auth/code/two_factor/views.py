@@ -10,16 +10,11 @@ import requests
 import jwt
 
 class Enable2FAView(generics.GenericAPIView):
-    serializer_class = UserIdSerializer
     #permission_classes = [AllowAny]
     permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
-        print(request.data)
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user_id = serializer.validated_data['userId']
         try:
-            user = CucaUser.objects.get(id=user_id)
+            user = request.user
         except CucaUser.DoesNotExist:
             return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
         if request.data['status'] in [0,1,2]:
@@ -35,17 +30,10 @@ class Enable2FAView(generics.GenericAPIView):
             return Response({'error': 'Invalid request.'}, status=status.HTTP_400_BAD_REQUEST)
 
 class SendOTPView(generics.GenericAPIView):
-    serializer_class = UserIdSerializer
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
-        token = request.data["jwtToken"]
-        payload = jwt.decode(token,'django-insecure-@www2r)nc-li_empd8(e()gc592l7wau$zn%y#2*ej)u^xb*(0',algorithms=['HS256'])
-        user_id = payload['user_id']
-        serializer = self.get_serializer(data=user_id)
-        serializer.is_valid(raise_exception=True)
-        user_id = serializer.validated_data['userId']
         try:
-            user = CucaUser.objects.get(id=user_id)
+            user = request.user
         except CucaUser.DoesNotExist:
             return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
         totp = pyotp.TOTP(user.otp_secret)
@@ -80,16 +68,10 @@ class VerifyOTPView(generics.GenericAPIView):
             return Response({'error': 'Invalid OTP code'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class GetOtpStatus(APIView):
-    serializer_class = UserIdSerializer
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
-        token = request.data["jwtToken"]
-        print(token)
-        payload = jwt.decode(token,'django-insecure-@www2r)nc-li_empd8(e()gc592l7wau$zn%y#2*ej)u^xb*(0',algorithms=['HS256'])
-        print(payload)
-        user_id = payload['user_id']
         try:
-            user = CucaUser.objects.get(id=user_id)
+            user = request.user
         except CucaUser.DoesNotExist:
             print(f'User not found with id {user_id}')
             return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)

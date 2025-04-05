@@ -1,13 +1,21 @@
 async function loginSuccess(data) {
     jwtToken = data.access;
+    await JWT.setTempToken(data);
     const opt_status = await OTP_check_enable(jwtToken);
     console.log(opt_status);
 
     if (opt_status == true) {
-        //OTP_send_email(jwtToken);
-        await JWT.setTempToken(data);
+        await OTP_send_email();
         window.history.pushState({}, "", "/mfa");
-        locationHandler("content");
+        await locationHandler("content");
+        if (await JWT.getOTPStatus() == 1) {
+            let resend = document.getElementById("resendLabel");
+            let msgLabel = document.getElementById("msgLabel");
+            let titleLabel = document.getElementById("titleLabel");
+            msgLabel.innerHTML = "";
+            titleLabel.innerHTML = "Check your app to get the code";
+            resend.innerHTML = "Please use your aplication";
+        }
     } else {
         if (jwtToken) {
             localStorage.setItem("jwt", jwtToken);
@@ -39,4 +47,6 @@ function validateEmail(emailId, validationId, checkId) {
     }
 }
 
-
+async function resendOTP() {
+    await OTP_send_email();
+}

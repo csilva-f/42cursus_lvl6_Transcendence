@@ -135,6 +135,7 @@ class ResetPasswordAPIView(APIView):
         return Response({'message': 'Password reset successfully.'}, status=status.HTTP_200_OK)
 
 class ChangePasswordAPIView(APIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = ChangePasswordSerializer
 
     def post(self, request):

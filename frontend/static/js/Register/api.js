@@ -174,12 +174,15 @@ async function OTP_check_enable(jwtToken) {
             type: "POST",
             url: `${apiUrl}/otp-status/`, // Adjust the endpoint as needed
             contentType: "application/json",
-            headers: { Accept: "application/json" },
-            data: JSON.stringify({ jwtToken }),
-            success: function (data) {
+            headers: { 
+                Accept: "application/json", 
+                Authorization: `Bearer ${jwtToken}`
+            },
+            success: async function (data) {
                 console.log(data);
                 var status = data.is_2fa_enabled;
-                if (status == 1) {
+                await JWT.setOTPStatus(status);
+                if (status > 0) {
                     resolve(true);
                 } else {
                     resolve(false);
@@ -195,14 +198,22 @@ async function OTP_check_enable(jwtToken) {
 }
 //! NOT IN USE (commented on Login.js:7)
 //? /authapi/otp-send/
-async function OTP_send_email(jwtToken) {
+async function OTP_send_email() {
     const apiUrl = "/authapi";
+    let jwtToken= await JWT.getTempToken();
+    if (await JWT.getOTPStatus() != 2) return;
+    if (!jwtToken) return;
+    let access = jwtToken.access;
+    console.log(access);
     $.ajax({
         type: "POST",
         url: `${apiUrl}/otp-send/`, // Adjust the endpoint as needed
         contentType: "application/json",
-        headers: { Accept: "application/json" },
-        data: JSON.stringify({ jwtToken }),
+        headers: { 
+            Accept: "application/json",
+            Authorization: `Bearer ${access}`
+         },
+        //data: JSON.stringify({ access }),
         success: function (data) {
             console.log("sucess");
         },

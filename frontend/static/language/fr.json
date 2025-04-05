@@ -47,6 +47,8 @@
 	"signUpSuccess": "Utilisateur enregistré avec succès, veuillez vérifier votre email",
 	"RecoverPasswordSuccess": "Vérifiez votre email pour récupérer votre mot de passe",
 	"ResetPasswordSuccess": "Vérifiez votre e-mail pour réinitialiser votre mot de passe",
+	"ChangePasswordSuccess": "Votre mot de passe a été modifié avec succès",
+	"UpdateProfileSuccess": "Le profil a été mis à jour avec succès",
 	"gameInvited": "L'invitation a réussi, attendez que l'autre utilisateur accepte",
 	"friendshipInvited": "Demande d'ami envoyée avec succès",
 	"friendRequest": "Demande d'ami",

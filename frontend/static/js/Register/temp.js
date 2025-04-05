@@ -108,7 +108,7 @@ function validatePasswordsMatch(
   const icon = document.getElementById(iconId);
 
   validationMessage.classList.remove("d-none");
-  if (password1.value === password2.value && password1.value.length >= 8) {
+  if (password1.value === password2.value) {
     validationMessage.classList.add("d-none");
     validationMessage.classList.add("valid");
     validationMessage.classList.remove("invalid");
@@ -125,15 +125,20 @@ function validateName(name, validationName, checkId) {
   const validationMessage = document.getElementById(validationName);
   const checkIcon = document.getElementById(checkId);
 
+
 	if (nameInput.value.length <= 50) {
 		validationMessage.classList.add('d-none');
 		validationMessage.classList.add('valid');
+    nameInput.classList.add('is-valid');
 		validationMessage.classList.remove('invalid');
+    nameInput.classList.remove('is-invalid');
 	} else {
 		checkIcon.style.color = 'red';
 		validationMessage.classList.remove('d-none');
 		validationMessage.classList.add('invalid');
+    nameInput.classList.add('is-invalid');
 		validationMessage.classList.remove('valid');
+    nameInput.classList.remove('is-valid');
 	}
 }
 
@@ -148,4 +153,14 @@ function clearForm(formElement) {
   formElement.querySelectorAll(".invalid-feedback, .text-muted").forEach((el) => {
       el.classList.add("d-none");
   });
+}
+
+function goToForgotPwd() {
+  window.history.pushState({}, "", "/forgotPassword");
+  locationHandler();
+}
+
+function goToResendCode() {
+  window.history.pushState({}, "", "/resendCode");
+  locationHandler();
 }

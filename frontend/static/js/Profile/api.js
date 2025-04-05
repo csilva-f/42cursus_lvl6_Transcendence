@@ -109,3 +109,36 @@ async function uploadAvatar(event) {
 	  };
 	}
   }
+
+  async function changePassword() {
+	const userLang = localStorage.getItem("language") || "en";
+	const langData = await getLanguageData(userLang);
+	const	old_password = $("#currentPassword").val();
+	const	new_password = $("#newPasswordChange").val();
+	const	confirm_new_password = $("#confirmPasswordChange").val();
+	const	form = document.getElementById("changePasswordForm");
+	const apiUrl = "/authapi";
+	const accessToken = await JWT.getAccess();
+	$.ajax({
+        type: "POST",
+        url: `${apiUrl}/change-password/`,
+        contentType: "application/json",
+        headers: { 
+			Accept: "application/json",
+			Authorization: `Bearer ${accessToken}`,
+		 },
+        data: JSON.stringify({ old_password, new_password, confirm_new_password }),
+		success: function (data) {
+			$("#signup-message").text("Change password successfully");
+			showSuccessToast(langData, langData.ChangePasswordSuccess);
+			form.reset();
+			clearForm(form);
+			$("#changePasswordModal").modal("hide");
+		},
+		error: function (xhr) {
+            const data = JSON.parse(xhr.responseJSON);
+            console.log("Change password failed:", data.error || "Change password failed.");
+			// retornar os erros!!!
+		}
+	})
+  }
