@@ -448,7 +448,7 @@ async function fetchTournamentGames(tournamentID) {
         },
       success: function (res) {
         resolve(res.games); // Resolve the promise with the tournament ID\
-        updateContent(langData);
+        //updateContent(langData);
       },
       error: function (xhr, status, error) {
         reject(error); // Reject the promise on error

@@ -1,16 +1,25 @@
 async function insertHistoryInfo(newCard, element) {
     const winnerImg = newCard.querySelector("#winnerImg");
-    const matchResult = newCard.querySelector("#matchResult");
     const divDefeat = newCard.querySelector("#divDefeat");
     const winnerNick = newCard.querySelector("#winnerNick");
     const resTextL = newCard.querySelector("#matchWinner");
     const resTextW = newCard.querySelector("#matchOpponent");
     const tsDate = newCard.querySelector("#gameHCreatedOn");
     tsDate.textContent = element.creationTS.split(" ")[0];
+
+    const gwin = newCard.querySelector("#gameWin");
+    const twin = newCard.querySelector("#tournWin");
+    const gloss = newCard.querySelector("#gameLoss");
+    const tloss = newCard.querySelector("#tournLoss");
+
     if (element.winnerUserID != await UserInfo.getUserID()) {
-        element.tournamentID == null ? matchResult.textContent = "Defeat" : matchResult.textContent = "Tournament Defeat";
         divDefeat.classList.remove("d-none");
         resTextL.classList.remove("d-none");
+        if (!element.tournamentID) {
+            gloss.classList.remove("d-none");
+        } else {
+            tloss.classList.remove("d-none");
+        }
         winnerNick.textContent = element.winnerNick;
         if (element.winnerUserID == element.user1ID) {
             winnerImg.src = `/static/img/profilePic/${element.user1Avatar}`;
@@ -18,17 +27,19 @@ async function insertHistoryInfo(newCard, element) {
             winnerImg.src = `/static/img/profilePic/${element.user2Avatar}`;
         }
     } else {
-        element.tournamentID == null ? matchResult.textContent = "Win" : matchResult.textContent = "Tournament Win";
         divDefeat.classList.remove("d-none");
         if (!element.tournamentID) {
+            gwin.classList.remove("d-none");
             resTextW.classList.remove("d-none");
-            if (element.winnerUserID == element.user1ID) {
-                winnerNick.textContent = element.user2Nick;
-                winnerImg.src = `/static/img/profilePic/${element.user1Avatar}`;
-            } else {
-                winnerNick.textContent = element.user1Nick;
-                winnerImg.src = `/static/img/profilePic/${element.user2Avatar}`;
-            }
+        } else {
+            twin.classList.remove("d-none");
+        }
+        if (element.winnerUserID == element.user1ID) {
+            winnerNick.textContent = element.user2Nick;
+            winnerImg.src = `/static/img/profilePic/${element.user1Avatar}`;
+        } else {
+            winnerNick.textContent = element.user1Nick;
+            winnerImg.src = `/static/img/profilePic/${element.user2Avatar}`;
         }
     }
 }
