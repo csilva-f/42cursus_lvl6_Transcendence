@@ -97,5 +97,6 @@
     "hits": "Balls hit:",
     "duration": "Duration:",
     "errorNick": "Tournament players alias must all be different",
-    "errorName": "Tournament name must be different from other active tournaments"
+    "errorName": "Tournament name must be different from other active tournaments",
+    "opponent": "Opponent:"
 }

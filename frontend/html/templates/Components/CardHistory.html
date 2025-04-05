@@ -2,29 +2,24 @@
 	<div class="container-fluid rounded-4 d-flex align-items-center"
 		 style="max-height: 5.85rem; min-height: 5.85rem; background-color: var(--cardBg);"
 		 id="cardHistoryMainDiv">
-	  
-	  <!-- Imagem -->
 	  <div class="d-flex justify-content-center align-items-center" style="max-width: 4.5rem;">
 		<img src="/static/img/pfp2.jpg"
 			 style="object-fit: cover"
 			 class="img-fluid w-100 rounded-circle shadow ms-2"
 			 id="winnerImg" />
 	  </div>
-  
-	  <!-- Texto: resultado e "Winner" -->
 	  <div class="d-flex flex-column justify-content-center ms-3 flex-grow-1">
 		<p class="h4 mb-0">
 		  <strong id="matchResult"></strong>
 		</p>
 		<div class="d-flex align-items-center d-none" id="divDefeat">
-		  <p class="h4 mb-0">Winner:</p>
+		  <p id="matchWinner" class="h4 mb-0 d-none" data-i18n="winnerT"></p>
+		  <p id="matchOpponent" class="h4 mb-0 d-none" data-i18n="opponent"></p>
 		  <p class="h4 mb-0 ms-2">
 			<strong id="winnerNick"></strong>
 		  </p>
 		</div>
 	  </div>
-  
-	  <!-- Ícone + data, à direita e centralizados verticalmente -->
 	  <div class="d-flex align-items-center ms-auto me-2">
 		<i class="fa-solid fa-calendar-check me-2" style="font-size: 16px;"></i>
 		<span class="h6 mb-0" id="gameHCreatedOn"></span>

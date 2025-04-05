@@ -402,7 +402,7 @@ def get_tournaments(request):
             'user2Nick': tournament.nick2,
             'user3Nick': tournament.nick3,
             'user4Nick': tournament.nick4,
-            'createdOn': tournament.creationTS,
+            'createdOn': tournament.creationTS.strftime("%Y-%m-%d %H:%M:%S") if tournament.creationTS else None
         }
         for tournament in tournaments
     ]

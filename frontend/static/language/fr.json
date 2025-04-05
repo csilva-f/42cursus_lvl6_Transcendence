@@ -89,9 +89,11 @@
 	"matches": "Matchs",
 	"globalStatistics": "Statistiques mondiales",
 	"winner": "Gagnant",
+	"winnerT": "Gagnant:",
     "points": "Points:",
     "hits": "Balles frappées:",
     "duration": "Durée:",
     "errorNick": "Les alias des joueurs du tournoi doivent tous être différents",
-    "errorName": "Le nom du tournoi doit être différent des autres tournois actifs"
+    "errorName": "Le nom du tournoi doit être différent des autres tournois actifs",
+    "opponent": "Adversaire:"
 }
