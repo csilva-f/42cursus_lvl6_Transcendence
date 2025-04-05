@@ -53,6 +53,7 @@ echo $ROOT_TOKEN > /vault/secrets/VAULT_ROOT_TOKEN.txt
 
 echo "Enabling the database secrets engine..."
 vault secrets enable database
+vault secrets enable -path=secret kv
 
 if ! vault secrets list | grep -q "database/config/config-auth-db"; then
     # Configure the PostgreSQL database connection
