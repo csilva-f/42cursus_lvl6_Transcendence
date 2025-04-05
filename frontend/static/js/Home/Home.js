@@ -30,7 +30,6 @@ async function insertHistoryInfo(newCard, element) {
                 winnerImg.src = `/static/img/profilePic/${element.user2Avatar}`;
             }
         }
-        
     }
 }
 

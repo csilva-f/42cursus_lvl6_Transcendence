@@ -722,7 +722,6 @@ def post_update_gameTS(request):
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
         except Exception as e:
-            print("aqui is 500")
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
@@ -746,7 +745,8 @@ def post_create_userextension(request):
                         "gender": userext.gender.gender if userext.gender else None,
                         "level": userext.ulevel,
                         "avatar": userext.avatar,
-                        "bio": userext.bio
+                        "bio": userext.bio,
+                        "language": userext.lang
                     },
                     "isOpenPopup": False if userext.nick else True
                 }, status=201)
@@ -763,7 +763,8 @@ def post_create_userextension(request):
                     "gender": userext.gender.gender if userext.gender else None,
                     "level": userext.ulevel,
                     "avatar": userext.avatar,
-                    "bio": userext.bio
+                    "bio": userext.bio,
+                    "language": userext.lang
                 },
                 "isOpenPopup": True
             }, status=201)
@@ -841,7 +842,8 @@ def get_userextensions(request):
             'gender': userext.gender.label if userext.gender else None,
             'level': userext.ulevel,
             'avatar': userext.avatar,
-            'bio': userext.bio
+            'bio': userext.bio,
+            "language": userext.lang
         }
         for userext in uextensions
     ]
@@ -980,6 +982,7 @@ def post_update_userextension(request):
             avatar = data.get('avatar')
             bio = data.get('bio')
             unick = data.get('nickname')
+            ulang = data.get('language')
             if (not unick) and (not uext.nick):
                 return JsonResponse({"error": "User nickname is a mandatory field in the first update"}, status=400)
             if gender_id:
@@ -1000,12 +1003,10 @@ def post_update_userextension(request):
                 avatar and avatar != uext.avatar,
                 unick and unick != uext.nick
             ]):
-                print("1: ", avatar)
                 return JsonResponse({"error": "No changes to the user information were performed"}, status=400)
             if birthdate:
                 uext.birthdate = birthdate
             if avatar:
-                print("if avatar", avatar)
                 uext.avatar = avatar
             if bio:
                 uext.bio = bio
