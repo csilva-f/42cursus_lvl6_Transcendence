@@ -5,16 +5,22 @@
 
 
 const routes = {
+	401: {
+		template: "/templates/Error/401.html",
+		title: "401",
+		descripton: "Unauthorized",
+		needAuth: 0,
+	},
+	403: {
+		template: "/templates/Error/403.html",
+		title: "403",
+		descripton: "Forbidden",
+		needAuth: 0,
+	},
 	404: {
 		template: "/templates/Error/404.html",
 		title: "404",
 		descripton: "Page not found",
-		needAuth: 0,
-	},
-	401: {
-		template: "/templates/Error/401.html",
-		title: "401",
-		descripton: "Forbidden",
 		needAuth: 0,
 	},
 	"/mainPage": {
@@ -132,8 +138,9 @@ const bigScreenLocation = [
 	"/resendCode",
 	"/resetPassword",
 	"/tournament",
-	"/404",
 	"/401",
+	"/403",
+	"/404",
 	"/testWebSocket",
 ];
 
@@ -228,7 +235,7 @@ async function changeToBig(location) {
 		disableTopBar();
 		resetNotifications();
 	}
-	else if (location == "/401" || location == "/404")
+	else if (location == "/401" || location == "/403" || location == "/404")
 		disableTopBar();
 	else if (location == "/tournament") {
 		allContent.style.cssText += 'height: calc(100vh - 7rem); overflow-x: auto;';
@@ -249,6 +256,7 @@ async function changeToBig(location) {
 	  let tempToken = await JWT.getTempToken();
 		headerElement.setAttribute("data-i18n", "mfa");
 		disableTopBar();
+		
 		getForms();
 	} else if (location == "/resetPassword") {
 		headerElement.setAttribute("data-i18n", "resetPassword");

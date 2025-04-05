@@ -135,6 +135,8 @@ async function validateVerifyEmail() {
 //? /authapi/reset-password/
 async function resetPassword() {
     const urlParams = new URLSearchParams(window.location.search);
+    const userLang = localStorage.getItem("language") || "en";
+	const langData = await getLanguageData(userLang);
     const uid = urlParams.get("uid");
     const token = urlParams.get("token");
     const password = $("#newPassword").val();
@@ -152,7 +154,9 @@ async function resetPassword() {
         data: JSON.stringify({ uid, token, password, confirm_password }),
         success: function (data) {
             //renderizar aqui o form de reset password
-            console.log("Token validated successfully");
+            // console.log("Token validated successfully");
+            $("#signup-message").text("Reset password successfully");
+			showSuccessToast(langData, langData.ResetPasswordSuccess);
         },
         error: function (xhr) {
             const data = JSON.parse(xhr.responseJSON);
@@ -172,12 +176,15 @@ async function OTP_check_enable(jwtToken) {
             type: "POST",
             url: `${apiUrl}/otp-status/`, // Adjust the endpoint as needed
             contentType: "application/json",
-            headers: { Accept: "application/json" },
-            data: JSON.stringify({ jwtToken }),
-            success: function (data) {
+            headers: { 
+                Accept: "application/json", 
+                Authorization: `Bearer ${jwtToken}`
+            },
+            success: async function (data) {
                 console.log(data);
                 var status = data.is_2fa_enabled;
-                if (status == 1) {
+                await JWT.setOTPStatus(status);
+                if (status > 0) {
                     resolve(true);
                 } else {
                     resolve(false);
@@ -193,14 +200,22 @@ async function OTP_check_enable(jwtToken) {
 }
 //! NOT IN USE (commented on Login.js:7)
 //? /authapi/otp-send/
-async function OTP_send_email(jwtToken) {
+async function OTP_send_email() {
     const apiUrl = "/authapi";
+    let jwtToken= await JWT.getTempToken();
+    if (await JWT.getOTPStatus() != 2) return;
+    if (!jwtToken) return;
+    let access = jwtToken.access;
+    console.log(access);
     $.ajax({
         type: "POST",
         url: `${apiUrl}/otp-send/`, // Adjust the endpoint as needed
         contentType: "application/json",
-        headers: { Accept: "application/json" },
-        data: JSON.stringify({ jwtToken }),
+        headers: { 
+            Accept: "application/json",
+            Authorization: `Bearer ${access}`
+         },
+        //data: JSON.stringify({ access }),
         success: function (data) {
             console.log("sucess");
         },

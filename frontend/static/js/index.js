@@ -84,7 +84,7 @@ function getForms() {
       "submit",
       (event) => {
         form.classList.remove("was-validated");
-        if (!form.checkValidity()) {
+        if (!(form.checkValidity()) || !(myCustomValidity(form))) {
           event.preventDefault();
           event.stopPropagation();
         } else {
@@ -98,6 +98,8 @@ function getForms() {
           else if (form.id == "nicknameModal-form") finishProfile();
             //else if (form.id == "mfa-form") verifyAccount();
           else if (form.id == "resetPwd-form") resetPassword();
+          else if (form.id == "changePasswordForm") changePassword();
+          else if (form.id == "editProfileForm") updateProfile();
           // else if (form.id == "resendCode-form")
           // 	sendCode();
           // else if (form.id == "resetPwd-form")

@@ -16,25 +16,6 @@ function updateIcon() {
             icon.className = '';
     }
 }
-//! DUPLICATED VERIFY WHICH ONE IS REAL
-// function updateIcon() {
-//     const genderSelect = document.getElementById("gender");
-//     const icon = document.getElementById("icon");
-
-//     switch (genderSelect.value) {
-//         case "male":
-//             icon.className = "fa-solid fa-mars";
-//             break;
-//         case "female":
-//             icon.className = "fa-solid fa-venus";
-//             break;
-//         case "other":
-//             icon.className = "fa-solid fa-neuter";
-//             break;
-//         default:
-//             icon.className = "";
-//     }
-// }
 
 async function insertProfileInfo(UserElement, users_on) {
     console.log("[insertProfileInfo]")
@@ -148,7 +129,6 @@ function validateBio(bioText, validationBio, checkId) {
         validationMessage.classList.remove('valid');
     }
 }
-
 
 async function insertOwnProfileInfo() {
     document.getElementById("birthdayText").textContent = await UserInfo.getUserBirthdate();

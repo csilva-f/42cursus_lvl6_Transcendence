@@ -117,12 +117,12 @@ class EnableOTPViewSet(viewsets.ViewSet):
 #return in case of success:
     # message: string
 class SendOTPViewSet(viewsets.ViewSet):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def create(self, request):
         backend_url = 'http://auth:8000/otp/send/'
         try:
-            backend_response = requests.post(backend_url, json=request.data)
+            backend_response = requests.post(backend_url, json=request.data, headers=request.headers)
             backend_response.raise_for_status()
             data = backend_response.json()
             return Response(data, status=status.HTTP_201_CREATED)
@@ -139,12 +139,12 @@ class SendOTPViewSet(viewsets.ViewSet):
 #return in case of success:
     # otp_enabled: boolean
 class GetOTPStatusViewSet(viewsets.ViewSet):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def create(self, request):
         backend_url = 'http://auth:8000/otp/get-otp/'
         try:
-            backend_response = requests.post(backend_url, json=request.data)
+            backend_response = requests.post(backend_url, json=request.data, headers=request.headers)
             backend_response.raise_for_status()
             data = backend_response.json()
             return Response(data, status=status.HTTP_201_CREATED)
