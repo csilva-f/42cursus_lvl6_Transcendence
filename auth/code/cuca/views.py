@@ -147,13 +147,12 @@ class ChangePasswordAPIView(APIView):
         return Response({'message': 'Password changed successfully.'}, status=status.HTTP_200_OK)
 
 class ValidateTokenView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        token = request.headers['Authorization'].split(' ')[1]
+        print(request)
         try:
-            payload = jwt.decode(token,'django-insecure-@www2r)nc-li_empd8(e()gc592l7wau$zn%y#2*ej)u^xb*(0',algorithms=['HS256'])
-            user = CucaUser.objects.get(id=payload['user_id'])
+            user = CucaUser.objects.get(id=request.user.id)
             data = {'user_id': user.id, 'username': user.username}
             return Response({'data': data}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError:

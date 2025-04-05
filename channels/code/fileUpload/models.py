@@ -11,8 +11,7 @@ def validate_filename(filename):
 
 def user_directory_path(instance, filename):
     validate_filename(filename)
-    extension = filename.split('.')[-1]
-    filename = instance.name+ '.' + extension
+
     path = os.path.join('', '')
     os.makedirs(os.path.join(MEDIA_ROOT, path), exist_ok=True)
     if os.path.isfile(os.path.join(MEDIA_ROOT, path, filename)):
