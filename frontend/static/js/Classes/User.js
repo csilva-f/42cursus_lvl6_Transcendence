@@ -24,6 +24,12 @@ class User {
     });
   }
 
+  async closeWebSocket() {
+    if (window.ws_os && window.ws_os.readyState === WebSocket.OPEN) {
+        window.ws_os.close();
+    }
+  }
+
   async refreshUser() {
     console.log("[refreshUser]");
     if (!this.isUpdating) {

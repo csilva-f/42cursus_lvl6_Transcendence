@@ -1,7 +1,6 @@
 <div id="tournamentGameCard" class="game-card p-3 mb-3 rounded-4"
      style="background-color: var(--bodyBg);">
     
-    <!-- Troque align-items-start por align-items-center -->
     <div class="d-flex align-items-center" style="min-height: 5rem;">
         
         <!-- Coluna ESQUERDA: "Game" / "Semi final" -->
@@ -28,6 +27,18 @@
                     <span class="ms-2" id="tournGameStatus"></span>
                 </p>
             </div>
+        </div>
+        <div id="tournGameWinnerText" class="d-flex flex-column d-none" style="width: 8rem;">
+            <p class="h4 mb-0" style="font-weight: bold" data-i18n="winner"></p>
+            <p class="h5 mt-2 mb-0" id="tournGameWinner"></p>
+        </div>
+        <div id="tournGameBtn" class="align-content-right d-none">
+            <ul class="nav nav-pills justify-content-end" style="height: 3rem">
+                <li class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+                    style="width: 3rem; cursor: pointer; background-color: white;" id="enterLi" href="/pong" onclick="enterTournamentGame(this.dataset.id)">
+                    <i class="fa-solid fa-table-tennis-paddle-ball fa-xl" style="color: black"></i>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

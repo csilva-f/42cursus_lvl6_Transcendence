@@ -90,5 +90,13 @@
     "victories": "Vitórias",
     "losses": "Derrotas",
     "matches": "Partidas",
-	"globalStatistics": "Estatisticas Globais"
+	"globalStatistics": "Estatisticas Globais",
+    "winner": "Vencedor",
+    "winnerT": "Vencedor:",
+    "points": "Pontos:",
+    "hits": "Bolas batidas:",
+    "duration": "Duração:",
+    "errorNick": "Os alias dos jogadores do torneio devem ser diferentes",
+    "errorName": "O nome do torneio deve ser diferente de outros torneios ativos",
+    "opponent": "Oponente:"
 }

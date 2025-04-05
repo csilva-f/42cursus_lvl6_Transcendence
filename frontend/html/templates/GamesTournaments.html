@@ -54,7 +54,7 @@
                   <div class="col-lg-10 col-md-10 col-10">
                     <div class="d-flex gap-2 h-100">
                       <ul class="nav nav-pills" style="height: 3rem">
-                        <li class="pop-hover-s menuLi nav-item rounded-3 me-2 d-flex align-items-center iconInactive"
+                        <li class="pop-hover-s menuLi nav-item rounded-3 me-2 ms-0 d-flex align-items-center iconInactive"
                           id="searchingLi" onclick="GamesTournamentsMatches(this.id)">
                           <i class="fa-solid fa-tower-broadcast fa-xl ms-2" id="searchingIcon"></i>
                           <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="searching"
@@ -222,7 +222,7 @@
                 <span class="input-group-text" id="basic-addon1" style="margin-top: 20px;">
                   <i class="fa-solid fa-signature fa-lg"></i>
                 </span>
-                <input id="localNameTournamentInput" type="text" class="form-control" placeholder="Nome torneio(traduzir)"
+                <input id="localNameTournamentInput" required type="text" class="form-control" placeholder="Nome torneio(traduzir)"
                   aria-describedby="basic-addon1" style="margin-top: 20px;">
               </div>
               <!-- End Name -->
@@ -246,7 +246,7 @@
                   <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
                     type="color" class="form-control-color p-0 m-0" id="P2ColorInput" value="#AC61C3">
                 </span>
-                <input type="text" class="form-control" id="P2NickInputTourn" placeholder="Player2 Nickname(traduzir)"
+                <input type="text" class="form-control" id="P2NickInputTourn" required placeholder="P2"
                   aria-describedby="inputGroupPrepend" required>
                 <div class="invalid-feedback" data-i18n="p1NickError">
                 </div>
@@ -258,7 +258,7 @@
                   <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
                     type="color" class="form-control-color p-0 m-0" id="P3ColorInput" value="#61ACC3">
                 </span>
-                <input type="text" class="form-control" id="P3NickInput" placeholder="Player3 Nickname(traduzir)"
+                <input type="text" class="form-control" id="P3NickInput" required placeholder="P3"
                   aria-describedby="inputGroupPrepend" required>
                 <div class="invalid-feedback" data-i18n="p1NickError">
                 </div>
@@ -270,7 +270,7 @@
                   <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
                     type="color" class="form-control-color p-0 m-0" id="P4ColorInput" value="#C361AC">
                 </span>
-                <input type="text" class="form-control" id="P4NickInput" placeholder="Player4 Nickname(traduzir)"
+                <input type="text" class="form-control" id="P4NickInput" required placeholder="P4"
                   aria-describedby="inputGroupPrepend" required>
                 <div class="invalid-feedback" data-i18n="p1NickError">
                 </div>
@@ -281,6 +281,12 @@
             </form>
             <!-- End Local Tournament Form -->
           </div>
+          <div id="tournErrorSection" class="col-12 mt-2 d-none">
+            <div class="alert alert-danger d-none" role="alert" id="tournErrorNick" data-i18n="errorNick">
+            </div>
+            <div class="alert alert-danger d-none" role="alert" id="tournErrorName" data-i18n="errorName">
+            </div>
+          </div>          
           <!-- Action Buttons -->
           <div class="col-md-4 text-start mt-4">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"

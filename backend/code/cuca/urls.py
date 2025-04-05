@@ -27,4 +27,5 @@ urlpatterns = [
     path('get_pendingrequests/', get_pendingrequests, name='get_pendingrequests'),
     path('get_nonfriendslist/', get_nonfriendslist, name='get_nonfriendslist'),
     path('get_topusers/', get_topusers, name='get_topusers'),
+    path('update_gameTS/', post_update_gameTS, name='post_update_gameTS'),
 ]

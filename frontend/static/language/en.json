@@ -62,7 +62,7 @@
 	"callback": "",
     "overall": "Overall",
     "status": "Status:",
-    "players": "PLayers:",
+    "players": "Players:",
     "users": "Users:",
     "noNotifications": "No Notifications",
     "confirmLogout": "Confirm log out?",
@@ -90,5 +90,13 @@
     "victories": "Victories",
     "losses": "Losses",
     "matches": "Matches",
-	"globalStatistics": "Global Statistics"
+	"globalStatistics": "Global Statistics",
+    "winner": "Winner",
+    "winnerT": "Winner:",
+    "points": "Points:",
+    "hits": "Balls hit:",
+    "duration": "Duration:",
+    "errorNick": "Tournament players alias must all be different",
+    "errorName": "Tournament name must be different from other active tournaments",
+    "opponent": "Opponent:"
 }

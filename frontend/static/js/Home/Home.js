@@ -3,13 +3,24 @@ async function insertHistoryInfo(newCard, element) {
     const matchResult = newCard.querySelector("#matchResult");
     const divDefeat = newCard.querySelector("#divDefeat");
     const winnerNick = newCard.querySelector("#winnerNick");
-
+    const resTextW = newCard.querySelector("#matchWinner");
+    const resTextL = newCard.querySelector("#matchOpponent");
+    const tsDate = newCard.querySelector("#gameHCreatedOn");
+    if (element.tournamentID) {
+        tsDate.textContent = element.createdOn.split(" ")[0];
+    } else {
+        tsDate.textContent = element.creationTS.split(" ")[0];
+    }
+    winnerNick.textContent = element.winnerNick
     if (element.winnerUserID != await UserInfo.getUserID()) {
         element.tournamentID == null ? matchResult.textContent = "Defeat" : matchResult.textContent = "Tournament Defeat";
         divDefeat.classList.remove("d-none");
-        element.winnerUserID == element.user1ID ? winnerNick.textContent = element.user1Nick : winnerNick.textContent = element.user2Nick
+        resTextW.classList.remove("d-none");
+        
     } else {
-        element.tournamentID == null ? matchResult.textContent = "Winner" : matchResult.textContent = "Tournament Winner";
+        element.tournamentID == null ? matchResult.textContent = "Win" : matchResult.textContent = "Tournament Win";
+        divDefeat.classList.remove("d-none");
+        if (!element.tournamentID) resTextL.classList.remove("d-none");
         winnerImg.src = "/static/img/pfp1.jpeg";
     }
 }
@@ -52,7 +63,7 @@ function searchFriend() {
 
 function renderHomeFriends(usersList, cardTemplate, users_on) {
 	const divElement = document.getElementById("friendsContent");
-	divElement.innerHTML = "";
+	if (divElement) divElement.innerHTML = "";
 	usersList.forEach(element => {
 		const newCard = document.createElement("div");
 		newCard.innerHTML = cardTemplate;
