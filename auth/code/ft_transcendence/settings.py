@@ -66,7 +66,7 @@ AUTHENTICATION_BACKENDS = (
 
 OAUTH2_PROVIDER = {
     'CLIENT_ID': 'u-s4t2ud-9ec7e1b569c511d464a5fde0f161abb7de05399c1ba6b45dcc7619f42c1bfff0',
-    'CLIENT_SECRET': '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',
+    'CLIENT_SECRET': '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',
     'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
     'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
     'USER_INFO_URL': 'https://api.intra.42.fr/v2/me',

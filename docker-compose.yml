@@ -117,6 +117,8 @@ services:
     build: ./channels
     volumes:
       #- channels-data:/code:rw
+      #- ./frontend/static/img/profilePic:/images:rw
+      - upload-data:/images:rw
       - ./channels/code:/code:rw
     networks:
       - frontend
@@ -306,4 +308,11 @@ volumes:
     driver_opts:
       type: none
       device: ./secrets
+      o: bind
+  upload-data:
+    name: upload-data
+    driver: local
+    driver_opts:
+      type: none
+      device: ./frontend/static/img/profilePic
       o: bind

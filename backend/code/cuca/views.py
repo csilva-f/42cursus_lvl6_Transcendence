@@ -22,8 +22,8 @@ def validate_filters_tournament(request):
     extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_TOURNAMENT
     if extra_keys:
         raise ValidationError(f"Invalid parameter(s): {', '.join(extra_keys)}")
-    
-    
+
+
 def validate_filters_games(request):
     extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_GAMES
     if extra_keys:
@@ -33,7 +33,7 @@ def validate_filters_uext(request):
     extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_UEXT
     if extra_keys:
         raise ValidationError(f"Invalid parameter(s): {', '.join(extra_keys)}")
-    
+
 def validate_filters_ugames(request):
     extra_keys = set(request.GET.keys()) - ALLOWED_FILTERS_UGAMES
     if extra_keys:
@@ -61,11 +61,11 @@ def validate_id(id):
     return int(id)
 
 def validate_name(name):
-    if len(name) > 255: 
+    if len(name) > 255:
         raise ValidationError("Name must not exceed 255 characters.")
     return name
 
-@csrf_exempt 
+@csrf_exempt
 def get_games(request):
     try:
         validate_filters_games(request)
@@ -114,18 +114,28 @@ def get_games(request):
     games_data = []
     for game in games:
         user1_nick = None
+        user1_avatar = None
         user2_nick = None
+        user2_avatar = None
 
         if game.user1:
             try:
                 user1_nick = tUserExtension.objects.get(user=game.user1).nick
             except tUserExtension.DoesNotExist:
                 user1_nick = None
+            try:
+                user1_avatar = tUserExtension.objects.get(user=game.user1).avatar
+            except tUserExtension.DoesNotExist:
+                user1_avatar = None
         if game.user2:
             try:
                 user2_nick = tUserExtension.objects.get(user=game.user2).nick
             except tUserExtension.DoesNotExist:
                 user2_nick = None
+            try:
+                user2_avatar = tUserExtension.objects.get(user=game.user2).avatar
+            except tUserExtension.DoesNotExist:
+                user2_avatar = None
 
         games_data.append({
             'userID': u_id if u_id else None,
@@ -137,8 +147,10 @@ def get_games(request):
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
             'user1Nick': game.user1_nick if game.tournament else user1_nick,
+            'user1Avatar': game.user1_avatar if game.tournament else user1_avatar,
             'user2ID': game.user2,
             'user2Nick': game.user2_nick if game.tournament else user2_nick,
+            'user2Avatar': game.user2_avatar if game.tournament else user2_avatar,
             'winnerUserID': game.winnerUser,
             'winnerNick': game.winnerNick,
             'user1_points': game.user1_points,
@@ -157,7 +169,7 @@ def get_games(request):
 
     return JsonResponse({"games": games_data}, status=200)
 
-@csrf_exempt 
+@csrf_exempt
 def get_gameinvitations(request):
     try:
         validate_filters_uext(request)
@@ -222,7 +234,7 @@ def get_gameinvitations(request):
         })
     return JsonResponse({"invitGames": games_data}, status=200)
 
-@csrf_exempt 
+@csrf_exempt
 def get_nbr_invitations(request):
     try:
         validate_filters_uext(request)
@@ -241,14 +253,14 @@ def get_nbr_invitations(request):
 
     except ValidationError as e:
         return JsonResponse({"error": str(e)}, status=400)
-    
+
     return JsonResponse({
         "userID": user_id,
         "nick": u_nick,
         "totalInvit": total_invitations
     }, status=200)
 
-@csrf_exempt 
+@csrf_exempt
 def get_usergames(request):
     try:
         validate_filters_ugames(request)
@@ -286,18 +298,28 @@ def get_usergames(request):
     games_data = []
     for game in games:
         user1_nick = None
+        user1_avatar = None
         user2_nick = None
+        user2_avatar = None
 
         if game.user1:
             try:
                 user1_nick = tUserExtension.objects.get(user=game.user1).nick
             except tUserExtension.DoesNotExist:
                 user1_nick = None
+            try:
+                user1_avatar = tUserExtension.objects.get(user=game.user1).avatar
+            except tUserExtension.DoesNotExist:
+                user1_avatar = None
         if game.user2:
             try:
                 user2_nick = tUserExtension.objects.get(user=game.user2).nick
             except tUserExtension.DoesNotExist:
                 user2_nick = None
+            try:
+                user2_avatar = tUserExtension.objects.get(user=game.user2).avatar
+            except tUserExtension.DoesNotExist:
+                user2_avatar = None
 
         games_data.append({
             'userID': user_id if user_id else None,
@@ -309,8 +331,10 @@ def get_usergames(request):
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
             'user1Nick': user1_nick,
+            'user1Avatar': user1_avatar,
             'user2ID': game.user2,
             'user2Nick': user2_nick,
+            'user2Avatar': user2_avatar,
             'winnerUserID': game.winnerUser,
             'winnerNick': game.winnerNick,
             'user1_points': game.user1_points,
@@ -329,7 +353,7 @@ def get_usergames(request):
     return JsonResponse({"games": games_data}, status=200)
 
 #validar os filtros (se tiver filtro com key que nao existe - dar erro)
-@csrf_exempt 
+@csrf_exempt
 def get_tournaments(request):
     try:
         validate_filters_tournament(request)
@@ -376,7 +400,7 @@ def get_tournaments(request):
         }
         for tournament in tournaments
     ]
-    
+
     return JsonResponse({'tournaments': tournaments_data}, safe=False)
 
 @csrf_exempt  # Remove this decorator for production to enforce CSRF protection
@@ -451,7 +475,7 @@ def post_create_game(request):
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
-    
+
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 @csrf_exempt
@@ -570,6 +594,8 @@ def post_update_game(request): #update statusID acording to user2 and winner var
         try:
             data = json.loads(request.body)
             game_id = data.get('gameID')
+            print("GAME_ID: ", game_id)
+            print(data)
             if not game_id:
                 return JsonResponse({"error": "Game ID is required for update"}, status=400)
             try:
@@ -597,6 +623,7 @@ def post_update_game(request): #update statusID acording to user2 and winner var
             if not is_join and user_id not in [game.user1, game.user2] and not game.tournament:
                 return JsonResponse({"error": "Winner must be either User1 or User2"}, status=400)
             if not is_join:
+                print("aqui not join")
                 gstatus = tauxStatus.objects.get(statusID=3)
                 game.status = gstatus
                 game.endTS = now()
@@ -661,13 +688,19 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                         user_ids.discard(game.winnerUser)
                         tUserExtension.objects.filter(user__in=user_ids).update(ulevel=models.F('ulevel') + 0.1)
             else:
+                print("aqui else")
                 uext = tUserExtension.objects.get(user=user_id)
+                print("aqui 42")
                 game.user2 = uext.user
+                print("aqui 43")
                 game.user2_nick = uext.nick
+                print("aqui 44")
                 gstatus = tauxStatus.objects.get(statusID=2)
                 game.status = gstatus
                 game.startTS = now()
+            print("aqui 47")
             game.save()
+            print("aqui 48")
             game_data = {
                 "id": game.game,
                 "user1": game.user1,
@@ -676,6 +709,7 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 "user2_nick": game.user2_nick,
                 "isLocal": game.isLocal
             }
+            print("aqui 20")
             return JsonResponse({"message": "Game updated successfully", "game": game_data}, status=201)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
@@ -712,6 +746,7 @@ def post_update_gameTS(request):
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
         except Exception as e:
+            print("aqui is 500")
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
@@ -720,7 +755,7 @@ def post_create_userextension(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-    
+
             user_id = data.get('uid')
             if not user_id:
                 return JsonResponse({"error": "Missing user ID"}, status=400)
@@ -739,7 +774,7 @@ def post_create_userextension(request):
                     },
                     "isOpenPopup": False if userext.nick else True
                 }, status=201)
-            
+
             userext = tUserExtension.objects.create(
                 user=user_id
             )
@@ -834,7 +869,7 @@ def get_userextensions(request):
         }
         for userext in uextensions
     ]
-    
+
     return JsonResponse({'users': userext_data}, safe=False, status=200)
 
 @csrf_exempt
@@ -868,7 +903,7 @@ def post_update_tournament(request): #update statusID acording to user2 and winn
                 phase1_users = tGames.objects.filter(tournament=tourn, phase__id=1).values_list('user1', 'user2', flat=True)
                 if winner_id not in phase1_users:
                     return JsonResponse({"error": f"Winner ID {winner_id} does not belong to the tournament."}, status=400)
-            
+
             tourn.winnerUser = winner_id
             tourn.status = 3
             tUserExtension.objects.filter(user=winner_id).update(
@@ -879,7 +914,7 @@ def post_update_tournament(request): #update statusID acording to user2 and winn
             ).values_list('user1', 'user2', flat=False)
             user_ids = set()
             for user1, user2 in participating_users:
-                if user1 and user1 not in user_ids:  
+                if user1 and user1 not in user_ids:
                     user_ids.add(user1)
                 if user2 and user2 not in user_ids:
                     user_ids.add(user2)
@@ -913,7 +948,7 @@ def post_join_tournament(request):  # user joins an active tournament
             if user_id is not None:
                 if not tUserExtension.objects.filter(user=user_id).exists():
                     return JsonResponse({"error": f"User ID {user_id} does not exist in tUserExtension"}, status=404)
-                
+
                 phase1_users = tGames.objects.filter(tournament_id=tourn.tournament, phase_id=1).values_list('user1', 'user2')
                 all_users = set()
                 for user1, user2 in phase1_users:
@@ -923,7 +958,7 @@ def post_join_tournament(request):  # user joins an active tournament
                         all_users.add(user2)
                 if user_id in all_users:
                     return JsonResponse({"error": f"User ID {user_id} already belongs to the tournament."}, status=400)
-            
+
             open_game = tGames.objects.filter(tournament_id=tourn.tournament, phase_id=1).filter(
                 models.Q(user1__isnull=True) | models.Q(user2__isnull=True)
             ).first()
@@ -977,7 +1012,7 @@ def post_update_userextension(request):
                     uext.gender = gen
                 except tauxGender.DoesNotExist:
                     return JsonResponse({"error": f"Gender with id {gender_id} does not exist"}, status=404)
-            if unick:
+            if unick and unick != uext.nick:
                 if len(unick) > 20:
                     return JsonResponse({"error": "Nickname cannot exceed 20 characters"}, status=400)
                 if tUserExtension.objects.filter(nick=unick).exists():
@@ -989,10 +1024,12 @@ def post_update_userextension(request):
                 avatar and avatar != uext.avatar,
                 unick and unick != uext.nick
             ]):
+                print("1: ", avatar)
                 return JsonResponse({"error": "No changes to the user information were performed"}, status=400)
             if birthdate:
                 uext.birthdate = birthdate
             if avatar:
+                print("if avatar", avatar)
                 uext.avatar = avatar
             if bio:
                 uext.bio = bio
@@ -1015,7 +1052,7 @@ def get_userstatistics(request):
             return JsonResponse({"error": "Filter can't be empty."}, status=400)
 
         uextensions = tUserExtension.objects.all()
-        
+
         if user_id:
             user_id = validate_id(user_id)
             uextensions = uextensions.filter(user=user_id)
@@ -1130,7 +1167,8 @@ def get_friendships(request):
                     'friendID': friends.user2.user if int(friends.user1.user) == int(user_id) else friends.user1.user,
                     'friendNick': friends.user2.nick if int(friends.user1.user) == int(user_id) else friends.user1.nick,
                     'friendLevel': friends.user2.ulevel if int(friends.user1.user) == int(user_id) else friends.user1.ulevel,
-                    'statusID': friends.requestStatus.status, 
+                    'friendAvatar': friends.user2.avatar if int(friends.user1.user) == int(user_id) else friends.user1.avatar,
+                    'statusID': friends.requestStatus.status,
                     'statusLabel': friends.requestStatus.label
                 }
                 for friends in friendships
@@ -1148,13 +1186,14 @@ def get_friendships(request):
                 friendships = tFriends.objects.filter(Q(user1_id=u_id) | Q(user2_id=u_id), Q(requestStatus_id=status_id))
             else:
                 friendships = tFriends.objects.filter(Q(user1_id=u_id) | Q(user2_id=u_id))
-                
+
             friends_data = [
                 {
                     'friendID': friends.user2.user if int(friends.user1.user) == int(u_id) else friends.user1.user,
                     'friendNick': friends.user2.nick if int(friends.user1.user) == int(u_id) else friends.user1.nick,
                     'friendLevel': friends.user2.ulevel if int(friends.user1.user) == int(u_id) else friends.user1.ulevel,
-                    'statusID': friends.requestStatus.status, 
+                    'friendAvatar': friends.user2.avatar if int(friends.user1.user) == int(u_id) else friends.user1.avatar,
+                    'statusID': friends.requestStatus.status,
                     'statusLabel': friends.requestStatus.label
                 }
                 for friends in friendships
@@ -1179,16 +1218,18 @@ def get_friendships(request):
         {
             'user1ID': friends.user1.user,
             'user1Nick': friends.user1.nick,
+            'user2Avatar': friends.user1.avatar,
             'user2ID': friends.user2.user,
             'user2Nick': friends.user2.nick,
+            'user2Avatar': friends.user2.avatar,
             'requesterID': friends.requester.user,
             'requesterNick': friends.requester.nick,
-            'statusID': friends.requestStatus.status, 
+            'statusID': friends.requestStatus.status,
             'statusLabel': friends.requestStatus.label
         }
         for friends in friendships
     ]
-    
+
     return JsonResponse({'friendships': friendships_data}, safe=False, status=200)
 
 @csrf_exempt
@@ -1251,7 +1292,7 @@ def post_respond_friend_req(request):
                 return JsonResponse({"error": "User ID 2 is required"}, status=400)
             if user1_id == user2_id:
                 return JsonResponse({"error": "The users IDs cannot be the same"}, status=400)
-            
+
             try:
                 user1 = tUserExtension.objects.get(user=user1_id)
             except tUserExtension.DoesNotExist:
@@ -1313,12 +1354,12 @@ def get_pendingrequests(request):
                     'userID': friends.user2.user if int(friends.user1.user) == int(user_id) else friends.user1.user,
                     'userNick': friends.user2.nick if int(friends.user1.user) == int(user_id) else friends.user1.nick,
                     'userLevel': friends.user2.ulevel if int(friends.user1.user) == int(user_id) else friends.user1.ulevel,
-                    'statusID': friends.requestStatus.status, 
+                    'statusID': friends.requestStatus.status,
                     'statusLabel': friends.requestStatus.label
                 }
                 for friends in friendships
             ]
-            return JsonResponse({'requests': friends_data}, safe=False, status=200)  
+            return JsonResponse({'requests': friends_data}, safe=False, status=200)
         else:
             return JsonResponse({"error": f"It's mandatory to indicate a user to find they're pending friendship requests"}, status=404)
     except ValidationError as e:
@@ -1350,12 +1391,13 @@ def get_nonfriendslist(request):
                 {
                     'userID': user.user,
                     'userNick': user.nick,
-                    'userLevel': user.ulevel
+                    'userLevel': user.ulevel,
+                    'userAvatar': user.avatar
                 }
                 for user in non_friends
             ]
 
-            return JsonResponse({'nonFriendsList': non_friends_data}, safe=False, status=200) 
+            return JsonResponse({'nonFriendsList': non_friends_data}, safe=False, status=200)
         else:
             return JsonResponse({"error": f"It's mandatory to indicate a user to find users to add as friends"}, status=404)
     except ValidationError as e:
