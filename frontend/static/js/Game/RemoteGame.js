@@ -186,7 +186,6 @@ class RemoteGame  {
         return false;
     }
     async gameLoop() {
-        detectExit();
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (!this.stopGame && !keyPressed["finishGame"]) {
             window.requestAnimationFrame(() => this.gameLoop());
