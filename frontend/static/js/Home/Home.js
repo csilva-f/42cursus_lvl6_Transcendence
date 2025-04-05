@@ -3,25 +3,34 @@ async function insertHistoryInfo(newCard, element) {
     const matchResult = newCard.querySelector("#matchResult");
     const divDefeat = newCard.querySelector("#divDefeat");
     const winnerNick = newCard.querySelector("#winnerNick");
-    const resTextW = newCard.querySelector("#matchWinner");
-    const resTextL = newCard.querySelector("#matchOpponent");
+    const resTextL = newCard.querySelector("#matchWinner");
+    const resTextW = newCard.querySelector("#matchOpponent");
     const tsDate = newCard.querySelector("#gameHCreatedOn");
-    if (element.tournamentID) {
-        tsDate.textContent = element.createdOn.split(" ")[0];
-    } else {
-        tsDate.textContent = element.creationTS.split(" ")[0];
-    }
-    winnerNick.textContent = element.winnerNick
+    tsDate.textContent = element.creationTS.split(" ")[0];
     if (element.winnerUserID != await UserInfo.getUserID()) {
         element.tournamentID == null ? matchResult.textContent = "Defeat" : matchResult.textContent = "Tournament Defeat";
         divDefeat.classList.remove("d-none");
-        resTextW.classList.remove("d-none");
-        
+        resTextL.classList.remove("d-none");
+        winnerNick.textContent = element.winnerNick;
+        if (element.winnerUserID == element.user1ID) {
+            winnerImg.src = `/static/img/profilePic/${element.user1Avatar}`;
+        } else {
+            winnerImg.src = `/static/img/profilePic/${element.user2Avatar}`;
+        }
     } else {
         element.tournamentID == null ? matchResult.textContent = "Win" : matchResult.textContent = "Tournament Win";
         divDefeat.classList.remove("d-none");
-        if (!element.tournamentID) resTextL.classList.remove("d-none");
-        winnerImg.src = "/static/img/pfp1.jpeg";
+        if (!element.tournamentID) {
+            resTextW.classList.remove("d-none");
+            if (element.winnerUserID == element.user1ID) {
+                winnerNick.textContent = element.user2Nick;
+                winnerImg.src = `/static/img/profilePic/${element.user1Avatar}`;
+            } else {
+                winnerNick.textContent = element.user1Nick;
+                winnerImg.src = `/static/img/profilePic/${element.user2Avatar}`;
+            }
+        }
+        
     }
 }
 
@@ -31,9 +40,9 @@ function insertHomeFriendInfo(newCard, element, users_on) {
     const userOnStatus = newCard.querySelector("#userOnStatus");
 
     if (users_on.includes(Number(element.friendID))) {
-        userOnStatus.style.backgroundColor = "green"; // Online
+        userOnStatus.style.backgroundColor = "green";
     } else {
-        userOnStatus.style.backgroundColor = "white"; // Offline
+        userOnStatus.style.backgroundColor = "white";
         userOnStatus.style.border = "1px solid gray";
     }
 }
