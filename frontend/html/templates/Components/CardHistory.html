@@ -1,29 +1,30 @@
 <div class="my-2 rounded-4">
 	<div class="container-fluid rounded-4 d-flex align-items-center"
-		 style="max-height: 5.85rem; min-height: 5.85rem; background-color: var(--cardBg);"
-		 id="cardHistoryMainDiv">
-	  <div class="d-flex justify-content-center align-items-center" style="max-width: 4.5rem;">
-		<img src="/static/img/pfp2.jpg"
-			 style="object-fit: cover"
-			 class="img-fluid w-100 rounded-circle shadow ms-2"
-			 id="winnerImg" />
-	  </div>
-	  <div class="d-flex flex-column justify-content-center ms-3 flex-grow-1">
-		<p class="h4 mb-0">
-		  <strong id="matchResult"></strong>
-		</p>
-		<div class="d-flex align-items-center d-none" id="divDefeat">
-		  <p id="matchWinner" class="h4 mb-0 d-none" data-i18n="winnerT"></p>
-		  <p id="matchOpponent" class="h4 mb-0 d-none" data-i18n="opponent"></p>
-		  <p class="h4 mb-0 ms-2">
-			<strong id="winnerNick"></strong>
-		  </p>
+		style="max-height: 5.85rem; min-height: 5.85rem; background-color: var(--cardBg);"
+		id="cardHistoryMainDiv">
+		<div class="d-flex justify-content-center align-items-center" style="width: 4.5rem; height: 4.5rem; overflow: hidden;">
+			<img src="/static/img/pfp2.jpg" 
+				 style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"
+				 id="winnerImg" />
 		</div>
-	  </div>
-	  <div class="d-flex align-items-center ms-auto me-2">
-		<i class="fa-solid fa-calendar-check me-2" style="font-size: 16px;"></i>
-		<span class="h6 mb-0" id="gameHCreatedOn"></span>
-	  </div>
+		<div class="d-flex flex-column justify-content-center ms-3 flex-grow-1">
+			<p class="h4 mb-0">
+			<strong class="d-none" id="gameWin" data-i18n="hCardWin"></strong>
+			<strong class="d-none" id="gameLoss" data-i18n="hCardLoss"></strong>
+			<strong class="d-none" id="tournWin" data-i18n="hCardWinT"></strong>
+			<strong class="d-none" id="tournLoss" data-i18n="hCardLossT"></strong>
+			</p>
+			<div class="d-flex align-items-center d-none" id="divDefeat">
+			<p id="matchWinner" class="h5 mb-0 d-none" data-i18n="winnerT"></p>
+			<p id="matchOpponent" class="h5 mb-0 d-none" data-i18n="opponent"></p>
+			<p class="h5 mb-0 ms-2">
+				<strong id="winnerNick"></strong>
+			</p>
+			</div>
+			<div class="d-flex align-items-center ms-auto me-2 mb-2">
+				<i class="fa-solid fa-calendar-check me-2" style="font-size: 16px;"></i>
+				<span class="h6 mb-0" id="gameHCreatedOn"></span>
+			</div>
+		</div>
 	</div>
-  </div>
-  
+</div>  

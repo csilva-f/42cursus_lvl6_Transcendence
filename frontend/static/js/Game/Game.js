@@ -4,16 +4,17 @@ const KEY_W = 87;
 const KEY_S = 83;
 const F5 = 116;
 const keyPressed = [];
-const maxSpeed = 10;
+const maxSpeed = 14;
 const maxScore = 5;
-const ballVelocity = 5;
-const ballVellocityIncreaseRate = 1.1;
+const ballVelocity = 6;
+const ballVellocityIncreaseRate = 1.2;
 const ballRadius = 15;
 const paddleWidth = 20;
 const paddleHeight = 150;
 const paddleVelocity = 10;
 var stopGame = false;
 const wsConnections = {};
+var imgLeft, imgRight;
 
 window.addEventListener('keydown', function (e) {
     keyPressed[e.keyCode] = true;
@@ -23,12 +24,12 @@ window.addEventListener('keyup', function (e) {
 })
 
 window.addEventListener("popstate", function (e) {
-    keyPressed["finishGame"] = true;
+    keyPressed["back"] = true;
     // Handle back button event (e.g., show a warning or log data)
 })
 
 window.addEventListener("beforeunload", function (e) {
-    keyPressed["finishGame"] = true;
+    keyPressed["close"] = true;
     //console.log("Aba ou navegador foi fechado!");
 });
 
@@ -43,7 +44,7 @@ class Game  {
         this.maxScore = maxScore;
         this.stopGame = false;
     }
-    initGame() {
+    async initGame() {
         console.info("onload");
         //this.canvas = document.getElementById('pongGameCanvas');
         //const context = canvas.getContext('2d');
@@ -65,7 +66,7 @@ class Game  {
         if (this.gameData == null) {
             this.objects = [
                 new Ball(this.canvas.width / 2, this.canvas.height / 2, this.ballVelocity, this.ballVelocity, this.ballRadius),
-                new Paddle(1, paddleWidth, paddleHeight, "#482445", 30, (this.canvas.height / 2) - 75, 10),
+                new Paddle(1, paddleWidth, paddleHeight, "#94DEC5", 30, (this.canvas.height / 2) - 75, 10),
                 new Paddle(2, paddleWidth, paddleHeight, "#de94ad",  this.canvas.width - 50, (this.canvas.height / 2) - 75 , 10)
             ]
             document.getElementById("leftPlayerName").innerHTML = "Shin";
@@ -74,41 +75,67 @@ class Game  {
             //console.log(this.gameData)
             this.objects = [
                 new Ball(this.canvas.width / 2, this.canvas.height / 2, this.ballVelocity, this.ballVelocity, this.ballRadius),
-                new Paddle(1, paddleWidth, paddleHeight, "#482445", 30, (this.canvas.height / 2) - 75, paddleVelocity),
+                new Paddle(1, paddleWidth, paddleHeight, "#94DEC5", 30, (this.canvas.height / 2) - 75, paddleVelocity),
                 new Paddle(2, paddleWidth, paddleHeight, "#de94ad",  this.canvas.width - 50, (this.canvas.height / 2) - 75 , paddleVelocity)
             ]
-            document.getElementById("leftPlayerName").innerHTML = this.gameData.P1;
-            document.getElementById("rightPlayerName").innerHTML = this.gameData.P2;
+            await this.loadPageInfo();
         }
         document.getElementById("playerLeftScore").innerHTML = this.objects[1].paddleScore;
         document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
         startTimer();
         this.gameLoop();
     }
+    async loadPageInfo() {
+        if(this.gameData.P1_uid == -1)
+            imgLeft = `/static/img/bot/guest.svg`;
+        else
+            imgLeft = await UserInfo.getUserAvatarPath();
+        if(this.gameData.P2_uid == -1)
+            imgRight = `/static/img/bot/guest.svg`;
+        else
+            imgRight = await UserInfo.getUserAvatarPath();
+        document.getElementById("leftPlayerName").innerHTML = this.gameData.P1;
+        document.getElementById("leftPlayerGameImg").src = imgLeft;
+        document.getElementById("rightPlayerName").innerHTML = this.gameData.P2;
+        document.getElementById("rightPlayerGameImg").src = imgRight;
+    }
 
     async gameLoop() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        if (!this.stopGame && !keyPressed["finishGame"]) {
+        if (!this.stopGame && !keyPressed["close"] && !keyPressed["back"]) {
             window.requestAnimationFrame(async () => this.gameLoop());
             this.gameUpdate();
             this.incScore();
             this.gameDraw();
             //console.log("game on going");
         }
-        else if (keyPressed["finishGame"]) {
-            keyPressed["finishGame"] = false;
-            await updateGameStatusForceFinish(this.gameData);
+        else if (keyPressed["close"] || keyPressed["back"]) {
+              //keyPressed["finishGame"] = false;
+              await updateGameStatusForceFinish(this.gameData);
+              if (keyPressed["back"]){
+                  window.history.pushState({}, "", `/games`);
+                  await locationHandler();
+              }
         } else {
             //console.log("Normal finish!");
-            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes);
-            this.gameData["objects"] = this.objects;
-            await updateGameStatus(this.gameData);
+            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, 
+                this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, this.gameData.isTournament, imgLeft, imgRight, this.gameData.isTournament);
+            startWinAnimation();
+            const data = {
+                uid: this.gameData.P1_uid,
+                gameID: this.gameData.gameID, 
+                user1_points : this.objects[1].paddleScore,
+                user2_points: this.objects[2].paddleScore,
+                user1_hits: this.objects[1].paddleColisionTimes,
+                user2_hits: this.objects[2].paddleColisionTimes,
+            }
+            await updateGameStatus(data);
         }
     }
     gameUpdate(){
-        this.ballUpdate();
         this.paddleUpdateLeft();
         this.paddleUpdateRight();
+        this.ballUpdate();
     }
     ballUpdate(){
         this.objects[0].update();
@@ -120,8 +147,9 @@ class Game  {
         let colision = this.objects[1].leftColissionBall(this.objects[0]);
         if(colision){
             console.log("Colision left: update ball again");
+            this.objects[1].paddleColisionTimes++;
             this.objects[0].lastColision = 1;
-            this.objects[0].update();
+            //this.objects[0].update();
         }
     }
     paddleUpdateRight(){
@@ -130,8 +158,9 @@ class Game  {
         let colision = this.objects[2].rightColissionBall(this.objects[0]);
         if(colision){
             console.log("Colision right: update ball again");
+            this.objects[2].paddleColisionTimes++;
             this.objects[0].lastColision = 2;
-            this.objects[0].update();
+            //this.objects[0].update();
         }
     }
     gameDraw() {

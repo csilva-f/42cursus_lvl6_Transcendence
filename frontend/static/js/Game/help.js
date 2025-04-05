@@ -7,16 +7,42 @@ function goToHome() {
   locationHandler();
 }
 
+async function goToScreen(isTournament) {
+    window.history.pushState({}, "", "/games");
+    await locationHandler();
+    if (isTournament == '0') {
+        console.log("[isTournament == 0]")
+        const iconElement = document.getElementById("loadGamesIcon");
+		disableIcon(iconElement);
+		const iconStatusElement = document.getElementById("searchingLi");
+		disableIcon(iconStatusElement);
+        GamesTournamentsSelect('loadTournamentsIcon')
+    }
+}
 
-function showGameStats(leftName, leftScore, leftColision, rightName, rightScore, rightColision) {
+//trocar home por games
+//tirar botao de play again nos jogos remotos e de torneios
+async function showGameStats(leftName, leftScore, leftColision, rightName, rightScore, rightColision, removePlayAgain, imgLeft, imgRight, isTournament) {
     console.log(window.location.href);
     const pongGameDiv = document.getElementById('pongGameDiv');
     const mainGameScore = document.getElementById('mainGameScore');
     const finishedGame = document.getElementById('finishedGame');
+    const playAgain = document.getElementById('playAgainButton');
+    const homeButton = document.getElementById('homeButton');
 
     pongGameDiv.classList.add('d-none');
     mainGameScore.classList.add('d-none');
     finishedGame.classList.remove('d-none');
+    if(removePlayAgain)
+        playAgain.classList.add('d-none');
+    if(isTournament)
+        homeButton.setAttribute("data-id", 0);
+    else
+        homeButton.setAttribute("data-id", 1);
+
+    // Imagens
+    document.getElementById("leftPlayerImg").src = imgLeft;
+    document.getElementById("rightPlayerImg").src = imgRight;
 
     // Nomes
     document.getElementById('leftPlayerNameFinished').textContent = leftName;
@@ -53,9 +79,6 @@ function showGameStats(leftName, leftScore, leftColision, rightName, rightScore,
     // Tempo total da partida
     const matchTotalTime = document.getElementById('matchTotalTime');
     matchTotalTime.textContent = formatTime(timerSeconds || 0); // Garante que timerSeconds seja um número válido
-
-    // Animação de vitória
-    startWinAnimation();
 }
 
 function startWinAnimation() {
@@ -96,17 +119,9 @@ function stopTimer() {
     }
 }
 
-async function updateGameStatus(gameData){
+async function updateGameStatus(data){
     const userLang = localStorage.getItem("language") || "en";
     const langData = await getLanguageData(userLang);
-    const data = {
-        uid: gameData.P1_uid,
-        gameID: gameData.gameID, 
-        user1_points : gameData.objects[1].paddleScore,
-        user2_points: gameData.objects[2].paddleScore,
-        user1_hits: gameData.objects[1].paddleColisionTimes,
-        user2_hits: gameData.objects[2].paddleColisionTimes,
-    }
     console.log(data);
     const APIurl = `/api/update-game/`;
     const accessToken = await JWT.getAccess();

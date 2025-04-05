@@ -131,17 +131,19 @@ def get_games(request):
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
-            'user1Nick': game.user1_nick if game.tournament else user1.nick,
+            'user1Nick': game.user1_nick if game.tournament else (user1.nick if user1 else None),
             'user1Avatar': user1.avatar if user1 else None,
+            'user1Lvl': user1.ulevel if user1 else None,
             'user2ID': game.user2,
-            'user2Nick': game.user2_nick if game.tournament else user2.nick,
-            'user1Avatar': user2.avatar if user2 else None,
+            'user2Nick': game.user2_nick if game.tournament else (user2.nick if user2 else None),
+            'user2Avatar': user2.avatar if user2 else None,
             'winnerUserID': game.winnerUser,
             'winnerNick': game.winnerNick,
             'user1_points': game.user1_points,
             'user2_points': game.user2_points,
             'user1_hits': game.user1_hits,
             'user2_hits': game.user2_hits,
+            'user2Lvl': user2.ulevel if user2 else None,
             'statusID': game.status.statusID,
             'status': game.status.status,
             'tournamentID': game.tournament.tournament if game.tournament else None,
@@ -198,10 +200,10 @@ def get_gameinvitations(request):
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
-            'user1Nick': game.user1_nick if game.tournament else user1.nick,
+            'user1Nick': game.user1_nick if game.tournament else (user1.nick if user1 else None),
             'user1Avatar': user1.avatar if user1 else None,
             'user2ID': game.user2,
-            'user2Nick': game.user2_nick if game.tournament else user2.nick,
+            'user2Nick': game.user2_nick if game.tournament else (user2.nick if user2 else None),
             'user2Avatar': user2.avatar if user2 else None,
             'winnerUserID': game.winnerUser,
             'winnerNick': game.winnerNick,
@@ -316,10 +318,10 @@ def get_usergames(request):
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
-            'user1Nick': game.user1_nick if game.tournament else user1.nick,
+            'user1Nick': game.user1_nick if game.tournament else (user1.nick if user1 else None),
             'user1Avatar': user1.avatar if user1 else None,
             'user2ID': game.user2,
-            'user2Nick': game.user2_nick if game.tournament else user2.nick,
+            'user2Nick': game.user2_nick if game.tournament else (user2.nick if user2 else None),
             'user2Avatar': user2.avatar if user2 else None,
             'winnerUserID': game.winnerUser,
             'winnerNick': game.winnerNick,
@@ -969,6 +971,7 @@ def post_join_tournament(request):  # user joins an active tournament
 def post_update_userextension(request):
     if request.method == 'POST':
         try:
+            print("cucu")
             data = json.loads(request.body)
             uext_id = data.get('uid')
             if not uext_id:
@@ -1012,6 +1015,8 @@ def post_update_userextension(request):
                 uext.bio = bio
             if unick:
                 uext.nick = unick
+            if ulang:
+                uext.lang = ulang
             uext.save()
             return JsonResponse({"message": "User information updated successfully", "user_id": uext.user}, status=200)
         except json.JSONDecodeError:

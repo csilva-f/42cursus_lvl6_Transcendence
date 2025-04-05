@@ -262,11 +262,9 @@ async function changeToBig(location) {
 		if (gameInfo) {
 			gameInfo = JSON.parse(gameInfo);
 			console.info("gameInfo: ", gameInfo);
-			console.log(gameInfo);
-			if(gameInfo.islocal){
-				game = new Game(gameInfo);
-				game.initGame();
-			}
+			console.log("entra aqui?")
+			game = new Game(gameInfo);
+			game.initGame();
     	}
 	} else if (location == "/callback") {
 		headerElement.setAttribute("data-i18n", "callback");
@@ -342,6 +340,7 @@ async function changeActive(location) {
 			});
 			headerElement.setAttribute("data-i18n", "games&tournaments");
 			updateContent(langData);
+			console.log("[router == /games]")
 			document.getElementById("subMsg").style.display = "none";
 			const iconElement = document.getElementById("loadGamesIcon");
 			activateIcon(iconElement);
@@ -463,19 +462,18 @@ const locationHandler = async () => {
       location = "/mainPage";
      	route = routes[location];
     }
+	if (!(location === "/pong")) localStorage.removeItem("gameInfo");
     if (route.needAuth == 2 && uid) {
       location = "401";
       route = routes[location];
     }
-  if (!location === "/pong") localStorage.removeItem("gameInfo");
-  }
-  else {
-    if (location === "/mfa" && !tempToken.access)
-    {
-      location = "/login";
-      route = routes[location];
-    }
-  }
+	else {
+		if (location === "/mfa" && !tempToken.access)
+		{
+		location = "/login";
+		route = routes[location];
+		}
+	}
 	if (isProfile(location)) {
 		route = routes["/profile/:userID"];
 		html = await fetch(route.template).then((response) => response.text());
@@ -485,7 +483,7 @@ const locationHandler = async () => {
 		document
 			.querySelector('meta[name="description"]')
 			.setAttribute("content", route.description);
-		changeActive("/profile/:userID");
+		await changeActive("/profile/:userID");
 		return;
 	}
 
@@ -503,9 +501,11 @@ const locationHandler = async () => {
 		document
 			.querySelector('meta[name="description"]')
 			.setAttribute("content", route.description);
-		changeActive(location);
+		await changeActive(location);
 	}
 };
+
+}
 
 document.addEventListener("click", (e) => {
 	const { target } = e;

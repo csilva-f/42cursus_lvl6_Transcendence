@@ -11,6 +11,7 @@ class User {
   userLastName = null;
   userPhoneNumber = null;
   userEmail = null;
+  userLang = null;
   isUpdating = false;
 
   constructor() {}
@@ -95,6 +96,10 @@ class User {
     if (this.userEmail) return this.userEmail;
     return null;
   }
+  async getUserLang() {
+    if (this.userLang) return this.userLang;
+    return null;
+  }
 
   async updateAvatar(filename) {
     this.userAvatar = filename;
@@ -129,6 +134,10 @@ class User {
     this.userPhoneNumber = phoneNumber;
   }
 
+  async updateUserLanguage(language) {
+    this.userLang = language;
+  }
+
   async updateUserExtension() {
     const accessToken = await JWT.getAccess();
     let userData = {
@@ -137,6 +146,7 @@ class User {
       genderid: this.userGender,
       bio: this.userBio,
       avatar: this.userAvatar,
+      language: this.userLang
     };
     console.table(userData);
     $.ajax({
@@ -239,6 +249,7 @@ class User {
     this.userBio = userInfo.bio;
     this.userAvatar = userInfo.avatar;
     this.userAvatarPath = `/static/img/profilePic/${userInfo.avatar}`
+    this.userLang = userInfo.language
   }
 
   async insertGetProfile(userInfo) {
