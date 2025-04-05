@@ -275,7 +275,8 @@ async function changeToBig(location) {
 	} else if (location == "/validate-email") {
 		headerElement.setAttribute("data-i18n", "validateEmail");
 		disableTopBar();
-		validateVerifyEmail();
+		await handleValidateEmail();
+
 	} else if (location == "/profile") {
 		console.log("router");
 		getForms();

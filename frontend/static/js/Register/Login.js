@@ -40,4 +40,15 @@ function validateEmail(emailId, validationId, checkId) {
     }
 }
 
-
+async function handleValidateEmail() {
+    try {
+        await validateVerifyEmail();
+        document.getElementById("emailVerifiedIcon").classList.remove("d-none");
+        document.getElementById("emailVerifiedLabel1").innerHTML = "Email Verified";
+        document.getElementById("emailVerifiedLabel2").innerHTML = "Your email address was successfully verified.";
+    } catch (error) {
+        document.getElementById("emailVerifiedFailedIcon").classList.remove("d-none");
+        document.getElementById("emailVerifiedLabel1").innerHTML = "Email Verification Failed";
+        document.getElementById("emailVerifiedLabel2").innerHTML = error;
+    }
+}

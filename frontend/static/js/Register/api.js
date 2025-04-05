@@ -111,6 +111,7 @@ async function validateVerifyEmail() {
     const uid = urlParams.get("uid");
     const token = urlParams.get("token");
     const apiUrl = "/authapi";
+    return new Promise((resolve, reject) => {
     $.ajax({
         type: "POST",
         url: `${apiUrl}/validate-email/`, // Adjust the endpoint as needed
@@ -118,12 +119,13 @@ async function validateVerifyEmail() {
         headers: { Accept: "application/json" },
         data: JSON.stringify({ uid, token }),
         success: function (data) {
-            console.log("email validated successfully");
+            resolve(true);
         },
-        error: function (xhr) {
+        error: async function (xhr) {
             const data = JSON.parse(xhr.responseJSON);
-            console.log("email failed validation");
+            reject(data.error || "Email verification failed.");
         },
+    });
     });
 }
 
