@@ -8,11 +8,13 @@ window.addEventListener('keyup', function (e) {
 })
 
 window.addEventListener("popstate", function (e) {
+    console.log("back button")
     keyPressed["finishGame"] = true;
     // Handle back button event (e.g., show a warning or log data)
 })
 
 window.addEventListener("beforeunload", function (e) {
+    console.log("browser fechado")
     keyPressed["finishGame"] = true;
     //console.log("Aba ou navegador foi fechado!");
 });

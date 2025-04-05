@@ -134,7 +134,7 @@ def get_games(request):
             'user1Nick': game.user1_nick if game.tournament else user1.nick,
             'user1Avatar': user1.avatar if user1 else None,
             'user2ID': game.user2,
-            'user2Nick': game.user2_nick if game.tournament else user2.nick,
+            'user2Nick': game.user2_nick if game.tournament else (user2.nick if user2 else None),
             'user1Avatar': user2.avatar if user2 else None,
             'winnerUserID': game.winnerUser,
             'winnerNick': game.winnerNick,
