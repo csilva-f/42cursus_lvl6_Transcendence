@@ -114,8 +114,8 @@ function getForms() {
 async function logOut() {
 	localStorage.removeItem("jwt");
 	JWT.deleteToken();
-  UserInfo.closeWebSocket();
-	UserInfo.resetUser();
+  await UserInfo.closeWebSocket();
+	await UserInfo.resetUser();
 	window.history.pushState({}, "", "/mainPage");
 	locationHandler();
 }
