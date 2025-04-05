@@ -122,7 +122,7 @@ function insertInfo(newCard, element, statusID) {
     enterBtn.setAttribute("data-id", element.gameID);
     if (statusID != 1)
         enterBtn.classList.add('d-none');
-        if (statusID == 3)
+        if (statusID == 3 & element.winnerUserID)
             statsBtn.classList.remove('d-none');
     user1Level.textContent = element.user1ID;
     user1Nick.textContent = element.user1Nick;

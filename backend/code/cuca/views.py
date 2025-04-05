@@ -594,8 +594,6 @@ def post_update_game(request): #update statusID acording to user2 and winner var
         try:
             data = json.loads(request.body)
             game_id = data.get('gameID')
-            print("GAME_ID: ", game_id)
-            print(data)
             if not game_id:
                 return JsonResponse({"error": "Game ID is required for update"}, status=400)
             try:
@@ -623,7 +621,6 @@ def post_update_game(request): #update statusID acording to user2 and winner var
             if not is_join and user_id not in [game.user1, game.user2] and not game.tournament:
                 return JsonResponse({"error": "Winner must be either User1 or User2"}, status=400)
             if not is_join:
-                print("aqui not join")
                 gstatus = tauxStatus.objects.get(statusID=3)
                 game.status = gstatus
                 game.endTS = now()
@@ -688,19 +685,13 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                         user_ids.discard(game.winnerUser)
                         tUserExtension.objects.filter(user__in=user_ids).update(ulevel=models.F('ulevel') + 0.1)
             else:
-                print("aqui else")
                 uext = tUserExtension.objects.get(user=user_id)
-                print("aqui 42")
                 game.user2 = uext.user
-                print("aqui 43")
                 game.user2_nick = uext.nick
-                print("aqui 44")
                 gstatus = tauxStatus.objects.get(statusID=2)
                 game.status = gstatus
                 game.startTS = now()
-            print("aqui 47")
             game.save()
-            print("aqui 48")
             game_data = {
                 "id": game.game,
                 "user1": game.user1,
@@ -709,7 +700,6 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 "user2_nick": game.user2_nick,
                 "isLocal": game.isLocal
             }
-            print("aqui 20")
             return JsonResponse({"message": "Game updated successfully", "game": game_data}, status=201)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)

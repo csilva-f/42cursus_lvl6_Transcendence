@@ -52,7 +52,7 @@ function searchFriend() {
 
 function renderHomeFriends(usersList, cardTemplate, users_on) {
 	const divElement = document.getElementById("friendsContent");
-	divElement.innerHTML = "";
+	if (divElement) divElement.innerHTML = "";
 	usersList.forEach(element => {
 		const newCard = document.createElement("div");
 		newCard.innerHTML = cardTemplate;
