@@ -122,24 +122,6 @@ class Paddle {
         }
         //console.log("update paddle:", this);
     }
-    updateByValueBasic(targetX, targetY) {
-        this.paddleX = targetX;
-        this.paddleY = targetY;
-    }
-
-    //functions to test smoth paddles
-    updateByValue(targetX, targetY) {
-        const lerpFactor = 0.2; // Adjust this for smoother movement (0 = no movement, 1 = instant)
-    
-        this.paddleX = this.paddleX + (targetX - this.paddleX) * lerpFactor;
-        this.paddleY = this.paddleY + (targetY - this.paddleY) * lerpFactor;
-    }
-    updateByPrediction(targetY) {
-        const predictionTime = 0.1; // Predict 100ms ahead
-        const predictedY = targetY + this.paddleVelocityY * predictionTime;
-    
-        this.paddleY = this.paddleY + (predictedY - this.paddleY) * 0.2;
-    }
     draw(ctx) {
         ctx.fillStyle = this.paddleColor;
         ctx.fillRect(this.paddleX, this.paddleY, this.paddleWidth, this.paddleHeight);

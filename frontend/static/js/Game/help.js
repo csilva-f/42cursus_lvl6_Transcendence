@@ -53,9 +53,6 @@ function showGameStats(leftName, leftScore, leftColision, rightName, rightScore,
     // Tempo total da partida
     const matchTotalTime = document.getElementById('matchTotalTime');
     matchTotalTime.textContent = formatTime(timerSeconds || 0); // Garante que timerSeconds seja um número válido
-
-    // Animação de vitória
-    startWinAnimation();
 }
 
 function startWinAnimation() {
@@ -96,17 +93,9 @@ function stopTimer() {
     }
 }
 
-async function updateGameStatus(gameData){
+async function updateGameStatus(data){
     const userLang = localStorage.getItem("language") || "en";
     const langData = await getLanguageData(userLang);
-    const data = {
-        uid: gameData.P1_uid,
-        gameID: gameData.gameID, 
-        user1_points : gameData.objects[1].paddleScore,
-        user2_points: gameData.objects[2].paddleScore,
-        user1_hits: gameData.objects[1].paddleColisionTimes,
-        user2_hits: gameData.objects[2].paddleColisionTimes,
-    }
     console.log(data);
     const APIurl = `/api/update-game/`;
     const accessToken = await JWT.getAccess();

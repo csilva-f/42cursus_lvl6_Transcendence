@@ -102,6 +102,16 @@ class RemoteGame  {
                 if(data.paddleSide == 2)
                     document.getElementById("playerRightScore").innerHTML = data.paddleScore;
             }
+            if (data.element == 4){
+                this.stopGame = true;
+                if(!this.isHost){
+                    this.objects[1].paddleColisionTimes = data.paddleColisionTimesLeft;
+                    this.objects[2].paddleColisionTimes = data.paddleColisionTimesRight;
+                }
+            }
+            if(data.element == 5){
+                keyPressed["finishGame"] = true;
+            }
         };
         this.gameLoop();
     }
@@ -127,7 +137,7 @@ class RemoteGame  {
     paddleUpdateByValueRight(y){
         this.objects[2].paddleY = y;
         this.objects[2].colissionEdge(this.canvas);
-        this.objects[2].rightColissionBall(this.objects[0]);
+        let colision = this.objects[2].rightColissionBall(this.objects[0]);
         if(colision){
             console.log("==> paddle update by right")
         }
@@ -149,6 +159,13 @@ class RemoteGame  {
         //     this.objects[0].update();
         // }
     }
+    isWinner(){
+        if(this.isHost && this.objects[2].paddleScore > this.objects[1].paddleScore)
+            return true;
+        if(!this.isHost && this.objects[1].paddleScore > this.objects[2].paddleScore)
+            return true;
+        return false;
+    }
     async gameLoop() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (!this.stopGame && !keyPressed["finishGame"]) {
@@ -159,10 +176,32 @@ class RemoteGame  {
                 this.joinerGame();
         } else if (keyPressed["finishGame"]) {
             keyPressed["finishGame"] = false;
-            //mandar msg; fechar socket
-            await updateGameStatusForceFinish(this.gameData);
-        } else
+            //fechar socket
+            let msg = {
+                element: 5,
+            }
+            this.ws.send(JSON.stringify(msg));
+            if(this.isHost)
+                await updateGameStatusForceFinish(this.gameData);
+            window.history.pushState({}, "", `/games`);
+            await locationHandler();
+        } else{
+            stopTimer();
             showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes);
+            if(this.isWinner())
+                startWinAnimation();
+            const data = {
+                uid: this.gameData.P2_uid,
+                gameID: this.gameData.gameID, 
+                user1_points : this.objects[2].paddleScore,
+                user2_points: this.objects[1].paddleScore,
+                user1_hits: this.objects[2].paddleColisionTimes,
+                user2_hits: this.objects[1].paddleColisionTimes,
+            }
+            //close socket
+            if(this.isHost)
+                await updateGameStatus(data);
+        }
     }
     hostGame(){
         this.gameUpdate();
@@ -256,7 +295,12 @@ class RemoteGame  {
                 this.respawnBall();
             else {
                 this.stopGame = true;
-                stopTimer();
+                let msg = {
+                    element: 4,
+                    ballsHitLeft: this.objects[1].paddleColisionTimes,
+                    ballsHitRight: this.objects[2].paddleColisionTimes,
+                }
+                this.ws.send(JSON.stringify(msg));
             }
         }
         if (this.objects[0].ballX - this.objects[0].ballRadius > this.canvas.width + 4){
@@ -273,7 +317,12 @@ class RemoteGame  {
                 this.respawnBall();
             else {
                 this.stopGame = true;
-                stopTimer();
+                let msg = {
+                    element: 4,
+                    paddleColisionTimesLeft: this.objects[1].paddleColisionTimes,
+                    paddleColisionTimesRight: this.objects[2].paddleColisionTimes,
+                }
+                this.ws.send(JSON.stringify(msg));
             }
         }
     }

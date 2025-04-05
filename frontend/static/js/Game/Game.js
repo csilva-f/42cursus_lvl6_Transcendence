@@ -23,12 +23,12 @@ window.addEventListener('keyup', function (e) {
 })
 
 window.addEventListener("popstate", function (e) {
-    keyPressed["finishGame"] = true;
+    keyPressed["back"] = true;
     // Handle back button event (e.g., show a warning or log data)
 })
 
 window.addEventListener("beforeunload", function (e) {
-    keyPressed["finishGame"] = true;
+    keyPressed["close"] = true;
     //console.log("Aba ou navegador foi fechado!");
 });
 
@@ -88,21 +88,33 @@ class Game  {
 
     async gameLoop() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        if (!this.stopGame && !keyPressed["finishGame"]) {
+        if (!this.stopGame && !keyPressed["close"] && !keyPressed["back"]) {
             window.requestAnimationFrame(async () => this.gameLoop());
             this.gameUpdate();
             this.incScore();
             this.gameDraw();
             //console.log("game on going");
         }
-        else if (keyPressed["finishGame"]) {
-            keyPressed["finishGame"] = false;
-            await updateGameStatusForceFinish(this.gameData);
+        else if (keyPressed["close"] || keyPressed["back"]) {
+              //keyPressed["finishGame"] = false;
+              await updateGameStatusForceFinish(this.gameData);
+              if (keyPressed["back"]){
+                  window.history.pushState({}, "", `/games`);
+                  await locationHandler();
+              }
         } else {
             //console.log("Normal finish!");
             showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes);
-            this.gameData["objects"] = this.objects;
-            await updateGameStatus(this.gameData);
+            startWinAnimation();
+            const data = {
+                uid: this.gameData.P1_uid,
+                gameID: this.gameData.gameID, 
+                user1_points : this.objects[1].paddleScore,
+                user2_points: this.objects[2].paddleScore,
+                user1_hits: this.objects[1].paddleColisionTimes,
+                user2_hits: this.objects[2].paddleColisionTimes,
+            }
+            await updateGameStatus(data);
         }
     }
     gameUpdate(){
