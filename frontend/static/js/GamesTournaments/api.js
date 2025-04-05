@@ -48,7 +48,6 @@ async function fetchGames(statusID) {
         },
         error: function (xhr, status, error) {
           console.error("Error Thrown:", error);
-
           showErrorToast(APIurl, error, langData);
         },
       });
@@ -354,7 +353,7 @@ async function postLocalTournament() {
     name: document.getElementById("localNameTournamentInput").value,
     nick2: document.getElementById("P2NickInputTourn").value,
     nick3: document.getElementById("P3NickInput").value,
-    nick4: document.getElementById("P4NickInput").value,
+    nick4: document.getElementById("P4NickInput").value
   };
   if (UserInfo.userNick == tournamentData.nick2 || 
     UserInfo.userNick == tournamentData.nick3 || 
@@ -390,7 +389,6 @@ async function postLocalTournament() {
         showSuccessToast(langData, langData.tournamentcreated);
         console.log(res);
         console.log("res.tournament", res.tournament);
-        // resetModal();
         resolve(res.tournament); // Resolve the promise with the tournament ID
       },
       error: function (xhr, status, error) {
@@ -400,7 +398,6 @@ async function postLocalTournament() {
     });
   });
 }
-
 
 //? POST - /api/update-game/
 async function enterTournament(gameID) {

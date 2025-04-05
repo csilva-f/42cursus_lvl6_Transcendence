@@ -169,7 +169,7 @@ function insertTournamentInfo(newCard, element, statusID, allGames) {
         divElement4.classList.remove('d-none');
     }
     const tournamentCreatedOnDate = newCard.querySelector("#tournamentCreatedOn")
-    tournamentCreatedOnDate.textContent = element.createdOn;
+    tournamentCreatedOnDate.textContent = element.createdOn.split(" ")[0];
 }
 
 function reloadInformation(statusID) {
