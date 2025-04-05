@@ -49,7 +49,7 @@ function insertGlobalUserInfo(newCard, user, users_on) {
 function insertFriendInfo(newCard, user, users_on) {
     newCard.querySelector("#userNick").textContent = user.friendNick;
     newCard.querySelector("#userLvl").textContent = user.friendLevel;
-    newCard.querySelector("#userAvatar").src = `/static/img/profilePic/${user.userAvatar}`;
+    newCard.querySelector("#userAvatar").src = `/static/img/profilePic/${user.friendAvatar}`;
     newCard.querySelector("#friendLi").setAttribute("data-id", user.friendID);
     newCard.querySelector("#friendLi").setAttribute("data-type", 1);
     newCard.querySelector("#friendLiIcon").classList.remove("fa-user-plus")
