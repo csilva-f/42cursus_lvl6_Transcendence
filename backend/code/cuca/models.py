@@ -8,6 +8,10 @@ from decimal import Decimal
 class tauxStatus(models.Model):
     statusID = models.AutoField(primary_key=True)
     status = models.CharField(max_length=255)
+    statusPT = models.CharField(max_length=255, null=True, blank=True)
+    statusES = models.CharField(max_length=255, null=True, blank=True)
+    statusFR = models.CharField(max_length=255, null=True, blank=True)
+    statusIT = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return f"Status {self.statusID} is {self.status}"
@@ -15,6 +19,10 @@ class tauxStatus(models.Model):
 class tauxGender(models.Model):
     gender = models.AutoField(primary_key=True)
     label = models.CharField(max_length=255)
+    labelPT = models.CharField(max_length=255, null=True, blank=True)
+    labelES = models.CharField(max_length=255, null=True, blank=True)
+    labelFR = models.CharField(max_length=255, null=True, blank=True)
+    labelIT = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return f"Gender {self.gender} is {self.label}"
@@ -22,9 +30,20 @@ class tauxGender(models.Model):
 class tauxPhase(models.Model):
     phase = models.AutoField(primary_key=True)
     label = models.CharField(max_length=255)
+    labelPT = models.CharField(max_length=255, null=True, blank=True)
+    labelES = models.CharField(max_length=255, null=True, blank=True)
+    labelFR = models.CharField(max_length=255, null=True, blank=True)
+    labelIT = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return f"Phase {self.phase} is {self.label}"
+    
+class tauxLanguage(models.Model):
+    language = models.AutoField(primary_key=True)
+    label = models.CharField(max_length=2)
+
+    def __str__(self):
+        return f"Language {self.language} is {self.label}"
 
 class tauxFriendshipStatus(models.Model):
     status = models.AutoField(primary_key=True)
@@ -41,6 +60,7 @@ class tUserExtension(models.Model):
     gender = models.ForeignKey(tauxGender, on_delete=models.PROTECT, null=True)
     avatar = models.CharField(max_length=1000, null=True, blank=True)
     bio = models.CharField(max_length=2000, null=True, blank=True)
+    language = models.CharField(max_length=2, default="en")
 
     def __str__(self):
         return f"UserExtension {self.user}"

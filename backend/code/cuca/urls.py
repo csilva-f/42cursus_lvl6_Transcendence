@@ -28,4 +28,5 @@ urlpatterns = [
     path('get_nonfriendslist/', get_nonfriendslist, name='get_nonfriendslist'),
     path('get_topusers/', get_topusers, name='get_topusers'),
     path('update_gameTS/', post_update_gameTS, name='post_update_gameTS'),
+    path('languages/', get_languages, name='get_languages'),
 ]

@@ -28,4 +28,5 @@ urlpatterns = [
     path('get-nonfriendslist/', GetNonFriendsList.as_view(), name='get-nonfriendslist'),
     path('get-topusers/', GetTopUsers.as_view(), name='get-topusers'),
     path('update-gameTS/', PostUpdateGameTS.as_view(), name='update-gameTS'),
+    path('get-languages/', GetLanguages.as_view(), name='get-languages'),
 ]

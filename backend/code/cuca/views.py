@@ -732,10 +732,15 @@ def post_create_userextension(request):
                         "id": userext.user,
                         "nickname": userext.nick,
                         "birthdate": str(userext.birthdate) if userext.birthdate else None,
-                        "gender": userext.gender.gender if userext.gender else None,
+                        "gender": userext.gender.label if userext.gender else None,
+                        "genderPT": userext.gender.labelPT if userext.gender else None,
+                        "genderES": userext.gender.labelES if userext.gender else None,
+                        "genderFR": userext.gender.labelFR if userext.gender else None,
+                        "genderIT": userext.gender.labelIT if userext.gender else None,
                         "level": userext.ulevel,
                         "avatar": userext.avatar,
-                        "bio": userext.bio
+                        "bio": userext.bio,
+                        "language": userext.language
                     },
                     "isOpenPopup": False if userext.nick else True
                 }, status=201)
@@ -749,10 +754,15 @@ def post_create_userextension(request):
                     "id": userext.user,
                     "nickname": userext.nick,
                     "birthdate": str(userext.birthdate) if userext.birthdate else None,
-                    "gender": userext.gender.gender if userext.gender else None,
+                    "gender": userext.gender.label if userext.gender else None,
+                    "genderPT": userext.gender.labelPT if userext.gender else None,
+                    "genderES": userext.gender.labelES if userext.gender else None,
+                    "genderFR": userext.gender.labelFR if userext.gender else None,
+                    "genderIT": userext.gender.labelIT if userext.gender else None,
                     "level": userext.ulevel,
                     "avatar": userext.avatar,
-                    "bio": userext.bio
+                    "bio": userext.bio,
+                    "language": userext.language
                 },
                 "isOpenPopup": True
             }, status=201)
@@ -769,7 +779,11 @@ def get_genders(request):
     gender_data = [
         {
             'id': gender.gender,
-            'label': gender.label
+            'label': gender.label,
+            'labelPT': gender.labelPT,
+            'labelES': gender.labelES,
+            'labelFR': gender.labelFR,
+            'labelIT': gender.labelIT
         }
         for gender in tauxGender.objects.all()
     ]
@@ -779,7 +793,11 @@ def get_status(request):
     status_data = [
         {
             'id': status.statusID,
-            'label': status.status
+            'label': status.status,
+            'labelPT': status.statusPT,
+            'labelES': status.statusES,
+            'labelFR': status.statusFR,
+            'labelIT': status.statusIT
         }
         for status in tauxStatus.objects.all()
     ]
@@ -789,11 +807,29 @@ def get_phases(request):
     phases_data = [
         {
             'id': phase.phase,
-            'label': phase.label
+            'label': phase.label,
+            'labelPT': phase.labelPT,
+            'labelES': phase.labelES,
+            'labelFR': phase.labelFR,
+            'labelIT': phase.labelIT
         }
         for phase in tauxPhase.objects.all()
     ]
     return JsonResponse({'phases': phases_data}, safe=False)
+
+def get_languages(request):
+    languages_data = [
+        {
+            'id': language.language,
+            'label': language.label,
+            'labelPT': language.labelPT,
+            'labelES': language.labelES,
+            'labelFR': language.labelFR,
+            'labelIT': language.labelIT
+        }
+        for language in tauxLanguage.objects.all()
+    ]
+    return JsonResponse({'languages': languages_data}, safe=False)
 
 def get_friendshipstatus(request):
     friendshipstatus_data = [
@@ -828,6 +864,10 @@ def get_userextensions(request):
             'nick': userext.nick,
             'birthdate': userext.birthdate.strftime("%Y-%m-%d") if userext.birthdate else None,
             'gender': userext.gender.label if userext.gender else None,
+            "genderPT": userext.gender.labelPT if userext.gender else None,
+            "genderES": userext.gender.labelES if userext.gender else None,
+            "genderFR": userext.gender.labelFR if userext.gender else None,
+            "genderIT": userext.gender.labelIT if userext.gender else None,
             'level': userext.ulevel,
             'avatar': userext.avatar,
             'bio': userext.bio
@@ -1381,7 +1421,11 @@ def get_topusers(request):
             "nickname": userext.nick,
             'level': userext.ulevel,
             "birthdate": str(userext.birthdate) if userext.birthdate else None,
-            "gender": userext.gender.gender if userext.gender else None,
+            "gender": userext.gender.label if userext.gender else None,
+            "genderPT": userext.gender.labelPT if userext.gender else None,
+            "genderES": userext.gender.labelES if userext.gender else None,
+            "genderFR": userext.gender.labelFR if userext.gender else None,
+            "genderIT": userext.gender.labelIT if userext.gender else None,
             "avatar": userext.avatar,
             "bio": userext.bio
         }
