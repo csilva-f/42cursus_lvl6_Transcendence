@@ -35,10 +35,10 @@ async function insertHistoryInfo(newCard, element) {
             twin.classList.remove("d-none");
         }
         if (element.winnerUserID == element.user1ID) {
-            winnerNick.textContent = element.user2Nick;
+            if (!element.tournamentID) winnerNick.textContent = element.user2Nick;
             winnerImg.src = `/static/img/profilePic/${element.user1Avatar}`;
         } else {
-            winnerNick.textContent = element.user1Nick;
+            if (!element.tournamentID) winnerNick.textContent = element.user1Nick;
             winnerImg.src = `/static/img/profilePic/${element.user2Avatar}`;
         }
     }
