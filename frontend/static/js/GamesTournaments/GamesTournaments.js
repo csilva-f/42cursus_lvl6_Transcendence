@@ -124,18 +124,22 @@ function insertInfo(newCard, element, statusID) {
         enterBtn.classList.add('d-none');
         if (statusID == 3 & element.winnerUserID)
             statsBtn.classList.remove('d-none');
-    user1Level.textContent = element.user1ID;
+    user1Level.textContent = element.user1Lvl;
     user1Nick.textContent = element.user1Nick;
     user1Img.src = `/static/img/profilePic/${element.user1Avatar}`;
     if (element.user2ID == null) {
         setRandomImage(user2Img);
         user2LvlLabel.style.display = "none";
-        //user2Nick.setAttribute("data-i18n", "waiting");
-        user2Nick.textContent = element.gameID
+        user2Nick.setAttribute("data-i18n", "waiting");
     } else {
-        user2Level.textContent = element.user2ID;
         user2Nick.textContent = element.user2Nick;
-        user2Img.src = `/static/img/profilePic/${element.user2Avatar}`;
+        if (element.user2ID != -1) {
+            user2Level.textContent = element.user2Lvl;
+            user2Img.src = `/static/img/profilePic/${element.user2Avatar}`;
+        } else {
+            user2LvlLabel.classList.add('d-none');
+            user2Img.src = `/static/img/bot/guest.svg`
+        }
     }
 }
 
@@ -292,6 +296,8 @@ async function loadTournamentGames(tournamentID, containerDiv) {
             containerDiv.appendChild(noGamesMsg);
             return;
         }
+        const userLang = localStorage.getItem("language") || "en";
+        const langData = await getLanguageData(userLang);
         fetch("/templates/Components/CardTournamentGame.html")
             .then((response) => {
                 if (!response.ok) {
@@ -308,6 +314,7 @@ async function loadTournamentGames(tournamentID, containerDiv) {
                     insertTournamentGameInfo(newCard, element);
                     divElement.appendChild(newCard);
                 });
+                updateContent(langData);
             })
             .catch((error) => {
                 console.error("There was a problem with the fetch operation:", error);
@@ -340,7 +347,6 @@ async function loadGameStats(gameID, containerDiv) {
         const statistics = await fetchGameStatistics(gameID);
         console.log("Fetched statistics:", statistics);
         containerDiv.classList.remove("d-none");
-
         if (!statistics || statistics.length === 0) {
             const noStatsMsg = document.createElement("p");
             noStatsMsg.classList.add("text-muted");
@@ -348,6 +354,8 @@ async function loadGameStats(gameID, containerDiv) {
             containerDiv.appendChild(noStatsMsg);
             return;
         }
+        const userLang = localStorage.getItem("language") || "en";
+        const langData = await getLanguageData(userLang);
         fetch("/templates/Components/CardGameStatistics.html")
             .then((response) => {
                 if (!response.ok) {
@@ -364,6 +372,7 @@ async function loadGameStats(gameID, containerDiv) {
                     insertGameStatInfo(newCard, element);
                     divElement.appendChild(newCard);
                 });
+                updateContent(langData);
             })
             .catch((error) => {
                 console.error("There was a problem with the fetch operation:", error);

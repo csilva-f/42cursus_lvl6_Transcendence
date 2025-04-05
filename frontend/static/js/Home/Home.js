@@ -81,12 +81,12 @@ function searchFriend() {
 }
 
 function renderHomeFriends(usersList, cardTemplate, users_on) {
-	const divElement = document.getElementById("friendsContent");
-	if (divElement) divElement.innerHTML = "";
-	usersList.forEach(element => {
-		const newCard = document.createElement("div");
-		newCard.innerHTML = cardTemplate;
-		insertHomeFriendInfo(newCard, element, users_on);
-		divElement.appendChild(newCard);
-	});
+    const divElement = document.getElementById("friendsContent");
+    if (divElement) divElement.innerHTML = "";
+    usersList.forEach(element => {
+        const newCard = document.createElement("div");
+        newCard.innerHTML = cardTemplate;
+        insertHomeFriendInfo(newCard, element, users_on);
+        divElement.appendChild(newCard);
+    });
 }
