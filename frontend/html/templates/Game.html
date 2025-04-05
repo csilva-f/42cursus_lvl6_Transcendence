@@ -17,7 +17,7 @@
         <div class="col-2 p-0">
             <div class="row mt-5">
                 <div class="col-12" style="margin-top: 15.7rem;">
-                    <p class="h6 fw-bold d-flex justify-content-center">Points</p>
+                    <p class="h6 fw-bold d-flex justify-content-center" data-i18n="users"></p>
                     <div class="progress-stacked w-100" style="height: 2rem;">
                         <div class="progress" role="progressbar" aria-valuemax="100" style="height: 2rem;" id="scoreProgressLeft">
                             <div class="progress-bar" style="background-color: #94DEC5;"></div>
@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <div class="col-12" style="margin-top: 1.7rem;">
-                    <p class="h6 fw-bold d-flex justify-content-center">Balls Batidas</p>
+                    <p class="h6 fw-bold d-flex justify-content-center" data-i18n="ballsHit"></p>
                     <div class="progress-stacked w-100" style="height: 2rem;">
                         <div class="progress" role="progressbar" aria-valuemax="100" style="height: 2rem;" id="colisionProgressLeft">
                             <div class="progress-bar" style="background-color: #94DEC5;"></div>
@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div class="col-12" style="margin-top: 1.7rem;">
-                    <p class="h6 fw-bold d-flex justify-content-center">Match Time</p>
+                    <p class="h6 fw-bold d-flex justify-content-center" data-i18n="totalTime"></p>
                     <p class="h3 fw-bold d-flex justify-content-center" id="matchTotalTime"></p>
                 </div>
             </div>
@@ -61,7 +61,7 @@
                 <button id="playAgainButton" class="btn d-flex align-items-center me-4 pop-hover-xs" onclick="postLocalGame();"
                     style="background-color: var(--primary); color: white; border: none; height: 3rem;">
                     <i class="fa-solid fa-table-tennis-paddle-ball fa-lg me-2"></i>
-                    <span class="d-none d-xl-block" style="font-size: 0.9rem; font-weight: bold;">Play Again</span>
+                    <span class="d-none d-xl-block" style="font-size: 0.9rem; font-weight: bold;" data-i18n="playAgain"></span>
                 </button>
                 <button id="homeButton" class="btn d-flex align-items-center pop-hover-xs" onclick="goToScreen(this.dataset.id)"
                     style="background-color: var(--primary); color: white; border: none; height: 3rem;">
@@ -77,16 +77,18 @@
         <!-- Left Player -->
         <div class="col-6 mb-2 border-end border-3 border-black">
             <div class="d-flex w-100" style="height: 7rem;">
-                <div class="justify-content-center align-content-center" style="min-width: 6rem; max-width: 6rem;">
-                    <img src="/static/img/pfp1.jpeg" style="object-fit: cover; border: 3px solid #94DEC5;"
-                        class="img-fluid w-100 rounded-circle shadow ms-2" id="leftPlayerGameImg" />
-                </div>
-                <div class="w-75 h-100 d-flex flex-column justify-content-center ms-0">
-                    <p class="h2 ms-4 d-flex align-items-start"><strong id="leftPlayerName"></strong></p>
-                </div>
-                <div class="w-75 h-100 d-flex flex-column justify-content-center align-items-end ms-4">
-                    <p class="h1 ms-4 me-3 d-flex align-items-start"><strong id="playerLeftScore"></strong></p>
-                </div>
+              <!-- Contêiner quadrado para a imagem -->
+              <div class="d-flex justify-content-center align-items-center" style="width: 6rem; height: 6rem; overflow: hidden; margin-left: 1rem;">
+                <img src="/static/img/pfp1.jpeg" 
+                     style="width: 100%; height: 100%; object-fit: cover; border: 3px solid #94DEC5; border-radius: 50%;" 
+                     id="leftPlayerGameImg" />
+              </div>
+              <div class="w-75 h-100 d-flex flex-column justify-content-center ms-0">
+                <p class="h2 ms-4 d-flex align-items-start"><strong id="leftPlayerName"></strong></p>
+              </div>
+              <div class="w-75 h-100 d-flex flex-column justify-content-center align-items-end ms-4">
+                <p class="h1 ms-4 me-3 d-flex align-items-start"><strong id="playerLeftScore"></strong></p>
+              </div>
             </div>
         </div>
         <!-- End Left Player -->

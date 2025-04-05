@@ -131,7 +131,7 @@ def get_games(request):
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
-            'user1Nick': game.user1_nick if game.tournament else user1.nick,
+            'user1Nick': game.user1_nick if game.tournament else (user1.nick if user1 else None),
             'user1Avatar': user1.avatar if user1 else None,
             'user1Lvl': user1.ulevel if user1 else None,
             'user2ID': game.user2,
@@ -200,10 +200,10 @@ def get_gameinvitations(request):
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
-            'user1Nick': game.user1_nick if game.tournament else user1.nick,
+            'user1Nick': game.user1_nick if game.tournament else (user1.nick if user1 else None),
             'user1Avatar': user1.avatar if user1 else None,
             'user2ID': game.user2,
-            'user2Nick': game.user2_nick if game.tournament else user2.nick,
+            'user2Nick': game.user2_nick if game.tournament else (user2.nick if user2 else None),
             'user2Avatar': user2.avatar if user2 else None,
             'winnerUserID': game.winnerUser,
             'winnerNick': game.winnerNick,
@@ -318,10 +318,10 @@ def get_usergames(request):
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
-            'user1Nick': game.user1_nick if game.tournament else user1.nick,
+            'user1Nick': game.user1_nick if game.tournament else (user1.nick if user1 else None),
             'user1Avatar': user1.avatar if user1 else None,
             'user2ID': game.user2,
-            'user2Nick': game.user2_nick if game.tournament else user2.nick,
+            'user2Nick': game.user2_nick if game.tournament else (user2.nick if user2 else None),
             'user2Avatar': user2.avatar if user2 else None,
             'winnerUserID': game.winnerUser,
             'winnerNick': game.winnerNick,
@@ -724,7 +724,6 @@ def post_update_gameTS(request):
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
         except Exception as e:
-            print("aqui is 500")
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
@@ -748,7 +747,8 @@ def post_create_userextension(request):
                         "gender": userext.gender.gender if userext.gender else None,
                         "level": userext.ulevel,
                         "avatar": userext.avatar,
-                        "bio": userext.bio
+                        "bio": userext.bio,
+                        "language": userext.lang
                     },
                     "isOpenPopup": False if userext.nick else True
                 }, status=201)
@@ -765,7 +765,8 @@ def post_create_userextension(request):
                     "gender": userext.gender.gender if userext.gender else None,
                     "level": userext.ulevel,
                     "avatar": userext.avatar,
-                    "bio": userext.bio
+                    "bio": userext.bio,
+                    "language": userext.lang
                 },
                 "isOpenPopup": True
             }, status=201)
@@ -843,7 +844,8 @@ def get_userextensions(request):
             'gender': userext.gender.label if userext.gender else None,
             'level': userext.ulevel,
             'avatar': userext.avatar,
-            'bio': userext.bio
+            'bio': userext.bio,
+            "language": userext.lang
         }
         for userext in uextensions
     ]
@@ -969,6 +971,7 @@ def post_join_tournament(request):  # user joins an active tournament
 def post_update_userextension(request):
     if request.method == 'POST':
         try:
+            print("cucu")
             data = json.loads(request.body)
             uext_id = data.get('uid')
             if not uext_id:
@@ -982,6 +985,7 @@ def post_update_userextension(request):
             avatar = data.get('avatar')
             bio = data.get('bio')
             unick = data.get('nickname')
+            ulang = data.get('language')
             if (not unick) and (not uext.nick):
                 return JsonResponse({"error": "User nickname is a mandatory field in the first update"}, status=400)
             if gender_id:
@@ -1002,17 +1006,17 @@ def post_update_userextension(request):
                 avatar and avatar != uext.avatar,
                 unick and unick != uext.nick
             ]):
-                print("1: ", avatar)
                 return JsonResponse({"error": "No changes to the user information were performed"}, status=400)
             if birthdate:
                 uext.birthdate = birthdate
             if avatar:
-                print("if avatar", avatar)
                 uext.avatar = avatar
             if bio:
                 uext.bio = bio
             if unick:
                 uext.nick = unick
+            if ulang:
+                uext.lang = ulang
             uext.save()
             return JsonResponse({"message": "User information updated successfully", "user_id": uext.user}, status=200)
         except json.JSONDecodeError:

@@ -1,26 +1,46 @@
 async function insertHistoryInfo(newCard, element) {
     const winnerImg = newCard.querySelector("#winnerImg");
-    const matchResult = newCard.querySelector("#matchResult");
     const divDefeat = newCard.querySelector("#divDefeat");
     const winnerNick = newCard.querySelector("#winnerNick");
     const resTextL = newCard.querySelector("#matchWinner");
     const resTextW = newCard.querySelector("#matchOpponent");
     const tsDate = newCard.querySelector("#gameHCreatedOn");
-    element.tournamentID ? tsDate.textContent = element.createdOn.split(" ")[0] : tsDate.textContent = element.creationTS.split(" ")[0];
+    tsDate.textContent = element.creationTS.split(" ")[0];
+
+    const gwin = newCard.querySelector("#gameWin");
+    const twin = newCard.querySelector("#tournWin");
+    const gloss = newCard.querySelector("#gameLoss");
+    const tloss = newCard.querySelector("#tournLoss");
+
     if (element.winnerUserID != await UserInfo.getUserID()) {
-        winnerNick.textContent = element.winnerNick
-        if (element.user2ID == -1)
-            winnerImg.src = '/static/img/bot/guest.svg';
-        element.tournamentID == null ? matchResult.textContent = "Defeat" : matchResult.textContent = "Tournament Defeat";
         divDefeat.classList.remove("d-none");
-        resTextW.classList.remove("d-none");
+        resTextL.classList.remove("d-none");
+        if (!element.tournamentID) {
+            gloss.classList.remove("d-none");
+        } else {
+            tloss.classList.remove("d-none");
+        }
+        winnerNick.textContent = element.winnerNick;
+        if (element.winnerUserID == element.user1ID) {
+            winnerImg.src = `/static/img/profilePic/${element.user1Avatar}`;
+        } else {
+            winnerImg.src = `/static/img/profilePic/${element.user2Avatar}`;
+        }
     } else {
-        winnerNick.textContent = element.user2Nick
-        element.tournamentID == null ? matchResult.textContent = "Win" : matchResult.textContent = "Tournament Win";
         divDefeat.classList.remove("d-none");
-        if (!element.tournamentID) resTextL.classList.remove("d-none");
-        const userAvatarPath = await UserInfo.getUserAvatarPath();
-        winnerImg.src = `${userAvatarPath}`;
+        if (!element.tournamentID) {
+            gwin.classList.remove("d-none");
+            resTextW.classList.remove("d-none");
+        } else {
+            twin.classList.remove("d-none");
+        }
+        if (element.winnerUserID == element.user1ID) {
+            if (!element.tournamentID) winnerNick.textContent = element.user2Nick;
+            winnerImg.src = `/static/img/profilePic/${element.user1Avatar}`;
+        } else {
+            if (!element.tournamentID) winnerNick.textContent = element.user1Nick;
+            winnerImg.src = `/static/img/profilePic/${element.user2Avatar}`;
+        }
     }
 }
 

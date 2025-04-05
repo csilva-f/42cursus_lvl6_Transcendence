@@ -15,6 +15,7 @@ async function loginSuccess(data) {
             console.log("Access: ", await JWT.getAccess());
         }
         await UserInfo.refreshUser();
+        localStorage.setItem('language', await UserInfo.getUserLang());
         window.history.pushState({}, "", "/");
         locationHandler();
     }
