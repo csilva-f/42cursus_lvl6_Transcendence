@@ -46,7 +46,7 @@ async function insertHistoryInfo(newCard, element) {
 
 function insertHomeFriendInfo(newCard, element, users_on) {
     newCard.querySelector('#friendNick').textContent = element.friendNick;
-    newCard.querySelector('#friendImg').textContent = `/static/img/profilePic/${element.friendAvatar}`;
+    newCard.querySelector('#friendImg').src = `/static/img/profilePic/${element.friendAvatar}`;
     const userOnStatus = newCard.querySelector("#userOnStatus");
 
     if (users_on.includes(Number(element.friendID))) {

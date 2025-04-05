@@ -101,5 +101,7 @@
     "hCardWin": "Vittoria",
     "hCardLoss": "Sconfitta",
     "hCardWinT": "Vittoria del Torneo",
-    "hCardLossT": "Sconfitta nel Torneo"
+    "hCardLossT": "Sconfitta nel Torneo",
+    "playAgain": "Gioca di nuovo",
+    "home": "Home"
 }
