@@ -141,30 +141,6 @@
         </ul>
       </div>
       <!-- End Select Game Type -->
-      <!-- End Local Create Form -->
-      <!-- Remote Create Form -->
-      <div class="modal-body d-none" id="remoteForm">
-        <form class="row g-3 needs-validation p-3" id="remoteFormID" novalidate>
-          <!-- P1 Nickname NOTACAROL: meter no placeholder do nickname o nick real do user -->
-          <div class="input-group has-validation mt-3">
-            <span class="input-group-text" id="basic-addon1R" style="margin-top: 10px;">
-              <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
-                type="color" class="form-control-color p-0 m-0" id="P1ColorInputR" value="#AC3B61">
-            </span>
-            <input type="text" class="form-control" id="P1NickInputR" placeholder="Nickname"
-              aria-describedby="inputGroupPrepend" style="margin-top: 10px;" required disabled>
-            <div class="invalid-feedback" data-i18n="p1NickError">
-            </div>
-          </div>
-          <!-- Submit Button -->
-          <div class="d-grid gap-2 d-flex justify-content-end">
-            <button class="pop-hover-xs btn modalActionsLi"
-              style="background-color: black; color: white; font-weight: bold;" type="submit"
-              data-i18n="create"></button>
-          </div>
-        </form>
-      </div>
-      <!-- End Remote Create Form -->
       <!-- Form Actions -->
       <div class="modal-footer">
         <ul class="nav nav-pills" style="height: 2.5rem">
@@ -199,83 +175,61 @@
       <div class="modal-body d-flex align-items-center">
         <div class="row">
           <div class="col-12">
-            <!-- Select Tournament Type -->
-            <ul class="nav nav-pills justify-content-center gap-5 h-100" style="min-height: 12rem; width: 100%;"
-              id="createTournamentOptions">
-              <li class="pop-hover-xs modalLi nav-item rounded-4 shadow d-flex align-items-center"
-                onclick="showGameForm('localTournamentFormID', 'createTournamentOptions', 'confirmTournamentBtn', 'backTournamentBtn')"
-                style="width: 24rem; background-color: var(--cardBg);">
-                <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
-                  <div class="d-flex align-items-center justify-content-center my-3">
-                    <i class="fa-solid fa-user-group fa-2xl" style="color: black"></i>
-                  </div>
-                  <p class="h3 px-3 mt-3 d-none d-xl-block justify-content-center align-content-center"
-                    style="font-weight: bold; text-align: center;" data-i18n="local"></p>
-                </div>
-              </li>
-            </ul>
-            <!-- End Select Tournament Type -->
             <!-- Local Tournament Form -->
-            <form id="localTournamentFormID" class="row g-3 needs-validation p-3 d-none" novalidate>
+            <form id="localTournamentFormID" class="row g-3 needs-validation p-3" novalidate>
               <!-- Name -->
               <div class="input-group mt-0 pt-0">
                 <span class="input-group-text" id="basic-addon1" style="margin-top: 20px;">
                   <i class="fa-solid fa-signature fa-lg"></i>
                 </span>
-                <input id="localNameTournamentInput" required type="text" class="form-control" placeholder="Nome torneio(traduzir)"
+                <input id="localNameTournamentInput" required type="text" class="form-control" placeholder=""
                   aria-describedby="basic-addon1" style="margin-top: 20px;">
               </div>
               <!-- End Name -->
-              <!-- P1 Nick and Color -->
+              <!-- P1 Nick -->
               <div class="input-group has-validation">
-                <span class="input-group-text" id="basic-addon1">
-                  <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
-                    type="color" class="form-control-color p-0 m-0" id="P1ColorInput" value="#AC3B61">
+                <span class="input-group-text d-flex justify-content-center align-items-center" id="basic-addon1" style="min-width: 50px; width: 50px;">
+                  <i class="fa-solid fa-1 fa-lg"></i>
                 </span>
                 <li class="d-flex justify-content-end my-1" id="P1Nick">
                 </li>
-                <!-- <input type="text" class="form-control" id="P1NickInput" placeholder="Player1 Nickname(traduzir)"
-                  aria-describedby="inputGroupPrepend" required>
-                <div class="invalid-feedback" data-i18n="p1NickError">
-                </div> -->
+                <input type="text" class="form-control" id="P1NickInput" placeholder=""
+                  aria-describedby="inputGroupPrepend" disabled>
               </div>
-              <!-- End P1 Nick and Color -->
-              <!-- P2 Nick and Color -->
+              <!-- End P1 Nick -->
+              <!-- P2 Nick -->
               <div class="input-group has-validation">
-                <span class="input-group-text" id="basic-addon1">
-                  <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
-                    type="color" class="form-control-color p-0 m-0" id="P2ColorInput" value="#AC61C3">
+                <span class="input-group-text  d-flex justify-content-center align-items-center" id="basic-addon1" style="min-width: 50px;">
+                  <i class="fa-solid fa-2 fa-lg"></i>
                 </span>
                 <input type="text" class="form-control" id="P2NickInputTourn" required placeholder="P2"
                   aria-describedby="inputGroupPrepend" required>
-                <div class="invalid-feedback" data-i18n="p1NickError">
+                <div class="invalid-feedback" data-i18n="p2NickError">
                 </div>
               </div>
-              <!-- End P2 Nick and Color -->
-              <!-- P3 Nick and Color -->
+              <!-- End P2 Nick -->
+              <!-- P3 Nick -->
               <div class="input-group has-validation">
-                <span class="input-group-text" id="basic-addon1">
-                  <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
-                    type="color" class="form-control-color p-0 m-0" id="P3ColorInput" value="#61ACC3">
+                <span class="input-group-text  d-flex justify-content-center align-items-center" id="basic-addon1" style="min-width: 50px;">
+                  <i class="fa-solid fa-3 fa-lg"></i>
                 </span>
                 <input type="text" class="form-control" id="P3NickInput" required placeholder="P3"
                   aria-describedby="inputGroupPrepend" required>
                 <div class="invalid-feedback" data-i18n="p1NickError">
                 </div>
               </div>
-              <!-- End P3 Nick and Color -->
-              <!-- P4 Nick and Color -->
+              <!-- End P3 Nick -->
+              <!-- P4 Nick -->
               <div class="input-group has-validation">
-                <span class="input-group-text" id="basic-addon1">
-                  <input style="border: none; background-color: transparent; max-width: 1.8rem; max-height: 1.8rem;"
-                    type="color" class="form-control-color p-0 m-0" id="P4ColorInput" value="#C361AC">
+                <span class="input-group-text  d-flex justify-content-center align-items-center" id="basic-addon1" style="min-width: 50px;">
+                  <i class="fa-solid fa-4 fa-lg"></i>
                 </span>
                 <input type="text" class="form-control" id="P4NickInput" required placeholder="P4"
                   aria-describedby="inputGroupPrepend" required>
                 <div class="invalid-feedback" data-i18n="p1NickError">
                 </div>
               </div>
-              <!-- End P4 Nick and Color -->
+              <!-- End P4 Nick -->
               <button class="btn" style="background-color: var(--primary); color: white;" data-i18n="create"
                 type="submit"></button>
             </form>
@@ -291,10 +245,6 @@
           <div class="col-md-4 text-start mt-4">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
               onclick="closeGameForm([localTournamentFormID],'createTournamentOptions', 'confirmTournamentBtn', 'backTournamentBtn')" data-i18n="close"></button>
-          </div>
-          <div class="col-md-4 text-end mt-4">
-            <button type="button" class="btn btn-secondary d-none" id="backTournamentBtn"
-              onclick="closeGameForm([localTournamentFormID],'createTournamentOptions', 'confirmTournamentBtn', 'backTournamentBtn')" data-i18n="back"></button>
           </div>
           <!-- End Action Buttons -->
         </div>
