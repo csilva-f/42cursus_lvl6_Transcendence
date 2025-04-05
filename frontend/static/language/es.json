@@ -86,5 +86,14 @@
     "victories": "Victorias",
     "losses": "Derrotas",
     "matches": "Partidas",
+    "status": "Estado:",
+    "players": "Jugadores:",
+    "users": "Usuarios:",
+    "winner": "Ganador",
+    "points": "Puntos:",
+    "hits": "Bolas golpeadas:",
+    "duration": "Duración:",
+    "errorNick": "Los alias de los jugadores del torneo deben ser todos diferentes",
+    "errorName": "El nombre del torneo debe ser diferente al de otros torneos activos",
 	"globalStatistics": "Estadísticas globales"
 }

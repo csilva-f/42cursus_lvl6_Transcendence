@@ -108,8 +108,8 @@ function setRandomImage(imgElement) {
 }
 
 function insertInfo(newCard, element, statusID) {
-    console.log("[insertInfo]")
-    console.log('element :>> ', element);
+    newCard.innerHTML = newCard.innerHTML.replaceAll("{{GAME_ID}}", element.gameID);
+    console.log("statusID: ", statusID)
     const user1Level = newCard.querySelector("#user1Level");
     const user1Nick = newCard.querySelector("#user1Nick");
     const user1Img = newCard.querySelector("#user1Img");
@@ -118,9 +118,12 @@ function insertInfo(newCard, element, statusID) {
     const user2Level = newCard.querySelector("#user2Level");
     const user2Nick = newCard.querySelector("#user2Nick");
     const enterBtn = newCard.querySelector("#enterLi");
+    const statsBtn = newCard.querySelector("#statsDropdownBtn");
     enterBtn.setAttribute("data-id", element.gameID);
     if (statusID != 1)
-            enterBtn.classList.add('d-none');
+        enterBtn.classList.add('d-none');
+        if (statusID == 3 & element.winnerUserID)
+            statsBtn.classList.remove('d-none');
     user1Level.textContent = element.user1ID;
     user1Nick.textContent = element.user1Nick;
     user1Img.src = `/static/img/profilePic/${element.user1Avatar}`;
@@ -137,25 +140,36 @@ function insertInfo(newCard, element, statusID) {
 }
 
 function insertTournamentInfo(newCard, element, statusID, allGames) {
+    newCard.innerHTML = newCard.innerHTML.replaceAll("{{TOURNAMENT_ID}}", element.tournamentID);
     const tournamentTitle = newCard.querySelector("#tournamentTitle")
     tournamentTitle.textContent = element.name;
-    const tournamentPlayers = newCard.querySelector("#tournamentPlayers")
     const enterBtn = newCard.querySelector("#enterLi");
     enterBtn.setAttribute("data-id", element.tournamentID);
-    tournamentPlayers.textContent = 4;
-    // const tournamentUser1ID = newCard.querySelector("#tournamentCreatedById")
-    // tournamentUser1ID.textContent = element.user1ID;
-    const tournamentUser1Nick = newCard.querySelector("#tournamentP1Nick")
-    tournamentUser1Nick.textContent = element.user1Nick;
-    const tournamentUser2Nick = newCard.querySelector("#tournamentP2Nick")
-    tournamentUser2Nick.textContent = element.user2Nick;
-    const tournamentUser3Nick = newCard.querySelector("#tournamentP3Nick")
-    tournamentUser3Nick.textContent = element.user3Nick;
-    const tournamentUser4Nick = newCard.querySelector("#tournamentP4Nick")
-    tournamentUser4Nick.textContent = element.user4Nick;
+    if (element.statusID == 3) {
+        const tournamenWinner = newCard.querySelector("#tournWinnerNick")
+        tournamenWinner.textContent = element.winnerNick;
+        const divElement = newCard.querySelector('#tournWinner');
+        divElement.classList.remove('d-none');
+        const divElement2 = newCard.querySelector('#tournUsers');
+        divElement2.classList.add('d-none');
+    } else {
+        const tournamentPlayers = newCard.querySelector("#tournamentPlayers")
+        tournamentPlayers.textContent = 4;
+        const tournamentUser1Nick = newCard.querySelector("#tournamentP1Nick")
+        tournamentUser1Nick.textContent = element.user1Nick;
+        const tournamentUser2Nick = newCard.querySelector("#tournamentP2Nick")
+        tournamentUser2Nick.textContent = element.user2Nick;
+        const tournamentUser3Nick = newCard.querySelector("#tournamentP3Nick")
+        tournamentUser3Nick.textContent = element.user3Nick;
+        const tournamentUser4Nick = newCard.querySelector("#tournamentP4Nick")
+        tournamentUser4Nick.textContent = element.user4Nick;
+        const divElement3 = newCard.querySelector('#tournWinner');
+        divElement3.classList.add('d-none');
+        const divElement4 = newCard.querySelector('#tournUsers');
+        divElement4.classList.remove('d-none');
+    }
     const tournamentCreatedOnDate = newCard.querySelector("#tournamentCreatedOn")
     tournamentCreatedOnDate.textContent = element.createdOn;
-    newCard.innerHTML = newCard.innerHTML.replaceAll("{{TOURNAMENT_ID}}", element.tournamentID);
 }
 
 function reloadInformation(statusID) {
@@ -165,10 +179,6 @@ function reloadInformation(statusID) {
     else
         fetchTournaments(statusID);
 }
-
-/*
-?    AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-*/
 
 //* Function to show Forms
 function showGameForm(formID, tabOpenID, confirmBtnID, backBtnID) {
@@ -190,7 +200,7 @@ function hideGameForm(formOpenID, tabID, confirmBtnID, backBtnID) {
     const tab = document.getElementById(tabID);
     tab.classList.remove('d-none');
     const confirmBtn = document.getElementById(confirmBtnID);
-    confirmBtn.classList.add('d-none');
+    if (confirmBtn) confirmBtn.classList.add('d-none');
     const backBtn = document.getElementById(backBtnID);
     backBtn.classList.add('d-none');
     backBtn.removeAttribute("data-id");
@@ -198,6 +208,13 @@ function hideGameForm(formOpenID, tabID, confirmBtnID, backBtnID) {
 
 //* Function to cancel and reset Forms
 function closeGameForm(formIDs, tabID, confirmBtnID, backBtnID) {
+    console.log("closeeeee");
+    const tournErrorSection = document.querySelector('#tournErrorSection');
+    if (tournErrorSection) tournErrorSection.classList.add('d-none');
+    const tournErrorNick = document.querySelector('#tournErrorNick');
+    if (tournErrorNick) tournErrorSection.classList.add('d-none');
+    const tournErrorName = document.querySelector('#tournErrorName');
+    if (tournErrorName) tournErrorSection.classList.add('d-none');
     const backBtn = document.getElementById(backBtnID);
     let formOpenID = backBtn.getAttribute("data-id")
     if (formOpenID != null)
@@ -211,6 +228,7 @@ function closeGameForm(formIDs, tabID, confirmBtnID, backBtnID) {
     })
 }
 
+//* Function to expand or retract the games section of each tournament
 function toggleTournamentGames(divID) {
     const gamesDiv = document.getElementById(divID);
     console.log(gamesDiv);
@@ -227,7 +245,9 @@ function toggleTournamentGames(divID) {
     }
 }
 
+//* Function to insert in frontend the info regarding a tournament's games
 function insertTournamentGameInfo(newCard, game) {
+    console.log(game);
     const tournGameNbr = newCard.querySelector("#tournGameNumber")
     tournGameNbr.textContent = game.phase;
     const tournP1 = newCard.querySelector("#tournGamePlayer1")
@@ -242,10 +262,22 @@ function insertTournamentGameInfo(newCard, game) {
     } else {
         tournP2.textContent = "(To be be defined)";
     }
+    const enterTournGameBtn = newCard.querySelector("#enterLi");
+    enterTournGameBtn.setAttribute("data-id", game.gameID);
+    if (game.user1Nick && game.user2Nick && game.statusID == 2) {
+        const element = newCard.querySelector('#tournGameBtn');
+        if (element) element.classList.remove('d-none');
+    } else if (game.statusID == 3) {
+        const element2 = newCard.querySelector('#tournGameWinnerText');
+        if (element2) element2.classList.remove('d-none');
+        const tournGameWinner = newCard.querySelector("#tournGameWinner")
+        tournGameWinner.textContent = game.winnerNick;
+    }
     const tournGameStat = newCard.querySelector("#tournGameStatus")
     tournGameStat.textContent = game.status;
 }
 
+//* Function to laod the tournament games
 async function loadTournamentGames(tournamentID, containerDiv) {
     try {
         console.log("Loading games for tournament:", tournamentID);
@@ -271,7 +303,6 @@ async function loadTournamentGames(tournamentID, containerDiv) {
                 const divElement = document.getElementById(`gamesContainer-${tournamentID}`);
                 divElement.innerHTML = "";
                 games.forEach((element) => {
-                    console.log(element);
                     const newCard = document.createElement("div");
                     newCard.innerHTML = data;
                     insertTournamentGameInfo(newCard, element);
@@ -284,5 +315,98 @@ async function loadTournamentGames(tournamentID, containerDiv) {
     } catch (error) {
         console.error("Error fetching games:", error);
         containerDiv.innerHTML = "<p class='text-danger'>Error loading games.</p>";
+    }
+}
+
+function toggleGameStats(divID) {
+    const gameStatsDiv = document.getElementById(divID);
+    console.log(gameStatsDiv);
+  
+    if (!gameStatsDiv) return;
+    if (gameStatsDiv.classList.contains("d-none")) {
+        gameStatsDiv.classList.remove("d-none");
+        
+        const gameID = divID.split("-")[1];
+        console.log(gameID);
+        loadGameStats(gameID, gameStatsDiv);
+    } else {
+        gameStatsDiv.classList.add("d-none");
+    }
+}
+
+//* Function to laod the game statistics
+async function loadGameStats(gameID, containerDiv) {
+    try {
+        const statistics = await fetchGameStatistics(gameID);
+        console.log("Fetched statistics:", statistics);
+        containerDiv.classList.remove("d-none");
+
+        if (!statistics || statistics.length === 0) {
+            const noStatsMsg = document.createElement("p");
+            noStatsMsg.classList.add("text-muted");
+            noStatsMsg.textContent = "No statistics found for this game.";
+            containerDiv.appendChild(noStatsMsg);
+            return;
+        }
+        fetch("/templates/Components/CardGameStatistics.html")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok " + response.statusText);
+                }
+                return response.text();
+            })
+            .then((data) => {
+                const divElement = document.getElementById(`gameStatContainer-${gameID}`);
+                divElement.innerHTML = "";
+                statistics.forEach((element) => {
+                    const newCard = document.createElement("div");
+                    newCard.innerHTML = data;
+                    insertGameStatInfo(newCard, element);
+                    divElement.appendChild(newCard);
+                });
+            })
+            .catch((error) => {
+                console.error("There was a problem with the fetch operation:", error);
+            });
+    } catch (error) {
+        console.error("Error fetching game statistics:", error);
+        containerDiv.innerHTML = "<p class='text-danger'>Error loading game statistics.</p>";
+    }
+}
+
+//* Function to insert in frontend the info regarding game stats
+function insertGameStatInfo(newCard, game) {
+    const gameCreatedOnDate = newCard.querySelector("#gameCreatedOn")
+    gameCreatedOnDate.textContent = game.creationTS.split(" ")[0];
+    const p1 = newCard.querySelector("#gamePlayer1")
+    p1.textContent = game.user1Nick;
+    const pointsP1 = newCard.querySelector("#pointsP1")
+    pointsP1.textContent = game.user1_points;
+    const hitsP1 = newCard.querySelector("#hitsP1")
+    hitsP1.textContent = game.user1_hits;
+    const p2 = newCard.querySelector("#gamePlayer2")
+    p2.textContent = game.user2Nick;
+    const pointsP2 = newCard.querySelector("#pointsP2")
+    pointsP2.textContent = game.user2_points;
+    const hitsP2 = newCard.querySelector("#hitsP2")
+    hitsP2.textContent = game.user2_hits;
+    const element2 = newCard.querySelector('#gameWinnerText');
+    if (element2) element2.classList.remove('d-none');
+    const gameWinner = newCard.querySelector("#gameWinner")
+    gameWinner.textContent = game.winnerNick;
+    const gameDuration = newCard.querySelector("#gameDuration")
+    gameDuration.textContent = game.duration.split(".")[0];
+}
+
+//* Function to insert in frontend the tournament form error message
+function insertTournErrorMsg(type) {
+    const tournErrorSection = document.querySelector('#tournErrorSection');
+    tournErrorSection.classList.remove('d-none');
+    const msgNick = document.querySelector('#tournErrorNick');
+    const msgName = document.querySelector('#tournErrorName');
+    if (type == 1) {
+        msgNick.classList.remove('d-none');
+    } else if (type == 2) {
+        msgName.classList.remove('d-none');
     }
 }

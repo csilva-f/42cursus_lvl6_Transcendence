@@ -122,7 +122,6 @@ async function postLocalGame() {
       resetModal();
     },
   });
-
 }
 
 // const ws = new WebSocket("wss://localhost:8000/channels/game_id/");
@@ -357,6 +356,24 @@ async function postLocalTournament() {
     nick3: document.getElementById("P3NickInput").value,
     nick4: document.getElementById("P4NickInput").value,
   };
+  if (UserInfo.userNick == tournamentData.nick2 || 
+    UserInfo.userNick == tournamentData.nick3 || 
+    UserInfo.userNick == tournamentData.nick4 || 
+    tournamentData.nick2 == tournamentData.nick3 ||
+    tournamentData.nick2 == tournamentData.nick4 ||
+    tournamentData.nick3 == tournamentData.nick4
+  ) {
+    return insertTournErrorMsg(1);
+  }
+
+  const tourns = await fetchActiveTournaments();
+  console.log(tourns);
+  console.log(tourns.tournaments);
+  if (tourns && tourns.some(tourn => tourn.name == tournamentData.name)) {
+    console.log("aqui");
+    return insertTournErrorMsg(2);
+  }
+
   const accessToken = await JWT.getAccess();
   console.log(tournamentData);
   return new Promise((resolve, reject) => {
@@ -373,12 +390,11 @@ async function postLocalTournament() {
         showSuccessToast(langData, langData.tournamentcreated);
         console.log(res);
         console.log("res.tournament", res.tournament);
-        resetModal();
+        // resetModal();
         resolve(res.tournament); // Resolve the promise with the tournament ID
       },
       error: function (xhr, status, error) {
         showErrorToast(APIurl, error, langData);
-        resetModal();
         reject(error); // Reject the promise on error
       },
     });
@@ -422,6 +438,8 @@ async function fetchTournamentGames(tournamentID) {
   const accessToken = await JWT.getAccess();
   const APIurl = `/api/get-games/?tournamentID=${tournamentID}`;
   console.log(APIurl)
+  if (!tournamentID)
+    return Promise.resolve([]);
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "GET",
@@ -437,6 +455,96 @@ async function fetchTournamentGames(tournamentID) {
       },
       error: function (xhr, status, error) {
         reject(error); // Reject the promise on error
+      },
+    });
+  });
+}
+
+async function enterTournamentGame(gameID) {
+  const userLang = localStorage.getItem("language") || "en";
+  const langData = await getLanguageData(userLang);
+  const accessToken = await JWT.getAccess();
+  const APIurl = `/api/update-gameTS/`;
+  let gameData = {
+    gameID: gameID
+  };
+
+  $.ajax({
+    type: "POST",
+    url: APIurl,
+    Accept: "application/json",
+    contentType: "application/json",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: JSON.stringify(gameData),
+    success: async function (res) {
+      const divElement = document.getElementById("gamesContent");
+      divElement.innerHTML = "";
+      game = res.game;
+      let gameInfo = {};
+      gameInfo["gameID"] = game.gameID;
+      gameInfo["islocal"] = game.isLocal;
+      gameInfo["P1"] = game.user1Nick;
+      gameInfo["P1_uid"] = game.user1ID;
+      gameInfo["P2"] = game.user2Nick;
+      gameInfo["P2_uid"] = game.user2ID;
+      localStorage.setItem("gameInfo", JSON.stringify(gameInfo));
+      window.history.pushState({}, "", "/pong");
+      await locationHandler();
+      updateContent(langData);
+    },
+    error: function (xhr, status, error) {
+      console.error("Error Thrown:", error);
+      showErrorToast(APIurl, error, langData);
+    },
+  });
+}
+
+async function fetchGameStatistics(gameID) {
+  const langData = localStorage.getItem("language") || "en";
+  const accessToken = await JWT.getAccess();
+  const APIurl = `/api/get-games/?gameID=${gameID}`;
+  console.log(APIurl)
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+        url: APIurl,
+        Accept: "application/json",
+        contentType: "application/json",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      success: function (res) {
+        resolve(res.games); // Resolve the promise with the tournament ID\
+        updateContent(langData);
+      },
+      error: function (xhr, status, error) {
+        reject(error); // Reject the promise on error
+      },
+    });
+  });
+}
+
+async function fetchActiveTournaments() {
+  const langData = localStorage.getItem("language") || "en";
+  const accessToken = await JWT.getAccess();
+  const APIurl = `/api/get-tournaments/?statusID=2`;
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+        url: APIurl,
+        Accept: "application/json",
+        contentType: "application/json",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      success: function (res) {
+        resolve(res.tournaments);
+        updateContent(langData);
+      },
+      error: function (xhr, status, error) {
+        reject(error);
       },
     });
   });
