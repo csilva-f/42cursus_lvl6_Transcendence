@@ -306,7 +306,7 @@ async function changeToSmall(location) {
 	content.classList.remove('d-none')
 }
 
-function insertPlaceholders(location, langData) {
+async function insertPlaceholders(location, langData) {
 	switch (location) {
 		case "/":
 			document.getElementById('inputHomeSearchFriends').placeholder = langData.search;
@@ -314,6 +314,10 @@ function insertPlaceholders(location, langData) {
 			break;
 		case "/social":
 			document.getElementById('userSearchInput').placeholder = langData.search;
+			break;
+		case "/games":
+			document.getElementById('localNameTournamentInput').placeholder = langData.tournamentName;
+			document.getElementById('P1NickInput').placeholder = await UserInfo.getUserNick();
 			break;
 	}
 }
@@ -347,6 +351,7 @@ async function changeActive(location) {
 					: disableSBIcon(element);
 			});
 			headerElement.setAttribute("data-i18n", "games&tournaments");
+			insertPlaceholders("/games", langData);
 			updateContent(langData);
 			console.log("[router == /games]")
 			document.getElementById("subMsg").style.display = "none";
@@ -499,7 +504,7 @@ const locationHandler = async () => {
 	document.title = route.title;
 	if (bigScreenLocation.includes(location)) {
 		document.getElementById("allContent").innerHTML = html;
-		changeToBig(location);
+		await changeToBig(location);
 		document
 			.querySelector('meta[name="description"]')
 			.setAttribute("content", route.description);
