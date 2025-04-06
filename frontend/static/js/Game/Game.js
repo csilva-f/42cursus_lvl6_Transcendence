@@ -30,7 +30,7 @@ window.addEventListener("popstate", function (e) {
 
 window.addEventListener("beforeunload", function (e) {
     keyPressed["close"] = true;
-    //console.log("Aba ou navegador foi fechado!");
+    //console.log("Aba ou navegador foi fechado! ==> so funciona para firefox");
 });
 
 class Game  {
