@@ -61,6 +61,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
     async def disconnect(self, close_code):
         # Avisar o grupo que um jogador saiu
+        print("disconnect begin")
         await self.channel_layer.group_send(
             self.room_group_name,
             {
@@ -69,6 +70,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             }
         )
         # Remover o cliente do grupo
+        print("disconnect end")
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     # Notificar clientes quando alguém entra
@@ -77,6 +79,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
     # Notificar clientes quando alguém sai
     async def player_left(self, event):
+        print("player left")
         await self.send(text_data=json.dumps({"message": event["message"]}))
 
 online_users = set()  # Armazena os IDs dos utilizadores online

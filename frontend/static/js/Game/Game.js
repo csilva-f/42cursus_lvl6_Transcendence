@@ -4,9 +4,9 @@ const KEY_W = 87;
 const KEY_S = 83;
 const F5 = 116;
 const keyPressed = [];
-const maxSpeed = 14;
+const maxSpeed = 16;
 const maxScore = 5;
-const ballVelocity = 6;
+const ballVelocity = 7;
 const ballVellocityIncreaseRate = 1.2;
 const ballRadius = 15;
 const paddleWidth = 20;
@@ -30,7 +30,7 @@ window.addEventListener("popstate", function (e) {
 
 window.addEventListener("beforeunload", function (e) {
     keyPressed["close"] = true;
-    //console.log("Aba ou navegador foi fechado!");
+    //console.log("Aba ou navegador foi fechado! ==> so funciona para firefox");
 });
 
 class Game  {
@@ -43,6 +43,7 @@ class Game  {
         this.ballRadius = 15;
         this.maxScore = maxScore;
         this.stopGame = false;
+        this.gameDuration = 0;
     }
     async initGame() {
         console.info("onload");
@@ -110,16 +111,19 @@ class Game  {
             //console.log("game on going");
         }
         else if (keyPressed["close"] || keyPressed["back"]) {
-              //keyPressed["finishGame"] = false;
-              await updateGameStatusForceFinish(this.gameData);
-              if (keyPressed["back"]){
-                  window.history.pushState({}, "", `/games`);
-                  await locationHandler();
-              }
+            console.log("force finish");
+            keyPressed["close"] = false;
+            await updateGameStatusForceFinish(this.gameData);
+            if (keyPressed["back"]){
+                keyPressed["back"] = false;
+                window.history.pushState({}, "", `/games`);
+                await locationHandler();
+            }
         } else {
-            //console.log("Normal finish!");
+            console.log("Normal finish!");
             showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, 
-                this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, this.gameData.isTournament, imgLeft, imgRight, this.gameData.isTournament);
+                this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, 
+                    this.gameData.isTournament, imgLeft, imgRight, this.gameData.isTournamen, this.gameDuration);
             startWinAnimation();
             const data = {
                 uid: this.gameData.P1_uid,
@@ -177,7 +181,7 @@ class Game  {
                 this.respawnBall();
             else {
                 this.stopGame = true;
-                stopTimer();
+                this.gameDuration = stopTimer();
             }
         }
         if (this.objects[0].ballX - this.objects[0].ballRadius > this.canvas.width){
@@ -188,7 +192,7 @@ class Game  {
                 this.respawnBall();
             else {
                 this.stopGame = true;
-                stopTimer();
+                this.gameDuration = stopTimer();
             }
         }
     }

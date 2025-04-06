@@ -32,6 +32,7 @@ class RemoteGame  {
         this.stopGame = false;
         this.ws = ws;
         this.isHost = isHost;
+        this.gameDuration = 0;
     }
     initGame() {
         console.log("onload");
@@ -74,11 +75,14 @@ class RemoteGame  {
         }
         document.getElementById("playerLeftScore").innerHTML = this.objects[1].paddleScore;
         document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
-        startTimer();
+        if(this.isHost)
+            startTimer();
         //so o left player atualiza a bola e o paddle right by value
         //so o right player (host) atualiza o paddle left by value
         this.ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
+            if(data.message == "A player left the game.")
+                console.log("OTHER PLAYER LEFT");
             // console.log("Element:", data.element);
             // console.log("Side:", data.paddleSide);
             // console.log("X:", data.paddleX);
@@ -110,6 +114,7 @@ class RemoteGame  {
                 if(!this.isHost){
                     this.objects[1].paddleColisionTimes = data.paddleColisionTimesLeft;
                     this.objects[2].paddleColisionTimes = data.paddleColisionTimesRight;
+                    this.gameDuration = data.gameDuration;
                 }
             }
             if(data.element == 5){
@@ -119,41 +124,19 @@ class RemoteGame  {
         this.gameLoop();
     }
     ballUpdateByValue(x, y, velocityX, velocityY, lastColision){
-        console.log("=>> Ball update by value")
+        //console.log("=>> Ball update by value")
         this.objects[0].updateByValue(x, y, velocityX, velocityY, lastColision);
         this.objects[0].colissionEdge(this.canvas);
-        // let colision_left = this.objects[1].leftColissionBall(this.objects[0]);
-        // let colision_right = this.objects[2].rightColissionBall(this.objects[0]);
-        // if(colision_left){
-        //     console.log("=>> Ball update by value")
-        //     console.log("Colision with paddle LEFT! Update ball again");
-        //     this.objects[0].lastColision = 1;
-        //     this.objects[0].update();
-        // }
-        // if(colision_right){
-        //     console.log("=>> Ball update by value")
-        //     console.log("Colision with paddle RIGHT! Update ball again");
-        //     this.objects[0].lastColision = 2;
-        //     this.objects[0].update();
-        // }
     }
     paddleUpdateByValueRight(y){
         this.objects[2].paddleY = y;
         this.objects[2].colissionEdge(this.canvas);
-        let colision = this.objects[2].rightColissionBall(this.objects[0]);
-        if(colision){
-            console.log("==> paddle update by right")
-        }
-        //if(colision && this.isHost)
-        //    this.objects[1].paddleColisionTimes++;
+        this.objects[2].rightColissionBall(this.objects[0]);
     }
     paddleUpdateByValueLeft(y){
         this.objects[1].paddleY = y;
         this.objects[1].colissionEdge(this.canvas);
         let colision = this.objects[1].leftColissionBall(this.objects[0]);
-        if(colision){
-            console.log("==> paddle update by left")
-        }
         if(colision && this.isHost)
             this.objects[1].paddleColisionTimes++;
         //     console.log("=>> Paddle pdate by value left")
@@ -180,19 +163,18 @@ class RemoteGame  {
         // } else if (keyPressed["finishGame"]) {
         //     console.log("force finish");
         //     keyPressed["finishGame"] = false;
-        //     //fechar socket
         //     let msg = {
-        //         element: 5,
-        //     }
+            //         element: 5,
+            //     }
         //     this.ws.send(JSON.stringify(msg));
         //     if(this.isHost)
         //         await updateGameStatusForceFinish(this.gameData);
         //     window.history.pushState({}, "", `/games`);
         //     await locationHandler();
+            //fechar socket
         } else{
-            stopTimer();
             showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, 
-                this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, true, this.gameData.imgLeft, this.gameData.imgRight, false);
+                this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, true, this.gameData.imgLeft, this.gameData.imgRight, false, this.gameDuration);
             if(this.isWinner())
                 startWinAnimation();
             const data = {
@@ -203,7 +185,8 @@ class RemoteGame  {
                 user1_hits: this.objects[2].paddleColisionTimes,
                 user2_hits: this.objects[1].paddleColisionTimes,
             }
-            //close socket
+            if(this.isHost)
+                this.ws.close();
             if(this.isHost)
                 await updateGameStatus(data);
         }
@@ -218,9 +201,9 @@ class RemoteGame  {
         this.gameDraw();
     }
     gameUpdate(){
-        this.ballUpdate();
         this.paddleUpdateLeft();
         this.paddleUpdateRight();
+        this.ballUpdate();
     }
     //update da bola pela velocidade
     ballUpdate(){
@@ -255,9 +238,8 @@ class RemoteGame  {
         this.objects[1].colissionEdge(this.canvas);
         let colision = this.objects[1].leftColissionBall(this.objects[0]);
         if(colision){
-            console.log("=>> Paddle update left")
-            console.log("Colision with paddle LEFT! Update ball again");
-            this.objects[0].update();
+            // console.log("=>> Paddle update left")
+            // console.log("Colision with paddle LEFT! Update ball again");
             if(this.isHost){
                 this.objects[1].paddleColisionTimes++;
                 let msg = JSON.stringify(this.objects[0].toJSON());
@@ -270,9 +252,8 @@ class RemoteGame  {
         this.objects[2].colissionEdge(this.canvas);
         let colision = this.objects[2].rightColissionBall(this.objects[0]);
         if(colision){
-            console.log("=>> Paddle update right")
-            console.log("Colision with paddle RIGHT! Update ball again");
-            this.objects[0].update();
+            // console.log("=>> Paddle update right")
+            // console.log("Colision with paddle RIGHT! Update ball again");
             if(this.isHost){
                 this.objects[2].paddleColisionTimes++;
                 let msg = JSON.stringify(this.objects[0].toJSON());
@@ -299,11 +280,13 @@ class RemoteGame  {
             if(this.objects[2].paddleScore < this.maxScore)
                 this.respawnBall();
             else {
+                this.gameDuration = stopTimer();
                 this.stopGame = true;
                 let msg = {
                     element: 4,
-                    ballsHitLeft: this.objects[1].paddleColisionTimes,
-                    ballsHitRight: this.objects[2].paddleColisionTimes,
+                    paddleColisionTimesLeft: this.objects[1].paddleColisionTimes,
+                    paddleColisionTimesRight: this.objects[2].paddleColisionTimes,
+                    gameDuration: this.gameDuration,
                 }
                 this.ws.send(JSON.stringify(msg));
             }
@@ -317,15 +300,16 @@ class RemoteGame  {
                 paddleScore: this.objects[1].paddleScore,
             }
             this.ws.send(JSON.stringify(msg));
-            //document.getElementById("playerLeftScore").innerHTML = this.objects[1].paddleScore;
             if(this.objects[1].paddleScore < this.maxScore)
                 this.respawnBall();
             else {
+                this.gameDuration = stopTimer();
                 this.stopGame = true;
                 let msg = {
                     element: 4,
                     paddleColisionTimesLeft: this.objects[1].paddleColisionTimes,
                     paddleColisionTimesRight: this.objects[2].paddleColisionTimes,
+                    gameDuration: this.gameDuration,
                 }
                 this.ws.send(JSON.stringify(msg));
             }

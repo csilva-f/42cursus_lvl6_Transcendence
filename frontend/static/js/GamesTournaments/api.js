@@ -164,8 +164,8 @@ async function postRemoteGame() {
       // let gameInterval;
       let myAvatar = await UserInfo.getUserAvatarPath();
       ws.onopen = async function () {
-        console.log("WebSocket connection established successfully.");
-        console.log(ws);
+        //console.log("WebSocket connection established successfully.");
+        //console.log(ws);
         //localStorage.setItem("gameInfo", JSON.stringify(gameData)); //se apagarmos o historico no fim de cada jogo podemos tirar isto
         window.history.pushState({}, "", `/pong`);
         await locationHandler();
@@ -191,6 +191,8 @@ async function postRemoteGame() {
           //5 4 3 2 1
           game.initGame();
         }
+        if(data.message == "A player left the game.")
+          console.log("OTHER PLAYER LEFT");
       };
 
       ws.onerror = function (error) {
@@ -198,8 +200,7 @@ async function postRemoteGame() {
       };
 
       ws.onclose = function (event) {
-        console.log("WebSocket connection closed:", event);
-        // clearInterval(gameInterval);
+        console.log("WebSocket connection closed");
       };
 
       console.log("Attempting to connect to WebSocket...");

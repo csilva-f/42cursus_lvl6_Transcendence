@@ -22,7 +22,8 @@ async function goToScreen(isTournament) {
 
 //trocar home por games
 //tirar botao de play again nos jogos remotos e de torneios
-async function showGameStats(leftName, leftScore, leftColision, rightName, rightScore, rightColision, removePlayAgain, imgLeft, imgRight, isTournament) {
+async function showGameStats(leftName, leftScore, leftColision, rightName, rightScore, 
+    rightColision, removePlayAgain, imgLeft, imgRight, isTournament, gameDuration) {
     console.log(window.location.href);
     const pongGameDiv = document.getElementById('pongGameDiv');
     const mainGameScore = document.getElementById('mainGameScore');
@@ -78,7 +79,7 @@ async function showGameStats(leftName, leftScore, leftColision, rightName, right
 
     // Tempo total da partida
     const matchTotalTime = document.getElementById('matchTotalTime');
-    matchTotalTime.textContent = formatTime(timerSeconds || 0); // Garante que timerSeconds seja um número válido
+    matchTotalTime.textContent = formatTime(gameDuration || 0); // Garante que timerSeconds seja um número válido
 }
 
 function startWinAnimation() {
@@ -117,6 +118,7 @@ function stopTimer() {
         clearInterval(timer);
         timerActive = false;
     }
+    return timerSeconds;
 }
 
 async function updateGameStatus(data){
