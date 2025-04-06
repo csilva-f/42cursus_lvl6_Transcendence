@@ -164,7 +164,7 @@ async function postRemoteGame() {
       // let gameInterval;
       let myAvatar = await UserInfo.getUserAvatarPath();
       ws.onopen = async function () {
-        //console.log("WebSocket connection established successfully.");
+        console.log("WebSocket connection established successfully.");
         //console.log(ws);
         //localStorage.setItem("gameInfo", JSON.stringify(gameData)); //se apagarmos o historico no fim de cada jogo podemos tirar isto
         window.history.pushState({}, "", `/pong`);
@@ -250,6 +250,7 @@ async function enterGame(gameID) {
       const ws = new WebSocket(socketUrl);
 
       ws.onopen = async () => {
+        console.log("WebSocket connection established successfully.");
         const message = JSON.stringify({
             type: "join",
             nick: res.game.user2_nick,

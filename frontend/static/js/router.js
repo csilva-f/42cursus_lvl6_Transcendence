@@ -270,7 +270,6 @@ async function changeToBig(location) {
 		if (gameInfo) {
 			gameInfo = JSON.parse(gameInfo);
 			console.info("gameInfo: ", gameInfo);
-			console.log("entra aqui?")
 			game = new Game(gameInfo);
 			game.initGame();
     	}

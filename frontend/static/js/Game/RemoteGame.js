@@ -9,15 +9,10 @@ window.addEventListener('keyup', function (e) {
 
 window.addEventListener("popstate", function (e) {
     console.log("back button")
-    keyPressed["finishGame"] = true;
+    keyPressed["back"] = true;
     // Handle back button event (e.g., show a warning or log data)
 })
 
-window.addEventListener("beforeunload", function (e) {
-    console.log("browser fechado")
-    keyPressed["finishGame"] = true;
-    //console.log("Aba ou navegador foi fechado!");
-});
 //add f5 ao finishGame
 
 class RemoteGame  {
@@ -33,6 +28,7 @@ class RemoteGame  {
         this.ws = ws;
         this.isHost = isHost;
         this.gameDuration = 0;
+        this.disconnect = false;
     }
     initGame() {
         console.log("onload");
@@ -77,19 +73,15 @@ class RemoteGame  {
         document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
         if(this.isHost)
             startTimer();
-        //so o left player atualiza a bola e o paddle right by value
-        //so o right player (host) atualiza o paddle left by value
         this.ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            if(data.message == "A player left the game.")
-                console.log("OTHER PLAYER LEFT");
-            // console.log("Element:", data.element);
-            // console.log("Side:", data.paddleSide);
-            // console.log("X:", data.paddleX);
-            // console.log("Y:", data.paddleY);
+            if(data.message == "A player left the game." && data.close_code != 1000){
+                this.disconnect = true;
+                console.log("close code:", data.close_code);
+            }
             //NOTE - 1 - Atualizar a bola
-            if (data.element == 0) { //saber se e a a minha bola faz sentido? o nuno diz que nao
-                if(!this.isHost) //verificar se isto e util
+            if (data.element == 0) {
+                if(!this.isHost)
                     this.ballUpdateByValue(data.ballX, data.ballY, data.ballVelocityX, data.ballVelocityY, data.lastColision);
             }
             //NOTE - 2 - Atualizar o paddle
@@ -117,9 +109,6 @@ class RemoteGame  {
                     this.gameDuration = data.gameDuration;
                 }
             }
-            if(data.element == 5){
-                keyPressed["finishGame"] = true;
-            }
         };
         this.gameLoop();
     }
@@ -139,11 +128,6 @@ class RemoteGame  {
         let colision = this.objects[1].leftColissionBall(this.objects[0]);
         if(colision && this.isHost)
             this.objects[1].paddleColisionTimes++;
-        //     console.log("=>> Paddle pdate by value left")
-        //     console.log("Colision with paddle LEFT! Update ball again");
-        //     this.objects[0].lastColision = 1;
-        //     this.objects[0].update();
-        // }
     }
     isWinner(){
         if(this.isHost && this.objects[2].paddleScore > this.objects[1].paddleScore)
@@ -154,24 +138,23 @@ class RemoteGame  {
     }
     async gameLoop() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        if (!this.stopGame){ // && !keyPressed["finishGame"]) {
+        if (!this.stopGame && !keyPressed["back"] && !this.disconnect) {
             window.requestAnimationFrame(() => this.gameLoop());
             if(this.isHost)
                 this.hostGame();
             else
                 this.joinerGame();
-        // } else if (keyPressed["finishGame"]) {
-        //     console.log("force finish");
-        //     keyPressed["finishGame"] = false;
-        //     let msg = {
-            //         element: 5,
-            //     }
-        //     this.ws.send(JSON.stringify(msg));
-        //     if(this.isHost)
-        //         await updateGameStatusForceFinish(this.gameData);
-        //     window.history.pushState({}, "", `/games`);
-        //     await locationHandler();
-            //fechar socket
+        } else if (this.disconnect){
+            this.ws.close(3000); // meu codigo de unexpected close
+            await updateGameStatusForceFinish(this.gameData);
+            window.history.pushState({}, "", `/games`);
+            await locationHandler();
+        } else if (keyPressed["back"]) {
+            console.log("back");
+            keyPressed["back"] = false;
+            this.ws.close(3000); //meu codigo de unexpected close
+            window.history.pushState({}, "", `/games`);
+            await locationHandler();
         } else{
             showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, 
                 this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, true, this.gameData.imgLeft, this.gameData.imgRight, false, this.gameDuration);
@@ -185,8 +168,7 @@ class RemoteGame  {
                 user1_hits: this.objects[2].paddleColisionTimes,
                 user2_hits: this.objects[1].paddleColisionTimes,
             }
-            if(this.isHost)
-                this.ws.close();
+            this.ws.close(1000);
             if(this.isHost)
                 await updateGameStatus(data);
         }
@@ -209,28 +191,6 @@ class RemoteGame  {
     ballUpdate(){
         this.objects[0].update();
         this.objects[0].colissionEdge(this.canvas);
-        //this.objects[1].colissionBall(this.objects[0]);
-        //this.objects[2].colissionBall(this.objects[0]);
-        // let colision_left = this.objects[1].leftColissionBall(this.objects[0]);
-        // let colision_right = this.objects[2].rightColissionBall(this.objects[0]);
-        // if(colision_left){
-        //     console.log("=>> Ball update")
-        //     console.log("Colision with paddle LEFT! Update ball again");
-        //     this.objects[0].lastColision = 1;
-        //     this.objects[0].update();
-        //     let msg = JSON.stringify(this.objects[0].toJSON()); 
-        //     this.ws.send(msg);
-        // }
-        // if(colision_right){
-        //     console.log("=>> Ball update")
-        //     console.log("Colision with paddle RIGHT! Update ball again");
-        //     this.objects[0].lastColision = 2;
-        //     this.objects[0].update();
-        //     if(this.isHost){
-        //         let msg = JSON.stringify(this.objects[0].toJSON());
-        //         this.ws.send(msg);
-        //     }
-        // }
     }
     //update do paddle pelas teclas e update da colisao do paddle com a bola
     paddleUpdateLeft(){
