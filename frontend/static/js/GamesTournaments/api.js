@@ -122,7 +122,6 @@ async function postLocalGame() {
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
-      resetModal();
     },
   });
 }
@@ -291,7 +290,6 @@ async function enterGame(gameID) {
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
-      //resetModal();
     },
   });
 }
