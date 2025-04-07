@@ -244,6 +244,7 @@ async function changeToBig(location) {
 		headerElement.setAttribute("data-i18n", "login");
 		const input = document.querySelector("#signupPhone");
 			window.intlTelInput(input, {
+				separateDialCode: true,
 				loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
 			});
 		disableTopBar();

@@ -21,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def validate_password(self, value):
         try:
-            validate_password(value)  # Use Django's built-in password validation
+            validate_password(valThis email is already taken.e)  # Use Django's built-in password validation
         except DjangoValidationError as e:
             raise serializers.ValidationError(list(e.messages))
         return value
