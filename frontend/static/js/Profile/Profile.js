@@ -131,16 +131,26 @@ function validateBio(bioText, validationBio, checkId) {
 }
 
 async function insertOwnProfileInfo() {
-    document.getElementById("birthdayText").textContent = await UserInfo.getUserBirthdate();
-    document.getElementById("genderText").textContent = await UserInfo.getUserGender();
+    const fName = await UserInfo.getUserFirstName();
+    const lName = await UserInfo.getUserLastName();
+    const bDate = await UserInfo.getUserBirthdate();
+    const bio = await UserInfo.getUserBio();
+    const gender = await UserInfo.getUserGender();
+    const pN = await UserInfo.getUserPhoneNumber();
+    //? Exterior Info
+    document.getElementById("birthdayText").textContent = bDate;
+    document.getElementById("genderText").textContent = gender;
     document.getElementById("nicknameText").textContent = await UserInfo.getUserNick();
-    document.getElementById("bioText").textContent = await UserInfo.getUserBio();
-    document.getElementById("fullNameText").textContent = await UserInfo.getUserFirstName() + " " + await UserInfo.getUserLastName();
-    document.getElementById("phoneNumberText").textContent = await UserInfo.getUserPhoneNumber();
-
-    // edit pop up
-    document.getElementById("birthday").value = await UserInfo.getUserBirthdate();
+    document.getElementById("bioText").textContent = bio;
+    document.getElementById("fullNameText").textContent = fName + " " + lName;
+    document.getElementById("phoneNumberText").textContent = pN;
     document.getElementById("avatarPreview").src = await UserInfo.getUserAvatarPath();
+    //? Pop-up Info
+    document.getElementById("firstName").value = fName;
+    document.getElementById("lastName").value = lName;
+    document.getElementById("phoneNumber").value = pN;
+    document.getElementById("birthday").value = bDate;
+    document.getElementById("biography").value = bio;
 
     let genderSelect = document.getElementById("gender");
     let userGender = await UserInfo.getUserGender();
@@ -148,7 +158,5 @@ async function insertOwnProfileInfo() {
         genderSelect.value = userGender;
         updateIcon();
     }
-    if (await UserInfo.getUserID() != null)
-        document.getElementById("fullNameText").classList.add = "d-none";
 }
 
