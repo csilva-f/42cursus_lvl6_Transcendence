@@ -110,5 +110,10 @@
     "playAgain": "Play again",
     "home": "Home",
     "tournamentName": "Tournament Name",
-    "score": "Score"
+    "score": "Score",
+    "edit": "Edit",
+    "changePass": "Change password",
+    "genderP": "Gender:",
+    "birthdayP": "Birthday:",
+    "phoneP": "Phone number:"
 }

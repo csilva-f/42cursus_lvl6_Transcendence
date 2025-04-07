@@ -90,6 +90,8 @@ def get_games(request):
         if status_id:
             status_id = validate_status(status_id)
             games = games.filter(status__statusID=status_id)
+            if (status_id == 3):
+                games = games.filter(status__statusID=status_id, winnerUser__isnull=False)
         if winner_id:
             winner_id = validate_id(winner_id)
             games = games.filter(winnerUser=winner_id)

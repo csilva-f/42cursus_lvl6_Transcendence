@@ -35,6 +35,9 @@ async function insertProfileInfo(UserElement, users_on) {
         userOnStatus.style.backgroundColor = "white"; // Offline
         userOnStatus.style.border = "1px solid gray";
     }
+    // if (UserElement.id != await UserInfo.getUserID()) {
+    //     document.getElementById("phoneNumberText")
+    // }
 }
 
 async function updateProfile() {

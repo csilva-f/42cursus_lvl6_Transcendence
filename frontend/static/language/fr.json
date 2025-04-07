@@ -107,5 +107,10 @@
     "playAgain": "Jouer à nouveau",
     "home": "Home",
     "tournamentName": "Nom du tournoi",
-    "score": "Score"
+    "score": "Score",
+    "edit": "Modifier",
+    "changePass": "Changer le mot de passe",
+    "genderP": "Genre:",
+    "birthdayP": "Anniversaire:",
+    "phoneP": "Numéro de téléphone:"
 }
