@@ -22,7 +22,7 @@ async function goToScreen(isTournament) {
 
 //trocar home por games
 //tirar botao de play again nos jogos remotos e de torneios
-async function showGameStats(leftName, leftScore, leftColision, rightName, rightScore, 
+async function showGameStats(leftName, leftScore, leftColision, rightName, rightScore,
     rightColision, removePlayAgain, imgLeft, imgRight, isTournament, gameDuration) {
     console.log(window.location.href);
     const pongGameDiv = document.getElementById('pongGameDiv');

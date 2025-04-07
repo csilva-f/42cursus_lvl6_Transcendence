@@ -9,6 +9,7 @@ from .models import CustomUser
 from channels.exceptions import StopConsumer
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.generic.websocket import WebsocketConsumer
+from .views import gameForceFinish
 
 #eu tenho uma instancia da websocket (canal), nessa instancia conectam-se varios clients
 #sempre que algum manda msg, todos os clients do canal "ouvem"
@@ -57,7 +58,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
     #             }
     #         )
     #     except json.JSONDecodeError:
-    #         print("Mensagem inválida recebida:", text_data) 
+    #         print("Mensagem inválida recebida:", text_data)
 
     async def disconnect(self, close_code):
         # Avisar o grupo que um jogador saiu
@@ -97,11 +98,15 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
         try:
             data = json.loads(text_data)  # Converte JSON para dicionário
             user_id = data.get("user_id")
+            game_id = data.get("game_id")
             if user_id:
                 user_id = int(user_id)
                 online_users.add(user_id)  # Adiciona o user à lista de online
                 self.user_id = user_id  # Guarda o user_id na instância
                 await self.update_online_users()
+            elif game_id:
+                gameInfo = json.loads(game_id)
+                gameForceFinish(gameInfo)
             elif "action" in data and data["action"] == "queryOnline":
                 await self.send(text_data=json.dumps({"online_users": list(map(int, online_users))}))
             else:
