@@ -20,12 +20,12 @@ async function getLanguageData(lang) {
 
 //Function called by the html that changes the language to the one clicked
 async function changeLanguage(lang) {
-    console.log("aqui");
     await UserInfo.updateUserLanguage(lang);
     localStorage.setItem('language', lang);
     const langData = await getLanguageData(lang);
     await UserInfo.updateUserExtension();
     updateContent(langData);
+    insertPlaceholders(window.location.pathname, langData)
 }
 
 //Main function to get the language on the localStorage then get the respective json language file
