@@ -107,7 +107,7 @@ function setRandomImage(imgElement) {
     imgElement.src = botImages[randomIndex];
 }
 
-function insertInfo(newCard, element, statusID) {
+async function insertInfo(newCard, element, statusID) {
     newCard.innerHTML = newCard.innerHTML.replaceAll("{{GAME_ID}}", element.gameID);
     console.log("statusID: ", statusID)
     const user1Level = newCard.querySelector("#user1Level");
@@ -119,7 +119,10 @@ function insertInfo(newCard, element, statusID) {
     const user2Nick = newCard.querySelector("#user2Nick");
     const enterBtn = newCard.querySelector("#enterLi");
     const statsBtn = newCard.querySelector("#statsDropdownBtn");
+    const uid = await UserInfo.getUserID();
     enterBtn.setAttribute("data-id", element.gameID);
+    if (!element.isLocal && (uid == element.user1ID || uid == element.user2ID))
+        enterBtn.classList.add('d-none');
     if (statusID != 1)
         enterBtn.classList.add('d-none');
         if (statusID == 3 & element.winnerUserID)
