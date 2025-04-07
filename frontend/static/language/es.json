@@ -108,5 +108,6 @@
     "hCardLossT": "Derrota en Torneo",
     "playAgain": "Jugar de nuevo",
     "home": "Home",
-    "tournamentName": "Nombre del torneo"
+    "tournamentName": "Nombre del torneo",
+    "score": "Puntaje"
 }
