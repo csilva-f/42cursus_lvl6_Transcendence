@@ -32,8 +32,8 @@ async function sendSignup(form) {
 		},
 		error: function (xhr, error) {
 			const data = JSON.parse(xhr.responseJSON);
-			console.log("data: ", data);
-			if (data) {
+			showErrorUserToast(langData, data);
+			/*if (data) {
 				const errorMsg = data.match(/"(.*?)"/);
 			}
 			$("#signup-message").text(data || "register failed.");
@@ -49,16 +49,15 @@ async function sendSignup(form) {
 			passwordInput.setCustomValidity('');
 
 			if (data.includes("email")) {
-				showErrorUserToast(langData, data);
-				emailInvalid.textContent = errorMsg[1];
-				emailInput.setCustomValidity(errorMsg[1]);
-				emailInput.classList.add('is-invalid');
+				// emailInvalid.textContent = errorMsg[1];
+				// emailInput.setCustomValidity(errorMsg[1]);
+				// emailInput.classList.add('is-invalid');
 			} else if (data.error.includes("password")) {
 				showErrorUserToast(langData, data);
-				passwordInvalid.textContent = errorMsg[1];
-				passwordInput.setCustomValidity(errorMsg[1]);
-				passwordInput.classList.add('is-invalid');
-			}
+				// passwordInvalid.textContent = errorMsg[1];
+				// passwordInput.setCustomValidity(errorMsg[1]);
+				// passwordInput.classList.add('is-invalid');
+			}*/
 			return false;
 		},
 	});
