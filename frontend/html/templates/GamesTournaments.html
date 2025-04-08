@@ -54,7 +54,8 @@
                   <div class="col-lg-10 col-md-10 col-10">
                     <div class="d-flex gap-2 h-100">
                       <ul class="nav nav-pills" style="height: 3rem">
-                        <li class="pop-hover-s menuLi nav-item rounded-3 me-2 ms-0 d-flex align-items-center iconInactive"
+                        <li
+                          class="pop-hover-s menuLi nav-item rounded-3 me-2 ms-0 d-flex align-items-center iconInactive"
                           id="searchingLi" onclick="GamesTournamentsMatches(this.id)">
                           <i class="fa-solid fa-tower-broadcast fa-xl ms-2" id="searchingIcon"></i>
                           <p class="h5 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="searching"
@@ -129,7 +130,7 @@
             </div>
           </li>
           <li class="pop-hover-xs modalLi nav-item rounded-4 shadow d-flex align-items-center"
-            onclick="activateGameForm('remoteForm')" style="width: 12rem;">
+            onclick="activateGameForm('remoteForm')" style="width: 12rem; background-color: var(--cardBg);">
             <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
               <div class="d-flex align-items-center justify-content-center my-3">
                 <i class="fa-solid fa-computer fa-2xl" style="color: black"></i>
@@ -142,21 +143,11 @@
       </div>
       <!-- End Select Game Type -->
       <!-- Form Actions -->
-      <div class="modal-footer">
-        <ul class="nav nav-pills" style="height: 2.5rem">
-          <li id="goBackLi"
-            class="pop-hover-xs modalActionsLi nav-item border border-2 border-black rounded-3 me-2 d-flex align-items-center bg-black d-none"
-            onclick="resetModal()">
-            <i class="fa-solid fa-arrow-left fa-l ms-2" style="color: white"></i>
-            <p class="h6 m-0 ms-2 d-none d-xl-block" style="font-weight: bold; color: white" data-i18n="back"></p>
-          </li>
-          <li
-            class="pop-hover-xs modalActionsLi nav-item border border-2 border-black rounded-3 ms-2 me-3 d-flex align-items-center"
-            data-bs-dismiss="modal" onclick="resetModal()">
-            <i class="fa-solid fa-xmark fa-xl ms-2" style="color: black"></i>
-            <p class="h6 m-0 ms-2 d-none d-xl-block" style="font-weight: bold" data-i18n="close"></p>
-          </li>
-        </ul>
+      <div class="modal-footer p-0 py-2 pe-1">
+        <div class="col-md-2 text-start">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+            data-i18n="close"></button>
+        </div>
       </div>
       <!-- End Form Actions -->
     </div>
@@ -188,7 +179,8 @@
               <!-- End Name -->
               <!-- P1 Nick -->
               <div class="input-group has-validation">
-                <span class="input-group-text d-flex justify-content-center align-items-center" id="basic-addon1" style="min-width: 50px; width: 50px;">
+                <span class="input-group-text d-flex justify-content-center align-items-center" id="basic-addon1"
+                  style="min-width: 50px; width: 50px;">
                   <i class="fa-solid fa-1 fa-lg"></i>
                 </span>
                 <li class="d-flex justify-content-end my-1" id="P1Nick">
@@ -199,7 +191,8 @@
               <!-- End P1 Nick -->
               <!-- P2 Nick -->
               <div class="input-group has-validation">
-                <span class="input-group-text  d-flex justify-content-center align-items-center" id="basic-addon1" style="min-width: 50px;">
+                <span class="input-group-text  d-flex justify-content-center align-items-center" id="basic-addon1"
+                  style="min-width: 50px;">
                   <i class="fa-solid fa-2 fa-lg"></i>
                 </span>
                 <input type="text" class="form-control" id="P2NickInputTourn" required placeholder="P2"
@@ -210,7 +203,8 @@
               <!-- End P2 Nick -->
               <!-- P3 Nick -->
               <div class="input-group has-validation">
-                <span class="input-group-text  d-flex justify-content-center align-items-center" id="basic-addon1" style="min-width: 50px;">
+                <span class="input-group-text  d-flex justify-content-center align-items-center" id="basic-addon1"
+                  style="min-width: 50px;">
                   <i class="fa-solid fa-3 fa-lg"></i>
                 </span>
                 <input type="text" class="form-control" id="P3NickInput" required placeholder="P3"
@@ -221,7 +215,8 @@
               <!-- End P3 Nick -->
               <!-- P4 Nick -->
               <div class="input-group has-validation">
-                <span class="input-group-text  d-flex justify-content-center align-items-center" id="basic-addon1" style="min-width: 50px;">
+                <span class="input-group-text  d-flex justify-content-center align-items-center" id="basic-addon1"
+                  style="min-width: 50px;">
                   <i class="fa-solid fa-4 fa-lg"></i>
                 </span>
                 <input type="text" class="form-control" id="P4NickInput" required placeholder="P4"
@@ -240,11 +235,14 @@
             </div>
             <div class="alert alert-danger d-none" role="alert" id="tournErrorName" data-i18n="errorName">
             </div>
-          </div>          
+          </div>
           <!-- Action Buttons -->
-          <div class="col-md-4 text-start mt-4">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-              onclick="closeGameForm([localTournamentFormID],'createTournamentOptions', 'confirmTournamentBtn', 'backTournamentBtn')" data-i18n="close"></button>
+          <div class="modal-footer p-0 pt-2 pe-1">
+            <div class="col-md-2 text-start">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                onclick="closeGameForm([localTournamentFormID],'createTournamentOptions', 'confirmTournamentBtn', 'backTournamentBtn')"
+                data-i18n="close"></button>
+            </div>
           </div>
           <!-- End Action Buttons -->
         </div>

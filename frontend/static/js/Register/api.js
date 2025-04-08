@@ -87,7 +87,6 @@ async function sendOAuthLogin(userdata) {
         success: async function (data) {
             jwtToken = data.access; // Store the JWT token
             if (jwtToken) {
-                localStorage.setItem("jwt", jwtToken);
                 await JWT.setToken(data);
             }
             $("#customlogin-message").text("Login successful!");

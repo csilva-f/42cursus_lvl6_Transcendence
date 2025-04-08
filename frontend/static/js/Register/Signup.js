@@ -32,7 +32,9 @@ async function sendSignup(form) {
 		},
 		error: function (xhr, error) {
 			const data = JSON.parse(xhr.responseJSON);
-			const errorMsg = data.error.match(/"(.*?)"/);
+			if (data.error) {
+				const errorMsg = data.error.match(/"(.*?)"/);
+			}
 			$("#signup-message").text(data.error || "register failed.");
 
 			const emailInput = document.getElementById('signupEmail');

@@ -83,17 +83,11 @@ function searchUser() {
 }
 
 function goToProfile(userID) {
-    if (userID == null) {
+    if (userID == null)
         window.history.pushState({}, "", `/profile`);
-        locationHandler();
-        fetchProfileInfo();
-        fetchStatistics();
-    } else {
+    else
         window.history.pushState({}, "", `/profile/${userID}`);
-        locationHandler();
-        fetchProfileInfo(userID);
-        fetchStatistics(userID);
-    }
+    locationHandler();
 }
 
 async function friendshipPlayer(ID, type){
