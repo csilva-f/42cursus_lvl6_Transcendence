@@ -115,5 +115,15 @@
     "changePass": "Mudar password",
     "genderP": "Género:",
     "birthdayP": "Aniversário:",
-    "phoneP": "Número de telefone:"
+    "phoneP": "Número de telefone:",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "passNotMatch": "As senhas não coincidem",
+    "retypePass": "Volte a introduzir a nova senha",
+    "passSpecCharact": "Pelo menos 1 caracter especial",
+    "passNumber": "Pelo menos 1 número",
+    "passUpperCase": "Pelo menos 1 letra maiúscula",
+    "passLength": "Pelo menos 8 caracteres",
+    "newPass": "Nova senha",
+    "currPass": "Senha atual"
 }
