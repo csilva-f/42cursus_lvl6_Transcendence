@@ -42,6 +42,7 @@ class User {
       } finally {
         this.isUpdating = false;
         console.log("[Finished refreshUser]");
+        await notificationLoad();
       }
     } else {
       while (this.isUpdating)

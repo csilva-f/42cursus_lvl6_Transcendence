@@ -96,9 +96,10 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         """Recebe mensagens do cliente (com o ID do user) e atualiza a lista de online."""
         try:
-            data = json.loads(text_data)  # Converte JSON para dicionário
+            data = json.loads(text_data)  #
             user_id = data.get("user_id")
             game_id = data.get("game_id")
+            add_user = data.get("addPlayer")
             if user_id:
                 user_id = int(user_id)
                 online_users.add(user_id)  # Adiciona o user à lista de online
@@ -107,6 +108,15 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
             elif game_id:
                 gameInfo = json.loads(game_id)
                 gameForceFinish(gameInfo)
+            elif add_user:
+                print("Received addUser :", add_user)
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        "type": "add_friend",
+                        "add_user": add_user,
+                    },
+                )
             elif "action" in data and data["action"] == "queryOnline":
                 await self.send(text_data=json.dumps({"online_users": list(map(int, online_users))}))
             else:
@@ -133,3 +143,6 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
     async def broadcast_online_users(self, event):
         """Envia a lista de utilizadores online para o cliente."""
         await self.send(text_data=json.dumps({"online_users": event["users"]}))
+
+    async def add_friend(self, event):
+        await self.send(text_data=json.dumps({"add_user": event["add_user"]}))

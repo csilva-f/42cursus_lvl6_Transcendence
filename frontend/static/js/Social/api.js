@@ -172,6 +172,7 @@ async function addPlayer(requestedFriend) {
     success: function (res) {
       showSuccessToast(langData, langData.friendshipInvited);
       fetchUsers();
+      window.ws_os.send(JSON.stringify({ addPlayer: requestedFriend }));
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
