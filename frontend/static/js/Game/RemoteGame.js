@@ -146,7 +146,7 @@ class RemoteGame  {
                 this.joinerGame();
         } else if (this.disconnect){
             this.ws.close(3000); // meu codigo de unexpected close
-            await updateGameStatusForceFinish(this.gameData);
+            await updateGameStatusForceFinish(this.gameData); //erase this, it will be done in the consumer
             window.history.pushState({}, "", `/games`);
             await locationHandler();
         } else if (keyPressed["back"]) {

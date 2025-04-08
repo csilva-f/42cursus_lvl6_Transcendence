@@ -580,6 +580,7 @@ def post_create_tournament(request):
 def post_update_game(request): #update statusID acording to user2 and winner vars
     if request.method == 'POST':
         try:
+            print("chega aqui")
             data = json.loads(request.body)
             game_id = data.get('gameID')
             if not game_id:
@@ -589,7 +590,11 @@ def post_update_game(request): #update statusID acording to user2 and winner var
             except tGames.DoesNotExist:
                 return JsonResponse({"error": "Game not found"}, status=404)
             user_id = data.get('uid')
+            print("user_id")
             is_join = str(data.get('isJoin')).lower() in ['true', '1', 'yes']
+            if is_join and game.user1 and game.user2:
+                print("lalal")
+                return JsonResponse({"error": "You can't do that. The game is full!"}, status=403)
             status = data.get('statusID')
             if status is not None:
                 status = validate_status(status)
@@ -688,6 +693,7 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 "user2_nick": game.user2_nick,
                 "isLocal": game.isLocal
             }
+            print("fim")
             return JsonResponse({"message": "Game updated successfully", "game": game_data}, status=201)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)

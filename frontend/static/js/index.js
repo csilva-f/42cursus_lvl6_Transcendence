@@ -35,6 +35,28 @@ function showErrorToast(APIurl, error, langData) {
       })
 }
 
+function showErrorUserToast(langData, error) {
+  fetch("/templates/Components/ToastErrorUser.html")
+      .then((response) => {
+          if (!response.ok) {
+              throw new Error("Network response was not ok " + response.statusText);
+          }
+          return response.text();
+      })
+      .then((data) => {
+          const bodyElement = document.getElementById("body");
+          const newToast = document.createElement("div");
+          newToast.innerHTML = data;
+          const errorToast = newToast.querySelector('#errorToast')
+          const toastShow = bootstrap.Toast.getOrCreateInstance(errorToast)
+          const errorMsg = newToast.querySelector('#errorMsg')
+          errorMsg.textContent = error;
+          bodyElement.appendChild(newToast);
+          updateContent(langData);
+          toastShow.show()
+      })
+}
+
 function showSuccessToast(langData, type) {
   fetch("/templates/Components/ToastSuccess.html")
       .then((response) => {
@@ -128,4 +150,4 @@ async function notificationLoad() {
 	setTimeout(notificationLoad, 5000);
 }
 
-setTimeout(notificationLoad, 2500);
+//setTimeout(notificationLoad, 2500);

@@ -16,12 +16,35 @@ from channels.generic.websocket import WebsocketConsumer
 #do lado do client terei de mandar msg com atualização do jogo
 #receberei msg com atualizaçoes do jogo que tenho de atualizar
 
+room_clients = {}
+
 class GameConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f"game_{self.room_name}"
+
+        # Inicializar o conjunto de clientes da sala se ainda não existir
+        if self.room_group_name not in room_clients:
+            room_clients[self.room_group_name] = set()
+
+        # Verificar se já existem 2 jogadores na sala
+        if len(room_clients[self.room_group_name]) >= 2:
+            # Aceitar a conexão para que possamos enviar a mensagem
+            await self.accept()
+
+            # Enviar uma mensagem ao terceiro jogador informando que a sala está cheia
+            await self.send({
+                "type": "websocket.send",  # Tipo de mensagem
+                "message": "Room is full"  # Mensagem de recusa
+            })
+
+            return
+
+        # Aceitar a conexão, já que a sala tem espaço
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
+
+        room_clients[self.room_group_name].add(self.channel_name)
 
         # Avisar o grupo que um novo cliente entrou
         await self.channel_layer.group_send(
@@ -31,6 +54,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 "message": "A player joined the game!"
             }
         )
+
     async def receive(self, text_data):
         # Directly forward the received message without parsing
         await self.channel_layer.group_send(
@@ -70,6 +94,12 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 "close_code": close_code
             }
         )
+        if self.room_group_name in room_clients:
+            room_clients[self.room_group_name].discard(self.channel_name)
+            if not room_clients[self.room_group_name]:
+                del room_clients[self.room_group_name]  # Limpar room vazia
+                print("Empty room: ", self.room_name)
+                #chamar api
         # Remover o cliente do grupo
         print("disconnect end")
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)

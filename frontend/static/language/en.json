@@ -102,6 +102,7 @@
     "duration": "Duration:",
     "errorNick": "Tournament players alias must all be different",
     "errorName": "Tournament name must be different from other active tournaments",
+    "Error": "Error",
     "opponent": "Opponent:",
     "hCardWin": "Win",
     "hCardLoss": "Defeat",

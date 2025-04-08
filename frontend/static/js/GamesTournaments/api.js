@@ -173,6 +173,7 @@ async function postRemoteGame() {
         document.getElementById("leftPlayerGameImg").src = `/static/img/bot/guest.svg`;
         document.getElementById("rightPlayerName").innerHTML = res.game.user1_nick;
         document.getElementById("rightPlayerGameImg").src = myAvatar;
+        //add logica para tratar back button
       };
       ws.onmessage = async function (e) {
         const data = JSON.parse(e.data);
@@ -199,8 +200,8 @@ async function postRemoteGame() {
         console.error("WebSocket error:", error);
       };
 
-      ws.onclose = function (event) {
-        console.log("WebSocket connection closed");
+      ws.onclose = function (e) {
+        console.log(e);
       };
 
       console.log("Attempting to connect to WebSocket...");
@@ -243,55 +244,67 @@ async function enterGame(gameID) {
     data: JSON.stringify(gameData),
     success: async function (res) {
       console.log("Enter game: ", res);
-      showSuccessToast(langData, langData.gameEntered);
-      fetchGames(1);
 
       const socketUrl = `wss://${window.location.host}/channels/${gameID}/`;
       const ws = new WebSocket(socketUrl);
 
       ws.onopen = async () => {
-        console.log("WebSocket connection established successfully.");
-        const message = JSON.stringify({
-            type: "join",
-            nick: res.game.user2_nick,
-            user_id: res.game.user2,
-            img: await UserInfo.getUserAvatarPath(),
-        });
-        ws.send(message);
-        gameData["gameID"] = res.game.id;
-        gameData["P2"] = res.game.user1_nick;
-        gameData["P2_uid"] = res.game.user1;
-        gameData["P1"] = res.game.user2_nick;
-        gameData["P1_uid"] = res.game.user2;
-        gameData["islocal"] = res.game.isLocal;
-        gameData["imgLeft"] = await UserInfo.getUserAvatarPath();
-        gameData["imgRight"] = await fetchUserAvatar(res.game.user1); 
-        //localStorage.setItem("gameInfo", JSON.stringify(gameData)); //se apagarmos o historico no fim de cada jogo podemos tirar isto
-        window.history.pushState({}, "", `/pong`);
-        await locationHandler();
-        const game = new RemoteGame(gameData, ws, false);
-        //5 4 3 2 1
-        game.initGame();
+        console.log("Trying to connect.");
       };
 
       ws.onmessage = async function (event) {
         const data = JSON.parse(event.data);
         console.log(data);
+        if (data.message == "A player joined the game!"){
+          showSuccessToast(langData, langData.gameEntered);
+          fetchGames(1);
+          const message = JSON.stringify({
+              type: "join",
+              nick: res.game.user2_nick,
+              user_id: res.game.user2,
+              img: await UserInfo.getUserAvatarPath(),
+          });
+          ws.send(message);
+          gameData["gameID"] = res.game.id;
+          gameData["P2"] = res.game.user1_nick;
+          gameData["P2_uid"] = res.game.user1;
+          gameData["P1"] = res.game.user2_nick;
+          gameData["P1_uid"] = res.game.user2;
+          gameData["islocal"] = res.game.isLocal;
+          gameData["imgLeft"] = await UserInfo.getUserAvatarPath();
+          gameData["imgRight"] = await fetchUserAvatar(res.game.user1); 
+          //localStorage.setItem("gameInfo", JSON.stringify(gameData)); //se apagarmos o historico no fim de cada jogo podemos tirar isto
+          window.history.pushState({}, "", `/pong`);
+          await locationHandler();
+          const game = new RemoteGame(gameData, ws, false);
+          //5 4 3 2 1
+          game.initGame();
+        }
+        if(data.message == "Room is full"){
+          let error_message = "Too late, the game is full, you need to hit the refresh button!";
+          showErrorUserToast(langData, error_message);
+          console.log("Room is full!!")
+          ws.close(3001);
+        }
       }
 
       //talvez isto precise de um parse do erro
       ws.onerror = function (error) {
-        console.error("WebSocket error:", error);
+        console.log(error)
       };
 
       //talvez isto precise de um parse do event
       ws.onclose = function (event) {
-        console.log("WebSocket connection closed:", event);
+        const data = JSON.parse(event.data);
+        console.log(data);
+        console.log("WebSocket connection closed:", data.close_code);
       };
+
 
     },
     error: function (xhr, status, error) {
-      showErrorToast(APIurl, error, langData);
+      const data = JSON.parse(xhr.responseJSON);
+      showErrorUserToast(langData, data.error);
       //resetModal();
     },
   });
