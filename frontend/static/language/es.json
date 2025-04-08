@@ -108,5 +108,11 @@
     "hCardLossT": "Derrota en Torneo",
     "playAgain": "Jugar de nuevo",
     "home": "Home",
-    "tournamentName": "Nombre del torneo"
+    "tournamentName": "Nombre del torneo",
+    "score": "Puntaje",
+    "edit": "Editar",
+    "changePass": "Cambiare la password",
+    "genderP": "Género:",
+    "birthdayP": "Cumpleaños:",
+    "phoneP": "Número de teléfono:"
 }

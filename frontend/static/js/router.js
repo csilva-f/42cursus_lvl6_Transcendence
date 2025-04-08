@@ -212,7 +212,6 @@ async function changeTopBarImg(newImg) {
 }
 
 async function activateTopBar() {
-	console.log("[activateTopBar]")
 	const topbar = document.getElementById("topbar")
 	topbar.classList.remove('d-none')
 	document.getElementById("personNickname").textContent = await UserInfo.getUserNick();
@@ -270,8 +269,6 @@ async function changeToBig(location) {
 		gameInfo = localStorage.getItem("gameInfo");
 		if (gameInfo) {
 			gameInfo = JSON.parse(gameInfo);
-			console.info("gameInfo: ", gameInfo);
-			console.log("entra aqui?")
 			game = new Game(gameInfo);
 			game.initGame();
     	}
@@ -283,12 +280,7 @@ async function changeToBig(location) {
 		headerElement.setAttribute("data-i18n", "validateEmail");
 		disableTopBar();
 		await handleValidateEmail();
-
-	} else if (location == "/profile") {
-		console.log("router");
-		getForms();
 	}
-
 	updateContent(langData);
 	document.getElementById("subMsg").style.display = "none";
 	document.getElementById("content").classList.add('d-none');
@@ -354,7 +346,6 @@ async function changeActive(location) {
 			headerElement.setAttribute("data-i18n", "games&tournaments");
 			insertPlaceholders("/games", langData);
 			updateContent(langData);
-			console.log("[router == /games]")
 			document.getElementById("subMsg").style.display = "none";
 			const iconElement = document.getElementById("loadGamesIcon");
 			activateIcon(iconElement);
@@ -427,6 +418,7 @@ async function changeActive(location) {
 			const statsEverythingIconProfile = document.getElementById("statsEverythingIcon");
 			activateIcon(statsEverythingIconProfile);
 			insertOwnProfileInfo();
+			fetchProfileInfo();
 			insertUserLevel("profileLvlProgress", null);
 			fetchStatistics(null);
 			getForms();
@@ -489,6 +481,7 @@ const locationHandler = async () => {
 		}
 	}
 	if (isProfile(location)) {
+		console.log("[isProfile(location)]")
 		route = routes["/profile/:userID"];
 		html = await fetch(route.template).then((response) => response.text());
 		document.title = route.title;
@@ -535,9 +528,6 @@ function loadProfileFromURL() {
 	const match = path.match(/\/profile\/(\w+)/);
 	if (match) {
 		const userID = match[1];
-		console.log("userID >> ", userID)
-		//document.getElementById("editButton").classList.add('d-none')
-		//document.getElementById("changePasswordButton").classList.add('d-none')
 		fetchProfileInfo(userID);
 		fetchStatistics(userID);
 	}

@@ -90,6 +90,8 @@ def get_games(request):
         if status_id:
             status_id = validate_status(status_id)
             games = games.filter(status__statusID=status_id)
+            if (status_id == 3):
+                games = games.filter(status__statusID=status_id, winnerUser__isnull=False)
         if winner_id:
             winner_id = validate_id(winner_id)
             games = games.filter(winnerUser=winner_id)
@@ -612,6 +614,8 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 gstatus = tauxStatus.objects.get(statusID=3)
                 game.status = gstatus
                 game.endTS = now()
+                print(game.user1)
+                print(game.user2)
 
                 u1_points = data.get('user1_points')
                 u2_points = data.get('user2_points')
@@ -627,16 +631,28 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                     return JsonResponse({"error": "Users game statistics are required for update"}, status=400)
                 if (game.user1_nick == game.winnerNick and u1_points < 5) or (game.user2_nick == game.winnerNick and u2_points < 5):
                     return JsonResponse({"error": "Winner's points are not consistent"}, status=400)
-                if game.user1_nick == game.winnerNick:
-                    if game.user1 != -1:
-                        tUserExtension.objects.filter(user=game.user1).update(ulevel=models.F('ulevel') + 0.2)
-                    elif game.user2 != -1:
-                        tUserExtension.objects.filter(user=game.user2).update(ulevel=models.F('ulevel') + 0.05)
+                if game.tournament:
+                    if game.user1_nick == game.winnerNick:
+                        if game.user1 != -1:
+                            tUserExtension.objects.filter(user=game.user1).update(ulevel=models.F('ulevel') + 0.2)
+                        if game.user2 != -1:
+                            tUserExtension.objects.filter(user=game.user2).update(ulevel=models.F('ulevel') + 0.05)
+                    else:
+                        if game.user1 != -1:
+                            tUserExtension.objects.filter(user=game.user1).update(ulevel=models.F('ulevel') + 0.05)
+                        if game.user2 != -1:
+                            tUserExtension.objects.filter(user=game.user2).update(ulevel=models.F('ulevel') + 0.2)
                 else:
-                    if game.user1 != -1:
-                        tUserExtension.objects.filter(user=game.user1).update(ulevel=models.F('ulevel') + 0.05)
-                    elif game.user2 != -1:
-                        tUserExtension.objects.filter(user=game.user2).update(ulevel=models.F('ulevel') + 0.2)
+                    if game.user1 == game.winnerUser:
+                        if game.user1 != -1:
+                            tUserExtension.objects.filter(user=game.user1).update(ulevel=models.F('ulevel') + 0.2)
+                        if game.user2 != -1:
+                            tUserExtension.objects.filter(user=game.user2).update(ulevel=models.F('ulevel') + 0.05)
+                    else:
+                        if game.user1 != -1:
+                            tUserExtension.objects.filter(user=game.user1).update(ulevel=models.F('ulevel') + 0.05)
+                        if game.user2 != -1:
+                            tUserExtension.objects.filter(user=game.user2).update(ulevel=models.F('ulevel') + 0.2)
                 if game.tournament and game.phase:
                     if game.phase.phase == 2:
                         next_phase_id = game.phase.phase + 1
