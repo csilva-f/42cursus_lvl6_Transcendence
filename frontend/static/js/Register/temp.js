@@ -14,7 +14,6 @@ function passwordVisibility(passwordFieldId, toggleIconId) {
   }
 }
 
-
 function validateNewPassword(passwordId, validationId, confirmPassId) {
   const password = document.getElementById(passwordId);
   const lengthCheck = document.getElementById("lengthCheck");
@@ -91,7 +90,7 @@ function validatePhoneNumber(phoneId, validationId, errorIcon) {
     console.log("firstElement: ", dddNumber);
   }
 
-  // console.log("numero: ", phone.value);
+  console.log("numero: ", phone.value);
   if (isNumeric && phone.value.length <= 20) {
     validationMessage.classList.add("d-none");
     validationMessage.classList.add("valid");

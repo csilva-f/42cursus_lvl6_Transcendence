@@ -6,6 +6,8 @@ async function sendLogin() {
     const email = $("#loginEmail").val();
     const password = $("#loginPassword").val();
     const apiUrl = "/authapi";
+    const userLang = localStorage.getItem("language") || "en";
+	const langData = await getLanguageData(userLang);
     $.ajax({
         type: "POST",
         url: `${apiUrl}/auth/`,
@@ -18,6 +20,7 @@ async function sendLogin() {
         error: function (xhr) {
             const data = JSON.parse(xhr.responseJSON);
             $("#customLogin-message").text(data.detail || "Login failed.");
+            showErrorUserToast(langData, data.detail);
         },
     });
 }
@@ -160,7 +163,7 @@ async function resetPassword() {
         error: function (xhr) {
             const data = JSON.parse(xhr.responseJSON);
             document.getElementById("resetPwd-message").textContent = data.error || "Reset password failed.";
-            console.log("Reset password failed:", data.error || "Reset password failed.");
+            showErrorUserToast(langData, data.error[0]);
         },
     });
 }

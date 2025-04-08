@@ -21,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def validate_password(self, value):
         try:
-            validate_password(valThis email is already taken.e)  # Use Django's built-in password validation
+            validate_password(value)  # Use Django's built-in password validation
         except DjangoValidationError as e:
             raise serializers.ValidationError(list(e.messages))
         return value
@@ -64,9 +64,9 @@ class ChangePasswordSerializer(serializers.Serializer):
     def validate(self, attrs):
         user = self.context['request'].user
         if not user.check_password(attrs['old_password']):
-            raise serializers.ValidationError({'old_password': 'Incorrect old password.'})
+            raise serializers.ValidationError({'error': 'Incorrect old password.'})
 
         if attrs['new_password'] != attrs['confirm_new_password']:
-            raise serializers.ValidationError({'confirm_new_password': 'New passwords do not match.'})
+            raise serializers.ValidationError({'error': 'New passwords do not match.'})
 
         return attrs
