@@ -35,9 +35,10 @@ async function insertProfileInfo(UserElement, users_on) {
         userOnStatus.style.backgroundColor = "white"; // Offline
         userOnStatus.style.border = "1px solid gray";
     }
-    // if (UserElement.id != await UserInfo.getUserID()) {
-    //     document.getElementById("phoneNumberText")
-    // }
+    if (UserElement.id == await UserInfo.getUserID()) {
+        document.getElementById("profileEditButton").classList.remove('d-none');
+        document.getElementById("changePasswordButton").classList.remove('d-none');
+    }
 }
 
 async function updateProfile() {
