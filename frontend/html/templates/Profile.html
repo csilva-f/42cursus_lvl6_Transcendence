@@ -33,7 +33,8 @@
 								</div>
 
 								<ul
-									style="display: flex; justify-content: space-between; font-weight: bold; list-style-type: none; padding: 0; margin: 0; color: black;">
+									style="display: flex; justify-content: space-between; font-weight: bold; list-style-type:
+									none; padding: 0; margin: 0; color: black;">
 									<li id="profileLvlNow"></li>
 									<li id="profileNextLvl"></li>
 								</ul>
@@ -43,13 +44,13 @@
 
 								<div class="p-3 mt-4 shadow rounded-4" style="background-color: var(--cardBg);">
 									<p class="text-start">
-										<strong data-i18n="phoneP">Phone number:</strong> <span id="phoneNumberText"></span>
+										<strong data-i18n="phoneP"></strong> <span id="phoneNumberText"></span>
 									</p>
 									<p class="text-start">
-										<strong data-i18n="birthdayP">Birthday:</strong> <span id="birthdayText"></span>
+										<strong data-i18n="birthdayP"></strong> <span id="birthdayText"></span>
 									</p>
 									<p class="text-start">
-										<strong data-i18n="genderP">Gender:</strong> <span id="genderText"></span>
+										<strong data-i18n="genderP"></strong> <span id="genderText"></span>
 									</p>
 
 									<div class="d-flex justify-content-between mt-3">
@@ -153,14 +154,14 @@
 		<div class="modal-dialog modal-dialog-centered modal-lg">
 			<div class="modal-content" style="background-color: var(--bodyBg)">
 				<div class="modal-header" style="background-color: var(--primary); justify-content: center;">
-					<h5 class="h5 m-0 fw-bold mb-2" style="color: white" id="editProfile" data-i18n="editProfile">Edit profile</h5>
+					<h5 class="h5 m-0 fw-bold mb-2" style="color: white" id="editProfile" data-i18n="editProfile"></h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
 					<form id="editProfileForm" class="needs-validation" novalidate>
 						<div class="row mb-3">
 							<div class="col-md-6">
-								<label for="firstName" class="form-label" data-i18n="firstName">First name</label>
+								<label for="firstName" class="form-label" data-i18n="firstName"></label>
 								<div class="input-group">
 									<span class="input-group-text" style="border: none; background: white;">
 										<i class="fa-solid fa-user" style="color: var(--primary);"></i>
@@ -172,13 +173,13 @@
 									<ul>
 										<li id="checkName" class="requirement">
 											<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
-											<span data-i18n="invalidFN">Invalid first name, too long</span>
+											<span data-i18n="invalidFN"></span>
 										</li>
 									</ul>
 								</small>
 							</div>
 							<div class="col-md-6">
-								<label for="lastName" class="form-label" data-i18n="lastName">Last name</label>
+								<label for="lastName" class="form-label" data-i18n="lastName"></label>
 								<div class="input-group">
 									<span class="input-group-text" style="border: none; background: white;">
 										<i class="fa-solid fa-user" style="color: var(--primary);"></i>
@@ -190,7 +191,7 @@
 									<ul>
 										<li id="checkLast" class="requirement">
 											<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
-											<span data-i18n="invalidLN">Invalid last name, too long</span>
+											<span data-i18n="invalidLN"></span>
 										</li>
 									</ul>
 								</small>
@@ -198,7 +199,7 @@
 						</div>
 						<div class="row mb-3">
 							<div class="col-md-6">
-								<label for="phoneNumber" class="form-label" data-i18n="phoneP2">Phone number</label>
+								<label for="phoneNumber" class="form-label" data-i18n="phoneP2"></label>
 								<div class="input-group">
 									<input type="tel" class="form-control" id="phoneNumber" style="border: none;"
 									oninput="validatePhoneNumber('phoneNumber', 'validateNumber', 'checkNumber')" required>
@@ -207,14 +208,14 @@
 									<ul>
 										<li id="checkNumber" class="requirement">
 											<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
-											<span data-i18n="invalidPN">Invalid phone number</span>
+											<span data-i18n="invalidPN"></span>
 										</li>
 									</ul>
 								</small>
 							</div>
 
 							<div class="col-md-6">
-								<label for="birthday" class="form-label" data-i18n="birthdayP2">Birthday</label>
+								<label for="birthday" class="form-label" data-i18n="birthdayP2"></label>
 								<div class="input-group">
 									<span class="input-group-text" style="border: none; background: white;">
 										<i class="fa-solid fa-cake-candles" style="color: var(--primary);"></i>
@@ -226,7 +227,7 @@
 									<ul>
 										<li id="checkBirth" class="requirement">
 											<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
-											<span data-i18n="invalidBD">Invalid birth date</span>
+											<span data-i18n="invalidBD"></span>
 										</li>
 									</ul>
 								</small>
@@ -235,7 +236,7 @@
 
 						<div class="row mb-4">
 							<div class="col-md-6">
-								<label for="gender" class="form-label" data-i18n="gender">Gender</label>
+								<label for="gender" class="form-label" data-i18n="gender"></label>
 								<div class="input-group">
 									<span id="gender-icon" class="input-group-text"
 										style="border: none; background: white;">
@@ -243,10 +244,10 @@
 									</span>
 									<select class="form-select" id="gender" style="border: none;"
 										onchange="updateIcon()" required>
-										<option value="" selected disabled data-i18n="selectGender"> Select gender </option>
-										<option value="male" data-i18n="male">Male</option>
-										<option value="female" data-i18n="female">Female</option>
-										<option value="other" data-i18n="other">Other</option>
+										<option value="" selected disabled data-i18n="selectGender"></option>
+										<option value="male" data-i18n="male"></option>
+										<option value="female" data-i18n="female"></option>
+										<option value="other" data-i18n="other"></option>
 									</select>
 								</div>
 							</div>
@@ -254,7 +255,7 @@
 
 						<div class="row mb-4">
 							<div class="col-md-12">
-								<label for="biography" class="form-label" data-i18n="bio">Bio</label>
+								<label for="biography" class="form-label" data-i18n="bio"></label>
 								<textarea class="form-control" id="biography" rows="4"
 								oninput="validateBio('biography', 'validateBio', 'checkBio')"></textarea>
 							</div>
@@ -262,7 +263,7 @@
 								<ul>
 									<li id="checkBio" class="requirement">
 										<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
-										<span data-i18n="invalidBio">Invalid bio, content is too long. Length must be less than or equal to 2000</span>
+										<span data-i18n="invalidBio"></span>
 									</li>
 								</ul>
 							</small>
@@ -272,7 +273,6 @@
 							<div class="row mb-3">
 								<div class="col-md-12">
 									<label for="twoFactor" class="form-label" data-i18n="enable2FAuth">
-										Enable two-factor authentication on your account
 									</label>
 									<div class="form-check form-switch">
 										<input class="form-check-input" type="checkbox" id="twoFactor"
@@ -285,12 +285,12 @@
 
 						<div class="row">
 							<div class="col-md-6 text-start">
-								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="cancel">Cancel</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="cancel"></button>
 							</div>
 							<div class="col-md-6 text-end">
 								<button class="btn" type="submit"
 									style="background-color: var(--primary); color: white;"
-									id="saveButtonProfile" data-i18n="save">Save</button>
+									id="saveButtonProfile" data-i18n="save"></button>
 							</div>
 						</div>
 					</form>
@@ -305,8 +305,7 @@
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content" style="background-color: var(--bodyBg)">
 			<div class="modal-header" style="background-color: var(--primary); justify-content: center;">
-				<h5 class="h5 m-0 fw-bold text-center mb-2" style="color: white" data-i18n="protectAccount">How do you want to protect your
-					account?</h5>
+				<h5 class="h5 m-0 fw-bold text-center mb-2" style="color: white" data-i18n="protectAccount"></h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 
@@ -362,7 +361,7 @@
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content" style="background-color: var(--bodyBg)">
 			<div class="modal-header" style="background-color: var(--primary); justify-content: center;">
-				<h5 class="h5 m-0 fw-bold text-center mb-2" style="color: white" data-i18n="changePass">Change Password</h5>
+				<h5 class="h5 m-0 fw-bold text-center mb-2" style="color: white" data-i18n="changePass"></h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -370,7 +369,7 @@
 
 					<!-- Current Password -->
 					<div class="mb-3">
-						<label for="currentPassword" class="form-label" data-i18n="currPass">Current Password</label>
+						<label for="currentPassword" class="form-label" data-i18n="currPass"></label>
 						<div class="input-group">
 							<span class="input-group-text" style="border: none; background: white;">
 								<i class="fas fa-lock" style="color: var(--primary);"></i>
@@ -387,7 +386,7 @@
 
 					<!-- New Password -->
 					<div class="mb-3">
-						<label for="newPasswordChange" class="form-label" data-i18n="newPass">New Password</label>
+						<label for="newPasswordChange" class="form-label" data-i18n="newPass"></label>
 						<div class="input-group">
 							<span class="input-group-text" style="border: none; background: white;">
 								<i class="fas fa-lock" style="color: var(--primary);"></i>
@@ -405,19 +404,19 @@
 							<ul>
 								<li id="lengthCheck" class="requirement">
 									<i class="fa-solid fa-xmark" id="lengthIcon" style="color: red;"></i>
-									<span data-i18n="passLength">At least 8 characters long</span>
+									<span data-i18n="passLength"></span>
 								</li>
 								<li id="upperCaseCheck" class="requirement">
 									<i class="fa-solid fa-xmark" id="upperCaseIcon" style="color: red;"></i>
-									<span data-i18n="passUpperCase">At least 1 uppercase letter</span>
+									<span data-i18n="passUpperCase"></span>
 								</li>
 								<li id="numberCheck" class="requirement">
 									<i class="fa-solid fa-xmark" id="numberIcon" style="color: red;"></i>
-									<span data-i18n="passNumber">At least 1 number</span>
+									<span data-i18n="passNumber"></span>
 								</li>
 								<li id="specialCharCheck" class="requirement">
 									<i class="fa-solid fa-xmark" id="specialCharIcon" style="color: red;"></i>
-									<span data-i18n="passSpecCharact">At least 1 special character</span>
+									<span data-i18n="passSpecCharact"></span>
 								</li>
 							</ul>
 						</small>
@@ -425,8 +424,7 @@
 
 					<!-- Retype Password -->
 					<div class="mb-3">
-						<label for="confirmPasswordChange" class="form-label" data-i18n="retypePass">Retype New
-							Password</label>
+						<label for="confirmPasswordChange" class="form-label" data-i18n="retypePass"></label>
 						<div class="input-group">
 							<span class="input-group-text" style="border: none; background: white;">
 								<i class="fa-solid fa-lock" style="color: var(--primary);"></i>
@@ -445,7 +443,7 @@
 								<ul>
 									<li id="matchCheckChange" class="requirement">
 										<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
-										<span data-i18n="passNotMatch">Passwords do not match</span>
+										<span data-i18n="passNotMatch"></span>
 									</li>
 								</ul>
 							</small>

@@ -10,7 +10,7 @@ function myCustomValidity(form)
 
 function validateUpdateProfileForm(form)
 {
-    firstName = form.firstName.value;
+    firstInput = form.firstName.value;
     lastName = form.lastName.value;
     phoneNumber = form.phoneNumber.value;
     birthday = new Date(form.birthday.value);
@@ -20,12 +20,26 @@ function validateUpdateProfileForm(form)
     const isNumeric = /^\d+$/.test(phoneNumber);
     let erro = 0;
 
-    if (!(firstName.length <= 50)) erro += 1;
-    if (!(lastName.length <= 50)) erro += 1;
-    if (!(phoneNumber.length <= 20)) erro += 1;
-    if (!(isNumeric)) erro += 1;
-    if (!(birthday < currentDate)) erro += 1;
-    if (!(biography.length <= 2000)) erro += 1;
+    if (!(firstInput.length <= 50 && firstInput.length > 0)) {
+        form.firstName.classList.remove('is-valid');
+        erro += 1;  
+    } 
+    if (!(lastName.length <= 50 && lastName.length > 0)) {
+        form.lastName.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(phoneNumber.length <= 20 && phoneNumber.length > 0) && !(isNumeric)){
+        form.phoneNumber.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(birthday < currentDate)) {
+        form.birthday.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(biography.length <= 2000)) {
+        form.biography.classList.remove('is-valid');
+        erro += 1;
+    }
     if (erro == 0) return true;
     return false;
 }

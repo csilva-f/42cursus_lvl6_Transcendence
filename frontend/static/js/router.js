@@ -221,6 +221,7 @@ async function activateTopBar() {
 }
 
 async function changeToBig(location) {
+	console.log("[changeToBig]")
 	const allContent = document.getElementById("allContent")
 	allContent.classList.remove('d-none');
 	allContent.style.cssText += 'height: calc(100vh - 7rem);';
@@ -242,10 +243,10 @@ async function changeToBig(location) {
 	else if (location == "/login") {
 		headerElement.setAttribute("data-i18n", "login");
 		const input = document.querySelector("#signupPhone");
-			window.intlTelInput(input, {
-				separateDialCode: true,
-				loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
-			});
+		window.intlTelInput(input, {
+			separateDialCode: true,
+			loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
+		});
 		disableTopBar();
 		getForms();
 	} else if (location == "/forgotPassword") {
@@ -253,10 +254,10 @@ async function changeToBig(location) {
 		disableTopBar();
 		getForms();
 	} else if (location == "/mfa") {
-	  let tempToken = await JWT.getTempToken();
+		console.log("[MFA]")
+		let tempToken = await JWT.getTempToken();
 		headerElement.setAttribute("data-i18n", "mfa");
 		disableTopBar();
-		
 		getForms();
 	} else if (location == "/resetPassword") {
 		headerElement.setAttribute("data-i18n", "resetPassword");
@@ -271,7 +272,7 @@ async function changeToBig(location) {
 			gameInfo = JSON.parse(gameInfo);
 			game = new Game(gameInfo);
 			game.initGame();
-    	}
+		}
 	} else if (location == "/callback") {
 		headerElement.setAttribute("data-i18n", "callback");
 		disableTopBar();
@@ -464,23 +465,24 @@ const locationHandler = async () => {
 	let uid = await UserInfo.getUserID();
 	let tempToken = await JWT.getTempToken();
 	console.log("[Location] ", location)
+
 	if (!(location === "/mfa" && (tempToken && !uid))) {
-    if ((isProfile(location) && !uid) || (route.needAuth == 1 && !uid)){
-      location = "/mainPage";
-     	route = routes[location];
-    }
-	if (!(location === "/pong")) localStorage.removeItem("gameInfo");
-    if (route.needAuth == 2 && uid) {
-      location = "401";
-      route = routes[location];
-    }
-	else {
-		if (location === "/mfa" && !tempToken.access)
-		{
-		location = "/login";
-		route = routes[location];
+		if ((isProfile(location) && !uid) || (route.needAuth == 1 && !uid)) {
+			location = "/mainPage";
+			route = routes[location];
 		}
+		if (!(location === "/pong"))
+			localStorage.removeItem("gameInfo");
+		if (route.needAuth == 2 && uid) {
+			location = "401";
+			route = routes[location];
+		}
+	} else if (location === "/mfa" && !tempToken.access) {
+        window.history.pushState({}, "", "/login");
+		locationHandler();
+		return;
 	}
+
 	if (isProfile(location)) {
 		console.log("[isProfile(location)]")
 		route = routes["/profile/:userID"];
@@ -511,8 +513,7 @@ const locationHandler = async () => {
 			.setAttribute("content", route.description);
 		await changeActive(location);
 	}
-};
-
+	console.log("a");
 }
 
 document.addEventListener("click", (e) => {

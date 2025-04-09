@@ -143,6 +143,7 @@ async function resetPassword() {
     const token = urlParams.get("token");
     const password = $("#newPassword").val();
     const confirm_password = $("#confirmPassword").val();
+    const	form = document.getElementById("resetPwd-form");
     if (password !== confirm_password) {
         document.getElementById("resetPwd-message").textContent = "Passwords do not match.";
         return;
@@ -159,6 +160,10 @@ async function resetPassword() {
             // console.log("Token validated successfully");
             $("#signup-message").text("Reset password successfully");
 			showSuccessToast(langData, langData.ResetPasswordSuccess);
+            form.reset();
+            window.history.pushState({}, "", "/login");
+            locationHandler();
+
         },
         error: function (xhr) {
             const data = JSON.parse(xhr.responseJSON);
