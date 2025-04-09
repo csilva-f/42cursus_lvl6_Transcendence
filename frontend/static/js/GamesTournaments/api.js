@@ -1,5 +1,4 @@
 let allGames = [];
-let backButton = false;
 let enteringGame = false;
 let waitingRoom = false;
 
@@ -173,13 +172,15 @@ async function postRemoteGame() {
         document.getElementById("leftPlayerGameImg").src = `/static/img/bot/guest.svg`;
         document.getElementById("rightPlayerName").innerHTML = res.game.user1_nick;
         document.getElementById("rightPlayerGameImg").src = myAvatar;
-        waitingRoom = true;
+        //waitingRoom = true;
+        remoteGame = true;
+        remoteWs = ws;
       };
       ws.onmessage = async function (e) {
         const data = JSON.parse(e.data);
         console.log(data.message);
         if(data.type == "join") {
-          enteringGame = true,
+          //enteringGame = true,
           console.log("Both players connected. Opening the game page...");
           gameData["gameID"] = res.game.id;
           gameData["P2"] = res.game.user1_nick;
@@ -262,6 +263,7 @@ async function enterGame(gameID) {
       };
 
       ws.onmessage = async function (event) {
+        console.log("entra aqui");
         const data = JSON.parse(event.data);
         console.log(data);
       }

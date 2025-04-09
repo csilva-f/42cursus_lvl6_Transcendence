@@ -8,15 +8,6 @@ window.addEventListener('keyup', function (e) {
     keyPressed[e.keyCode] = false;
 })
 
-window.addEventListener("popstate", async function (e) {
-    console.log("back button remote game")
-    backButton = true;
-    remoteWs.close(3000)
-    window.history.pushState({}, "", `/games`);
-    await locationHandler();
-    // Handle back button event (e.g., show a warning or log data)
-})
-
 //add f5 ao finishGame
 
 class RemoteGame  {
@@ -34,7 +25,9 @@ class RemoteGame  {
         this.disconnect = false;
     }
     initGame() {
+        backButton = false;
         remoteWs = this.ws;
+        remoteGame = true;
         console.log("onload");
         //this.canvas = document.getElementById('pongGameCanvas');
         //const context = canvas.getContext('2d');
@@ -77,8 +70,14 @@ class RemoteGame  {
         document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
         if(this.isHost)
             startTimer();
-        this.ws.onmessage = (event) => {
+        this.ws.onmessage = async (event) => {
             const data = JSON.parse(event.data);
+            if(!this.isHost && data.message == "Refresh game status"){
+                console.log("IT WORKS")
+                await UserInfo.refreshUser();
+                await activateTopBar();
+                this.ws.close(1000);
+            }
             if(data.message == "A player left the game." && data.close_code != 1000){
                 this.disconnect = true;
                 console.log("close code:", data.close_code);
@@ -148,11 +147,15 @@ class RemoteGame  {
                 this.hostGame();
             else
                 this.joinerGame();
+        } else if(backButton){
+            backButton = false;
+            remoteGame = false;
         } else if (this.disconnect){
             this.ws.close(3000); // meu codigo de unexpected close
             //await updateGameStatusForceFinish(this.gameData); //erase this, it will be done in the consumer
             window.history.pushState({}, "", `/games`);
             await locationHandler();
+            remoteGame = false;
         // } else if (keyPressed["back"]) {
         //     console.log("back");
         //     keyPressed["back"] = false;
@@ -161,20 +164,27 @@ class RemoteGame  {
         //     await locationHandler();
         } else if (this.stopGame){
             showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, 
-                this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, true, this.gameData.imgLeft, this.gameData.imgRight, false, this.gameDuration);
+            this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, true, this.gameData.imgLeft, this.gameData.imgRight, false, this.gameDuration);
             if(this.isWinner())
                 startWinAnimation();
-            const data = {
-                uid: this.gameData.P2_uid,
-                gameID: this.gameData.gameID, 
-                user1_points : this.objects[2].paddleScore,
-                user2_points: this.objects[1].paddleScore,
-                user1_hits: this.objects[2].paddleColisionTimes,
-                user2_hits: this.objects[1].paddleColisionTimes,
-            }
-            this.ws.close(1000);
-            if(this.isHost)
+            if(this.isHost){
+                const data = {
+                    uid: this.gameData.P2_uid,
+                    gameID: this.gameData.gameID, 
+                    user1_points : this.objects[2].paddleScore,
+                    user2_points: this.objects[1].paddleScore,
+                    user1_hits: this.objects[2].paddleColisionTimes,
+                    user2_hits: this.objects[1].paddleColisionTimes,
+                }
                 await updateGameStatus(data);
+                let msg = {
+                    message: "Refresh game status",
+                }
+                console.log(msg.message);
+                this.ws.send(JSON.stringify(msg));
+                this.ws.close(1000);
+            }
+            remoteGame = false;
         }
     }
     hostGame(){

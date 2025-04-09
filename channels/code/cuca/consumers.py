@@ -100,7 +100,9 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             if not room_clients[self.room_group_name]:
                 del room_clients[self.room_group_name]  # Limpar room vazia
                 print("Empty room: ", self.room_name)
-                gameForceFinish(self.room_name)
+                print("Close code: ", close_code)
+                if close_code != 1000:
+                    gameForceFinish(self.room_name)
                 #chamar api
         # Remover o cliente do grupo
         print("disconnect end")

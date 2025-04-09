@@ -13,6 +13,9 @@ const paddleWidth = 20;
 const paddleHeight = 150;
 const paddleVelocity = 10;
 var backButton = false;
+var localGame = false;
+var isTournament = false;
+var remoteGame = false;
 const wsConnections = {};
 var imgLeft, imgRight;
 
@@ -23,14 +26,27 @@ window.addEventListener('keydown', function (e) {
     isRefreshing = true;
   keyPressed[e.keyCode] = true;
 })
+
 window.addEventListener('keyup', function (e) {
     keyPressed[e.keyCode] = false;
 })
 
-// window.addEventListener("popstate", function (e) {
-//     keyPressed["back"] = true;
-//     // Handle back button event (e.g., show a warning or log data)
-// })
+window.addEventListener("popstate", async function (e) {
+    console.log("back button 1")
+    if(window.location.pathname != "/games")
+        return;
+    console.log("back button 2")
+    backButton = true;
+    if(localGame){
+        localGame = false;
+        bmcForcedFinish();
+    }
+    if (remoteGame){
+        remoteGame = false;
+        remoteWs.close(3000)
+    }
+    // Handle back button event (e.g., show a warning or log data)
+})
 
 function bmcForcedFinish()
 {
@@ -38,10 +54,7 @@ function bmcForcedFinish()
   window.ws_os.send(JSON.stringify({"game_id":gameInfo}));
 }
 
-
-
 window.addEventListener("beforeunload", function (e) {
-    keyPressed["close"] = true;
     if (!isRefreshing)
       bmcForcedFinish();
     isRefreshing = false;
@@ -61,6 +74,8 @@ class Game  {
         this.gameDuration = 0;
     }
     async initGame() {
+        backButton = false;
+        localGame = true;
         console.info("onload");
         //this.canvas = document.getElementById('pongGameCanvas');
         //const context = canvas.getContext('2d');
@@ -118,27 +133,22 @@ class Game  {
 
     async gameLoop() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        if (!this.stopGame && !keyPressed["close"] && !keyPressed["back"]) {
+        if (!this.stopGame && !backButton) {
             window.requestAnimationFrame(async () => this.gameLoop());
             this.gameUpdate();
             this.incScore();
             this.gameDraw();
             //console.log("game on going");
         }
-        else if (keyPressed["close"] || keyPressed["back"]) {
+        else if (backButton) {
             console.log("force finish");
-            keyPressed["close"] = false;
-            await updateGameStatusForceFinish(this.gameData);
-            if (keyPressed["back"]){
-                keyPressed["back"] = false;
-                window.history.pushState({}, "", `/games`);
-                await locationHandler();
-            }
+            backButton = false;
+            localGame = false;
         } else {
             console.log("Normal finish!");
             showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes,
                 this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes,
-                    this.gameData.isTournament, imgLeft, imgRight, this.gameData.isTournamen, this.gameDuration);
+                    this.gameData.isTournament, imgLeft, imgRight, this.gameData.isTournament, this.gameDuration);
             startWinAnimation();
             const data = {
                 uid: this.gameData.P1_uid,
@@ -149,6 +159,7 @@ class Game  {
                 user2_hits: this.objects[2].paddleColisionTimes,
             }
             await updateGameStatus(data);
+            localGame = false;
         }
     }
     gameUpdate(){
