@@ -153,5 +153,7 @@
     "signup": "Sign up",
     "invalidEmail": "Invalid email",
     "checkEmail": "Check your e-mail to get the code",
-    "emailSent": "We sent a six-character code to your e-mail."
+    "emailSent": "We sent a six-character code to your e-mail.",
+    "noCodeReceived": "Didn't receive code?",
+    "resend": "Resend"
 }

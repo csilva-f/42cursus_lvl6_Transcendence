@@ -150,5 +150,7 @@
     "signup": "Inscription",
     "invalidEmail": "Email invalide",
     "checkEmail": "Consultez votre boîte mail pour obtenir le code",
-    "emailSent": "Nous vous avons envoyé un code à six caractères par e-mail."
+    "emailSent": "Nous vous avons envoyé un code à six caractères par e-mail.",
+    "noCodeReceived": "Vous n'avez pas reçu le code?",
+    "resend": "Renvoyer"
 }

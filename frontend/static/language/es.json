@@ -152,5 +152,7 @@
     "signup": "Regístrate",
     "invalidEmail": "Correo electrónico no válido",
     "checkEmail": "Revisa tu correo electrónico para obtener el código",
-    "emailSent": "Te enviamos un código de seis caracteres a tu correo electrónico."
+    "emailSent": "Te enviamos un código de seis caracteres a tu correo electrónico.",
+    "noCodeReceived": "¿No recibiste el código?",
+    "resend": "Reenviar"    
 }
