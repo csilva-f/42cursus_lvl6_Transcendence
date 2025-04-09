@@ -593,8 +593,8 @@ def post_update_game(request): #update statusID acording to user2 and winner var
             print("user_id")
             is_join = str(data.get('isJoin')).lower() in ['true', '1', 'yes']
             if is_join and game.user1 and game.user2:
-                print("lalal")
-                return JsonResponse({"error": "You can't do that. The game is full!"}, status=403)
+                print("error joining remote game: game is full")
+                return JsonResponse({"error": "The game is full! Try refreshing the tab to see the available games"}, status=403)
             status = data.get('statusID')
             if status is not None:
                 status = validate_status(status)
