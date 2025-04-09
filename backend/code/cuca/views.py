@@ -278,16 +278,21 @@ def get_usergames(request):
                 games = games.filter(tournament__tournament__isnull=True)
             else:
                 games = games.filter(tournament__tournament=tournament_id)
+        tournament_filter = (
+            Q(tournament__isnull=True) |
+            Q(tournament__isnull=False, phase__phase=3) |
+            (Q(tournament__isnull=False, phase__phase=2) & ~Q(winnerUser=user_id) & Q(createdByUser=user_id))
+        )
         if status_id and status_id == 3:
             games = games.filter(
                 (Q(isInvitation=False) | Q(isInvitation=True, isInvitAccepted=True)) &
                 Q(winnerUser__isnull=False) &
-                (Q(tournament__isnull=True) | Q(tournament__isnull=False, phase__phase=3))
+                tournament_filter
             )
         else:
             games = games.filter(
                 (Q(isInvitation=False) | Q(isInvitation=True, isInvitAccepted=True)) &
-                (Q(tournament__isnull=True) | Q(tournament__isnull=False, phase__phase=3))
+                tournament_filter
             )
         try:
             u_ext = tUserExtension.objects.get(user=user_id)
