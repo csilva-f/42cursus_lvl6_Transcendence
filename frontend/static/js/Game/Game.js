@@ -16,8 +16,12 @@ var stopGame = false;
 const wsConnections = {};
 var imgLeft, imgRight;
 
+let isRefreshing = false;
+
 window.addEventListener('keydown', function (e) {
-    keyPressed[e.keyCode] = true;
+  if (e.keyCode == 116)
+    isRefreshing = true;
+  keyPressed[e.keyCode] = true;
 })
 window.addEventListener('keyup', function (e) {
     keyPressed[e.keyCode] = false;
@@ -28,8 +32,19 @@ window.addEventListener("popstate", function (e) {
     // Handle back button event (e.g., show a warning or log data)
 })
 
+function bmcForcedFinish()
+{
+  let gameInfo = localStorage.getItem('gameInfo');
+  window.ws_os.send(JSON.stringify({"game_id":gameInfo}));
+}
+
+
+
 window.addEventListener("beforeunload", function (e) {
     keyPressed["close"] = true;
+    if (!isRefreshing)
+      bmcForcedFinish();
+    isRefreshing = false;
     //console.log("Aba ou navegador foi fechado! ==> so funciona para firefox");
 });
 
@@ -121,13 +136,13 @@ class Game  {
             }
         } else {
             console.log("Normal finish!");
-            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, 
-                this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, 
+            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes,
+                this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes,
                     this.gameData.isTournament, imgLeft, imgRight, this.gameData.isTournamen, this.gameDuration);
             startWinAnimation();
             const data = {
                 uid: this.gameData.P1_uid,
-                gameID: this.gameData.gameID, 
+                gameID: this.gameData.gameID,
                 user1_points : this.objects[1].paddleScore,
                 user2_points: this.objects[2].paddleScore,
                 user1_hits: this.objects[1].paddleColisionTimes,

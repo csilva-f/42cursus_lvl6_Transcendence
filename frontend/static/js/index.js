@@ -125,7 +125,8 @@ async function logOut() {
 async function notificationLoad() {
 	if (await UserInfo.getUserID())
 		await fetchUserNotificationGame();
-	setTimeout(notificationLoad, 5000);
+	//setTimeout(notificationLoad, 5000);
 }
 
-setTimeout(notificationLoad, 2500);
+//notificationLoad();
+//setTimeout(notificationLoad, 2500);
