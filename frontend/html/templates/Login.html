@@ -11,7 +11,7 @@
 						data-bs-target="#login" type="button" role="tab" aria-controls="login" aria-selected="true"
 						style="min-height:46px; font-weight: bold; color: #000; padding-left: 90px; padding-right: 90px;">
 						<i class="fa-solid fa-sign-in-alt fa-xl"></i>
-						<span class="d-none d-xl-block">Login</span>
+						<span class="d-none d-xl-block" data-i18n="login2">Login</span>
 					</button>
 				</li>
 				<li class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center iconInactive"
@@ -20,7 +20,7 @@
 						data-bs-target="#signup" type="button" role="tab" aria-controls="signup" aria-selected="false"
 						style="min-height:46px; font-weight: bold; color: #000; padding-left: 90px; padding-right: 90px;">
 						<i class="fa-solid fa-user-plus fa-xl"></i>
-						<span class="d-none d-xl-block">Sign up</span>
+						<span class="d-none d-xl-block" data-i18n="signup">Sign up</span>
 					</button>
 				</li>
 			</ul>
@@ -40,7 +40,7 @@
 							<small id="validateEmailLogin" class="form-text text-muted d-none">
 								<ul>
 									<li id="checkEmailLogin" class="requirement">
-										<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+										<i class="fa-solid fa-xmark" id="charIcon" style="color: red" data-i18n="invalidEmail"></i>
 										Invalid e-mail
 									</li>
 								</ul>
@@ -64,11 +64,11 @@
 
 						<div class="mb-3">
 							<a class="d-block text-end"
-							onclick="goToForgotPwd()" style="color: var(--primary); text-decoration: none;">Forgot password?</a>
+							onclick="goToForgotPwd()" style="color: var(--primary); text-decoration: none;" data-i18n="forgotPassword">Forgot password?</a>
 						</div>
 
 						<button type="submit" class="btn"
-							style="background-color: var(--primary); color: white; width: 100%; margin-bottom: 10px;">Login</button>
+							style="background-color: var(--primary); color: white; width: 100%; margin-bottom: 10px;" data-i18n="login2">Login</button>
 
 						<div class="mb-3">
 							<button type="button" onclick="oauthLogin();"
@@ -101,7 +101,7 @@
 							<small id="validateFirst" class="form-text text-muted d-none">
 								<ul>
 									<li id="checkFirst" class="requirement">
-										<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+										<i class="fa-solid fa-xmark" id="charIcon" style="color: red" data-i18n="invalidFN"></i>
 										Invalid first name, too long
 									</li>
 								</ul>
@@ -119,7 +119,7 @@
 							<small id="validateLast" class="form-text text-muted d-none">
 								<ul>
 									<li id="checkLast" class="requirement">
-										<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+										<i class="fa-solid fa-xmark" id="charIcon" style="color: red" data-i18n="invalidLN"></i>
 										Invalid last name, too long
 									</li>
 								</ul>
@@ -139,7 +139,7 @@
 							<small id="validateEmail" class="form-text text-muted d-none">
 								<ul>
 									<li id="checkEmail" class="requirement">
-										<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+										<i class="fa-solid fa-xmark" id="charIcon" style="color: red" data-i18n="invalidEmail"></i>
 										Invalid e-mail
 									</li>
 								</ul>
@@ -163,19 +163,19 @@
 							<small id="passwordValidation" class="form-text text-muted d-none">
 								<ul>
 									<li id="lengthCheck" class="requirement">
-										<i class="fa-solid fa-xmark" id="lengthIcon" style="color: red;"></i>
+										<i class="fa-solid fa-xmark" id="lengthIcon" style="color: red;" data-i18n="passLength"></i>
 										At least 8 characters long
 									</li>
 									<li id="upperCaseCheck" class="requirement">
-										<i class="fa-solid fa-xmark" id="upperCaseIcon" style="color: red;"></i>
+										<i class="fa-solid fa-xmark" id="upperCaseIcon" style="color: red;" data-i18n="passUpperCase"></i>
 										At least 1 uppercase letter
 									</li>
 									<li id="numberCheck" class="requirement">
-										<i class="fa-solid fa-xmark" id="numberIcon" style="color: red;"></i>
+										<i class="fa-solid fa-xmark" id="numberIcon" style="color: red;" data-i18n="passNumber"></i>
 										At least 1 number
 									</li>
 									<li id="specialCharCheck" class="requirement">
-										<i class="fa-solid fa-xmark" id="specialCharIcon" style="color: red;"></i>
+										<i class="fa-solid fa-xmark" id="specialCharIcon" style="color: red;" data-i18n="passSpecCharact"></i>
 										At least 1 special character
 									</li>
 								</ul>
@@ -198,7 +198,7 @@
 							<small id="confirmValidation" class="form-text text-muted d-none">
 								<ul>
 									<li id="matchCheck" class="requirement">
-										<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+										<i class="fa-solid fa-xmark" id="charIcon" style="color: red" data-i18n="passNotMatch"></i>
 										Passwords do not match
 									</li>
 								</ul>
@@ -214,7 +214,7 @@
 							<small id="validateNumber" class="form-text text-muted d-none">
 								<ul>
 									<li id="checkNum" class="requirement">
-										<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+										<i class="fa-solid fa-xmark" id="charIcon" style="color: red" data-i18n="invalidPN"></i>
 										Invalid phone number
 									</li>
 								</ul>
@@ -222,7 +222,7 @@
 						</div>
 
 						<button type="submit" class="btn"
-							style="background-color: var(--primary); color: white; width: 100%;">Sign up</button>
+							style="background-color: var(--primary); color: white; width: 100%;" data-i18n="signup">Sign up</button>
 					</form>
 				</div>
 			</div>
