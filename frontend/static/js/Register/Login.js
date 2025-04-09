@@ -7,7 +7,7 @@ async function loginSuccess(data) {
     if (opt_status == true) {
         await OTP_send_email();
         window.history.pushState({}, "", "/mfa");
-        await locationHandler("content");
+        await locationHandler();
         if (await JWT.getOTPStatus() == 1) {
             let resend = document.getElementById("resendLabel");
             let msgLabel = document.getElementById("msgLabel");

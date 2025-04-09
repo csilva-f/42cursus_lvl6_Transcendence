@@ -1,8 +1,8 @@
 <div class="container mt-5">
 	<div class="row justify-content-center">
 		<div class="p-3 shadow rounded" style="background-color: var(--cardBg); width: 600px;">
-			<p id="titleLabel" class="h4 text-center" style="font-weight: bold; color: #000;" data-i18n="checkEmail">Check your e-mail to get the code</p>
-			<p id="msgLabel" class="h7 text-center" style="color: #000;" data-i18n="emailSent">We sent a six-character code to your e-mail.</p>
+			<p id="titleLabel" class="h4 text-center" style="font-weight: bold; color: #000;" data-i18n="checkEmail"></p>
+			<p id="msgLabel" class="h7 text-center" style="color: #000;" data-i18n="emailSent"></p>
 			<div class="tab-pane fade show active" id="mfa" role="tabpanel" aria-labelledby="mfa-tab">
 				<form class="mt-3" id="mfa-form">
 					<div class="mb-3">
@@ -19,7 +19,8 @@
 				</form>
 				<p id="mfa-message"></p>
 				<div class="text-center mt-3">
-					<p id="resendLabel" style="color: #000;" data-i18n="noCodeReceived">Didn't receive code?<a id="resendEmail" onclick="resendOTP()" style="color: var(--primary); text-decoration: none;" data-i18n="resend">Resend</a></p>
+					<p id="resendLabel" style="color: #000;" data-i18n="noCodeReceived"><a id="resendEmail" onclick="resendOTP()"
+						style="color: var(--primary); text-decoration: none;" data-i18n="resend"></a></p>
 				</div>
 			</div>
 		</div>

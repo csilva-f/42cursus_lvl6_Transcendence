@@ -106,7 +106,7 @@ function getForms() {
       "submit",
       (event) => {
         form.classList.remove("was-validated");
-        if (!(form.checkValidity()) || !(myCustomValidity(form))) {
+        if (!(myCustomValidity(form)) || !(form.checkValidity())) {
           event.preventDefault();
           event.stopPropagation();
         } else {
@@ -127,8 +127,8 @@ function getForms() {
           // else if (form.id == "resetPwd-form")
           // 	resetPwd();
           event.preventDefault();
+          form.classList.add("was-validated");
         }
-        form.classList.add("was-validated");
       },
       false,
     );
