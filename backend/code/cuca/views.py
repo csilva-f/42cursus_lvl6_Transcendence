@@ -591,12 +591,6 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 game = tGames.objects.get(game=game_id)
             except tGames.DoesNotExist:
                 return JsonResponse({"error": "Game not found"}, status=404)
-            user_id = data.get('uid')
-            print("user_id")
-            is_join = str(data.get('isJoin')).lower() in ['true', '1', 'yes']
-            if is_join and game.user1 and game.user2:
-                print("error joining remote game: game is full")
-                return JsonResponse({"error": "The game is full! Try refreshing the tab to see the available games"}, status=403)
             status = data.get('statusID')
             if status is not None:
                 status = validate_status(status)
@@ -607,8 +601,14 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                         game.save()
                     return JsonResponse({"message": "Game updated successfully, forced finished was performed", "game_id": game.game}, status=201)
                 return JsonResponse({"error": "Override status only allowed for finished"}, status=400)
+            user_id = data.get('uid')
+            is_join = str(data.get('isJoin')).lower() in ['true', '1', 'yes']
+            print("user_id")
             if not user_id and not is_join:
                 return JsonResponse({"error": "User ID is required for update"}, status=400)
+            if is_join and game.user1 and game.user2:
+                print("error joining remote game: game is full")
+                return JsonResponse({"error": "The game is full! Try refreshing the tab to see the available games"}, status=403)
             if user_id == game.user1 and is_join:
                 return JsonResponse({"error": "User2 must be different from User1"}, status=400)
             if is_join and not tUserExtension.objects.filter(user=user_id).exists():

@@ -1,4 +1,5 @@
-
+var remoteWs;
+//var this.stopGame = false;
 
 window.addEventListener('keydown', function (e) {
     keyPressed[e.keyCode] = true;
@@ -7,9 +8,12 @@ window.addEventListener('keyup', function (e) {
     keyPressed[e.keyCode] = false;
 })
 
-window.addEventListener("popstate", function (e) {
-    console.log("back button")
-    keyPressed["back"] = true;
+window.addEventListener("popstate", async function (e) {
+    console.log("back button remote game")
+    backButton = true;
+    remoteWs.close(3000)
+    window.history.pushState({}, "", `/games`);
+    await locationHandler();
     // Handle back button event (e.g., show a warning or log data)
 })
 
@@ -24,13 +28,13 @@ class RemoteGame  {
         this.ballVelocity = ballVelocity;
         this.ballRadius = 15;
         this.maxScore = 5;
-        this.stopGame = false;
         this.ws = ws;
         this.isHost = isHost;
         this.gameDuration = 0;
         this.disconnect = false;
     }
     initGame() {
+        remoteWs = this.ws;
         console.log("onload");
         //this.canvas = document.getElementById('pongGameCanvas');
         //const context = canvas.getContext('2d');
@@ -138,7 +142,7 @@ class RemoteGame  {
     }
     async gameLoop() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        if (!this.stopGame && !keyPressed["back"] && !this.disconnect) {
+        if (!this.stopGame && !this.disconnect && !backButton) { //!keyPressed["back"] &&
             window.requestAnimationFrame(() => this.gameLoop());
             if(this.isHost)
                 this.hostGame();
@@ -146,16 +150,16 @@ class RemoteGame  {
                 this.joinerGame();
         } else if (this.disconnect){
             this.ws.close(3000); // meu codigo de unexpected close
-            await updateGameStatusForceFinish(this.gameData); //erase this, it will be done in the consumer
+            //await updateGameStatusForceFinish(this.gameData); //erase this, it will be done in the consumer
             window.history.pushState({}, "", `/games`);
             await locationHandler();
-        } else if (keyPressed["back"]) {
-            console.log("back");
-            keyPressed["back"] = false;
-            this.ws.close(3000); //meu codigo de unexpected close
-            window.history.pushState({}, "", `/games`);
-            await locationHandler();
-        } else{
+        // } else if (keyPressed["back"]) {
+        //     console.log("back");
+        //     keyPressed["back"] = false;
+        //     this.ws.close(3000); //meu codigo de unexpected close
+        //     window.history.pushState({}, "", `/games`);
+        //     await locationHandler();
+        } else if (this.stopGame){
             showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, 
                 this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, true, this.gameData.imgLeft, this.gameData.imgRight, false, this.gameDuration);
             if(this.isWinner())

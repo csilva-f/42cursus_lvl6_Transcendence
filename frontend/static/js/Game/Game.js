@@ -12,7 +12,7 @@ const ballRadius = 15;
 const paddleWidth = 20;
 const paddleHeight = 150;
 const paddleVelocity = 10;
-var stopGame = false;
+var backButton = false;
 const wsConnections = {};
 var imgLeft, imgRight;
 
@@ -27,10 +27,10 @@ window.addEventListener('keyup', function (e) {
     keyPressed[e.keyCode] = false;
 })
 
-window.addEventListener("popstate", function (e) {
-    keyPressed["back"] = true;
-    // Handle back button event (e.g., show a warning or log data)
-})
+// window.addEventListener("popstate", function (e) {
+//     keyPressed["back"] = true;
+//     // Handle back button event (e.g., show a warning or log data)
+// })
 
 function bmcForcedFinish()
 {

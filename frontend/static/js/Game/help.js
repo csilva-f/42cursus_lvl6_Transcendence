@@ -151,7 +151,6 @@ async function updateGameStatusForceFinish(gameData){
     const userLang = localStorage.getItem("language") || "en";
     const langData = await getLanguageData(userLang);
     const data = {
-        uid: gameData.P1_uid,
         gameID: gameData.gameID,
         statusID: 3,
     }

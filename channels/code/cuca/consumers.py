@@ -28,18 +28,18 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         if self.room_group_name not in room_clients:
             room_clients[self.room_group_name] = set()
 
-        # Verificar se já existem 2 jogadores na sala
-        if len(room_clients[self.room_group_name]) >= 2:
-            # Aceitar a conexão para que possamos enviar a mensagem
-            await self.accept()
+        # # Verificar se já existem 2 jogadores na sala
+        # if len(room_clients[self.room_group_name]) >= 2:
+        #     # Aceitar a conexão para que possamos enviar a mensagem
+        #     await self.accept()
 
-            # Enviar uma mensagem ao terceiro jogador informando que a sala está cheia
-            await self.send({
-                "type": "websocket.send",  # Tipo de mensagem
-                "message": "Room is full"  # Mensagem de recusa
-            })
+        #     # Enviar uma mensagem ao terceiro jogador informando que a sala está cheia
+        #     await self.send({
+        #         "type": "websocket.send",  # Tipo de mensagem
+        #         "message": "Room is full"  # Mensagem de recusa
+        #     })
 
-            return
+        #     return
 
         # Aceitar a conexão, já que a sala tem espaço
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
@@ -100,6 +100,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             if not room_clients[self.room_group_name]:
                 del room_clients[self.room_group_name]  # Limpar room vazia
                 print("Empty room: ", self.room_name)
+                gameForceFinish(self.room_name)
                 #chamar api
         # Remover o cliente do grupo
         print("disconnect end")
@@ -138,7 +139,7 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
                 await self.update_online_users()
             elif game_id:
                 gameInfo = json.loads(game_id)
-                gameForceFinish(gameInfo)
+                gameForceFinish(gameInfo["gameID"])
             elif add_user:
                 print("Received addUser :", add_user)
                 await self.channel_layer.group_send(

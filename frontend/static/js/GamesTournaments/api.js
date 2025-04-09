@@ -1,11 +1,12 @@
 let allGames = [];
 let backButton = false;
-
+let enteringGame = false;
+let waitingRoom = false;
 
 //* GAMES
 //? GET - /api/get-games/?statusID=
 async function fetchGames(statusID) {
-  const userLang = await localStorage.getItem("language") || "en";
+  const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
   const reloadIcon = document.getElementById("reloadIcon");
   const reloadBtn = document.getElementById("reloadBtn");
@@ -172,12 +173,13 @@ async function postRemoteGame() {
         document.getElementById("leftPlayerGameImg").src = `/static/img/bot/guest.svg`;
         document.getElementById("rightPlayerName").innerHTML = res.game.user1_nick;
         document.getElementById("rightPlayerGameImg").src = myAvatar;
-        //add logica para tratar back button
+        waitingRoom = true;
       };
       ws.onmessage = async function (e) {
         const data = JSON.parse(e.data);
         console.log(data.message);
         if(data.type == "join") {
+          enteringGame = true,
           console.log("Both players connected. Opening the game page...");
           gameData["gameID"] = res.game.id;
           gameData["P2"] = res.game.user1_nick;
@@ -191,19 +193,15 @@ async function postRemoteGame() {
           //5 4 3 2 1
           game.initGame();
         }
-        if(data.message == "A player left the game.")
-          console.log("OTHER PLAYER LEFT");
       };
-
+      
       ws.onerror = function (error) {
         console.error("WebSocket error:", error);
       };
-
+      
       ws.onclose = function (e) {
         console.log(e);
       };
-
-      console.log("Attempting to connect to WebSocket...");
     },
     error: function (xhr, status, error) {
       showErrorToast(APIurl, error, langData);
@@ -211,16 +209,6 @@ async function postRemoteGame() {
   });
 }
 
-async function sendMessage(){
-  ws.send("we did it!");
-}
-
-function openGameModal() {
-
-}
-
-//TODO getUserID
-//? POST - /api/update-game/
 async function enterGame(gameID) {
   const userLang = localStorage.getItem("language") || "en";
   const langData = await getLanguageData(userLang);
@@ -243,62 +231,50 @@ async function enterGame(gameID) {
     data: JSON.stringify(gameData),
     success: async function (res) {
       console.log("Enter game: ", res);
+      showSuccessToast(langData, langData.gameEntered);
+      fetchGames(1);
 
       const socketUrl = `wss://${window.location.host}/channels/${gameID}/`;
       const ws = new WebSocket(socketUrl);
 
       ws.onopen = async () => {
-        console.log("Trying to connect.");
+        const message = JSON.stringify({
+            type: "join",
+            nick: res.game.user2_nick,
+            user_id: res.game.user2,
+            img: await UserInfo.getUserAvatarPath(),
+        });
+        ws.send(message);
+        gameData["gameID"] = res.game.id;
+        gameData["P2"] = res.game.user1_nick;
+        gameData["P2_uid"] = res.game.user1;
+        gameData["P1"] = res.game.user2_nick;
+        gameData["P1_uid"] = res.game.user2;
+        gameData["islocal"] = res.game.isLocal;
+        gameData["imgLeft"] = await UserInfo.getUserAvatarPath();
+        gameData["imgRight"] = await fetchUserAvatar(res.game.user1); 
+        //localStorage.setItem("gameInfo", JSON.stringify(gameData)); //se apagarmos o historico no fim de cada jogo podemos tirar isto
+        window.history.pushState({}, "", `/pong`);
+        await locationHandler();
+        const game = new RemoteGame(gameData, ws, false);
+        //5 4 3 2 1
+        game.initGame();
       };
 
       ws.onmessage = async function (event) {
         const data = JSON.parse(event.data);
         console.log(data);
-        if (data.message == "A player joined the game!"){
-          showSuccessToast(langData, langData.gameEntered);
-          fetchGames(1);
-          const message = JSON.stringify({
-              type: "join",
-              nick: res.game.user2_nick,
-              user_id: res.game.user2,
-              img: await UserInfo.getUserAvatarPath(),
-          });
-          ws.send(message);
-          gameData["gameID"] = res.game.id;
-          gameData["P2"] = res.game.user1_nick;
-          gameData["P2_uid"] = res.game.user1;
-          gameData["P1"] = res.game.user2_nick;
-          gameData["P1_uid"] = res.game.user2;
-          gameData["islocal"] = res.game.isLocal;
-          gameData["imgLeft"] = await UserInfo.getUserAvatarPath();
-          gameData["imgRight"] = await fetchUserAvatar(res.game.user1); 
-          //localStorage.setItem("gameInfo", JSON.stringify(gameData)); //se apagarmos o historico no fim de cada jogo podemos tirar isto
-          window.history.pushState({}, "", `/pong`);
-          await locationHandler();
-          const game = new RemoteGame(gameData, ws, false);
-          //5 4 3 2 1
-          game.initGame();
-        }
-        if(data.message == "Room is full"){
-          let error_message = "Too late, the game is full, you need to hit the refresh button!";
-          showErrorUserToast(langData, error_message);
-          console.log("Room is full!!")
-          ws.close(3001);
-        }
       }
 
       //talvez isto precise de um parse do erro
       ws.onerror = function (error) {
-        console.log(error)
+        console.error("WebSocket error:", error);
       };
 
       //talvez isto precise de um parse do event
       ws.onclose = function (event) {
-        const data = JSON.parse(event.data);
-        console.log(data);
-        console.log("WebSocket connection closed:", data.close_code);
+        console.log("WebSocket connection closed:", event);
       };
-
 
     },
     error: function (xhr, status, error) {
