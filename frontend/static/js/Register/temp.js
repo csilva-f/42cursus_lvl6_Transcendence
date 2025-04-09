@@ -14,7 +14,6 @@ function passwordVisibility(passwordFieldId, toggleIconId) {
   }
 }
 
-
 function validateNewPassword(passwordId, validationId, confirmPassId) {
   const password = document.getElementById(passwordId);
   const lengthCheck = document.getElementById("lengthCheck");
@@ -82,8 +81,16 @@ function validatePhoneNumber(phoneId, validationId, errorIcon) {
   const phone = document.getElementById(phoneId);
   const validationMessage = document.getElementById(validationId);
   const icon = document.getElementById(errorIcon);
+  const isNumeric = /^[\d\s-]*$/.test(phone.value);
 
-  const isNumeric = /^\d+$/.test(phone.value);
+  var elements = document.getElementsByClassName('iti__selected-dial-code');
+  if (elements.length > 0) {
+    var firstElement = elements[0];
+    const dddNumber = firstElement.textContent;
+    console.log("firstElement: ", dddNumber);
+  }
+
+  console.log("numero: ", phone.value);
   if (isNumeric && phone.value.length <= 20) {
     validationMessage.classList.add("d-none");
     validationMessage.classList.add("valid");

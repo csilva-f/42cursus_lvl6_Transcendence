@@ -62,9 +62,9 @@
 							</div>
 						</div>
 
-						<div class="mb-3">
-							<a class="d-block text-end"
-							onclick="goToForgotPwd()" style="color: var(--primary); text-decoration: none;" data-i18n="forgotPassword">Forgot password?</a>
+						<div class="mb-3" style="text-align: right;">
+							<a onclick="goToForgotPwd()" style="color: var(--primary); text-decoration: none; display: inline-block;">
+							Forgot password?</a>
 						</div>
 
 						<button type="submit" class="btn"
@@ -82,13 +82,12 @@
 
 					</form>
 					<p id="login-message" class="invalid-feedback">
-					<p id="customLogin-message" class="">
 					</p>
 				</div>
 
 				<!-- Sign Up -->
 				<div class="tab-pane fade" id="signup" role="tabpanel" aria-labelledby="signup-tab">
-					<form class="mt-3 needs-validation" id="signup-form" novalidate>
+					<form class="mt-3 needs-validation" id="signup-form" was-validated>
 
 						<div class="mb-3">
 							<div class="input-group">
