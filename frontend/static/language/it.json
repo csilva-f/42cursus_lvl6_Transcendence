@@ -124,5 +124,14 @@
     "passUpperCase": "Almeno 1 lettera maiuscola",
     "passLength": "Lunghezza minima 8 caratteri",
     "newPass": "Nuova password",
-    "currPass": "Password attuale"
+    "currPass": "Password attuale",
+
+    "scanQRcode": "Digitalize o código QR",
+    "protectAccount": "Como pretende proteger a sua conta?",
+    "enable2FAuth": "Ative a autenticação de dois fatores na sua conta",
+    "invalidBio": "Biografia inválida, conteúdo demasiado longo. O comprimento deve ser inferior ou igual a 2000",
+    "invalidBD": "Data de nascimento inválida",
+    "invalidPN": "Número de telefone inválido",
+    "invalidLN": "Apelido inválido, muito longo",
+    "invalidFN": "Nome inválido, demasiado longo"
 }

@@ -125,5 +125,13 @@
     "passUpperCase": "At least 1 uppercase letter",
     "passLength": "At least 8 characters long",
     "newPass": "New password",
-    "currPass": "Current password"
+    "currPass": "Current password",
+    "scanQRcode": "Scan the QR Code",
+    "protectAccount": "How do you want to protect your account?",
+    "enable2FAuth": "Enable two-factor authentication on your account",
+    "invalidBio": "Invalid bio, content is too long. Length must be less than or equal to 2000",
+    "invalidBD": "Invalid birth date",
+    "invalidPN": "Invalid phone number",
+    "invalidLN": "Invalid last name, too long",
+    "invalidFN": "Invalid first name, too long"
 }
