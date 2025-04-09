@@ -30,6 +30,7 @@ async function showGameStats(leftName, leftScore, leftColision, rightName, right
     const finishedGame = document.getElementById('finishedGame');
     const playAgain = document.getElementById('playAgainButton');
     const homeButton = document.getElementById('homeButton');
+    await activateClickTopBar();
 
     pongGameDiv.classList.add('d-none');
     mainGameScore.classList.add('d-none');
@@ -175,6 +176,5 @@ async function updateGameStatusForceFinish(gameData){
         },
     });
     await UserInfo.refreshUser();
-    document.getElementById("topbar").classList.remove('d-none');
     activateTopBar();
 }
