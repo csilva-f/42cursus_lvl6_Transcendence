@@ -2,7 +2,7 @@ NAME	= ft_transcendence
 BACKEND_DB_CONTAINER_NAME=backend-db
 AUTH_DB_CONTAINER_NAME=auth-db
 EMAIL_DB_CONTAINER_NAME = email-db
-all: secrets build up migrate
+all: secrets build up
 DATA_DIR = $(HOME)/ft_transcendence_data
 ROOT_TOKEN_FILE = ./secrets/VAULT_ROOT_TOKEN.txt
 
@@ -33,28 +33,7 @@ up: directories
 	@docker compose down
 	@echo "" > $(ROOT_TOKEN_FILE)
 	@echo "Running Docker Compose setup..."
-	@docker compose up -d auth-db vault-db backend-db email-db
-	@while ! ( \
-		docker inspect -f '{{.State.Health.Status}}' auth-db | grep -q "healthy" && \
-		docker inspect -f '{{.State.Health.Status}}' vault-db | grep -q "healthy" && \
-		docker inspect -f '{{.State.Health.Status}}' backend-db | grep -q "healthy" && \
-		docker inspect -f '{{.State.Health.Status}}' email-db | grep -q "healthy" \
-	); do \
-		echo "Waiting for all databases to be healthy..."; \
-		sleep 2; \
-	done
-	@echo "Database is up and running! Applying Migrations..."
-	@echo "Setting up Vault..."
-	sleep 2
-	@docker compose up -d vault
-	@echo "Waiting for $(ROOT_TOKEN_FILE) to contain any value..."
-	@while [ ! -s $(ROOT_TOKEN_FILE) ]; do \
-		sleep 1; \
-	done
-	@echo "$(ROOT_TOKEN_FILE) contains a value!"
-	@docker compose up -d email auth-api auth backend backend-api channels redis
-	sleep 5
-	@docker compose up -d nginx
+	@docker compose --verbose up -d
 # Stop the Docker Compose setup
 down:
 	@echo "Stopping Docker Compose setup..."
@@ -65,19 +44,7 @@ down:
 	@docker exec -it vault chmod 777 /vault -R
 	@docker compose down
 
-migrate:
-	@echo "Applying Migrations..."
-	@docker compose exec -it auth python manage.py makemigrations
-	@docker compose exec -it auth python manage.py migrate
-	@docker compose exec -it backend python manage.py makemigrations
-	@docker compose exec -it backend python manage.py migrate
-	@docker compose exec -it channels python manage.py makemigrations
-	@docker compose exec -it channels python manage.py migrate
-	@docker compose exec -it email python manage.py makemigrations
-	@docker compose exec -it email python manage.py migrate
-	@docker compose restart auth backend email channels
-	@sleep 2
-	@docker compose up -d nginx
+
 
 clean:down
 	@echo "Cleaning up stopped containers and networks..."

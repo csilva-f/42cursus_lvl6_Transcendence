@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from .views import healthcheck
 
 # urlpatterns = [
 #     path('admin/', admin.site.urls),
@@ -26,4 +27,5 @@ from django.urls import path
 urlpatterns = [
     path('testWebsocket', include("cuca.urls")),
     path('fileUpload/', include("fileUpload.urls")),
+    path('healthcheck/', healthcheck, name='healthcheck'),
 ]

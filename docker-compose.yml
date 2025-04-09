@@ -5,16 +5,20 @@ services:
     volumes:
       #- auth-data:/code:rw
       - ./auth/code:/code:rw
-    ports:
-      - "9001:8000"
     networks:
-      - backend
+      - backend-network
     init: true
     restart: on-failure
     env_file:
       - ./auth/.env
     secrets:
       - vault_root_token
+    depends_on:
+      vault:
+        condition: service_healthy
+      auth-db:
+        condition: service_healthy
+
 
   auth-db:
     container_name: auth-db
@@ -24,7 +28,7 @@ services:
     volumes:
       - auth-db-data:/var/lib/postgresql/data:rw
     networks:
-      - backend
+      - backend-network
     secrets:
       - postgres_user
       - postgres_password
@@ -36,16 +40,19 @@ services:
       #- auth-api-data:/code:rw
       - ./auth-api/code:/code:rw
     networks:
-      - backend
-      - frontend
-    ports:
-      - "5556:8000"
+      - backend-network
+      - frontend-network
     init: true
     restart: on-failure
     env_file:
       - ./auth-api/.env
     secrets:
       - vault_root_token
+    depends_on:
+      vault:
+        condition: service_healthy
+      auth:
+        condition: service_healthy
 
   vault-db:
     container_name: vault-db
@@ -55,7 +62,7 @@ services:
     volumes:
       - vault-db-data:/var/lib/postgresql/data:rw
     networks:
-      - backend
+      - backend-network
     secrets:
       - postgres_user
       - postgres_password
@@ -69,9 +76,7 @@ services:
     cap_add:
       - IPC_LOCK
     networks:
-      - backend
-    ports:
-      - "8200:8200"
+      - backend-network
     init: true
     restart: on-failure
     env_file:
@@ -80,6 +85,16 @@ services:
       - vault_root_token
       - postgres_user
       - postgres_password
+    depends_on:
+      vault-db:
+        condition: service_healthy
+      auth-db:
+        condition: service_healthy
+      backend-db:
+        condition: service_healthy
+      email-db:
+        condition: service_healthy
+
 
   backend-api:
     container_name: backend-api
@@ -88,16 +103,19 @@ services:
       #- backend-api-data:/code:rw
       - ./backend-api/code:/code:rw
     networks:
-      - backend
-      - frontend
-    ports:
-      - "5555:8000"
+      - backend-network
+      - frontend-network
     init: true
     restart: on-failure
     env_file:
       - ./backend-api/.env
     secrets:
       - vault_root_token
+    depends_on:
+      vault:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
 
   backend:
     container_name: backend
@@ -106,15 +124,18 @@ services:
       #- backend-data:/code:rw
       - ./backend/code:/code:rw
     networks:
-      - backend
-    ports:
-      - "9000:8002"
+      - backend-network
     init: true
     restart: on-failure
     env_file:
       - ./backend/.env
     secrets:
       - vault_root_token
+    depends_on:
+      vault:
+        condition: service_healthy
+      backend-db:
+        condition: service_healthy
 
   channels:
     container_name: channels
@@ -125,16 +146,17 @@ services:
       - upload-data:/images:rw
       - ./channels/code:/code:rw
     networks:
-      - frontend
-      - backend
-    ports:
-      - "9010:8000"
+      - frontend-network
+      - backend-network
     init: true
     restart: on-failure
     env_file:
       - ./channels/.env
     secrets:
       - vault_root_token
+    depends_on:
+      vault:
+        condition: service_healthy
 
   backend-db:
     container_name: backend-db
@@ -144,7 +166,7 @@ services:
     volumes:
       - backend-db-data:/var/lib/postgresql/data:rw
     networks:
-      - backend
+      - backend-network
     secrets:
       - postgres_user
       - postgres_password
@@ -155,16 +177,19 @@ services:
     volumes:
       #- email-data:/code:rwx
       - ./email/code:/code:rwx
-    ports:
-      - "9005:8000"
     networks:
-      - backend
+      - backend-network
     init: true
     restart: on-failure
     env_file:
       - ./email/.env
     secrets:
       - vault_root_token
+    depends_on:
+      vault:
+        condition: service_healthy
+      email-db:
+        condition: service_healthy
 
   email-db:
     container_name: email-db
@@ -174,7 +199,7 @@ services:
     volumes:
       - email-db-data:/var/lib/postgresql/data:rw
     networks:
-      - backend
+      - backend-network
     secrets:
       - postgres_user
       - postgres_password
@@ -186,31 +211,37 @@ services:
       #- frontend-data:/frontend:rw
       - ./frontend:/frontend:rw
     networks:
-      - frontend
+      - frontend-network
     ports:
       - "8000:443"
     init: true
     restart: on-failure
     env_file:
       - ./nginx/.env
-
+    depends_on:
+      channels:
+        condition: service_healthy
+      auth-api:
+        condition: service_healthy
+      backend-api:
+        condition: service_healthy
   redis:
     image: redis:alpine
     container_name: redis
     ports:
       - "6378:6379"
     networks:
-      - frontend
+      - frontend-network
 
 networks:
-  backend:
-    name: backend
+  backend-network:
+    name: backend-network
     driver: bridge
     ipam:
       config:
         - subnet: 172.18.0.0/24
-  frontend:
-    name: frontend
+  frontend-network:
+    name: frontend-network
     driver: bridge
     ipam:
       config:

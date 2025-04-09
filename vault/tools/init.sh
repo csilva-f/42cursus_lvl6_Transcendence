@@ -116,6 +116,6 @@ vault write -f database/rotate-root/config-backend-db
 vault write -f database/rotate-root/config-email-db
 
 
-
+echo $ROOT_TOKEN > /vault/secrets/VAULT_ROOT_TOKEN.txt
 # Initialize Vault if it is not already initialized
 tail -f /dev/null

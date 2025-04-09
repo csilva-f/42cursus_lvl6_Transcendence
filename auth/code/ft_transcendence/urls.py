@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from .views import healthcheck
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +26,6 @@ urlpatterns = [
     path('register/', include("cuca.urls")),
     path('otp/', include("two_factor.urls")),
     path('oauth/', include("oauth.urls")),
+    path('healthcheck/', healthcheck, name='healthcheck'),
+
 ]
