@@ -26,7 +26,7 @@
 								</div>
 
 								<div class="progress mt-2" role="progressbar" aria-label="Basic example"
-								 aria-valuemax="100" style="height: 8px;">
+								 aria-valuemax="100" style="height: 14px;">
 									<div class="progress-bar" style="background-color: var(--primary);"
 									id="profileLvlProgress">
 									</div>
@@ -42,25 +42,29 @@
 								<p class="p-3 text-center mt-3" style="font-style: italic; color: black;" id="bioText"></p>
 
 								<div class="p-3 mt-4 shadow rounded-4" style="background-color: var(--cardBg);">
-									<p class="text-start"><strong>Phone number:</strong> <span
-											id="phoneNumberText"></span></p>
-									<p class="text-start"><strong>Birthday:</strong> <span id="birthdayText"></span></p>
-									<p class="text-start"><strong>Gender:</strong> <span id="genderText"></span></p>
+									<p class="text-start">
+										<strong data-i18n="phoneP">Phone number:</strong> <span id="phoneNumberText"></span>
+									</p>
+									<p class="text-start">
+										<strong data-i18n="birthdayP">Birthday:</strong> <span id="birthdayText"></span>
+									</p>
+									<p class="text-start">
+										<strong data-i18n="genderP">Gender:</strong> <span id="genderText"></span>
+									</p>
 
 									<div class="d-flex justify-content-between mt-3">
-										<button id="editButton" class="btn d-flex align-items-center gap-2"
+										<button id="profileEditButton" class="d-none btn d-flex align-items-center gap-2"
 											style="background-color: var(--primary); color: white; border: none;"
 											data-bs-toggle="modal" data-bs-target="#editProfileModal">
 											<i class="fa-solid fa-pen-to-square fa-lg"></i>
-											<span class="d-none d-xl-block" style="font-size: 0.9rem;">Edit</span>
+											<span class="d-none d-xl-block" style="font-size: 0.9rem;" data-i18n="edit"></span>
 										</button>
 
-										<button id="changePasswordButton" class="btn d-flex align-items-center gap-2"
+										<button id="changePasswordButton" class="d-none btn d-flex align-items-center gap-2"
 											style="background-color: var(--primary); color: white; border: none;"
 											data-bs-toggle="modal" data-bs-target="#changePasswordModal">
 											<i class="fa-solid fa-key fa-lg"></i>
-											<span class="d-none d-xl-block" style="font-size: 0.9rem;">Change
-												Password</span>
+											<span class="d-none d-xl-block" style="font-size: 0.9rem;" data-i18n="changePass"></span>
 										</button>
 									</div>
 								</div>
@@ -358,7 +362,7 @@
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content" style="background-color: var(--bodyBg)">
 			<div class="modal-header" style="background-color: var(--primary); justify-content: center;">
-				<h5 class="h5 m-0 fw-bold text-center mb-2" style="color: white">Change Password</h5>
+				<h5 class="h5 m-0 fw-bold text-center mb-2" style="color: white" data-i18n="changePass">Change Password</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -366,7 +370,7 @@
 
 					<!-- Current Password -->
 					<div class="mb-3">
-						<label for="currentPassword" class="form-label">Current Password</label>
+						<label for="currentPassword" class="form-label" data-i18n="currPass">Current Password</label>
 						<div class="input-group">
 							<span class="input-group-text" style="border: none; background: white;">
 								<i class="fas fa-lock" style="color: var(--primary);"></i>
@@ -383,7 +387,7 @@
 
 					<!-- New Password -->
 					<div class="mb-3">
-						<label for="newPasswordChange" class="form-label">New Password</label>
+						<label for="newPasswordChange" class="form-label" data-i18n="newPass">New Password</label>
 						<div class="input-group">
 							<span class="input-group-text" style="border: none; background: white;">
 								<i class="fas fa-lock" style="color: var(--primary);"></i>
@@ -401,19 +405,19 @@
 							<ul>
 								<li id="lengthCheck" class="requirement">
 									<i class="fa-solid fa-xmark" id="lengthIcon" style="color: red;"></i>
-									At least 8 characters long
+									<span data-i18n="passLength">At least 8 characters long</span>
 								</li>
 								<li id="upperCaseCheck" class="requirement">
 									<i class="fa-solid fa-xmark" id="upperCaseIcon" style="color: red;"></i>
-									At least 1 uppercase letter
+									<span data-i18n="passUpperCase">At least 1 uppercase letter</span>
 								</li>
 								<li id="numberCheck" class="requirement">
 									<i class="fa-solid fa-xmark" id="numberIcon" style="color: red;"></i>
-									At least 1 number
+									<span data-i18n="passNumber">At least 1 number</span>
 								</li>
 								<li id="specialCharCheck" class="requirement">
 									<i class="fa-solid fa-xmark" id="specialCharIcon" style="color: red;"></i>
-									At least 1 special character
+									<span data-i18n="passSpecCharact">At least 1 special character</span>
 								</li>
 							</ul>
 						</small>
@@ -421,7 +425,7 @@
 
 					<!-- Retype Password -->
 					<div class="mb-3">
-						<label for="confirmPasswordChange" class="form-label">Retype New
+						<label for="confirmPasswordChange" class="form-label" data-i18n="retypePass">Retype New
 							Password</label>
 						<div class="input-group">
 							<span class="input-group-text" style="border: none; background: white;">
@@ -440,8 +444,8 @@
 							<small id="confirmValidationChange" class="form-text text-muted d-none">
 								<ul>
 									<li id="matchCheckChange" class="requirement">
-									<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
-										Passwords do not match
+										<i class="fa-solid fa-xmark" id="charIcon" style="color: red"></i>
+										<span data-i18n="passNotMatch">Passwords do not match</span>
 									</li>
 								</ul>
 							</small>
@@ -449,9 +453,9 @@
 
 					<!-- Submit -->
 					<div class="text-end">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="cancel"></button>
 						<button type="submit" class="btn"
-							style="background-color: var(--primary); color: white;">Save</button>
+							style="background-color: var(--primary); color: white;" data-i18n="save"></button>
 					</div>
 				</form>
 			</div>

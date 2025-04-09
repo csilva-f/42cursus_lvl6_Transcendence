@@ -22,10 +22,10 @@
 	<script type="text/javascript" src="/static/js/language.js"></script>
 	<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
 	<!-- FontAwesome Imports -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+	<link rel="stylesheet" href="/static/fontawesome/css/all.min.css" />
 	<!-- GraphJS Imports -->
-	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="/static/js/Libraries/chart.umd.min.js"></script>
+	<script src="/static/js/Libraries/chart.js"></script>
 	<!-- ParticleJS Imports -->
 	<script src="/static/js/Game/tsparticles.confetti.bundle.min.js"></script>
 	<!-- Font Imports -->
@@ -131,7 +131,7 @@
 					<!-- Profile Picture -->
 					<div class="ms-1 justify-content-end align-content-end">
 						<a id="profilePicElement" onclick="goToProfile(null)">
-							<img src="/static/img/pfp1.jpeg" style="object-fit: cover;max-width: 5rem;min-width: 5rem; cursor: pointer;"
+							<img src="/static/img/pfp1.jpeg" style="object-fit: cover;max-width: 5rem;min-width: 5rem; cursor: pointer; max-height: 5rem"
 								class="img-fluid w-100 rounded-3" id="userProfilePic"/>
 						</a>
 					</div>

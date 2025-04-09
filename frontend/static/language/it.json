@@ -109,5 +109,21 @@
     "hCardLossT": "Sconfitta nel Torneo",
     "playAgain": "Gioca di nuovo",
     "home": "Home",
-    "tournamentName": "Nome del torneo"
+    "tournamentName": "Nome del torneo",
+    "score": "Punto",
+    "edit": "Modificare",
+    "changePass": "Cambiare la password",
+    "genderP": "Genere:",
+    "birthdayP": "Compleanno:",
+    "phoneP": "Numero di telefono:",
+    "save": "Salva",
+    "cancel": "Cancellare",
+    "passNotMatch": "Le password non corrispondono",
+    "retypePass": "Riscrivi la nuova password",
+    "passSpecCharact": "Almeno 1 carattere speciale",
+    "passNumber": "Almeno 1 numero",
+    "passUpperCase": "Almeno 1 lettera maiuscola",
+    "passLength": "Lunghezza minima 8 caratteri",
+    "newPass": "Nuova password",
+    "currPass": "Password attuale"
 }

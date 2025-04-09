@@ -18,7 +18,6 @@ async function loginSuccess(data) {
         }
     } else {
         if (jwtToken) {
-            localStorage.setItem("jwt", jwtToken);
             await JWT.setToken(data);
             console.log("Access: ", await JWT.getAccess());
         }

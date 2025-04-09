@@ -110,5 +110,21 @@
     "hCardLossT": "Tournament Defeat",
     "playAgain": "Play again",
     "home": "Home",
-    "tournamentName": "Tournament Name"
+    "tournamentName": "Tournament Name",
+    "score": "Score",
+    "edit": "Edit",
+    "changePass": "Change password",
+    "genderP": "Gender:",
+    "birthdayP": "Birthday:",
+    "phoneP": "Phone number:",
+    "save": "Save",
+    "cancel": "Cancel",
+    "passNotMatch": "Passwords do not match",
+    "retypePass": "Retype new password",
+    "passSpecCharact": "At least 1 special character",
+    "passNumber": "At least 1 number",
+    "passUpperCase": "At least 1 uppercase letter",
+    "passLength": "At least 8 characters long",
+    "newPass": "New password",
+    "currPass": "Current password"
 }

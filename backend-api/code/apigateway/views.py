@@ -111,6 +111,25 @@ class PostUpdateGame(APIView):
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class PostUpdateGameChannels(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        backend_url = 'http://backend:8002/backend/update_game/'
+        game_data = request.data.get('game')
+        try:
+            #request.data["uid"] = request.user.user_id
+            backend_response = requests.post(backend_url, json=request.data)
+            backend_response.raise_for_status()
+            game_data = backend_response.json()
+            return Response(game_data, status=backend_response.status_code)
+        except requests.exceptions.HTTPError as http_err:
+            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except requests.exceptions.RequestException as req_err:
+            return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except ValueError as json_err:
+            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 class PostAddUserExtension(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -305,7 +324,7 @@ class PostAcceptGameInvit(APIView):
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
 class GetUserInvitations(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -327,7 +346,7 @@ class GetUserInvitations(APIView):
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
 class GetUserNbrInvitations(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -432,7 +451,7 @@ class PostSendFriendRequest(APIView):
 
 class PostRespondFriendRequest(APIView):
     permission_classes = [IsAuthenticated]
-    
+
     def post(self, request):
         backend_url = 'http://backend:8002/backend/respond_friendrequest/'
         friendship_data = request.data.get('friendship')
@@ -509,7 +528,7 @@ class GetTopUsers(APIView):
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
 class PostUpdateGameTS(APIView):
     permission_classes = [IsAuthenticated]
 

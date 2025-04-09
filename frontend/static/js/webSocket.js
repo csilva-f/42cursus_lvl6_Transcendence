@@ -16,13 +16,20 @@ function initializeWebSocket(callback = null) {
         if (callback) callback();
     };
 
-	window.ws_os.onmessage = function (e) {
+	window.ws_os.onmessage = async function (e) {
         const data = JSON.parse(e.data);
+        console.log("Received data:", data);
         if (data.online_users) {
             console.log("Online users list:", data.online_users);
             if (window.onlineUsersCallback) {
                 window.onlineUsersCallback(data.online_users);
             }
+        } else if (data.add_user) {
+          let uid = data.add_user;
+          //let user = await UserInfo.getUserID();
+          if (uid == await UserInfo.getUserID()) {
+            await fetchUserNotificationGame();
+          }
         } else {
             console.log("Message received:", e.data);
         }
