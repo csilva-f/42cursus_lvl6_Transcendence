@@ -252,7 +252,7 @@ function toggleTournamentGames(divID) {
 }
 
 //* Function to insert in frontend the info regarding a tournament's games
-function insertTournamentGameInfo(newCard, game) {
+async function insertTournamentGameInfo(newCard, game) {
     console.log(game);
     const tournGameNbr = newCard.querySelector("#tournGameNumber")
     tournGameNbr.textContent = game.phase;
@@ -271,8 +271,12 @@ function insertTournamentGameInfo(newCard, game) {
     const enterTournGameBtn = newCard.querySelector("#enterLi");
     enterTournGameBtn.setAttribute("data-id", game.gameID);
     if (game.user1Nick && game.user2Nick && game.statusID == 2) {
-        const element = newCard.querySelector('#tournGameBtn');
-        if (element) element.classList.remove('d-none');
+        console.log(game.createdByUser);
+        console.log(await UserInfo.getUserID());
+        if (game.createdByUser == await UserInfo.getUserID()) {
+            const element = newCard.querySelector('#tournGameBtn');
+            if (element) element.classList.remove('d-none');
+        }
     } else if (game.statusID == 3) {
         const element2 = newCard.querySelector('#tournGameWinnerText');
         if (element2) element2.classList.remove('d-none');
