@@ -359,23 +359,6 @@ async function postLocalTournament() {
     nick3: document.getElementById("P3NickInput").value,
     nick4: document.getElementById("P4NickInput").value
   };
-  if (UserInfo.userNick == tournamentData.nick2 || 
-    UserInfo.userNick == tournamentData.nick3 || 
-    UserInfo.userNick == tournamentData.nick4 || 
-    tournamentData.nick2 == tournamentData.nick3 ||
-    tournamentData.nick2 == tournamentData.nick4 ||
-    tournamentData.nick3 == tournamentData.nick4
-  ) {
-    return insertTournErrorMsg(1);
-  }
-
-  // const tourns = await fetchActiveTournaments();
-  // console.log(tourns);
-  // console.log(tourns.tournaments);
-  // if (tourns && tourns.some(tourn => tourn.name == tournamentData.name)) {
-  //   console.log("aqui");
-  //   return insertTournErrorMsg(2);
-  // }
 
   const accessToken = await JWT.getAccess();
   console.log(tournamentData);
@@ -397,7 +380,8 @@ async function postLocalTournament() {
         $("#createTournamentModal").modal("hide");
       },
       error: function (xhr, status, error) {
-        showErrorToast(APIurl, error, langData);
+        const data = JSON.parse(xhr.responseJSON);
+			  showErrorUserToast(langData, data.error);
         reject(error); // Reject the promise on error
       },
     });
