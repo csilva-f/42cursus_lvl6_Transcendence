@@ -5,6 +5,7 @@ EMAIL_DB_CONTAINER_NAME = email-db
 all: secrets build up
 DATA_DIR = $(HOME)/ft_transcendence_data
 ROOT_TOKEN_FILE = ./secrets/VAULT_ROOT_TOKEN.txt
+DOCKER_COMPOSE_BINARY=./docker-compose-linux-x86_64
 
 secrets:
 	@echo "Creating secrets folder..."
@@ -17,7 +18,7 @@ secrets:
 
 build:
 	@echo "Building Docker Compose setup..."
-	@docker compose -p $(NAME) build
+	@$(DOCKER_COMPOSE_BINARY) -p $(NAME) build
 
 directories:
 	@echo "Creating directories..."
@@ -30,10 +31,10 @@ directories:
 	@mkdir -p ./vault/data
 
 up: directories
-	@docker compose down
+	@$(DOCKER_COMPOSE_BINARY) down
 	@echo "" > $(ROOT_TOKEN_FILE)
 	@echo "Running Docker Compose setup..."
-	@docker compose --verbose up -d
+	@$(DOCKER_COMPOSE_BINARY) up -d
 # Stop the Docker Compose setup
 down:
 	@echo "Stopping Docker Compose setup..."
@@ -42,17 +43,17 @@ down:
 	@docker exec -it email-db chmod 777 /var/lib/postgresql/data -R
 	@docker exec -it vault-db chmod 777 /var/lib/postgresql/data -R
 	@docker exec -it vault chmod 777 /vault -R
-	@docker compose down
+	@$(DOCKER_COMPOSE_BINARY) down
 
 
 
 clean:down
 	@echo "Cleaning up stopped containers and networks..."
-	@docker compose -p $(NAME) down
+	@$(DOCKER_COMPOSE_BINARY) -p $(NAME) down
 
 fclean: clean
 	@echo "Force cleaning: removing all images..."
-	@docker compose -p $(NAME) down --rmi all
+	@$(DOCKER_COMPOSE_BINARY) -p $(NAME) down --rmi all
 	@docker system prune -af
 
 
@@ -62,6 +63,7 @@ fulldestroy: fclean
 	@rm -rf "$(DATA_DIR)/vault-db/data" -R
 	@rm -rf "$(DATA_DIR)/email-db/data" -R
 	@rm -rf "./vault/data" -R
+	@rm -rf "./channels/db.sqlite3" -R
 	@echo "" > $(ROOT_TOKEN_FILE)
 
 db-clear:

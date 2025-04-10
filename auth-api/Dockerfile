@@ -17,6 +17,6 @@ COPY tools/healthcheck.sh /tools/healthcheck.sh
 RUN chmod +x /tools/wait-for-it.sh
 RUN chmod +x /tools/entrypoint.sh
 RUN chmod +x /tools/healthcheck.sh
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 CMD ["/bin/sh", "/tools/healthcheck.sh"]
+HEALTHCHECK --interval=15s --timeout=5s --start-period=5s --retries=3 CMD ["/bin/sh", "/tools/healthcheck.sh"]
 ENTRYPOINT ["/bin/sh","/tools/entrypoint.sh"]
 #CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

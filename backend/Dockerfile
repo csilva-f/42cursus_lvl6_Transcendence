@@ -18,7 +18,7 @@ COPY tools/entrypoint.sh /tools/entrypoint.sh
 RUN chmod +x /tools/wait-for-it.sh
 RUN chmod +x /tools/entrypoint.sh
 ENTRYPOINT ["/bin/sh","/tools/entrypoint.sh"]
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+HEALTHCHECK --interval=15s --timeout=5s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:8002/healthcheck/ || exit 1
 #CMD ["python3", "manage.py", "runserver", "0.0.0.0:8002"]
 #CMD ["gunicorn", "--bind", "0.0.0.0:8001", "--reload", "ft_transcendence.wsgi:application"]
