@@ -45,7 +45,7 @@ function validateUpdateProfileForm(form)
 }
 
 function ValidateNicknameForm(form){
-    newNickname = form.newNickname.value;
+    newNickname = form.newNickname.value.trim();
     newBirthday = new Date(form.newBirthday.value);
     const currentDate = new Date();
     let erro = 0;

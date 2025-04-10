@@ -245,8 +245,12 @@ async function changeToBig(location) {
 		const input = document.querySelector("#signupPhone");
 		window.intlTelInput(input, {
 			separateDialCode: true,
-			loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
+			utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"
 		});
+		// window.intlTelInput(input, {
+		// 	separateDialCode: true,
+		// 	loadUtils: () => await import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
+		// });
 		disableTopBar();
 		getForms();
 	} else if (location == "/forgotPassword") {
@@ -426,8 +430,12 @@ async function changeActive(location) {
 			const input = document.querySelector("#phoneNumber");
 			window.intlTelInput(input, {
 				separateDialCode: true,
-				loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
+				utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"
 			});
+			// window.intlTelInput(input, {
+			// 	separateDialCode: true,
+			// 	loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
+			// });
 			//createQrCode();
 			break;
 		case "/profile/:userID":

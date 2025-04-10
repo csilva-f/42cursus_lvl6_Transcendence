@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import Q, Sum, F, ExpressionWrapper, DurationField
 from django.utils.timezone import now
+from rest_framework import status
 
 ALLOWED_FILTERS_TOURNAMENT = {'uid', 'tournamentID', 'statusID', 'name', 'winnerID'}
 
@@ -1025,7 +1026,7 @@ def post_update_userextension(request):
                 if len(unick) > 20:
                     return JsonResponse({"error": "Nickname cannot exceed 20 characters"}, status=400)
                 if tUserExtension.objects.filter(nick=unick).exists():
-                    return JsonResponse({"error": f"Nickname '{unick}' is already in use"}, status=400)
+                    return JsonResponse({"error": f"Nickname '{unick}' is already in use"}, status=status.HTTP_409_CONFLICT)
             if not any([
                 birthdate and birthdate != uext.birthdate,
                 gender_id and gender_id != (uext.gender.gender if uext.gender else None),
