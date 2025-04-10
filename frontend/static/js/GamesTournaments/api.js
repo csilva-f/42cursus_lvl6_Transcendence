@@ -361,7 +361,6 @@ async function postLocalTournament() {
   };
 
   const accessToken = await JWT.getAccess();
-  console.log(tournamentData);
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "POST",
@@ -374,9 +373,8 @@ async function postLocalTournament() {
       data: JSON.stringify(tournamentData),
       success: function (res) {
         showSuccessToast(langData, langData.tournamentcreated);
-        console.log(res);
-        console.log("res.tournament", res.tournament);
         resolve(res.tournament); // Resolve the promise with the tournament ID
+        document.querySelector("#localTournamentFormID").reset();
         $("#createTournamentModal").modal("hide");
       },
       error: function (xhr, status, error) {
