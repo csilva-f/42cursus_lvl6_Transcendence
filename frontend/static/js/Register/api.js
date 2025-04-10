@@ -235,6 +235,8 @@ async function OTP_send_email() {
 //? /authapi/otp-verify/
 async function verifyAccount() {
     let code = '';
+    const userLang = localStorage.getItem("language") || "en";
+	const langData = await getLanguageData(userLang);
     for (let i = 1; i <= 6; i++) {
         const field = document.getElementById(`otp${i}`);
         if (field)
@@ -280,6 +282,7 @@ async function verifyAccount() {
         error: function (xhr) {
             const data = JSON.parse(xhr.responseJSON);
             $("#mfa-message").text(data.error || "Login failed.");
+            showErrorUserToast(langData, data.error);
             clearOTPFields();
         },
     });
