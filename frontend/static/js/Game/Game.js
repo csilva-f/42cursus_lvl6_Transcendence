@@ -12,53 +12,66 @@ const ballRadius = 15;
 const paddleWidth = 20;
 const paddleHeight = 150;
 const paddleVelocity = 10;
-var backButton = false;
+var closeGame = false;
 var localGame = false;
 var isTournament = false;
 var remoteGame = false;
+var waitingRoom = false;
 const wsConnections = {};
 var imgLeft, imgRight;
-
+var gameID = 0;
 let isRefreshing = false;
 
 window.addEventListener('keydown', function (e) {
-  if (e.keyCode == 116)
-    isRefreshing = true;
-  keyPressed[e.keyCode] = true;
+    keyPressed[e.keyCode] = true;
 })
 
 window.addEventListener('keyup', function (e) {
     keyPressed[e.keyCode] = false;
 })
 
-window.addEventListener("popstate", async function (e) {
+//handle do back button
+window.addEventListener("popstate", function (e) {
     console.log("back button 1")
     if(window.location.pathname != "/games")
         return;
     console.log("back button 2")
-    backButton = true;
+    closeGame = true;
     if(localGame){
         localGame = false;
-        bmcForcedFinish();
+        console.log("SEND GAME ID:", gameID);
+        window.ws_os.send(JSON.stringify({"game_id": gameID}));
     }
     if (remoteGame){
         remoteGame = false;
         remoteWs.close(3000)
     }
-    // Handle back button event (e.g., show a warning or log data)
 })
 
-function bmcForcedFinish()
-{
-  let gameInfo = localStorage.getItem('gameInfo');
-  window.ws_os.send(JSON.stringify({"game_id":gameInfo}));
-}
+// function bmcForcedFinish()
+// {
+//     console.log("FORCE FINISH")
+//   let gameInfo = localStorage.getItem('gameInfo');
+//   window.ws_os.send(JSON.stringify({"game_id":gameInfo}));
+// }
 
+//handle fechar a janela / refresh
 window.addEventListener("beforeunload", function (e) {
-    if (!isRefreshing)
-      bmcForcedFinish();
-    isRefreshing = false;
-    //console.log("Aba ou navegador foi fechado! ==> so funciona para firefox");
+    console.log("=======>>>  BEFORE UNLOAD")
+    console.log("WHERE: ", window.location.pathname)
+    if(window.location.pathname != "/pong")
+        return;
+    closeGame = true;
+    if (localGame){
+        localGame = false;
+        console.log("SEND GAME ID:", gameID);
+        window.ws_os.send(JSON.stringify({"game_id": gameID}));
+    }
+    if(remoteGame){
+        remoteGame = false;
+        remoteWs.close(3000);
+    }
+    localStorage.removeItem("gameInfo");
 });
 
 class Game  {
@@ -74,7 +87,8 @@ class Game  {
         this.gameDuration = 0;
     }
     async initGame() {
-        backButton = false;
+        gameID = this.gameData.gameID;
+        closeGame = false;
         localGame = true;
         console.info("onload");
         //this.canvas = document.getElementById('pongGameCanvas');
@@ -133,16 +147,16 @@ class Game  {
 
     async gameLoop() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        if (!this.stopGame && !backButton) {
+        if (!this.stopGame && !closeGame) {
             window.requestAnimationFrame(async () => this.gameLoop());
             this.gameUpdate();
             this.incScore();
             this.gameDraw();
             //console.log("game on going");
         }
-        else if (backButton) {
+        else if (closeGame) {
             console.log("force finish");
-            backButton = false;
+            closeGame = false;
             localGame = false;
         } else {
             console.log("Normal finish!");
@@ -176,7 +190,7 @@ class Game  {
         this.objects[1].colissionEdge(this.canvas);
         let colision = this.objects[1].leftColissionBall(this.objects[0]);
         if(colision){
-            console.log("Colision left: update ball again");
+            //console.log("Colision left: update ball again");
             this.objects[1].paddleColisionTimes++;
             this.objects[0].lastColision = 1;
             //this.objects[0].update();
@@ -187,7 +201,7 @@ class Game  {
         this.objects[2].colissionEdge(this.canvas);
         let colision = this.objects[2].rightColissionBall(this.objects[0]);
         if(colision){
-            console.log("Colision right: update ball again");
+            //console.log("Colision right: update ball again");
             this.objects[2].paddleColisionTimes++;
             this.objects[0].lastColision = 2;
             //this.objects[0].update();
@@ -223,7 +237,7 @@ class Game  {
         }
     }
     respawnBall() {
-        console.info("respawn")
+        //console.info("respawn")
         if (this.objects[0].ballVelocityX > 0) {
             this.objects[0].ballX = this.canvas.width / 2;
             this.objects[0].ballY = (Math.random() * (this.canvas.height - 200)) + 100;

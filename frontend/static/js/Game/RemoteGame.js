@@ -25,7 +25,7 @@ class RemoteGame  {
         this.disconnect = false;
     }
     initGame() {
-        backButton = false;
+        closeGame = false;
         remoteWs = this.ws;
         remoteGame = true;
         console.log("onload");
@@ -141,27 +141,22 @@ class RemoteGame  {
     }
     async gameLoop() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        if (!this.stopGame && !this.disconnect && !backButton) { //!keyPressed["back"] &&
+        if (!this.stopGame && !this.disconnect && !closeGame) { //!keyPressed["back"] &&
             window.requestAnimationFrame(() => this.gameLoop());
             if(this.isHost)
                 this.hostGame();
             else
                 this.joinerGame();
-        } else if(backButton){
-            backButton = false;
+        } else if(closeGame){
+            console.log("force finish");
+            closeGame = false;
             remoteGame = false;
         } else if (this.disconnect){
+            console.log("disconect");
             this.ws.close(3000); // meu codigo de unexpected close
-            //await updateGameStatusForceFinish(this.gameData); //erase this, it will be done in the consumer
             window.history.pushState({}, "", `/games`);
             await locationHandler();
             remoteGame = false;
-        // } else if (keyPressed["back"]) {
-        //     console.log("back");
-        //     keyPressed["back"] = false;
-        //     this.ws.close(3000); //meu codigo de unexpected close
-        //     window.history.pushState({}, "", `/games`);
-        //     await locationHandler();
         } else if (this.stopGame){
             showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, 
             this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, true, this.gameData.imgLeft, this.gameData.imgRight, false, this.gameDuration);

@@ -265,14 +265,14 @@ async function changeToBig(location) {
 		disableTopBar();
 		getForms();
 	} else if (location == "/pong") {
+		gameInfo = localStorage.getItem("gameInfo");
+		if (!gameInfo){
+			window.history.pushState({}, "", `/games`);
+			await locationHandler();
+			return;
+		}
 		headerElement.setAttribute("data-i18n", "pong");
 		activateTopBar();
-		gameInfo = localStorage.getItem("gameInfo");
-		if (gameInfo) {
-			gameInfo = JSON.parse(gameInfo);
-			game = new Game(gameInfo);
-			game.initGame();
-    	}
 	} else if (location == "/callback") {
 		headerElement.setAttribute("data-i18n", "callback");
 		disableTopBar();
@@ -469,7 +469,10 @@ const locationHandler = async () => {
       location = "/mainPage";
      	route = routes[location];
     }
-	if (!(location === "/pong")) localStorage.removeItem("gameInfo");
+	// if (!(location === "/pong")) {
+	// 	localStorage.removeItem("gameInfo");
+	// 	localStorage.removeItem("waitingRoomInfo");
+	// }
     if (route.needAuth == 2 && uid) {
       location = "401";
       route = routes[location];

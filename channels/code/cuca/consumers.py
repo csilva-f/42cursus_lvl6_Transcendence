@@ -140,8 +140,9 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
                 self.user_id = user_id  # Guarda o user_id na instância
                 await self.update_online_users()
             elif game_id:
-                gameInfo = json.loads(game_id)
-                gameForceFinish(gameInfo["gameID"])
+                print("FORCE FINISH")
+                #gameInfo = json.loads(game_id)
+                gameForceFinish(game_id)
             elif add_user:
                 print("Received addUser :", add_user)
                 await self.channel_layer.group_send(
