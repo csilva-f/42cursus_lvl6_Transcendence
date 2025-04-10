@@ -129,6 +129,7 @@ def get_games(request):
             'userNick': u_ext.nick if u_ext else None,
             'gameID': game.game,
             'creationTS': game.creationTS.strftime("%Y-%m-%d %H:%M:%S"),
+            'createdByUser': game.createdByUser,
             'startTS': game.startTS.strftime("%Y-%m-%d %H:%M:%S") if game.startTS else None,
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
@@ -198,6 +199,7 @@ def get_gameinvitations(request):
             'userNick': u_ext.nick if u_ext else None,
             'gameID': game.game,
             'creationTS': game.creationTS.strftime("%Y-%m-%d %H:%M:%S"),
+            'createdByUser': game.createdByUser,
             'startTS': game.startTS.strftime("%Y-%m-%d %H:%M:%S") if game.startTS else None,
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
@@ -276,16 +278,21 @@ def get_usergames(request):
                 games = games.filter(tournament__tournament__isnull=True)
             else:
                 games = games.filter(tournament__tournament=tournament_id)
+        tournament_filter = (
+            Q(tournament__isnull=True) |
+            Q(tournament__isnull=False, phase__phase=3) |
+            (Q(tournament__isnull=False, phase__phase=2) & ~Q(winnerUser=user_id) & Q(createdByUser=user_id))
+        )
         if status_id and status_id == 3:
             games = games.filter(
                 (Q(isInvitation=False) | Q(isInvitation=True, isInvitAccepted=True)) &
                 Q(winnerUser__isnull=False) &
-                (Q(tournament__isnull=True) | Q(tournament__isnull=False, phase__phase=3))
+                tournament_filter
             )
         else:
             games = games.filter(
                 (Q(isInvitation=False) | Q(isInvitation=True, isInvitAccepted=True)) &
-                (Q(tournament__isnull=True) | Q(tournament__isnull=False, phase__phase=3))
+                tournament_filter
             )
         try:
             u_ext = tUserExtension.objects.get(user=user_id)
@@ -316,6 +323,7 @@ def get_usergames(request):
             'userNick': u_ext.nick if u_ext else None,
             'gameID': game.game,
             'creationTS': game.creationTS.strftime("%Y-%m-%d %H:%M:%S"),
+            'createdByUser': game.createdByUser,
             'startTS': game.startTS.strftime("%Y-%m-%d %H:%M:%S") if game.startTS else None,
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
             'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
@@ -439,6 +447,7 @@ def post_create_game(request):
                     return JsonResponse({"error": f"Status ID {gstatus} does not exist in tauxStatus"}, status=404)
 
             game = tGames.objects.create(
+                createdByUser=user1_id,
                 user1=user1_id,
                 user2=user2_id,
                 user1_nick=user1nick,
@@ -451,6 +460,7 @@ def post_create_game(request):
             )
             game_data = {
                 "id": game.game,
+                'createdByUser': game.createdByUser,
                 "user1": user1_id,
                 "user1_nick": user1nick,
                 "user2": user2_id,
@@ -554,6 +564,7 @@ def post_create_tournament(request):
                         gstatus = tauxStatus.objects.get(statusID=1)
                     games.append(tGames(
                         tournament=tournament,
+                        createdByUser=created_by,
                         status=gstatus,
                         isLocal=True,
                         phase=gphase,
