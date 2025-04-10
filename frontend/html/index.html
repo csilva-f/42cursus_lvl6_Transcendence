@@ -279,7 +279,7 @@
 										<i class="fa-solid fa-id-card" style="color: var(--primary);"></i></span>
 									<input type="text" class="form-control" id="newNickname" required
 										style="border: none;"
-										oninput="validateNick('newNickname', 'validateNick', 'checkNick')">
+										oninput="this.value = this.value.replace(/\s/g, ''); validateNick('newNickname', 'validateNick', 'checkNick')">
 								</div>
 								<small id="validateNick" class="form-text text-muted d-none">
 									<ul>

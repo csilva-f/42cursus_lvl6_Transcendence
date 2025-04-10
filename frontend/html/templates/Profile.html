@@ -167,7 +167,7 @@
 										<i class="fa-solid fa-user" style="color: var(--primary);"></i>
 									</span>
 									<input type="text" class="form-control" id="firstName" style="border: none;"
-									oninput="validateName('firstName', 'validateName', 'checkName')"required>
+									oninput="this.value = this.value.replace(/\s/g, ''); validateName('firstName', 'validateName', 'checkName')"required>
 								</div>
 								<small id="validateName" class="form-text text-muted d-none">
 									<ul>
@@ -185,7 +185,7 @@
 										<i class="fa-solid fa-user" style="color: var(--primary);"></i>
 									</span>
 									<input type="text" class="form-control" id="lastName" style="border: none;"
-									oninput="validateName('lastName', 'validateLast', 'checkLast')" required>
+									oninput="this.value = this.value.replace(/\s/g, ''); validateName('lastName', 'validateLast', 'checkLast')" required>
 								</div>
 								<small id="validateLast" class="form-text text-muted d-none">
 									<ul>
@@ -202,7 +202,7 @@
 								<label for="phoneNumber" class="form-label" data-i18n="phoneP2"></label>
 								<div class="input-group">
 									<input type="tel" class="form-control" id="phoneNumber" style="border: none;"
-									oninput="validatePhoneNumber('phoneNumber', 'validateNumber', 'checkNumber')" required>
+									oninput="this.value = this.value.replace(/\s/g, ''); validatePhoneNumber('phoneNumber', 'validateNumber', 'checkNumber')" required>
 								</div>
 								<small id="validateNumber" class="form-text text-muted d-none">
 									<ul>

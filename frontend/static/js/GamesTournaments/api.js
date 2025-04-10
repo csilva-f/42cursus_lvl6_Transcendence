@@ -369,13 +369,13 @@ async function postLocalTournament() {
     return insertTournErrorMsg(1);
   }
 
-  const tourns = await fetchActiveTournaments();
-  console.log(tourns);
-  console.log(tourns.tournaments);
-  if (tourns && tourns.some(tourn => tourn.name == tournamentData.name)) {
-    console.log("aqui");
-    return insertTournErrorMsg(2);
-  }
+  // const tourns = await fetchActiveTournaments();
+  // console.log(tourns);
+  // console.log(tourns.tournaments);
+  // if (tourns && tourns.some(tourn => tourn.name == tournamentData.name)) {
+  //   console.log("aqui");
+  //   return insertTournErrorMsg(2);
+  // }
 
   const accessToken = await JWT.getAccess();
   console.log(tournamentData);
@@ -394,6 +394,7 @@ async function postLocalTournament() {
         console.log(res);
         console.log("res.tournament", res.tournament);
         resolve(res.tournament); // Resolve the promise with the tournament ID
+        $("#createTournamentModal").modal("hide");
       },
       error: function (xhr, status, error) {
         showErrorToast(APIurl, error, langData);
@@ -428,7 +429,9 @@ async function enterTournament(gameID) {
       updateContent(langData);
     },
     error: function (xhr, status, error) {
-      showErrorToast(APIurl, error, langData);
+      const data = JSON.parse(xhr.responseJSON);
+			showErrorUserToast(langData, data.error);
+      // showErrorToast(APIurl, error, langData);
       // resetModal();
     },
   });
