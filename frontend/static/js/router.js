@@ -192,6 +192,7 @@ function resetNotifications() {
 }
 
 async function insertUserLevel(element, otherUserLvl) {
+	console.log("[insertUserLevel]")
 	var userLvl = null;
 	if (otherUserLvl == null)
 		userLvl = await UserInfo.getUserLvl();
@@ -212,6 +213,7 @@ async function changeTopBarImg(newImg) {
 }
 
 async function activateTopBar() {
+	console.log("[activateTopBar]")
 	const topbar = document.getElementById("topbar")
 	topbar.classList.remove('d-none')
 	document.getElementById("personNickname").textContent = await UserInfo.getUserNick();
@@ -268,15 +270,14 @@ async function changeToBig(location) {
 		disableTopBar();
 		getForms();
 	} else if (location == "/pong") {
-		headerElement.setAttribute("data-i18n", "pong");
-		document.getElementById("topbar").classList.remove('d-none');
-		activateTopBar();
 		gameInfo = localStorage.getItem("gameInfo");
-		if (gameInfo) {
-			gameInfo = JSON.parse(gameInfo);
-			game = new Game(gameInfo);
-			game.initGame();
+		if (!gameInfo){
+			window.history.pushState({}, "", `/games`);
+			await locationHandler();
+			return;
 		}
+		headerElement.setAttribute("data-i18n", "pong");
+		activateTopBar();
 	} else if (location == "/callback") {
 		headerElement.setAttribute("data-i18n", "callback");
 		disableTopBar();

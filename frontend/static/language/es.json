@@ -103,6 +103,8 @@
     "errorName": "El nombre del torneo debe ser diferente al de otros torneos activos",
 	"Error": "Error",
     "globalStatistics": "Estadísticas globales",
+    "Error": "Error",
+    "globalStatistics": "Estadísticas globales",
     "opponent": "Adversario:",
     "hCardWin": "Victoria",
     "hCardLoss": "Derrota",

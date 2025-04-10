@@ -146,35 +146,3 @@ async function updateGameStatus(data){
         },
     });
 }
-
-async function updateGameStatusForceFinish(gameData){
-    const userLang = localStorage.getItem("language") || "en";
-    const langData = await getLanguageData(userLang);
-    const data = {
-        uid: gameData.P1_uid,
-        gameID: gameData.gameID,
-        statusID: 3,
-    }
-    console.log(data);
-    const APIurl = `/api/update-game/`;
-    const accessToken = await JWT.getAccess();
-    $.ajax({
-        type: "POST",
-        url: APIurl,
-        Accept: "application/json",
-        contentType: "application/json",
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        },
-        data: JSON.stringify(data),
-        success: async function (res) {
-            console.log(res);
-        },
-        error: function (xhr, status, error) {
-            showErrorToast(APIurl, error, langData);
-        },
-    });
-    await UserInfo.refreshUser();
-    document.getElementById("topbar").classList.remove('d-none');
-    activateTopBar();
-}
