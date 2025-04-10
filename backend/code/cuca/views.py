@@ -516,7 +516,7 @@ def post_create_tournament(request):
                 return JsonResponse({"error": "name can't be empty"}, status=400)
             existing_tournament = tTournaments.objects.filter(name=save_name, status__in=[1, 2]).exists()
             if existing_tournament:
-                return JsonResponse({"error": "Tournament name must be different from an active tournament"}, status=400)
+                return JsonResponse({"error": "Tournament name must be different from an active tournament"}, status=status.HTTP_409_CONFLICT)
             created_by = int(u1)
             if not created_by:
                 return JsonResponse({"error": "User ID is required for tournament creation"}, status=400)
@@ -526,7 +526,7 @@ def post_create_tournament(request):
                 return JsonResponse({"error": "Tournament players' alias must be provided"}, status=400)
             uext1 = tUserExtension.objects.get(user=created_by)
             if u2 in [u3, u4, uext1.nick] or u3 in [u4, uext1.nick] or u4 == uext1.nick:
-                return JsonResponse({"error": "Tournament players' alias must be different"}, status=400)
+                return JsonResponse({"error": "Tournament players' alias must be different"}, status=status.HTTP_409_CONFLICT)
             creation_ts = date.today()
             with transaction.atomic():
                 tournament = tTournaments.objects.create(
