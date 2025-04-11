@@ -7,12 +7,12 @@
 				<form class="mt-3" id="mfa-form">
 					<div class="mb-3">
 						<div class="input-group">
-							<input type="text" class="form-control otp-field" maxlength="1" id="otp1" autocomplete="off" autofocus oninput="handleOTPInput(this)">
-							<input type="text" class="form-control otp-field" maxlength="1" id="otp2" autocomplete="off" oninput="handleOTPInput(this)">
-							<input type="text" class="form-control otp-field" maxlength="1" id="otp3" autocomplete="off" oninput="handleOTPInput(this)">
-							<input type="text" class="form-control otp-field" maxlength="1" id="otp4" autocomplete="off" oninput="handleOTPInput(this)">
-							<input type="text" class="form-control otp-field" maxlength="1" id="otp5" autocomplete="off" oninput="handleOTPInput(this)">
-							<input type="text" class="form-control otp-field" maxlength="1" id="otp6" autocomplete="off" oninput="handleOTPInput(this)">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp1" autocomplete="off" autofocus onkeydown="handleOTPInput(this)">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp2" autocomplete="off" onkeydown="handleOTPInput(this)">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp3" autocomplete="off" onkeydown="handleOTPInput(this)">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp4" autocomplete="off" onkeydown="handleOTPInput(this)">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp5" autocomplete="off" onkeydown="handleOTPInput(this)">
+							<input type="text" class="form-control otp-field" maxlength="1" id="otp6" autocomplete="off" onkeydown="handleOTPInput(this)">
 						</div>
 					</div>
 					<button type="button" class="btn" onClick="verifyAccount();" style="background-color: var(--primary); color: white; width: 100%;">Verify account</button>
