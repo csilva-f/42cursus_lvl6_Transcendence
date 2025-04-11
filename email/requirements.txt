@@ -1,5 +1,5 @@
 Django==5.1.2
 django-mailer==2.3.2
 djangorestframework==3.15.2
-psycopg2-binary
-hvac
+psycopg2-binary==2.9.10
+hvac==2.3.0

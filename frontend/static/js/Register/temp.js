@@ -14,7 +14,6 @@ function passwordVisibility(passwordFieldId, toggleIconId) {
   }
 }
 
-
 function validateNewPassword(passwordId, validationId, confirmPassId) {
   const password = document.getElementById(passwordId);
   const lengthCheck = document.getElementById("lengthCheck");
@@ -71,7 +70,7 @@ function validateNewPassword(passwordId, validationId, confirmPassId) {
     ? "green"
     : "red";
 
-  if (isValidLength && hasUpperCase && hasNumbers && hasSpecialChars) {
+  if (isValidLength && hasUpperCase && hasNumbers && hasSpecialChars && password.length > 0) {
     validationMessage.classList.add("d-none");
   } else {
     validationMessage.classList.remove("d-none");
@@ -82,8 +81,15 @@ function validatePhoneNumber(phoneId, validationId, errorIcon) {
   const phone = document.getElementById(phoneId);
   const validationMessage = document.getElementById(validationId);
   const icon = document.getElementById(errorIcon);
+  const isNumeric = /^[\d\s-]*$/.test(phone.value);
 
-  const isNumeric = /^\d+$/.test(phone.value);
+  var elements = document.getElementsByClassName('iti__selected-dial-code');
+  if (elements.length > 0) {
+    var firstElement = elements[0];
+    const dddNumber = firstElement.textContent;
+    console.log("firstElement: ", dddNumber);
+  }
+  console.log("numero: ", phone.value);
   if (isNumeric && phone.value.length <= 20) {
     validationMessage.classList.add("d-none");
     validationMessage.classList.add("valid");
@@ -120,25 +126,23 @@ function validatePasswordsMatch(
   }
 }
 
-function validateName(name, validationName, checkId) {
+function validateName(name, validationName, checkId, formID) {
   const nameInput = document.getElementById(name);
   const validationMessage = document.getElementById(validationName);
   const checkIcon = document.getElementById(checkId);
-
-
-	if (nameInput.value.length <= 50) {
-		validationMessage.classList.add('d-none');
+	if (nameInput.value.length <= 50  && nameInput.value.length > 0) {
+    validationMessage.classList.add('d-none');
 		validationMessage.classList.add('valid');
     nameInput.classList.add('is-valid');
 		validationMessage.classList.remove('invalid');
     nameInput.classList.remove('is-invalid');
 	} else {
-		checkIcon.style.color = 'red';
+    checkIcon.style.color = 'red';
 		validationMessage.classList.remove('d-none');
-		validationMessage.classList.add('invalid');
-    nameInput.classList.add('is-invalid');
 		validationMessage.classList.remove('valid');
+		validationMessage.classList.add('invalid');
     nameInput.classList.remove('is-valid');
+    nameInput.classList.add('is-invalid');
 	}
 }
 

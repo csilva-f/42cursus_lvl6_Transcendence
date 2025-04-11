@@ -32,8 +32,11 @@ async function sendSignup(form) {
 		},
 		error: function (xhr, error) {
 			const data = JSON.parse(xhr.responseJSON);
-			const errorMsg = data.error.match(/"(.*?)"/);
-			$("#signup-message").text(data.error || "register failed.");
+			showErrorUserToast(langData, data);
+			/*if (data) {
+				const errorMsg = data.match(/"(.*?)"/);
+			}
+			$("#signup-message").text(data || "register failed.");
 
 			const emailInput = document.getElementById('signupEmail');
 			const passwordInput = document.getElementById('signupPassword');
@@ -45,15 +48,16 @@ async function sendSignup(form) {
 			emailInput.setCustomValidity('');
 			passwordInput.setCustomValidity('');
 
-			if (data.error.includes("email")) {
-				emailInvalid.textContent = errorMsg[1];
-				emailInput.setCustomValidity(errorMsg[1]);
-				emailInput.classList.add('is-invalid');
+			if (data.includes("email")) {
+				// emailInvalid.textContent = errorMsg[1];
+				// emailInput.setCustomValidity(errorMsg[1]);
+				// emailInput.classList.add('is-invalid');
 			} else if (data.error.includes("password")) {
-				passwordInvalid.textContent = errorMsg[1];
-				passwordInput.setCustomValidity(errorMsg[1]);
-				passwordInput.classList.add('is-invalid');
-			}
+				showErrorUserToast(langData, data);
+				// passwordInvalid.textContent = errorMsg[1];
+				// passwordInput.setCustomValidity(errorMsg[1]);
+				// passwordInput.classList.add('is-invalid');
+			}*/
 			return false;
 		},
 	});

@@ -204,6 +204,7 @@ function resetNotifications() {
 }
 
 async function insertUserLevel(element, otherUserLvl) {
+	console.log("[insertUserLevel]")
 	var userLvl = null;
 	if (otherUserLvl == null)
 		userLvl = await UserInfo.getUserLvl();
@@ -225,6 +226,7 @@ async function changeTopBarImg(newImg) {
 }
 
 async function activateTopBar() {
+	console.log("[activateTopBar]")
 	const topbar = document.getElementById("topbar")
 	topbar.classList.remove('d-none')
 	document.getElementById("personNickname").textContent = await UserInfo.getUserNick();
@@ -234,6 +236,7 @@ async function activateTopBar() {
 }
 
 async function changeToBig(location) {
+	console.log("[changeToBig]")
 	const allContent = document.getElementById("allContent")
 	allContent.classList.remove('d-none');
 	allContent.style.cssText += 'height: calc(100vh - 7rem);';
@@ -257,8 +260,12 @@ async function changeToBig(location) {
 		const input = document.querySelector("#signupPhone");
 		window.intlTelInput(input, {
 			separateDialCode: true,
-			loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
+			utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"
 		});
+		// window.intlTelInput(input, {
+		// 	separateDialCode: true,
+		// 	loadUtils: () => await import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
+		// });
 		disableTopBar();
 		getForms();
 	} else if (location == "/forgotPassword") {
@@ -276,8 +283,13 @@ async function changeToBig(location) {
 		disableTopBar();
 		getForms();
 	} else if (location == "/pong") {
+		gameInfo = localStorage.getItem("gameInfo");
+		if (!gameInfo){
+			window.history.pushState({}, "", `/games`);
+			await locationHandler();
+			return;
+		}
 		headerElement.setAttribute("data-i18n", "pong");
-		document.getElementById("topbar").classList.remove('d-none');
 		activateTopBar();
 		disableClickTopBar();
 		gameInfo = localStorage.getItem("gameInfo");
@@ -439,8 +451,13 @@ async function changeActive(location) {
 			getForms();
 			const input = document.querySelector("#phoneNumber");
 			window.intlTelInput(input, {
-				loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
+				separateDialCode: true,
+				utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"
 			});
+			// window.intlTelInput(input, {
+			// 	separateDialCode: true,
+			// 	loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
+			// });
 			//createQrCode();
 			break;
 		case "/profile/:userID":
@@ -478,35 +495,37 @@ const locationHandler = async () => {
 	let uid = await UserInfo.getUserID();
 	let tempToken = await JWT.getTempToken();
 	console.log("[Location] ", location)
+
 	if (!(location === "/mfa" && (tempToken && !uid))) {
 		if ((isProfile(location) && !uid) || (route.needAuth == 1 && !uid)) {
 			location = "/mainPage";
 			route = routes[location];
 		}
-		if (!(location === "/pong")) localStorage.removeItem("gameInfo");
+		if (!(location === "/pong"))
+			localStorage.removeItem("gameInfo");
 		if (route.needAuth == 2 && uid) {
 			location = "401";
 			route = routes[location];
 		}
-		else {
-			if (location === "/mfa" && !tempToken.access) {
-				location = "/login";
-				route = routes[location];
-			}
-		}
-		if (isProfile(location)) {
-			console.log("[isProfile(location)]")
-			route = routes["/profile/:userID"];
-			html = await fetch(route.template).then((response) => response.text());
-			document.title = route.title;
-			document.getElementById("content").innerHTML = html;
-			changeToSmall(location);
-			document
-				.querySelector('meta[name="description"]')
-				.setAttribute("content", route.description);
-			await changeActive("/profile/:userID");
-			return;
-		}
+	} else if (location === "/mfa" && !tempToken.access) {
+        window.history.pushState({}, "", "/login");
+		locationHandler();
+		return;
+	}
+
+	if (isProfile(location)) {
+		console.log("[isProfile(location)]")
+		route = routes["/profile/:userID"];
+		html = await fetch(route.template).then((response) => response.text());
+		document.title = route.title;
+		document.getElementById("content").innerHTML = html;
+		changeToSmall(location);
+		document
+			.querySelector('meta[name="description"]')
+			.setAttribute("content", route.description);
+		await changeActive("/profile/:userID");
+		return;
+	}
 
 		html = await fetch(route.template).then((response) => response.text());
 		document.title = route.title;

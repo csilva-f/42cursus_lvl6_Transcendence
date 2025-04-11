@@ -138,6 +138,8 @@ async function fetchTopUsers() {
 }
 
 async function finishProfile() {
+	const userLang = localStorage.getItem("language") || "en";
+	const langData = await getLanguageData(userLang);
 	const APIurl = `/api/update-userextension/`;
 	const accessToken = await JWT.getAccess();
 	let gender = document.getElementById("gender").value;
@@ -150,6 +152,7 @@ async function finishProfile() {
 		birthdate: document.getElementById("newBirthday").value,
 		genderid: genderID,
 	};
+	console.log(userData);
 	$.ajax({
 		type: "POST",
 		url: APIurl,
@@ -166,7 +169,8 @@ async function finishProfile() {
 			fetchTopUsers();
 		},
 		error: function (xhr, status, error) {
-			//showErrorToast(APIurl, error, langData);
+			const data = JSON.parse(xhr.responseJSON);
+			showErrorUserToast(langData, data.error);
 		},
 	});
 }

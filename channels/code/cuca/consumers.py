@@ -9,6 +9,7 @@ from .models import CustomUser
 from channels.exceptions import StopConsumer
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.generic.websocket import WebsocketConsumer
+from .views import gameForceFinish
 
 #eu tenho uma instancia da websocket (canal), nessa instancia conectam-se varios clients
 #sempre que algum manda msg, todos os clients do canal "ouvem"
@@ -16,12 +17,35 @@ from channels.generic.websocket import WebsocketConsumer
 #do lado do client terei de mandar msg com atualização do jogo
 #receberei msg com atualizaçoes do jogo que tenho de atualizar
 
+room_clients = {}
+
 class GameConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f"game_{self.room_name}"
+
+        # Inicializar o conjunto de clientes da sala se ainda não existir
+        if self.room_group_name not in room_clients:
+            room_clients[self.room_group_name] = set()
+
+        # # Verificar se já existem 2 jogadores na sala
+        # if len(room_clients[self.room_group_name]) >= 2:
+        #     # Aceitar a conexão para que possamos enviar a mensagem
+        #     await self.accept()
+
+        #     # Enviar uma mensagem ao terceiro jogador informando que a sala está cheia
+        #     await self.send({
+        #         "type": "websocket.send",  # Tipo de mensagem
+        #         "message": "Room is full"  # Mensagem de recusa
+        #     })
+
+        #     return
+
+        # Aceitar a conexão, já que a sala tem espaço
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
+
+        room_clients[self.room_group_name].add(self.channel_name)
 
         # Avisar o grupo que um novo cliente entrou
         await self.channel_layer.group_send(
@@ -31,6 +55,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 "message": "A player joined the game!"
             }
         )
+
     async def receive(self, text_data):
         # Directly forward the received message without parsing
         await self.channel_layer.group_send(
@@ -57,7 +82,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
     #             }
     #         )
     #     except json.JSONDecodeError:
-    #         print("Mensagem inválida recebida:", text_data) 
+    #         print("Mensagem inválida recebida:", text_data)
 
     async def disconnect(self, close_code):
         # Avisar o grupo que um jogador saiu
@@ -66,9 +91,19 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             self.room_group_name,
             {
                 "type": "player_left",
-                "message": "A player left the game."
+                "message": "A player left the game.",
+                "close_code": close_code
             }
         )
+        if self.room_group_name in room_clients:
+            room_clients[self.room_group_name].discard(self.channel_name)
+            if not room_clients[self.room_group_name]:
+                del room_clients[self.room_group_name]  # Limpar room vazia
+                print("Empty room: ", self.room_name)
+                print("Close code: ", close_code)
+                if close_code != 1000:
+                    gameForceFinish(self.room_name)
+                #chamar api
         # Remover o cliente do grupo
         print("disconnect end")
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
@@ -80,7 +115,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
     # Notificar clientes quando alguém sai
     async def player_left(self, event):
         print("player left")
-        await self.send(text_data=json.dumps({"message": event["message"]}))
+        await self.send(text_data=json.dumps(event))
 
 online_users = set()  # Armazena os IDs dos utilizadores online
 
@@ -95,13 +130,28 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         """Recebe mensagens do cliente (com o ID do user) e atualiza a lista de online."""
         try:
-            data = json.loads(text_data)  # Converte JSON para dicionário
+            data = json.loads(text_data)  #
             user_id = data.get("user_id")
+            game_id = data.get("game_id")
+            add_user = data.get("addPlayer")
             if user_id:
                 user_id = int(user_id)
                 online_users.add(user_id)  # Adiciona o user à lista de online
                 self.user_id = user_id  # Guarda o user_id na instância
                 await self.update_online_users()
+            elif game_id:
+                print("FORCE FINISH")
+                #gameInfo = json.loads(game_id)
+                gameForceFinish(game_id)
+            elif add_user:
+                print("Received addUser :", add_user)
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        "type": "add_friend",
+                        "add_user": add_user,
+                    },
+                )
             elif "action" in data and data["action"] == "queryOnline":
                 await self.send(text_data=json.dumps({"online_users": list(map(int, online_users))}))
             else:
@@ -128,3 +178,6 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
     async def broadcast_online_users(self, event):
         """Envia a lista de utilizadores online para o cliente."""
         await self.send(text_data=json.dumps({"online_users": event["users"]}))
+
+    async def add_friend(self, event):
+        await self.send(text_data=json.dumps({"add_user": event["add_user"]}))

@@ -1,10 +1,11 @@
 class tokenService {
   cookieRefreshName = "refresh";
   cookieAccessName = "access";
-  cookieExpiricy = 1 * 60 * 1000;
+  cookieExpiricy = 1 * 10 * 1000;
   token = {};
   tempToken = {};
   date = new Date();
+  timediff =  this.date.getTimezoneOffset();
   isUpdating = false;
   OTPStatus = false;
 
@@ -18,8 +19,9 @@ class tokenService {
   }
 
   async setToken(t) {
+    console.log("setToken");
     this.token = t;
-    this.setCookie();
+    await this.setCookie();
   }
 
   async getTempAccess() {
@@ -53,8 +55,8 @@ class tokenService {
 
 
   async getAccess() {
-    let cookie = this.checkCookie(this.cookieAccessName);
-    let cookieRefresh = this.checkCookie(this.cookieRefreshName);
+    let cookie = await this.checkCookie(this.cookieAccessName);
+    let cookieRefresh = await this.checkCookie(this.cookieRefreshName);
     if (cookie && this.token.access) return this.token.access;
     if (!this.isUpdating && cookieRefresh) {
       this.isUpdating = true;
@@ -77,7 +79,7 @@ class tokenService {
         await new Promise((resolve) => setTimeout(resolve, 10));
       }
     }
-    cookie = this.checkCookie(this.cookieAccessName);
+    cookie = await this.checkCookie(this.cookieAccessName);
     if (cookie)
     {
       return this.token.access;
@@ -86,7 +88,7 @@ class tokenService {
   }
 
   async reloadPage() {
-    let token = this.checkCookie(this.cookieRefreshName);
+    let token = await this.checkCookie(this.cookieRefreshName);
     if (!token) return null;
     if (!this.isUpdating) {
       this.isUpdating = true;
@@ -105,7 +107,7 @@ class tokenService {
   async updateToken() {
     console.log("[updateToken]")
       const apiUrl = "/authapi";
-      let token = this.checkCookie(this.cookieRefreshName);
+      let token = await this.checkCookie(this.cookieRefreshName);
 
       if (!token) {
           console.log("No token found");
@@ -123,6 +125,7 @@ class tokenService {
             let tk = { refresh: token, access: data.access };
             this.isUpdating = false;
             await this.setToken(tk);
+
             console.log("[Finished updateToken]")
             resolve(); // Resolve the promise when the token is updated
           },
@@ -138,14 +141,15 @@ class tokenService {
 
 
   /* Cookie */
-  setCookie() {
+  async setCookie() {
+    this.date = new Date();
     this.date.setTime(this.date.getTime() + this.cookieExpiricy);
     let expires = "expires=" + this.date.toUTCString();
     document.cookie = this.cookieRefreshName + "=" + this.token.refresh + "; path=/";
     document.cookie = this.cookieAccessName + "=CucaBeludo;" + expires + "; path=/";
   }
 
-  checkCookie(cookieName) {
+  async checkCookie(cookieName) {
     let decodedCookie = document.cookie.split(";");
     for (let i = 0; i < decodedCookie.length; i++) {
       let cookie = decodedCookie[i];

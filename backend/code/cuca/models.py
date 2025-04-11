@@ -67,6 +67,7 @@ class tTournaments(models.Model):
 class tGames(models.Model):
     game = models.AutoField(primary_key=True)
     creationTS = models.DateTimeField(auto_now_add=True)
+    createdByUser = models.IntegerField(null=True, blank=True)
     startTS = models.DateTimeField(null=True, blank=True)
     endTS = models.DateTimeField(null=True, blank=True)
     user1 = models.IntegerField(null=True, blank=True)

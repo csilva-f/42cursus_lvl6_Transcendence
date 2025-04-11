@@ -22,7 +22,7 @@ async function goToScreen(isTournament) {
 
 //trocar home por games
 //tirar botao de play again nos jogos remotos e de torneios
-async function showGameStats(leftName, leftScore, leftColision, rightName, rightScore, 
+async function showGameStats(leftName, leftScore, leftColision, rightName, rightScore,
     rightColision, removePlayAgain, imgLeft, imgRight, isTournament, gameDuration) {
     console.log(window.location.href);
     const pongGameDiv = document.getElementById('pongGameDiv');
@@ -146,35 +146,4 @@ async function updateGameStatus(data){
             showErrorToast(APIurl, error, langData);
         },
     });
-}
-
-async function updateGameStatusForceFinish(gameData){
-    const userLang = localStorage.getItem("language") || "en";
-    const langData = await getLanguageData(userLang);
-    const data = {
-        uid: gameData.P1_uid,
-        gameID: gameData.gameID,
-        statusID: 3,
-    }
-    console.log(data);
-    const APIurl = `/api/update-game/`;
-    const accessToken = await JWT.getAccess();
-    $.ajax({
-        type: "POST",
-        url: APIurl,
-        Accept: "application/json",
-        contentType: "application/json",
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        },
-        data: JSON.stringify(data),
-        success: async function (res) {
-            console.log(res);
-        },
-        error: function (xhr, status, error) {
-            showErrorToast(APIurl, error, langData);
-        },
-    });
-    await UserInfo.refreshUser();
-    activateTopBar();
 }

@@ -27,7 +27,7 @@
                   <li
                     class="pop-hover-s menuLi nav-item rounded-3 d-flex align-items-center justify-content-center shadow-sm"
                     style="width: 3rem; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#createModal"
-                    id="createGameBtn" onclick="openGameModal()">
+                    id="createGameBtn">
                     <i class="fa-solid fa-plus fa-xl" style="color: black;"></i>
                   </li>
                   <li
@@ -174,7 +174,8 @@
                   <i class="fa-solid fa-signature fa-lg"></i>
                 </span>
                 <input id="localNameTournamentInput" required type="text" class="form-control" placeholder=""
-                  aria-describedby="basic-addon1" style="margin-top: 20px;">
+                  aria-describedby="basic-addon1" style="margin-top: 20px;"
+                  oninput="this.value = this.value.replace(/\s/g, '');">
               </div>
               <!-- End Name -->
               <!-- P1 Nick -->
@@ -196,7 +197,8 @@
                   <i class="fa-solid fa-2 fa-lg"></i>
                 </span>
                 <input type="text" class="form-control" id="P2NickInputTourn" required placeholder="P2"
-                  aria-describedby="inputGroupPrepend" required>
+                  aria-describedby="inputGroupPrepend" required
+                  oninput="this.value = this.value.replace(/\s/g, '');">
                 <div class="invalid-feedback" data-i18n="p2NickError">
                 </div>
               </div>
@@ -208,7 +210,8 @@
                   <i class="fa-solid fa-3 fa-lg"></i>
                 </span>
                 <input type="text" class="form-control" id="P3NickInput" required placeholder="P3"
-                  aria-describedby="inputGroupPrepend" required>
+                  aria-describedby="inputGroupPrepend" required
+                  oninput="this.value = this.value.replace(/\s/g, '');">
                 <div class="invalid-feedback" data-i18n="p1NickError">
                 </div>
               </div>
@@ -220,7 +223,8 @@
                   <i class="fa-solid fa-4 fa-lg"></i>
                 </span>
                 <input type="text" class="form-control" id="P4NickInput" required placeholder="P4"
-                  aria-describedby="inputGroupPrepend" required>
+                  aria-describedby="inputGroupPrepend" required
+                  oninput="this.value = this.value.replace(/\s/g, '');">
                 <div class="invalid-feedback" data-i18n="p1NickError">
                 </div>
               </div>

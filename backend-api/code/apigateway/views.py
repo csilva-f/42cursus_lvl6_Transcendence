@@ -27,7 +27,7 @@ class GetGames(APIView):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -49,7 +49,7 @@ class GetTournaments(APIView):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -68,7 +68,7 @@ class PostAddGame(APIView):
             game_data = backend_response.json()
             return Response(game_data, status=backend_response.status_code)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -86,7 +86,7 @@ class PostAddTournament(APIView):
             data = backend_response.json()
             return Response(data, status=backend_response.status_code)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -100,6 +100,25 @@ class PostUpdateGame(APIView):
         game_data = request.data.get('game')
         try:
             request.data["uid"] = request.user.user_id
+            backend_response = requests.post(backend_url, json=request.data)
+            backend_response.raise_for_status()
+            game_data = backend_response.json()
+            return Response(game_data, status=backend_response.status_code)
+        except requests.exceptions.HTTPError as http_err:
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
+        except requests.exceptions.RequestException as req_err:
+            return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except ValueError as json_err:
+            return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class PostUpdateGameChannels(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        backend_url = 'http://backend:8002/backend/update_game/'
+        game_data = request.data.get('game')
+        try:
+            #request.data["uid"] = request.user.user_id
             backend_response = requests.post(backend_url, json=request.data)
             backend_response.raise_for_status()
             game_data = backend_response.json()
@@ -124,7 +143,7 @@ class PostAddUserExtension(APIView):
             user_data = backend_response.json()
             return Response(user_data, status=backend_response.status_code)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -141,7 +160,7 @@ class GetGenders(APIView):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -163,7 +182,7 @@ class GetStatus(APIView):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -185,7 +204,7 @@ class GetUserExtensions(APIView):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -204,7 +223,7 @@ class PostUpdateTournament(APIView):
             tourn_data = backend_response.json()
             return Response(tourn_data, status=backend_response.status_code)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -221,7 +240,7 @@ class GetPhases(APIView):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -240,7 +259,7 @@ class PostJoinTournament(APIView):
             tourn_data = backend_response.json()
             return Response(tourn_data, status=backend_response.status_code)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -259,7 +278,7 @@ class PostUpdateUserExtension(APIView):
             game_data = backend_response.json()
             return Response(uext_data, status=backend_response.status_code)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -281,7 +300,7 @@ class GetUserStatistics(APIView):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -300,12 +319,12 @@ class PostAcceptGameInvit(APIView):
             game_data = backend_response.json()
             return Response(game_data, status=backend_response.status_code)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
 class GetUserInvitations(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -322,12 +341,12 @@ class GetUserInvitations(APIView):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
 class GetUserNbrInvitations(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -344,7 +363,7 @@ class GetUserNbrInvitations(APIView):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -366,7 +385,7 @@ class GetUserGames(APIView):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -383,7 +402,7 @@ class GetFriendshipStatus(APIView):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -405,7 +424,7 @@ class GetFriendships(APIView):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -424,7 +443,7 @@ class PostSendFriendRequest(APIView):
             friendship_data = backend_response.json()
             return Response(friendship_data, status=backend_response.status_code)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -432,7 +451,7 @@ class PostSendFriendRequest(APIView):
 
 class PostRespondFriendRequest(APIView):
     permission_classes = [IsAuthenticated]
-    
+
     def post(self, request):
         backend_url = 'http://backend:8002/backend/respond_friendrequest/'
         friendship_data = request.data.get('friendship')
@@ -443,7 +462,7 @@ class PostRespondFriendRequest(APIView):
             friendship_data = backend_response.json()
             return Response(friendship_data, status=backend_response.status_code)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -465,7 +484,7 @@ class GetPendingRequests(APIView):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -487,7 +506,7 @@ class GetNonFriendsList(APIView):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
@@ -504,12 +523,12 @@ class GetTopUsers(APIView):
             data = backend_response.json()
             return Response(data, status=status.HTTP_200_OK)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
             return Response({"error": f"JSON decoding error: {str(json_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
 class PostUpdateGameTS(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -523,7 +542,7 @@ class PostUpdateGameTS(APIView):
             game_data = backend_response.json()
             return Response(game_data, status=backend_response.status_code)
         except requests.exceptions.HTTPError as http_err:
-            return Response({"error": f"HTTP error occurred: {str(http_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=f"{http_err.response.text}", status=http_err.response.status_code)
         except requests.exceptions.RequestException as req_err:
             return Response({"error": f"Request error occurred: {str(req_err)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except ValueError as json_err:
