@@ -34,12 +34,14 @@ class OAuthViewSetCallback(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
     def retrieve(self, request):
+        print("OAuth Callback")
         backend_url = 'http://auth:8000/oauth/callback/'
         try:
             headers = {
                 'Content-Type': 'application/json',
                 'Origin': request.headers.get('Origin', ''),
             }
+            print(request.query_params)
             # Use requests.get with params to send query parameters
             backend_response = requests.get(backend_url, headers=headers, params=request.query_params)
             backend_response.raise_for_status()

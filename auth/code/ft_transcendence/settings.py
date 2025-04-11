@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 from os import getenv
 from pathlib import Path
-from .hvac import get_secret_key, get_oauth_config
+from .hvac import get_secret_key, get_oauth_config, read_host_ip
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #SECRET_KEY = 'django-insecure-@www2r)nc-li_empd8(e()gc592l7wau$zn%y#2*ej)u^xb*(0'
 
 SECRET_KEY = get_secret_key()
-print(SECRET_KEY)
+HOST_IP = read_host_ip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -67,7 +67,6 @@ AUTHENTICATION_BACKENDS = (
 )
 
 OAUTH = get_oauth_config()
-print(OAUTH)
 OAUTH2_PROVIDER = {
     'CLIENT_ID': OAUTH['OAUTH_CLIENTID'],
     'CLIENT_SECRET': OAUTH['OAUTH_SECRET'],

@@ -38,7 +38,6 @@ class User {
       try {
         await Promise.all([this.fetchUserExtension(), this.fetchGetProfile()]);
       } catch (error) {
-        console.error("Error refreshing user:", error);
       } finally {
         this.isUpdating = false;
         console.log("[Finished refreshUser]");
@@ -172,6 +171,7 @@ class User {
     const accessToken = await JWT.getAccess();
     const userLang = localStorage.getItem("language") || "en";
     const langData = await getLanguageData(userLang);
+
     let userData = {
       first_name: this.userFirstName,
       last_name: this.userLastName,

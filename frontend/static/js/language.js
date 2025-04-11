@@ -30,7 +30,9 @@ async function changeLanguage(lang) {
 
 //Main function to get the language on the localStorage then get the respective json language file
 window.addEventListener('DOMContentLoaded', async () => {
-    const userLang = localStorage.getItem('language') || 'en';
-    const langData = await getLanguageData(userLang);
-    updateContent(langData);
+    try {
+        const userLang = localStorage.getItem('language') || 'en';
+        const langData = await getLanguageData(userLang);
+        updateContent(langData);
+    } catch (e) {}
 });

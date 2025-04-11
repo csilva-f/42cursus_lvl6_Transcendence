@@ -10,26 +10,27 @@ from cuca.models import CucaUser
 
 class OAuthViewSet(viewsets.ViewSet):
 
+    redirect_uri = 'https://' + settings.HOST_IP + ':8000/callback'
     def login(self, request):
-        redirect_uri = request.headers['Origin'] + '/callback'
-        print(redirect_uri)
         #authorization_url = f"{settings.OAUTH2_PROVIDER['AUTHORIZATION_URL']}?client_id={settings.OAUTH2_PROVIDER['CLIENT_ID']}&redirect_uri={redirect_uri}&response_type=code"
         authorization_url = (
             f"{settings.OAUTH2_PROVIDER['AUTHORIZATION_URL']}?"
             f"client_id={settings.OAUTH2_PROVIDER['CLIENT_ID']}&"
-            f"redirect_uri={redirect_uri}&"
+            f"redirect_uri={self.redirect_uri}&"
             f"response_type=code&"
         )
         return Response({'url': authorization_url}, status=status.HTTP_200_OK)
 
     def callback(self, request):
+        print("tou aqui")
         code = request.GET.get('code')
+        print(code)
         token_url = settings.OAUTH2_PROVIDER['TOKEN_URL']
         data = {
             'grant_type': 'authorization_code',
             'client_id': settings.OAUTH2_PROVIDER['CLIENT_ID'],
             'client_secret': settings.OAUTH2_PROVIDER['CLIENT_SECRET'],
-            'redirect_uri': 'https://localhost:8000/callback',
+            'redirect_uri': self.redirect_uri,
             'code': code,
         }
         response = requests.post(token_url, data=data)

@@ -19,25 +19,36 @@ function updateIcon() {
 
 async function insertProfileInfo(UserElement, users_on) {
     console.log("[insertProfileInfo]")
-    document.getElementById("birthdayText").textContent = UserElement.birthdate;
-    document.getElementById("genderText").textContent = UserElement.gender;
-    document.getElementById("nicknameText").textContent = UserElement.nick;
-    document.getElementById("bioText").textContent = UserElement.bio;
-    document.getElementById("avatarPreview").src = `/static/img/profilePic/${UserElement.avatar}`;
-    document.getElementById("phoneNumberText").textContent = "PRIVATE";
-
-    console.log("gender: ", gender);
-    console.log(Number(UserElement.id));
-    console.log(users_on);
-    if (users_on.includes(Number(UserElement.id))) {
-        userOnStatus.style.backgroundColor = "green"; // Online
-    } else {
-        userOnStatus.style.backgroundColor = "white"; // Offline
-        userOnStatus.style.border = "1px solid gray";
+    const userLang = localStorage.getItem("language") || "en";
+    const langData = await getLanguageData(userLang);
+    const errorMsg = "Error, empty field"; 
+    if ((!UserElement.birthdate) || (!UserElement.gender) || (!UserElement.nick)) {
+        showErrorUserToast(langData, errorMsg);
+        return ;
     }
-    if (UserElement.id == await UserInfo.getUserID()) {
+    console.table(UserElement)
+    if (UserElement.id != await UserInfo.getUserID()){
+        document.getElementById("birthdayText").textContent = UserElement.birthdate;
+        document.getElementById("genderText").textContent = UserElement.gender;
+        document.getElementById("nicknameText").textContent = UserElement.nick;
+        document.getElementById("bioText").textContent = UserElement.bio;
+        document.getElementById("avatarPreview").src = `/static/img/profilePic/${UserElement.avatar}`;
+        document.getElementById("phoneNumberText").textContent = "PRIVATE";
+        
+        console.log("gender: ", gender);
+        console.log()
+        console.log(Number(UserElement.id));
+        console.log(users_on);
+        if (users_on.includes(Number(UserElement.id))) {
+            userOnStatus.style.backgroundColor = "green"; // Online
+        } else {
+            userOnStatus.style.backgroundColor = "white"; // Offline
+            userOnStatus.style.border = "1px solid gray";
+        }
+    } else {
         document.getElementById("profileEditButton").classList.remove('d-none');
         document.getElementById("changePasswordButton").classList.remove('d-none');
+        await insertOwnProfileInfo();
     }
 }
 
@@ -56,7 +67,7 @@ async function updateProfile() {
     UserInfo.updateBio(document.getElementById("biography").value);
     await UserInfo.updateProfile();
     await UserInfo.updateUserExtension();
-    insertOwnProfileInfo();
+    await insertOwnProfileInfo();
 }
 
 function createQrCode(string) {
@@ -83,7 +94,7 @@ function validateNick(nick, validationNick, checkId) {
     const validationMessage = document.getElementById(validationNick);
     const checkIcon = document.getElementById(checkId);
 
-    if (nickInput.value.length <= 20) {
+    if (nickInput.value.length <= 20 && nickInput.value.length > 0) {
         validationMessage.classList.add("d-none");
         validationMessage.classList.add("valid");
         validationMessage.classList.remove("invalid");
@@ -135,12 +146,19 @@ function validateBio(bioText, validationBio, checkId) {
 }
 
 async function insertOwnProfileInfo() {
+    console.log("[insertOwnProfileInfo]")
     const fName = await UserInfo.getUserFirstName();
     const lName = await UserInfo.getUserLastName();
     const bDate = await UserInfo.getUserBirthdate();
     const bio = await UserInfo.getUserBio();
-    const gender = await UserInfo.getUserGender();
+    let gender = await UserInfo.getUserGender();
     const pN = await UserInfo.getUserPhoneNumber();
+    if (gender == 1)
+        gender = 'male'
+    else if (gender == 2)
+        gender = 'female'
+    else if (gender == 3)
+        gender = 'other'
     //? Exterior Info
     document.getElementById("birthdayText").textContent = bDate;
     document.getElementById("genderText").textContent = gender;
@@ -152,15 +170,19 @@ async function insertOwnProfileInfo() {
     //? Pop-up Info
     document.getElementById("firstName").value = fName;
     document.getElementById("lastName").value = lName;
-    document.getElementById("phoneNumber").value = pN;
+    //document.getElementById("phoneNumber").value = pN;
     document.getElementById("birthday").value = bDate;
     document.getElementById("biography").value = bio;
+    document.getElementById("gender").value = gender;
+    updateIcon();
 
-    let genderSelect = document.getElementById("gender");
-    let userGender = await UserInfo.getUserGender();
-    if (userGender) {
-        genderSelect.value = userGender;
-        updateIcon();
-    }
+    const input = document.querySelector("#phoneNumber");
+    const iti = window.intlTelInput(input, {
+        separateDialCode: true,
+        initialCountry: "auto",
+        loadUtils: () => import("/static/js/Libraries/intl.js"),
+    });
+    iti.setNumber(pN);
+    const countryData = iti.getSelectedCountryData();
 }
 

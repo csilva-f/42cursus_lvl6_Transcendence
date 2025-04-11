@@ -13,6 +13,7 @@ services:
       - ./auth/.env
     secrets:
       - vault_root_token
+      - host_ip
     depends_on:
       vault:
         condition: service_healthy
@@ -269,6 +270,8 @@ secrets:
     file: ./secrets/OAUTH_SECRET.txt
   oauth_clientid:
     file: ./secrets/OAUTH_CLIENTID.txt
+  host_ip:
+    file: ./secrets/HOST_IP.txt
 
 volumes:
   auth-db-data:

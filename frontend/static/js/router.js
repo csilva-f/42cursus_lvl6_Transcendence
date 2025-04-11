@@ -254,7 +254,8 @@ async function changeToBig(location) {
 		const input = document.querySelector("#signupPhone");
 		window.intlTelInput(input, {
 			separateDialCode: true,
-			utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"
+			initialCountry: "auto",
+			utilsScript: "/static/js/Libraries/intl.js"
 		});
 		// window.intlTelInput(input, {
 		// 	separateDialCode: true,
@@ -432,7 +433,6 @@ async function changeActive(location) {
 			document.getElementById("subMsg").style.display = "none";
 			const statsEverythingIconProfile = document.getElementById("statsEverythingIcon");
 			activateIcon(statsEverythingIconProfile);
-			insertOwnProfileInfo();
 			fetchProfileInfo();
 			insertUserLevel("profileLvlProgress", null);
 			fetchStatistics(null);
@@ -440,7 +440,7 @@ async function changeActive(location) {
 			const input = document.querySelector("#phoneNumber");
 			window.intlTelInput(input, {
 				separateDialCode: true,
-				utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"
+				utilsScript: "/static/js/Libraries/intl.js"
 			});
 			// window.intlTelInput(input, {
 			// 	separateDialCode: true,
@@ -483,6 +483,9 @@ const locationHandler = async () => {
 	let uid = await UserInfo.getUserID();
 	let tempToken = await JWT.getTempToken();
 	console.log("[Location] ", location)
+	try {
+		$('.modal').modal('hide');
+	} catch (e) {}
 
 	if (!(location === "/mfa" && (tempToken && !uid))) {
 		if ((isProfile(location) && !uid) || (route.needAuth == 1 && !uid)) {
@@ -577,13 +580,14 @@ async function loadProfileFromURL() {
 async function reloadPage() {
 	let location = window.location.pathname;
 	let route = routes[location] || routes["404"];
-
-	await JWT.reloadPage();
-	if (await JWT.getAccess())
-		await UserInfo.refreshUser();
-	if (!UserInfo.getUserID())
-		initializeWebSocket();
-	locationHandler();
+	try {
+		await JWT.reloadPage();
+		if (await JWT.getAccess())
+			await UserInfo.refreshUser();
+		if (!UserInfo.getUserID())
+			initializeWebSocket();
+		locationHandler();
+	} catch (e) {}
 }
 
 window.onpopstate = async () => {
