@@ -547,8 +547,6 @@ const locationHandler = async () => {
 				.setAttribute("content", route.description);
 			await changeActive(location);
 		}
-	};
-
 }
 
 document.addEventListener("click", (e) => {
