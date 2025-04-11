@@ -26,6 +26,8 @@ async function sendLogin() {
 }
 //? /oauthapi/login/
 async function oauthLogin() {
+  const userLang = localStorage.getItem("language") || "en";
+	const langData = await getLanguageData(userLang);
     const oauthapiUrl = "/oauthapi";
     $.ajax({
         type: "POST",
@@ -40,11 +42,11 @@ async function oauthLogin() {
                 console.log(url);
                 window.location.href = url;
             }
-            $("#customlogin-message").text("Login successful!");
+            showSuccessToast(langData, "Login successful!");
         },
         error: function (xhr) {
             const data = JSON.parse(xhr.responseJSON);
-            $("#customLogin-message").text(data["error_description"] || "Login failed.");
+            showErrorUserToast(langData, data["error_description"] || "Login failed.");
         },
     });
 }
@@ -53,6 +55,8 @@ async function oauthCallback() {
     const oauthapiUrl = "/oauthapi";
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
+    const userLang = localStorage.getItem("language") || "en";
+	const langData = await getLanguageData(userLang);
     if (code) {
         console.log("oauthCallback");
         $.ajax({
@@ -63,12 +67,12 @@ async function oauthCallback() {
             success: async function (data) {
                 console.log(data);
                 await sendOAuthLogin(data);
-                $("#customlogin-message").text("Login successful!");
+                showSuccessToast(langData, "Login successful!");
             },
             error: function (xhr) {
                 const data = JSON.parse(xhr.responseJSON);
                 console.log(data["error_description"]);
-                $("#customlogin-message").text(data["error_description"] || "Login failed.");
+                showErrorUserToast(langData, data["error_description"] || "Login failed.");
             },
         });
     }
@@ -183,8 +187,8 @@ async function OTP_check_enable(jwtToken) {
             type: "POST",
             url: `${apiUrl}/otp-status/`, // Adjust the endpoint as needed
             contentType: "application/json",
-            headers: { 
-                Accept: "application/json", 
+            headers: {
+                Accept: "application/json",
                 Authorization: `Bearer ${jwtToken}`
             },
             success: async function (data) {
@@ -218,7 +222,7 @@ async function OTP_send_email() {
         type: "POST",
         url: `${apiUrl}/otp-send/`, // Adjust the endpoint as needed
         contentType: "application/json",
-        headers: { 
+        headers: {
             Accept: "application/json",
             Authorization: `Bearer ${access}`
          },

@@ -7,6 +7,15 @@ DATA_DIR = $(HOME)/ft_transcendence_data
 ROOT_TOKEN_FILE = ./secrets/VAULT_ROOT_TOKEN.txt
 DOCKER_COMPOSE_BINARY=./docker-compose-linux-x86_64
 
+HOST_IP_FILE= ./secrets/HOST_IP.txt
+
+get_ip:
+	@echo "Getting host IP address..."
+	@hostname -i | awk '{print $1}' > $(HOST_IP_FILE)
+	@echo "IP address written to $(HOST_IP_FILE)"
+
+
+
 secrets:
 	@echo "Creating secrets folder..."
 	@mkdir -p ./secrets
@@ -18,7 +27,7 @@ secrets:
 	@echo Cuc@3elud0 > ./secrets/EMAIL_PASSWORD.txt
 	@echo webdomain04.dnscpanel.com > ./secrets/EMAIL_HOST.txt
 	@echo u-s4t2ud-9ec7e1b569c511d464a5fde0f161abb7de05399c1ba6b45dcc7619f42c1bfff0 > ./secrets/OAUTH_CLIENTID.txt
-	@echo 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 > ./secrets/OAUTH_SECRET.txt
+	@echo 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 > ./secrets/OAUTH_SECRET.txt
 
 
 build:
@@ -35,11 +44,13 @@ directories:
 	@mkdir -p $(DATA_DIR)/email-db/data
 	@mkdir -p ./vault/data
 
-up: directories
+up: directories get_ip
 	@$(DOCKER_COMPOSE_BINARY) down
 	@echo "" > $(ROOT_TOKEN_FILE)
 	@echo "Running Docker Compose setup..."
 	@$(DOCKER_COMPOSE_BINARY) up -d
+	@echo "Service build successfully"
+	@echo -n "https://" &&  cat $(HOST_IP_FILE) | tr -d '\n' && echo -n ":8000\n"
 # Stop the Docker Compose setup
 down:
 	@echo "Stopping Docker Compose setup..."

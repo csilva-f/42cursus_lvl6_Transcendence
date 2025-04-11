@@ -11,6 +11,15 @@ def read_docker_secret(secret_name):
     except FileNotFoundError:
         return None
 
+def read_host_ip():
+    secret_path = f'/run/secrets/host_ip'
+    try:
+        with open(secret_path, 'r') as secret_file:
+            host_ip = secret_file.read().strip()
+            return host_ip
+    except FileNotFoundError:
+        return None
+
 def get_secret_key():
     token=read_docker_secret('VAULT_ROOT_TOKEN')
     client = hvac.Client(url=os.getenv('VAULT_ADDR'), token=token)
