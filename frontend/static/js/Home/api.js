@@ -144,7 +144,7 @@ async function finishProfile() {
 	const langData = await getLanguageData(userLang);
 	const APIurl = `/api/update-userextension/`;
 	const accessToken = await JWT.getAccess();
-	let gender = document.getElementById("gender").value;
+	let gender = document.getElementById("genderFP").value;
 	let genderID = 0;
 	if (gender == "male") genderID = 1;
 	else if (gender == "female") genderID = 2;
@@ -165,6 +165,8 @@ async function finishProfile() {
 		},
 		data: JSON.stringify(userData),
 		success: async function (res) {
+			document.querySelector("#nicknameModal-form").classList.remove('was-validated');
+        	document.querySelector("#nicknameModal-form").reset();
 			$("#nickModal").modal("hide");
 			await UserInfo.refreshUser();
 			await activateTopBar();

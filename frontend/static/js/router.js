@@ -438,7 +438,6 @@ async function changeActive(location) {
 			document.getElementById("subMsg").style.display = "none";
 			const statsEverythingIconProfile = document.getElementById("statsEverythingIcon");
 			activateIcon(statsEverythingIconProfile);
-			insertOwnProfileInfo();
 			fetchProfileInfo();
 			insertUserLevel("profileLvlProgress", null);
 			fetchStatistics(null);

@@ -48,16 +48,16 @@ async function fetchProfileInfo(userID) {
 			if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
 				console.warn("WebSocket not found or closed. Reinitializing...");
 				initializeWebSocket(() => {
-					requestOnlineUsers(function (onlineUsers) {
+					requestOnlineUsers(function (onlineUsers) {						
 						console.log("Updated online users list:", onlineUsers);
-						if (window.location.pathname == "/profile")
+						if (window.location.pathname.includes("/profile"))
 							insertProfileInfo(res.users[0], onlineUsers);
 					});
 				});
 			} else {
 				requestOnlineUsers(function (onlineUsers) {
 					console.log("Updated online users list:", onlineUsers);
-					if (window.location.pathname == "/profile")
+					if (window.location.pathname.includes("/profile"))
 						insertProfileInfo(res.users[0], onlineUsers);
 				});
 			}

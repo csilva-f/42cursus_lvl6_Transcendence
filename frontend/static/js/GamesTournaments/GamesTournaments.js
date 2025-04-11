@@ -209,6 +209,7 @@ function showGameForm(formID, tabOpenID, confirmBtnID, backBtnID) {
 function hideGameForm(formOpenID, tabID, confirmBtnID) {
     const form = document.getElementById(formOpenID);
     if (form) form.classList.add('d-none');
+    form.classList.remove('was-validated')
     const tab = document.getElementById(tabID);
     if (tab) tab.classList.remove('d-none');
     const confirmBtn = document.getElementById(confirmBtnID);
