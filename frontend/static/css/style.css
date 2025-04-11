@@ -224,3 +224,7 @@ ul {
 
 .cursor-not-allowed { cursor: not-allowed; }
 .pointer-events-none { pointer-events: none; }
+
+.iti__selected-country-primary {
+	background: #ffffff !important; 
+}

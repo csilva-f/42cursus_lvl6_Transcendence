@@ -38,7 +38,6 @@ class User {
       try {
         await Promise.all([this.fetchUserExtension(), this.fetchGetProfile()]);
       } catch (error) {
-        console.error("Error refreshing user:", error);
       } finally {
         this.isUpdating = false;
         console.log("[Finished refreshUser]");

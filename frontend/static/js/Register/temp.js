@@ -87,7 +87,7 @@ function validatePhoneNumber(phoneId, validationId, errorIcon) {
   if (elements.length > 0) {
     var firstElement = elements[0];
     const dddNumber = firstElement.textContent;
-    console.log("firstElement: ", dddNumber);
+    console.log("dddNumber: ", dddNumber);
   }
 
   if (isNumeric && phone.value.length <= 20 && phone.value.length > 0) {

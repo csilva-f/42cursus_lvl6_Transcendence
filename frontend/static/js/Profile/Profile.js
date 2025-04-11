@@ -166,7 +166,7 @@ async function insertOwnProfileInfo() {
     const iti = window.intlTelInput(input, {
         separateDialCode: true,
         initialCountry: "auto",
-        loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
+        loadUtils: () => import("/static/js/Libraries/intl.js"),
     });
     iti.setNumber(pN);
     const countryData = iti.getSelectedCountryData();

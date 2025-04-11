@@ -128,8 +128,11 @@ async function validateVerifyEmail() {
             resolve(true);
         },
         error: async function (xhr) {
-            const data = JSON.parse(xhr.responseJSON);
-            reject(data.error || "Email verification failed.");
+            try {
+                const data = JSON.parse(xhr.responseJSON);
+                reject(data.error || "Email verification failed.");
+            } catch (e) {}
+            reject("Email verification failed.");
         },
     });
     });
