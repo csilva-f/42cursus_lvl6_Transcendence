@@ -4,7 +4,8 @@ const KEY_W = 87;
 const KEY_S = 83;
 const F5 = 116;
 const keyPressed = [];
-const maxSpeed = 14;
+const localMaxSpeed = 20;
+const remoteMaxSpeed = 12;
 const maxScore = 5;
 const ballVelocity = 7;
 const ballVellocityIncreaseRate = 1.2;
@@ -173,7 +174,7 @@ class Game  {
     paddleUpdateLeft(){
         this.objects[1].update();
         this.objects[1].colissionEdge(this.canvas);
-        let colision = this.objects[1].leftColissionBall(this.objects[0]);
+        let colision = this.objects[1].leftColissionBall(this.objects[0], localMaxSpeed);
         if(colision){
             //console.log("Colision left: update ball again");
             this.objects[1].paddleColisionTimes++;
@@ -184,7 +185,7 @@ class Game  {
     paddleUpdateRight(){
         this.objects[2].update();
         this.objects[2].colissionEdge(this.canvas);
-        let colision = this.objects[2].rightColissionBall(this.objects[0]);
+        let colision = this.objects[2].rightColissionBall(this.objects[0], localMaxSpeed);
         if(colision){
             //console.log("Colision right: update ball again");
             this.objects[2].paddleColisionTimes++;

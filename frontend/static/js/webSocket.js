@@ -29,6 +29,8 @@ function initializeWebSocket(callback = null) {
           //let user = await UserInfo.getUserID();
           if (uid == await UserInfo.getUserID()) {
             await fetchUserNotificationGame();
+            if(window.location.pathname == "/social")
+                await fetchUsers();
           }
         } else {
             console.log("Message received:", e.data);

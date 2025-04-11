@@ -50,14 +50,14 @@ async function fetchProfileInfo(userID) {
 				initializeWebSocket(() => {
 					requestOnlineUsers(function (onlineUsers) {
 						console.log("Updated online users list:", onlineUsers);
-						if (window.location.pathname == "/profile")
+						if (window.location.pathname.includes("/profile"))
 							insertProfileInfo(res.users[0], onlineUsers);
 					});
 				});
 			} else {
 				requestOnlineUsers(function (onlineUsers) {
 					console.log("Updated online users list:", onlineUsers);
-					if (window.location.pathname == "/profile")
+					if (window.location.pathname.includes("/profile"))
 						insertProfileInfo(res.users[0], onlineUsers);
 				});
 			}
