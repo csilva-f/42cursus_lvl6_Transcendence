@@ -113,8 +113,8 @@ function ValidateSignupForm(form){
     signupPasswordInput = form.signupPassword.value;
     retypePasswordInput = form.signupPassword2.value;
     const isNumeric = /^\d+$/.test(signupPhoneInput);
-    const hasUpperCase = /[A-Z]/.test(signupPassword);
-	const hasNumbers = /\d/.test(signupPassword);
+    const hasUpperCase = /[A-Z]/.test(signupPasswordInput);
+	const hasNumbers = /\d/.test(signupPasswordInput);
 	const hasSpecialChars = /[!@#_$%^&*(),.?":+{}|<>]/.test(signupPasswordInput);
 	const isValidLength = signupPasswordInput.length >= 8;
     let erro = 0;
@@ -185,7 +185,7 @@ function ValidatechangePasswordForm(form) {
         form.newPasswordChange.classList.remove('is-valid');
         erro += 1;
     }
-    if (!(newPasswordChange == confirmPasswordChangeInput)) {
+    if (!(newPasswordChangeInput == confirmPasswordChangeInput)) {
         form.confirmPasswordChange.classList.remove('is-valid');
         erro += 1;
     }
