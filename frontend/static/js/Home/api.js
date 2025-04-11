@@ -70,13 +70,15 @@ async function fetchHomeFriends() {
 						initializeWebSocket(() => {
 							requestOnlineUsers(function (onlineUsers) {
 								console.log("Updated online users list:", onlineUsers);
-								renderHomeFriends(res.friendships, data, onlineUsers);
+								if (window.location.pathname == "/")
+									renderHomeFriends(res.friendships, data, onlineUsers);
 							});
 						});
 					} else {
 						requestOnlineUsers(function (onlineUsers) {
 							console.log("Updated online users list:", onlineUsers);
-							renderHomeFriends(res.friendships, data, onlineUsers);
+							if (window.location.pathname == "/")
+								renderHomeFriends(res.friendships, data, onlineUsers);
 						});
 					}
 					updateContent(langData);

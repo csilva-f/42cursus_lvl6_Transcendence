@@ -113,7 +113,6 @@ function getForms() {
           //if (form.id == "localFormID") postLocalGame();
           //if (form.id == "remoteFormID") postRemoteGame();
           if (form.id == "localTournamentFormID") initLocalTournament();
-          else if (form.id == "tournamentFormID") postTournament();
           else if (form.id == "login-form") sendLogin();
           else if (form.id == "signup-form") sendSignup(form);
           else if (form.id == "forgotPwd-form") forgotPwd();

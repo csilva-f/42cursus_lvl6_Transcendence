@@ -8,6 +8,7 @@ const botImages = [
     '/static/img/bot/bot4.jpeg',
     '/static/img/bot/bot5.jpeg',
     '/static/img/bot/bot6.jpg',
+    '/static/img/bot/bot7.jpeg',
 ];
 
 function activateInput(elementID) {
