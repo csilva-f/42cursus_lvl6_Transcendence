@@ -50,13 +50,15 @@ async function fetchProfileInfo(userID) {
 				initializeWebSocket(() => {
 					requestOnlineUsers(function (onlineUsers) {
 						console.log("Updated online users list:", onlineUsers);
-						insertProfileInfo(res.users[0], onlineUsers);
+						if (window.location.pathname == "/profile")
+							insertProfileInfo(res.users[0], onlineUsers);
 					});
 				});
 			} else {
 				requestOnlineUsers(function (onlineUsers) {
 					console.log("Updated online users list:", onlineUsers);
-					insertProfileInfo(res.users[0], onlineUsers);
+					if (window.location.pathname == "/profile")
+						insertProfileInfo(res.users[0], onlineUsers);
 				});
 			}
 			updateContent(langData);
@@ -137,7 +139,8 @@ async function uploadAvatar(event) {
 		},
 		error: function (xhr) {
             const data = JSON.parse(xhr.responseJSON);
-            console.log("Change password failed:", data.error || "Change password failed.");
+            console.log("Change password failed:", data.error, xhr.responseJSON, data.error[0]);
+			showErrorUserToast(langData, data.error[0]);
 			// retornar os erros!!!
 		}
 	})

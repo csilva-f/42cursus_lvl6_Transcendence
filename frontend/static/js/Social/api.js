@@ -28,12 +28,14 @@ async function fetchUsers() {
             console.warn("WebSocket not found or closed. Reinitializing...");
             requestOnlineUsers(function (onlineUsers) {
                 console.log("Updated online users list:", onlineUsers);
-                renderUserCards(res.nonFriendsList, data, onlineUsers, 1);
+                if (window.location.pathname == "/social")
+                  renderUserCards(res.nonFriendsList, data, onlineUsers, 1);
             });
           } else {
             requestOnlineUsers(function (onlineUsers) {
                 console.log("Updated online users list:", onlineUsers);
-                renderUserCards(res.nonFriendsList, data, onlineUsers, 1);
+                if (window.location.pathname == "/social")
+                  renderUserCards(res.nonFriendsList, data, onlineUsers, 1);
             });
           }
           updateContent(langData);
@@ -97,13 +99,15 @@ async function fetchFriends() {
             initializeWebSocket(() => {
                 requestOnlineUsers(function (onlineUsers) {
                     console.log("Updated online users list:", onlineUsers);
-                    renderUserCards(res.friendships, data, onlineUsers, 0);
+                    if (window.location.pathname == "/social")
+                      renderUserCards(res.friendships, data, onlineUsers, 0);
                 });
             });
           } else {
             requestOnlineUsers(function (onlineUsers) {
                 console.log("Updated online users list:", onlineUsers);
-                renderUserCards(res.friendships, data, onlineUsers, 0);
+                if (window.location.pathname == "/social")
+                  renderUserCards(res.friendships, data, onlineUsers, 0);
             });
           }
           updateContent(langData);

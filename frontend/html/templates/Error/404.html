@@ -4,12 +4,23 @@
 			<h1 class="display-1"><strong> ⚠️ OOPS!</strong></h1>
 		</ul>
 		<ul class="nav nav-pills d-flex justify-content-center" style="height: 5rem;">
-			<h1 class="h3 mt-4">This page not found!</h1>
+			<h1 class="h3 mt-4" data-i18n="notFound">This page not found!</h1>
 		</ul>
 	</nav>
     <div class="col-12 d-flex mt-5 justify-content-center">
-        <img src="/static/img/errorPage/404.png" class="img-fluid" alt="..." style="width: 30%; height: auto;">
+        <img src="/static/img/errorPage/404.png" class="img-fluid" alt="..." style="width: 20%; height: auto;">
     </div>
     <div class="col-12 d-flex align-content-center align-items-center">
+    </div>
+	<div class="col-12 d-flex align-content-center align-items-center mt-4">
+        <nav class="container-fluid">
+            <ul class="nav nav-pills d-flex justify-content-center" style="height: 5rem; padding-left: 0;">
+                <li class="pop-hover-xs mainPageLi iconMainPage nav-item rounded-3 me-2 d-flex align-items-center" onclick="goToHome()">
+                    <i class="fa-solid fa-house fa-2xl me-2"></i>
+                    <p class="h4 m-0 ms-2" style="font-weight: bold">Home
+                    </p>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>

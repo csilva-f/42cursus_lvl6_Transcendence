@@ -45,7 +45,7 @@ const routes = {
 		template: "/templates/ForgotPassword.html",
 		title: "Forgot Password",
 		descripton: "This is the forgot password Page",
-		neddAuth: 2,
+		needAuth: 2,
 	},
 	"/mfa": {
 		template: "/templates/MFA.html",
@@ -63,7 +63,7 @@ const routes = {
 		template: "/templates/ResetPassword.html",
 		title: "Reset Password",
 		descripton: "This is the reset password page",
-		neddAuth: 2,
+		needAuth: 2,
 	},
 	"/pong": {
 		template: "/templates/Game.html",
@@ -93,7 +93,7 @@ const routes = {
 		template: "/templates/AboutUs.html",
 		title: "AboutUs",
 		descripton: "This is the AboutUs Page",
-		neddAuth: 1,
+		needAuth: 1,
 	},
 	"/profile": {
 		template: "/templates/Profile.html",
@@ -186,12 +186,25 @@ function disableTopBar() {
 	document.getElementById("personLvlProgress").style.width = "0%"
 }
 
+
+function disableClickTopBar() {
+	document.getElementById('logoImg').classList.add('cursor-not-allowed', 'pointer-events-none');
+	document.getElementById('profilePicElement').classList.add('cursor-not-allowed', 'pointer-events-none');
+}
+
+function activateClickTopBar() {
+	document.getElementById('logoImg').classList.remove('cursor-not-allowed', 'pointer-events-none');
+	document.getElementById('profilePicElement').classList.remove('cursor-not-allowed', 'pointer-events-none');
+}
+
+
 function resetNotifications() {
 	document.getElementById("notificationDropdownMenu").innerHTML = "";
 	document.getElementById("noNotificationP").classList.remove("d-none")
 }
 
 async function insertUserLevel(element, otherUserLvl) {
+	console.log("[insertUserLevel]")
 	var userLvl = null;
 	if (otherUserLvl == null)
 		userLvl = await UserInfo.getUserLvl();
@@ -201,6 +214,7 @@ async function insertUserLevel(element, otherUserLvl) {
 	let lvlUnity = userLvl.split(".")[0];
 	let lvlProgress = parseFloat((lvlDecimal * 100) / (99))
 	document.getElementById(element).style.width = lvlProgress + "%"
+	document.getElementById('personLvlTag').textContent = "Lvl " + lvlUnity
 	if (element == "profileLvlProgress") {
 		document.getElementById('profileLvlNow').textContent = "Lvl " + lvlUnity
 		document.getElementById('profileNextLvl').textContent = "Lvl " + (parseInt(lvlUnity) + 1)
@@ -212,6 +226,7 @@ async function changeTopBarImg(newImg) {
 }
 
 async function activateTopBar() {
+	console.log("[activateTopBar]")
 	const topbar = document.getElementById("topbar")
 	topbar.classList.remove('d-none')
 	document.getElementById("personNickname").textContent = await UserInfo.getUserNick();
@@ -221,6 +236,7 @@ async function activateTopBar() {
 }
 
 async function changeToBig(location) {
+	console.log("[changeToBig]")
 	const allContent = document.getElementById("allContent")
 	allContent.classList.remove('d-none');
 	allContent.style.cssText += 'height: calc(100vh - 7rem);';
@@ -242,10 +258,14 @@ async function changeToBig(location) {
 	else if (location == "/login") {
 		headerElement.setAttribute("data-i18n", "login");
 		const input = document.querySelector("#signupPhone");
-			window.intlTelInput(input, {
-				separateDialCode: true,
-				loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
-			});
+		window.intlTelInput(input, {
+			separateDialCode: true,
+			utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"
+		});
+		// window.intlTelInput(input, {
+		// 	separateDialCode: true,
+		// 	loadUtils: () => await import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
+		// });
 		disableTopBar();
 		getForms();
 	} else if (location == "/forgotPassword") {
@@ -253,25 +273,25 @@ async function changeToBig(location) {
 		disableTopBar();
 		getForms();
 	} else if (location == "/mfa") {
-	  let tempToken = await JWT.getTempToken();
+		let tempToken = await JWT.getTempToken();
 		headerElement.setAttribute("data-i18n", "mfa");
 		disableTopBar();
-		
+
 		getForms();
 	} else if (location == "/resetPassword") {
 		headerElement.setAttribute("data-i18n", "resetPassword");
 		disableTopBar();
 		getForms();
 	} else if (location == "/pong") {
-		headerElement.setAttribute("data-i18n", "pong");
-		document.getElementById("topbar").classList.remove('d-none');
-		activateTopBar();
 		gameInfo = localStorage.getItem("gameInfo");
-		if (gameInfo) {
-			gameInfo = JSON.parse(gameInfo);
-			game = new Game(gameInfo);
-			game.initGame();
-    	}
+		if (!gameInfo){
+			window.history.pushState({}, "", `/games`);
+			await locationHandler();
+			return;
+		}
+		headerElement.setAttribute("data-i18n", "pong");
+		activateTopBar();
+		disableClickTopBar();
 	} else if (location == "/callback") {
 		headerElement.setAttribute("data-i18n", "callback");
 		disableTopBar();
@@ -316,9 +336,9 @@ async function insertPlaceholders(location, langData) {
 }
 
 async function changeActive(location) {
-	while (UserInfo.getUserID() == null || UserInfo.getUserID() === undefined) {
-		setTimeout(10)
-	}
+	// while (UserInfo.getUserID() == null || UserInfo.getUserID() === undefined) {
+	// 	setTimeout(10)
+	// }
 	const iconsElements = [
 		document.getElementById("homepageIcon"),
 		document.getElementById("gamesIcon"),
@@ -336,6 +356,7 @@ async function changeActive(location) {
 		nickModal.show();
 	}
 	await activateTopBar();
+	activateClickTopBar();
 	switch (location) {
 		case "/games":
 			iconsElements.forEach((element) => {
@@ -424,8 +445,13 @@ async function changeActive(location) {
 			getForms();
 			const input = document.querySelector("#phoneNumber");
 			window.intlTelInput(input, {
-				loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
+				separateDialCode: true,
+				utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"
 			});
+			// window.intlTelInput(input, {
+			// 	separateDialCode: true,
+			// 	loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
+			// });
 			//createQrCode();
 			break;
 		case "/profile/:userID":
@@ -463,23 +489,24 @@ const locationHandler = async () => {
 	let uid = await UserInfo.getUserID();
 	let tempToken = await JWT.getTempToken();
 	console.log("[Location] ", location)
+
 	if (!(location === "/mfa" && (tempToken && !uid))) {
-    if ((isProfile(location) && !uid) || (route.needAuth == 1 && !uid)){
-      location = "/mainPage";
-     	route = routes[location];
-    }
-	if (!(location === "/pong")) localStorage.removeItem("gameInfo");
-    if (route.needAuth == 2 && uid) {
-      location = "401";
-      route = routes[location];
-    }
-	else {
-		if (location === "/mfa" && !tempToken.access)
-		{
-		location = "/login";
-		route = routes[location];
+		if ((isProfile(location) && !uid) || (route.needAuth == 1 && !uid)) {
+			location = "/mainPage";
+			route = routes[location];
 		}
+		if (!(location === "/pong"))
+			localStorage.removeItem("gameInfo");
+		if (route.needAuth == 2 && uid) {
+			location = "401";
+			route = routes[location];
+		}
+	} else if (location === "/mfa" && !tempToken.access) {
+        window.history.pushState({}, "", "/login");
+		locationHandler();
+		return;
 	}
+
 	if (isProfile(location)) {
 		console.log("[isProfile(location)]")
 		route = routes["/profile/:userID"];
@@ -494,24 +521,26 @@ const locationHandler = async () => {
 		return;
 	}
 
-	html = await fetch(route.template).then((response) => response.text());
-	document.title = route.title;
-	if (bigScreenLocation.includes(location)) {
-		document.getElementById("allContent").innerHTML = html;
-		await changeToBig(location);
-		document
-			.querySelector('meta[name="description"]')
-			.setAttribute("content", route.description);
-	} else {
-		document.getElementById("content").innerHTML = html;
-		changeToSmall(location);
-		document
-			.querySelector('meta[name="description"]')
-			.setAttribute("content", route.description);
-		await changeActive(location);
-	}
-};
-
+		html = await fetch(route.template).then((response) => response.text());
+		document.title = route.title;
+		if (route.title == "404") {
+			window.history.pushState({}, "", "/404");
+			location = "/404"
+		}
+		if (bigScreenLocation.includes(location)) {
+			document.getElementById("allContent").innerHTML = html;
+			await changeToBig(location);
+			document
+				.querySelector('meta[name="description"]')
+				.setAttribute("content", route.description);
+		} else {
+			document.getElementById("content").innerHTML = html;
+			changeToSmall(location);
+			document
+				.querySelector('meta[name="description"]')
+				.setAttribute("content", route.description);
+			await changeActive(location);
+		}
 }
 
 document.addEventListener("click", (e) => {
@@ -522,16 +551,34 @@ document.addEventListener("click", (e) => {
 	}
 });
 
-function loadProfileFromURL() {
-	console.log("[loadProfileFromURL]")
+async function loadProfileFromURL() {
+	console.log("[loadProfileFromURL]");
 	const path = window.location.pathname;
 	const match = path.match(/\/profile\/(\w+)/);
 	if (match) {
 		const userID = match[1];
-		fetchProfileInfo(userID);
-		fetchStatistics(userID);
+		const userIDNumber = Number(userID);
+		if (isNaN(userIDNumber)) {
+			window.history.pushState({}, "", "/404");
+			await locationHandler();
+			return;
+		} else {
+			if (await validatePathUser(userID)) {
+				fetchProfileInfo(userID);
+				fetchStatistics(userID);
+				if (userID != await UserInfo.getUserID())
+					document.getElementById("avatarLabel").classList.add('cursor-not-allowed', 'pointer-events-none');
+				else
+					document.getElementById("avatarLabel").classList.remove('cursor-not-allowed', 'pointer-events-none');
+			} else {
+				window.history.pushState({}, "", "/404");
+				await locationHandler();
+				return;
+			}
+		}
 	}
 }
+
 
 async function reloadPage() {
 	let location = window.location.pathname;

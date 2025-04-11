@@ -4,7 +4,7 @@ const KEY_W = 87;
 const KEY_S = 83;
 const F5 = 116;
 const keyPressed = [];
-const maxSpeed = 16;
+const maxSpeed = 14;
 const maxScore = 5;
 const ballVelocity = 7;
 const ballVellocityIncreaseRate = 1.2;
@@ -12,40 +12,53 @@ const ballRadius = 15;
 const paddleWidth = 20;
 const paddleHeight = 150;
 const paddleVelocity = 10;
-var stopGame = false;
+var closeGame = false;
+var localGame = false;
+var isTournament = false;
+var remoteGame = false;
 const wsConnections = {};
 var imgLeft, imgRight;
-
-let isRefreshing = false;
+var gameID = 0;
 
 window.addEventListener('keydown', function (e) {
-  if (e.keyCode == 116)
-    isRefreshing = true;
-  keyPressed[e.keyCode] = true;
+    keyPressed[e.keyCode] = true;
 })
+
 window.addEventListener('keyup', function (e) {
     keyPressed[e.keyCode] = false;
 })
 
+//handle do back button
 window.addEventListener("popstate", function (e) {
-    keyPressed["back"] = true;
-    // Handle back button event (e.g., show a warning or log data)
+    if(window.location.pathname != "/games")
+        return;
+    if(localGame){
+        closeGame = true;
+        localGame = false;
+        window.ws_os.send(JSON.stringify({"game_id": gameID}));
+    }
+    if (remoteGame){
+        closeGame = true;
+        remoteGame = false;
+        remoteWs.close(3000)
+    }
 })
 
-function bmcForcedFinish()
-{
-  let gameInfo = localStorage.getItem('gameInfo');
-  window.ws_os.send(JSON.stringify({"game_id":gameInfo}));
-}
-
-
-
+//handle fechar a janela / refresh
 window.addEventListener("beforeunload", function (e) {
-    keyPressed["close"] = true;
-    if (!isRefreshing)
-      bmcForcedFinish();
-    isRefreshing = false;
-    //console.log("Aba ou navegador foi fechado! ==> so funciona para firefox");
+    if(window.location.pathname != "/pong")
+        return;
+    if (localGame){
+        closeGame = true;
+        localGame = false;
+        window.ws_os.send(JSON.stringify({"game_id": gameID}));
+    }
+    if(remoteGame){
+        closeGame = true;
+        remoteGame = false;
+        remoteWs.close(3000);
+    }
+    localStorage.removeItem("gameInfo");
 });
 
 class Game  {
@@ -61,9 +74,10 @@ class Game  {
         this.gameDuration = 0;
     }
     async initGame() {
-        console.info("onload");
-        //this.canvas = document.getElementById('pongGameCanvas');
-        //const context = canvas.getContext('2d');
+        gameID = this.gameData.gameID;
+        closeGame = false;
+        localGame = true;
+        //console.info("onload");
 
         // Get the device pixel ratio (DPR)
         const dpr = window.devicePixelRatio || 1;
@@ -118,28 +132,19 @@ class Game  {
 
     async gameLoop() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        if (!this.stopGame && !keyPressed["close"] && !keyPressed["back"]) {
+        if (!this.stopGame && !closeGame) {
             window.requestAnimationFrame(async () => this.gameLoop());
             this.gameUpdate();
             this.incScore();
             this.gameDraw();
             //console.log("game on going");
         }
-        else if (keyPressed["close"] || keyPressed["back"]) {
-            console.log("force finish");
-            keyPressed["close"] = false;
-            await updateGameStatusForceFinish(this.gameData);
-            if (keyPressed["back"]){
-                keyPressed["back"] = false;
-                window.history.pushState({}, "", `/games`);
-                await locationHandler();
-            }
+        else if (closeGame) {
+            //console.log("force finish");
+            closeGame = false;
+            localGame = false;
         } else {
-            console.log("Normal finish!");
-            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes,
-                this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes,
-                    this.gameData.isTournament, imgLeft, imgRight, this.gameData.isTournamen, this.gameDuration);
-            startWinAnimation();
+            //console.log("Normal finish!");
             const data = {
                 uid: this.gameData.P1_uid,
                 gameID: this.gameData.gameID,
@@ -149,6 +154,11 @@ class Game  {
                 user2_hits: this.objects[2].paddleColisionTimes,
             }
             await updateGameStatus(data);
+            localGame = false;
+            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes,
+                this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes,
+                this.gameData.isTournament, imgLeft, imgRight, this.gameData.isTournament, this.gameDuration);
+                startWinAnimation();
         }
     }
     gameUpdate(){
@@ -165,7 +175,7 @@ class Game  {
         this.objects[1].colissionEdge(this.canvas);
         let colision = this.objects[1].leftColissionBall(this.objects[0]);
         if(colision){
-            console.log("Colision left: update ball again");
+            //console.log("Colision left: update ball again");
             this.objects[1].paddleColisionTimes++;
             this.objects[0].lastColision = 1;
             //this.objects[0].update();
@@ -176,7 +186,7 @@ class Game  {
         this.objects[2].colissionEdge(this.canvas);
         let colision = this.objects[2].rightColissionBall(this.objects[0]);
         if(colision){
-            console.log("Colision right: update ball again");
+            //console.log("Colision right: update ball again");
             this.objects[2].paddleColisionTimes++;
             this.objects[0].lastColision = 2;
             //this.objects[0].update();
@@ -212,7 +222,7 @@ class Game  {
         }
     }
     respawnBall() {
-        console.info("respawn")
+        //console.info("respawn")
         if (this.objects[0].ballVelocityX > 0) {
             this.objects[0].ballX = this.canvas.width / 2;
             this.objects[0].ballY = (Math.random() * (this.canvas.height - 200)) + 100;

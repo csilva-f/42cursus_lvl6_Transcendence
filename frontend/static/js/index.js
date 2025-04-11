@@ -35,6 +35,28 @@ function showErrorToast(APIurl, error, langData) {
       })
 }
 
+function showErrorUserToast(langData, error) {
+  fetch("/templates/Components/ToastErrorUser.html")
+      .then((response) => {
+          if (!response.ok) {
+              throw new Error("Network response was not ok " + response.statusText);
+          }
+          return response.text();
+      })
+      .then((data) => {
+          const bodyElement = document.getElementById("body");
+          const newToast = document.createElement("div");
+          newToast.innerHTML = data;
+          const errorToast = newToast.querySelector('#errorToast')
+          const toastShow = bootstrap.Toast.getOrCreateInstance(errorToast)
+          const errorMsg = newToast.querySelector('#errorMsg')
+          errorMsg.textContent = error;
+          bodyElement.appendChild(newToast);
+          updateContent(langData);
+          toastShow.show()
+      })
+}
+
 function showSuccessToast(langData, type) {
   fetch("/templates/Components/ToastSuccess.html")
       .then((response) => {
@@ -84,14 +106,13 @@ function getForms() {
       "submit",
       (event) => {
         form.classList.remove("was-validated");
-        if (!(form.checkValidity()) || !(myCustomValidity(form))) {
+        if (!(myCustomValidity(form)) || !(form.checkValidity())) {
           event.preventDefault();
           event.stopPropagation();
         } else {
           //if (form.id == "localFormID") postLocalGame();
           //if (form.id == "remoteFormID") postRemoteGame();
           if (form.id == "localTournamentFormID") initLocalTournament();
-          else if (form.id == "tournamentFormID") postTournament();
           else if (form.id == "login-form") sendLogin();
           else if (form.id == "signup-form") sendSignup(form);
           else if (form.id == "forgotPwd-form") forgotPwd();
@@ -105,8 +126,8 @@ function getForms() {
           // else if (form.id == "resetPwd-form")
           // 	resetPwd();
           event.preventDefault();
+          form.classList.add("was-validated");
         }
-        form.classList.add("was-validated");
       },
       false,
     );
