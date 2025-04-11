@@ -2,9 +2,10 @@ NAME	= ft_transcendence
 BACKEND_DB_CONTAINER_NAME=backend-db
 AUTH_DB_CONTAINER_NAME=auth-db
 EMAIL_DB_CONTAINER_NAME = email-db
-all: secrets build up migrate
+all: secrets build up
 DATA_DIR = $(HOME)/ft_transcendence_data
 ROOT_TOKEN_FILE = ./secrets/VAULT_ROOT_TOKEN.txt
+DOCKER_COMPOSE_BINARY=./docker-compose-linux-x86_64
 
 secrets:
 	@echo "Creating secrets folder..."
@@ -13,11 +14,16 @@ secrets:
 	@touch ./secrets/VAULT_ROOT_TOKEN.txt
 	@echo eva > ./secrets/POSTGRES_USER.txt
 	@echo gina > ./secrets/POSTGRES_PASSWORD.txt
+	@echo noreply@cucabeludo.pt > ./secrets/EMAIL_USER.txt
+	@echo Cuc@3elud0 > ./secrets/EMAIL_PASSWORD.txt
+	@echo webdomain04.dnscpanel.com > ./secrets/EMAIL_HOST.txt
+	@echo u-s4t2ud-9ec7e1b569c511d464a5fde0f161abb7de05399c1ba6b45dcc7619f42c1bfff0 > ./secrets/OAUTH_CLIENTID.txt
+	@echo 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 > ./secrets/OAUTH_SECRET.txt
 
 
 build:
 	@echo "Building Docker Compose setup..."
-	@docker compose -p $(NAME) build
+	@$(DOCKER_COMPOSE_BINARY) -p $(NAME) build
 
 directories:
 	@echo "Creating directories..."
@@ -30,31 +36,10 @@ directories:
 	@mkdir -p ./vault/data
 
 up: directories
-	@docker compose down
+	@$(DOCKER_COMPOSE_BINARY) down
 	@echo "" > $(ROOT_TOKEN_FILE)
 	@echo "Running Docker Compose setup..."
-	@docker compose up -d auth-db vault-db backend-db email-db
-	@while ! ( \
-		docker inspect -f '{{.State.Health.Status}}' auth-db | grep -q "healthy" && \
-		docker inspect -f '{{.State.Health.Status}}' vault-db | grep -q "healthy" && \
-		docker inspect -f '{{.State.Health.Status}}' backend-db | grep -q "healthy" && \
-		docker inspect -f '{{.State.Health.Status}}' email-db | grep -q "healthy" \
-	); do \
-		echo "Waiting for all databases to be healthy..."; \
-		sleep 2; \
-	done
-	@echo "Database is up and running! Applying Migrations..."
-	@echo "Setting up Vault..."
-	sleep 2
-	@docker compose up -d vault
-	@echo "Waiting for $(ROOT_TOKEN_FILE) to contain any value..."
-	@while [ ! -s $(ROOT_TOKEN_FILE) ]; do \
-		sleep 1; \
-	done
-	@echo "$(ROOT_TOKEN_FILE) contains a value!"
-	@docker compose up -d email auth-api auth backend backend-api channels redis
-	sleep 5
-	@docker compose up -d nginx
+	@$(DOCKER_COMPOSE_BINARY) up -d
 # Stop the Docker Compose setup
 down:
 	@echo "Stopping Docker Compose setup..."
@@ -63,29 +48,17 @@ down:
 	@docker exec -it email-db chmod 777 /var/lib/postgresql/data -R
 	@docker exec -it vault-db chmod 777 /var/lib/postgresql/data -R
 	@docker exec -it vault chmod 777 /vault -R
-	@docker compose down
+	@$(DOCKER_COMPOSE_BINARY) down
 
-migrate:
-	@echo "Applying Migrations..."
-	@docker compose exec -it auth python manage.py makemigrations
-	@docker compose exec -it auth python manage.py migrate
-	@docker compose exec -it backend python manage.py makemigrations
-	@docker compose exec -it backend python manage.py migrate
-	@docker compose exec -it channels python manage.py makemigrations
-	@docker compose exec -it channels python manage.py migrate
-	@docker compose exec -it email python manage.py makemigrations
-	@docker compose exec -it email python manage.py migrate
-	@docker compose restart auth backend email channels
-	@sleep 2
-	@docker compose up -d nginx
+
 
 clean:down
 	@echo "Cleaning up stopped containers and networks..."
-	@docker compose -p $(NAME) down
+	@$(DOCKER_COMPOSE_BINARY) -p $(NAME) down
 
 fclean: clean
 	@echo "Force cleaning: removing all images..."
-	@docker compose -p $(NAME) down --rmi all
+	@$(DOCKER_COMPOSE_BINARY) -p $(NAME) down --rmi all
 	@docker system prune -af
 
 
@@ -95,6 +68,7 @@ fulldestroy: fclean
 	@rm -rf "$(DATA_DIR)/vault-db/data" -R
 	@rm -rf "$(DATA_DIR)/email-db/data" -R
 	@rm -rf "./vault/data" -R
+	@rm -rf "./channels/db.sqlite3" -R
 	@echo "" > $(ROOT_TOKEN_FILE)
 
 db-clear:

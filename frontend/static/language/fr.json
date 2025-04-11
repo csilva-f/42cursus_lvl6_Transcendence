@@ -101,6 +101,8 @@
     "errorName": "Le nom du tournoi doit être différent des autres tournois actifs",
     "Error": "Error",
 	"opponent": "Adversaire:",
+	"Error": "Error",
+	"opponent": "Adversaire:",
     "hCardWin": "Victoire",
     "hCardLoss": "Défaite",
     "hCardWinT": "Victoire en Tournoi",

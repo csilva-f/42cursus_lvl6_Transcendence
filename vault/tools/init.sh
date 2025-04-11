@@ -1,6 +1,11 @@
 #!/bin/sh
 POSTGRES_USER=$(cat "$POSTGRES_USER_FILE")
 POSTGRES_PASSWORD=$(cat "$POSTGRES_PASSWORD_FILE")
+EMAIL_HOST=$(cat "$EMAIL_HOST_FILE")
+EMAIL_HOST_USER=$(cat "$EMAIL_USER_FILE")
+EMAIL_HOST_PASSWORD=$(cat "$EMAIL_PASSWORD_FILE")
+OAUTH_SECRET=$(cat "$OAUTH_SECRET_FILE")
+OAUTH_CLIENTID=$(cat "$OAUTH_CLIENTID_FILE")
 
 chmod 777 /vault -R
 cat <<EOF > /vault/vault.hcl
@@ -54,6 +59,28 @@ echo $ROOT_TOKEN > /vault/secrets/VAULT_ROOT_TOKEN.txt
 echo "Enabling the database secrets engine..."
 vault secrets enable database
 vault secrets enable -path=secret kv
+
+
+if vault kv get -field=EMAIL_HOST secret/data/email_config &> /dev/null; then
+    echo "Secret already exists at $VAULT_PATH."
+else
+    echo "Secret does not exist. Adding it to Vault..."
+    vault kv put secret/data/email_config \
+        EMAIL_HOST="$EMAIL_HOST" \
+        EMAIL_HOST_USER="$EMAIL_HOST_USER" \
+        EMAIL_HOST_PASSWORD="$EMAIL_HOST_PASSWORD"
+    echo "Secret added successfully."
+fi
+
+if vault kv get -field=OAUTH_SECRET secret/data/oauth_config &> /dev/null; then
+    echo "Secret already exists at $VAULT_PATH."
+else
+    echo "Secret does not exist. Adding it to Vault..."
+    vault kv put secret/data/oauth_config \
+        OAUTH_CLIENTID="$OAUTH_CLIENTID" \
+        OAUTH_SECRET="$OAUTH_SECRET"
+    echo "Secret added successfully."
+fi
 
 if ! vault secrets list | grep -q "database/config/config-auth-db"; then
     # Configure the PostgreSQL database connection
@@ -116,6 +143,6 @@ vault write -f database/rotate-root/config-backend-db
 vault write -f database/rotate-root/config-email-db
 
 
-
+echo $ROOT_TOKEN > /vault/secrets/VAULT_ROOT_TOKEN.txt
 # Initialize Vault if it is not already initialized
 tail -f /dev/null

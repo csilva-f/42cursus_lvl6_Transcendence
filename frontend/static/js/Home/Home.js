@@ -13,8 +13,8 @@ async function insertHistoryInfo(newCard, element) {
     const tloss = newCard.querySelector("#tournLoss");
 
     if (element.winnerUserID != await UserInfo.getUserID()) {
-        divDefeat.classList.remove("d-none");
-        resTextL.classList.remove("d-none");
+        if (divDefeat) divDefeat.classList.remove("d-none");
+        if (resTextL) resTextL.classList.remove("d-none");
         if (!element.tournamentID) {
             gloss.classList.remove("d-none");
         } else {
@@ -29,8 +29,8 @@ async function insertHistoryInfo(newCard, element) {
     } else {
         divDefeat.classList.remove("d-none");
         if (!element.tournamentID) {
-            gwin.classList.remove("d-none");
-            resTextW.classList.remove("d-none");
+            if (gwin) gwin.classList.remove("d-none");
+            if (resTextW) resTextW.classList.remove("d-none");
         } else {
             twin.classList.remove("d-none");
         }
@@ -87,6 +87,6 @@ function renderHomeFriends(usersList, cardTemplate, users_on) {
         const newCard = document.createElement("div");
         newCard.innerHTML = cardTemplate;
         insertHomeFriendInfo(newCard, element, users_on);
-        divElement.appendChild(newCard);
+        if (divElement) divElement.appendChild(newCard);
     });
 }

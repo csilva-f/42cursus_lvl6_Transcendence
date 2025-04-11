@@ -31,3 +31,16 @@ def get_secret_key():
         except Exception as e:
             print(f"Error storing secret key in Vault: {e}")
             return None
+
+def get_oauth_config():
+    token = read_docker_secret('VAULT_ROOT_TOKEN')
+    client = hvac.Client(url=os.getenv('VAULT_ADDR'), token=token)
+    secret_path = 'oauth_config'  # This is the path relative to the mount point
+    try:
+        secret = client.secrets.kv.read_secret_version(path=secret_path)
+        config = secret['data']
+        print("OAuth configuration retrieved successfully")
+        return config
+    except Exception as e:
+        print(f"Error getting key from Vault: {e}")
+        return None

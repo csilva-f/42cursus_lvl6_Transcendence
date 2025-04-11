@@ -16,8 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-
+from .views import healthcheck
 urlpatterns = [
     path('send_email/', include("cuca.urls")),
+    path('healthcheck/', healthcheck, name='healthcheck'),
 
 ]

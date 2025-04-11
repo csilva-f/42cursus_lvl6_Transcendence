@@ -19,7 +19,9 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
+from .views import healthcheck
 
 urlpatterns = [
     path('api/', include('apigateway.urls')),
+        path('healthcheck/', healthcheck, name='healthcheck'),
 ]

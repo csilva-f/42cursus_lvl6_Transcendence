@@ -17,9 +17,11 @@ Including another URLconf
 from django.urls import path, include
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
+from .views import healthcheck
 
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('authapi/', include('authapi.urls')),
     path('oauthapi/', include('oauthapi.urls')),
+    path('healthcheck/', healthcheck, name='healthcheck'),
 ]

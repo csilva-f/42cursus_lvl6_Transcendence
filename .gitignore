@@ -7,3 +7,4 @@ secrets/
 **/__pycache__/
 .vscode/
 **/.DS_Store
+channels/code/db.sqlite3

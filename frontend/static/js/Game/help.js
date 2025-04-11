@@ -30,6 +30,7 @@ async function showGameStats(leftName, leftScore, leftColision, rightName, right
     const finishedGame = document.getElementById('finishedGame');
     const playAgain = document.getElementById('playAgainButton');
     const homeButton = document.getElementById('homeButton');
+    await activateClickTopBar();
 
     pongGameDiv.classList.add('d-none');
     mainGameScore.classList.add('d-none');
@@ -145,36 +146,4 @@ async function updateGameStatus(data){
             showErrorToast(APIurl, error, langData);
         },
     });
-}
-
-async function updateGameStatusForceFinish(gameData){
-    const userLang = localStorage.getItem("language") || "en";
-    const langData = await getLanguageData(userLang);
-    const data = {
-        uid: gameData.P1_uid,
-        gameID: gameData.gameID,
-        statusID: 3,
-    }
-    console.log(data);
-    const APIurl = `/api/update-game/`;
-    const accessToken = await JWT.getAccess();
-    $.ajax({
-        type: "POST",
-        url: APIurl,
-        Accept: "application/json",
-        contentType: "application/json",
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        },
-        data: JSON.stringify(data),
-        success: async function (res) {
-            console.log(res);
-        },
-        error: function (xhr, status, error) {
-            showErrorToast(APIurl, error, langData);
-        },
-    });
-    await UserInfo.refreshUser();
-    document.getElementById("topbar").classList.remove('d-none');
-    activateTopBar();
 }

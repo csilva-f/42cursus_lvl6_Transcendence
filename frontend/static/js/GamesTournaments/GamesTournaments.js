@@ -8,6 +8,7 @@ const botImages = [
     '/static/img/bot/bot4.jpeg',
     '/static/img/bot/bot5.jpeg',
     '/static/img/bot/bot6.jpg',
+    '/static/img/bot/bot7.jpeg',
 ];
 
 function activateInput(elementID) {
@@ -118,15 +119,15 @@ async function insertInfo(newCard, element, statusID) {
     const user2Level = newCard.querySelector("#user2Level");
     const user2Nick = newCard.querySelector("#user2Nick");
     const enterBtn = newCard.querySelector("#enterLi");
-    const statsBtn = newCard.querySelector("#statsDropdownBtn");
     const uid = await UserInfo.getUserID();
     enterBtn.setAttribute("data-id", element.gameID);
+    const statsButton = document.getElementById('statsDropdownBtn');
     if (!element.isLocal && (uid == element.user1ID || uid == element.user2ID))
         enterBtn.classList.add('d-none');
     if (statusID != 1)
         enterBtn.classList.add('d-none');
-        if (statusID == 3 & element.winnerUserID)
-            statsBtn.classList.remove('d-none');
+    if (statusID != 3)
+        statsButton.classList.add('d-none');
     user1Level.textContent = element.user1Lvl;
     user1Nick.textContent = element.user1Nick;
     user1Img.src = `/static/img/profilePic/${element.user1Avatar}`;
@@ -207,9 +208,9 @@ function showGameForm(formID, tabOpenID, confirmBtnID, backBtnID) {
 //* Function to hide Forms
 function hideGameForm(formOpenID, tabID, confirmBtnID) {
     const form = document.getElementById(formOpenID);
-    form.classList.add('d-none');
+    if (form) form.classList.add('d-none');
     const tab = document.getElementById(tabID);
-    tab.classList.remove('d-none');
+    if (tab) tab.classList.remove('d-none');
     const confirmBtn = document.getElementById(confirmBtnID);
     if (confirmBtn) confirmBtn.classList.add('d-none');
 }
@@ -223,8 +224,8 @@ function closeGameForm(formIDs, tabID, confirmBtnID, backBtnID) {
     if (tournErrorNick) tournErrorSection.classList.add('d-none');
     const tournErrorName = document.querySelector('#tournErrorName');
     if (tournErrorName) tournErrorSection.classList.add('d-none');
-    if (formOpenID != null)
-        hideGameForm(formOpenID, tabID, confirmBtnID)
+    if (formIDs != null)
+        hideGameForm(formIDs, tabID, confirmBtnID)
     formIDs.forEach((f) => {
         const form = document.getElementById(f.id)
         const inputs = document.querySelectorAll(`#${f.id} input`)

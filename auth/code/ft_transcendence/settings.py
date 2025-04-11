@@ -11,9 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 from os import getenv
 from pathlib import Path
-from .hvac import get_secret_key
-
-#rom .hvac import get_database_credentials
+from .hvac import get_secret_key, get_oauth_config
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -44,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'rest_framework',
     'rest_framework_simplejwt',
-    'mailer',
     'pyotp',
     'cuca',
     'two_factor',
@@ -69,9 +66,11 @@ AUTHENTICATION_BACKENDS = (
     'oauth2_provider.backends.OAuth2Backend',
 )
 
+OAUTH = get_oauth_config()
+print(OAUTH)
 OAUTH2_PROVIDER = {
-    'CLIENT_ID': 'u-s4t2ud-9ec7e1b569c511d464a5fde0f161abb7de05399c1ba6b45dcc7619f42c1bfff0',
-    'CLIENT_SECRET': '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',
+    'CLIENT_ID': OAUTH['OAUTH_CLIENTID'],
+    'CLIENT_SECRET': OAUTH['OAUTH_SECRET'],
     'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
     'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
     'USER_INFO_URL': 'https://api.intra.42.fr/v2/me',

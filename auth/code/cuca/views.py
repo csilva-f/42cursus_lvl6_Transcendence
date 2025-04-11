@@ -31,14 +31,15 @@ class UserCreate(generics.CreateAPIView):
             #validation_link  = request.headers['Origin'] + '/authapi/validate-email/validate-email/' + uid + '/' + token
             validation_link  = request.headers['Origin'] + '/validate-email?uid=' + uid + '&token=' + token
             print('build_absolute_uri: ',validation_link)
-            print(user)
-            response = requests.post('http://email:8000/send_email/', json={
-                'subject': 'Your Activation Link',
-                'message': f'Your account activation link is \n\n {validation_link}',
-                'from_email': 'noreply@cucabeludo.pt',
-                #[email],
-                'recipient_list': ['bcamarinha92@gmail.com'],
-            })
+            try:
+                response = requests.post('http://email:8000/send_email/', json={
+                    'subject': 'Your Activation Link',
+                    'message': f'Your account activation link is \n\n {validation_link}',
+                    'from_email': 'noreply@cucabeludo.pt',
+                    'recipient_list': [user.email],
+                })
+            except Exception as e:
+                print('Error sending email:', e)
             if response.status_code == 200:
                 print('Email sent successfully!')
             else:

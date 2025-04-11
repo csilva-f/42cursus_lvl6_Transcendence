@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import Q, Sum, F, ExpressionWrapper, DurationField
 from django.utils.timezone import now
+from rest_framework import status
 
 ALLOWED_FILTERS_TOURNAMENT = {'uid', 'tournamentID', 'statusID', 'name', 'winnerID'}
 
@@ -278,16 +279,21 @@ def get_usergames(request):
                 games = games.filter(tournament__tournament__isnull=True)
             else:
                 games = games.filter(tournament__tournament=tournament_id)
+        tournament_filter = (
+            Q(tournament__isnull=True) |
+            Q(tournament__isnull=False, phase__phase=3) |
+            (Q(tournament__isnull=False, phase__phase=2) & ~Q(winnerUser=user_id) & Q(createdByUser=user_id))
+        )
         if status_id and status_id == 3:
             games = games.filter(
                 (Q(isInvitation=False) | Q(isInvitation=True, isInvitAccepted=True)) &
                 Q(winnerUser__isnull=False) &
-                (Q(tournament__isnull=True) | Q(tournament__isnull=False, phase__phase=3))
+                tournament_filter
             )
         else:
             games = games.filter(
                 (Q(isInvitation=False) | Q(isInvitation=True, isInvitAccepted=True)) &
-                (Q(tournament__isnull=True) | Q(tournament__isnull=False, phase__phase=3))
+                tournament_filter
             )
         try:
             u_ext = tUserExtension.objects.get(user=user_id)
@@ -510,7 +516,7 @@ def post_create_tournament(request):
                 return JsonResponse({"error": "name can't be empty"}, status=400)
             existing_tournament = tTournaments.objects.filter(name=save_name, status__in=[1, 2]).exists()
             if existing_tournament:
-                return JsonResponse({"error": "Tournament name must be different from an active tournament"}, status=400)
+                return JsonResponse({"error": "Tournament name must be different from an active tournament"}, status=status.HTTP_409_CONFLICT)
             created_by = int(u1)
             if not created_by:
                 return JsonResponse({"error": "User ID is required for tournament creation"}, status=400)
@@ -520,7 +526,7 @@ def post_create_tournament(request):
                 return JsonResponse({"error": "Tournament players' alias must be provided"}, status=400)
             uext1 = tUserExtension.objects.get(user=created_by)
             if u2 in [u3, u4, uext1.nick] or u3 in [u4, uext1.nick] or u4 == uext1.nick:
-                return JsonResponse({"error": "Tournament players' alias must be different"}, status=400)
+                return JsonResponse({"error": "Tournament players' alias must be different"}, status=status.HTTP_409_CONFLICT)
             creation_ts = date.today()
             with transaction.atomic():
                 tournament = tTournaments.objects.create(
@@ -588,6 +594,7 @@ def post_create_tournament(request):
 def post_update_game(request): #update statusID acording to user2 and winner vars
     if request.method == 'POST':
         try:
+            print("chega aqui")
             data = json.loads(request.body)
             game_id = data.get('gameID')
             if not game_id:
@@ -596,8 +603,6 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 game = tGames.objects.get(game=game_id)
             except tGames.DoesNotExist:
                 return JsonResponse({"error": "Game not found"}, status=404)
-            user_id = data.get('uid')
-            is_join = str(data.get('isJoin')).lower() in ['true', '1', 'yes']
             status = data.get('statusID')
             if status is not None:
                 status = validate_status(status)
@@ -608,8 +613,14 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                         game.save()
                     return JsonResponse({"message": "Game updated successfully, forced finished was performed", "game_id": game.game}, status=201)
                 return JsonResponse({"error": "Override status only allowed for finished"}, status=400)
+            user_id = data.get('uid')
+            is_join = str(data.get('isJoin')).lower() in ['true', '1', 'yes']
+            print("user_id")
             if not user_id and not is_join:
                 return JsonResponse({"error": "User ID is required for update"}, status=400)
+            if is_join and game.user1 and game.user2:
+                print("error joining remote game: game is full")
+                return JsonResponse({"error": "The game is full! Try refreshing the tab to see the available games"}, status=403)
             if user_id == game.user1 and is_join:
                 return JsonResponse({"error": "User2 must be different from User1"}, status=400)
             if is_join and not tUserExtension.objects.filter(user=user_id).exists():
@@ -710,6 +721,7 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 "user2_nick": game.user2_nick,
                 "isLocal": game.isLocal
             }
+            print("fim")
             return JsonResponse({"message": "Game updated successfully", "game": game_data}, status=201)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
@@ -1016,11 +1028,15 @@ def post_update_userextension(request):
                     uext.gender = gen
                 except tauxGender.DoesNotExist:
                     return JsonResponse({"error": f"Gender with id {gender_id} does not exist"}, status=404)
+            print("nick from request: ")
+            print(unick)
+            print("nick from u extension: ")
+            print(uext.nick)
             if unick and unick != uext.nick:
                 if len(unick) > 20:
                     return JsonResponse({"error": "Nickname cannot exceed 20 characters"}, status=400)
                 if tUserExtension.objects.filter(nick=unick).exists():
-                    return JsonResponse({"error": f"Nickname '{unick}' is already in use"}, status=400)
+                    return JsonResponse({"error": f"Nickname '{unick}' is already in use"}, status=status.HTTP_409_CONFLICT)
             if not any([
                 birthdate and birthdate != uext.birthdate,
                 gender_id and gender_id != (uext.gender.gender if uext.gender else None),
