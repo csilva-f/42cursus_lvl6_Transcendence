@@ -45,7 +45,7 @@ const routes = {
 		template: "/templates/ForgotPassword.html",
 		title: "Forgot Password",
 		descripton: "This is the forgot password Page",
-		neddAuth: 2,
+		needAuth: 2,
 	},
 	"/mfa": {
 		template: "/templates/MFA.html",
@@ -63,7 +63,7 @@ const routes = {
 		template: "/templates/ResetPassword.html",
 		title: "Reset Password",
 		descripton: "This is the reset password page",
-		neddAuth: 2,
+		needAuth: 2,
 	},
 	"/pong": {
 		template: "/templates/Game.html",
@@ -93,7 +93,7 @@ const routes = {
 		template: "/templates/AboutUs.html",
 		title: "AboutUs",
 		descripton: "This is the AboutUs Page",
-		neddAuth: 1,
+		needAuth: 1,
 	},
 	"/profile": {
 		template: "/templates/Profile.html",
@@ -292,12 +292,6 @@ async function changeToBig(location) {
 		headerElement.setAttribute("data-i18n", "pong");
 		activateTopBar();
 		disableClickTopBar();
-		gameInfo = localStorage.getItem("gameInfo");
-		if (gameInfo) {
-			gameInfo = JSON.parse(gameInfo);
-			game = new Game(gameInfo);
-			game.initGame();
-		}
 	} else if (location == "/callback") {
 		headerElement.setAttribute("data-i18n", "callback");
 		disableTopBar();
@@ -572,6 +566,10 @@ async function loadProfileFromURL() {
 			if (await validatePathUser(userID)) {
 				fetchProfileInfo(userID);
 				fetchStatistics(userID);
+				if (userID != await UserInfo.getUserID())
+					document.getElementById("avatarLabel").classList.add('cursor-not-allowed', 'pointer-events-none');
+				else
+					document.getElementById("avatarLabel").classList.remove('cursor-not-allowed', 'pointer-events-none');
 			} else {
 				window.history.pushState({}, "", "/404");
 				await locationHandler();

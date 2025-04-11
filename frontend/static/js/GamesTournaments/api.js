@@ -361,8 +361,11 @@ async function postLocalTournament() {
       success: function (res) {
         showSuccessToast(langData, langData.tournamentcreated);
         resolve(res.tournament); // Resolve the promise with the tournament ID
+        document.querySelector("#localTournamentFormID").classList.remove('was-validated');
         document.querySelector("#localTournamentFormID").reset();
         $("#createTournamentModal").modal("hide");
+        if (document.getElementById('happeningLi').classList.contains('iconActive'))
+          fetchTournaments(2);
       },
       error: function (xhr, status, error) {
         const data = JSON.parse(xhr.responseJSON);
