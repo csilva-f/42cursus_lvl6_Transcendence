@@ -88,6 +88,8 @@ services:
       - email_password
       - email_host
       - email_user
+      - oauth_secret
+      - oauth_clientid
     depends_on:
       vault-db:
         condition: service_healthy
@@ -263,6 +265,10 @@ secrets:
     file: ./secrets/EMAIL_HOST.txt
   email_user:
     file: ./secrets/EMAIL_USER.txt
+  oauth_secret:
+    file: ./secrets/OAUTH_SECRET.txt
+  oauth_clientid:
+    file: ./secrets/OAUTH_CLIENTID.txt
 
 volumes:
   auth-db-data:
