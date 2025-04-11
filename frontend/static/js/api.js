@@ -35,30 +35,30 @@ async function fetchUserNotificationGame() {
             }
           });
           const notificationCount =
-          document.getElementById("notificationCount");
+            document.getElementById("notificationCount");
           if (currentNotifications.length > 0) {
-              notificationCount.classList.remove("d-none");
-              notificationCount.textContent = currentNotifications.length;
-              document.getElementById("noNotificationP").classList.add("d-none");
-            } else {
-              notificationCount.classList.add("d-none");
-              document.getElementById("noNotificationP").classList.remove("d-none");
-              }
-              const hasNewNotifications =
-                currentNotifications.length > 0 &&
-                !currentNotifications.every((id) =>
-                  previousNotifications.includes(id)
-                );
-              if (hasNewNotifications) {
-                const notificationIcon =
-                  document.getElementById("notificationIcon");
-                notificationIcon.classList.add("fa-shake");
-                setTimeout(() => {
-                  notificationIcon.classList.remove("fa-shake");
-                }, 1800);
-              }
-              previousNotifications = currentNotifications;
-              updateContent(langData);
+            notificationCount.classList.remove("d-none");
+            notificationCount.textContent = currentNotifications.length;
+            document.getElementById("noNotificationP").classList.add("d-none");
+          } else {
+            notificationCount.classList.add("d-none");
+            document.getElementById("noNotificationP").classList.remove("d-none");
+          }
+          const hasNewNotifications =
+            currentNotifications.length > 0 &&
+            !currentNotifications.every((id) =>
+              previousNotifications.includes(id)
+            );
+          if (hasNewNotifications) {
+            const notificationIcon =
+              document.getElementById("notificationIcon");
+            notificationIcon.classList.add("fa-shake");
+            setTimeout(() => {
+              notificationIcon.classList.remove("fa-shake");
+            }, 1800);
+          }
+          previousNotifications = currentNotifications;
+          updateContent(langData);
         },
         error: function (xhr, status, error) {
           console.error("Error Thrown:", error);
@@ -91,7 +91,7 @@ async function respondFriendRequest(friendID, statusID) {
     success: async function (res) {
       if (statusID == 2) {
         showSuccessToast(langData, langData.friendAccepted);
-        if (window.location.pathname == "/" )
+        if (window.location.pathname == "/")
           await fetchHomeFriends();
       }
       else if (statusID == 3)
@@ -119,4 +119,28 @@ async function notificationAccept(ID) {
 
 async function notificationDeny(ID) {
   await respondFriendRequest(ID, 3)
+}
+
+async function validatePathUser(userID) {
+  const accessToken = await JWT.getAccess();
+  APIurl = `/api/get-userextensions/?userID=${userID}`
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: APIurl,
+      contentType: "application/json",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      success: function (res) {
+        if (res.users.length == 0)
+          resolve(false)
+        else
+          resolve(true)
+      },
+      error: function (xhr, status, error) {
+        reject()
+      },
+    });
+  });
 }
