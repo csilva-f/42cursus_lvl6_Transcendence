@@ -1028,6 +1028,10 @@ def post_update_userextension(request):
                     uext.gender = gen
                 except tauxGender.DoesNotExist:
                     return JsonResponse({"error": f"Gender with id {gender_id} does not exist"}, status=404)
+            print("nick from request: ")
+            print(unick)
+            print("nick from u extension: ")
+            print(uext.nick)
             if unick and unick != uext.nick:
                 if len(unick) > 20:
                     return JsonResponse({"error": "Nickname cannot exceed 20 characters"}, status=400)

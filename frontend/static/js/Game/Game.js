@@ -4,7 +4,7 @@ const KEY_W = 87;
 const KEY_S = 83;
 const F5 = 116;
 const keyPressed = [];
-const maxSpeed = 16;
+const maxSpeed = 14;
 const maxScore = 5;
 const ballVelocity = 7;
 const ballVellocityIncreaseRate = 1.2;
@@ -16,11 +16,9 @@ var closeGame = false;
 var localGame = false;
 var isTournament = false;
 var remoteGame = false;
-var waitingRoom = false;
 const wsConnections = {};
 var imgLeft, imgRight;
 var gameID = 0;
-let isRefreshing = false;
 
 window.addEventListener('keydown', function (e) {
     keyPressed[e.keyCode] = true;
@@ -32,42 +30,31 @@ window.addEventListener('keyup', function (e) {
 
 //handle do back button
 window.addEventListener("popstate", function (e) {
-    console.log("back button 1")
     if(window.location.pathname != "/games")
         return;
-    console.log("back button 2")
-    closeGame = true;
     if(localGame){
+        closeGame = true;
         localGame = false;
-        console.log("SEND GAME ID:", gameID);
         window.ws_os.send(JSON.stringify({"game_id": gameID}));
     }
     if (remoteGame){
+        closeGame = true;
         remoteGame = false;
         remoteWs.close(3000)
     }
 })
 
-// function bmcForcedFinish()
-// {
-//     console.log("FORCE FINISH")
-//   let gameInfo = localStorage.getItem('gameInfo');
-//   window.ws_os.send(JSON.stringify({"game_id":gameInfo}));
-// }
-
 //handle fechar a janela / refresh
 window.addEventListener("beforeunload", function (e) {
-    console.log("=======>>>  BEFORE UNLOAD")
-    console.log("WHERE: ", window.location.pathname)
     if(window.location.pathname != "/pong")
         return;
-    closeGame = true;
     if (localGame){
+        closeGame = true;
         localGame = false;
-        console.log("SEND GAME ID:", gameID);
         window.ws_os.send(JSON.stringify({"game_id": gameID}));
     }
     if(remoteGame){
+        closeGame = true;
         remoteGame = false;
         remoteWs.close(3000);
     }
@@ -90,9 +77,7 @@ class Game  {
         gameID = this.gameData.gameID;
         closeGame = false;
         localGame = true;
-        console.info("onload");
-        //this.canvas = document.getElementById('pongGameCanvas');
-        //const context = canvas.getContext('2d');
+        //console.info("onload");
 
         // Get the device pixel ratio (DPR)
         const dpr = window.devicePixelRatio || 1;
@@ -155,15 +140,11 @@ class Game  {
             //console.log("game on going");
         }
         else if (closeGame) {
-            console.log("force finish");
+            //console.log("force finish");
             closeGame = false;
             localGame = false;
         } else {
-            console.log("Normal finish!");
-            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes,
-                this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes,
-                    this.gameData.isTournament, imgLeft, imgRight, this.gameData.isTournament, this.gameDuration);
-            startWinAnimation();
+            //console.log("Normal finish!");
             const data = {
                 uid: this.gameData.P1_uid,
                 gameID: this.gameData.gameID,
@@ -174,6 +155,10 @@ class Game  {
             }
             await updateGameStatus(data);
             localGame = false;
+            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes,
+                this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes,
+                this.gameData.isTournament, imgLeft, imgRight, this.gameData.isTournament, this.gameDuration);
+                startWinAnimation();
         }
     }
     gameUpdate(){

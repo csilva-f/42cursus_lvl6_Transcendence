@@ -120,10 +120,13 @@ async function insertInfo(newCard, element, statusID) {
     const enterBtn = newCard.querySelector("#enterLi");
     const uid = await UserInfo.getUserID();
     enterBtn.setAttribute("data-id", element.gameID);
+    const statsButton = document.getElementById('statsDropdownBtn');
     if (!element.isLocal && (uid == element.user1ID || uid == element.user2ID))
         enterBtn.classList.add('d-none');
     if (statusID != 1)
         enterBtn.classList.add('d-none');
+    if (statusID != 3)
+        statsButton.classList.add('d-none');
     user1Level.textContent = element.user1Lvl;
     user1Nick.textContent = element.user1Nick;
     user1Img.src = `/static/img/profilePic/${element.user1Avatar}`;

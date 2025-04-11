@@ -1,5 +1,4 @@
 var remoteWs;
-//var this.stopGame = false;
 
 window.addEventListener('keydown', function (e) {
     keyPressed[e.keyCode] = true;
@@ -23,12 +22,13 @@ class RemoteGame  {
         this.isHost = isHost;
         this.gameDuration = 0;
         this.disconnect = false;
+        this.stopGame = false;
     }
     initGame() {
         closeGame = false;
         remoteWs = this.ws;
         remoteGame = true;
-        console.log("onload");
+        //console.log("onload");
         //this.canvas = document.getElementById('pongGameCanvas');
         //const context = canvas.getContext('2d');
 
@@ -55,7 +55,7 @@ class RemoteGame  {
             document.getElementById("leftPlayerName").innerHTML = "Shin";
             document.getElementById("rightPlayerName").innerHTML = "Chan";
         } else {
-            console.log(this.gameData)
+            //console.log(this.gameData)
             this.objects = [
                 new Ball(this.canvas.width / 2, this.canvas.height / 2, this.ballVelocity, this.ballVelocity, this.ballRadius),
                 new Paddle(1, paddleWidth, paddleHeight, "#94DEC5", 30, (this.canvas.height / 2) - 75, paddleVelocity),
@@ -68,24 +68,25 @@ class RemoteGame  {
         }
         document.getElementById("playerLeftScore").innerHTML = this.objects[1].paddleScore;
         document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
+        //this.runCountdown()
         if(this.isHost)
             startTimer();
         this.ws.onmessage = async (event) => {
             const data = JSON.parse(event.data);
             if(!this.isHost && data.message == "Refresh game status"){
-                console.log("IT WORKS")
+                //console.log("IT WORKS")
                 await UserInfo.refreshUser();
                 await activateTopBar();
                 this.ws.close(1000);
             }
             if(data.message == "A player left the game." && data.close_code != 1000){
                 this.disconnect = true;
-                console.log("close code:", data.close_code);
+                //console.log("close code:", data.close_code);
             }
             //NOTE - 1 - Atualizar a bola
             if (data.element == 0) {
-                if(!this.isHost)
-                    this.ballUpdateByValue(data.ballX, data.ballY, data.ballVelocityX, data.ballVelocityY, data.lastColision);
+                //if(!this.isHost)
+                this.ballUpdateByValue(data.ballX, data.ballY, data.ballVelocityX, data.ballVelocityY, data.lastColision);
             }
             //NOTE - 2 - Atualizar o paddle
             if (data.element == 1) {
@@ -124,6 +125,7 @@ class RemoteGame  {
         this.objects[2].paddleY = y;
         this.objects[2].colissionEdge(this.canvas);
         this.objects[2].rightColissionBall(this.objects[0]);
+        //console.log("=>> Paddle update right by value")
     }
     paddleUpdateByValueLeft(y){
         this.objects[1].paddleY = y;
@@ -148,20 +150,16 @@ class RemoteGame  {
             else
                 this.joinerGame();
         } else if(closeGame){
-            console.log("force finish");
+            //console.log("force finish");
             closeGame = false;
             remoteGame = false;
         } else if (this.disconnect){
-            console.log("disconect");
+            //console.log("disconect");
             this.ws.close(3000); // meu codigo de unexpected close
             window.history.pushState({}, "", `/games`);
             await locationHandler();
             remoteGame = false;
         } else if (this.stopGame){
-            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, 
-            this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, true, this.gameData.imgLeft, this.gameData.imgRight, false, this.gameDuration);
-            if(this.isWinner())
-                startWinAnimation();
             if(this.isHost){
                 const data = {
                     uid: this.gameData.P2_uid,
@@ -175,11 +173,15 @@ class RemoteGame  {
                 let msg = {
                     message: "Refresh game status",
                 }
-                console.log(msg.message);
+                //console.log(msg.message);
                 this.ws.send(JSON.stringify(msg));
                 this.ws.close(1000);
             }
             remoteGame = false;
+            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, 
+            this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, true, this.gameData.imgLeft, this.gameData.imgRight, false, this.gameDuration);
+            if(this.isWinner())
+                startWinAnimation();
         }
     }
     hostGame(){
@@ -221,8 +223,8 @@ class RemoteGame  {
         this.objects[2].colissionEdge(this.canvas);
         let colision = this.objects[2].rightColissionBall(this.objects[0]);
         if(colision){
-            // console.log("=>> Paddle update right")
-            // console.log("Colision with paddle RIGHT! Update ball again");
+            //console.log("=>> Paddle update right")
+            //console.log("Colision with paddle RIGHT! Update ball again");
             if(this.isHost){
                 this.objects[2].paddleColisionTimes++;
                 let msg = JSON.stringify(this.objects[0].toJSON());
@@ -236,7 +238,7 @@ class RemoteGame  {
         });
     }
     incScore() {
-        if (this.objects[0].ballX + this.objects[0].ballRadius < -4){
+        if (this.objects[0].ballX + this.objects[0].ballRadius < 0){
             this.objects[0].lastColision = 0;
             this.objects[2].paddleScore += 1;
             let msg = {
@@ -260,7 +262,8 @@ class RemoteGame  {
                 this.ws.send(JSON.stringify(msg));
             }
         }
-        if (this.objects[0].ballX - this.objects[0].ballRadius > this.canvas.width + 4){
+        if (this.objects[0].ballX - this.objects[0].ballRadius > this.canvas.width){
+            //console.log("=>> GOLOOOO")
             this.objects[0].lastColision = 0;
             this.objects[1].paddleScore += 1;
             let msg = {
@@ -288,15 +291,13 @@ class RemoteGame  {
         if (this.objects[0].ballVelocityX > 0) {
             this.objects[0].ballX = this.canvas.width / 2;
             this.objects[0].ballY = (Math.random() * (this.canvas.height - 200)) + 100; 
+            this.objects[0].ballVelocityX = -ballVelocity;
         }
         if (this.objects[0].ballVelocityX < 0) {
             this.objects[0].ballX = this.canvas.width / 2;
             this.objects[0].ballY = (Math.random() * (this.canvas.height - 200)) + 100;
-        }
-        if(this.objects[0].ballVelocityX < 0)
             this.objects[0].ballVelocityX = ballVelocity;
-        else
-            this.objects[0].ballVelocityX = -ballVelocity;
+        }
         this.objects[0].ballVelocityY *= -1;
         let msg = JSON.stringify(this.objects[0].toJSON());
         this.ws.send(msg);
