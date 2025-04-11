@@ -11,32 +11,36 @@ function myCustomValidity(form)
 function validateUpdateProfileForm(form)
 {
     firstInput = form.firstName.value;
-    lastName = form.lastName.value;
-    phoneNumber = form.phoneNumber.value;
-    birthday = new Date(form.birthday.value);
-    biography = form.biography.value;
+    lastInput = form.lastName.value;
+    phoneNumberInput = form.phoneNumber.value;
+    birthdayInput = new Date(form.birthday.value);
+    biographyInput = form.biography.value;
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
-    const isNumeric = /^\d+$/.test(phoneNumber);
+    const isNumeric = /^\d+$/.test(phoneNumberInput);
     let erro = 0;
 
     if (!(firstInput.length <= 50 && firstInput.length > 0)) {
         form.firstName.classList.remove('is-valid');
         erro += 1;  
     } 
-    if (!(lastName.length <= 50 && lastName.length > 0)) {
+    if (!(lastInput.length <= 50 && lastInput.length > 0)) {
         form.lastName.classList.remove('is-valid');
         erro += 1;
     }
-    if (!(phoneNumber.length <= 20 && phoneNumber.length > 0) && !(isNumeric)){
+    if (!(phoneNumberInput.length <= 20 && phoneNumberInput.length > 0)){
         form.phoneNumber.classList.remove('is-valid');
         erro += 1;
     }
-    if (!(birthday < currentDate)) {
+    if (!(isNumeric)) {
+        form.phoneNumber.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(birthdayInput < currentDate)) {
         form.birthday.classList.remove('is-valid');
         erro += 1;
     }
-    if (!(biography.length <= 2000)) {
+    if (!(biographyInput.length <= 2000)) {
         form.biography.classList.remove('is-valid');
         erro += 1;
     }
@@ -45,79 +49,146 @@ function validateUpdateProfileForm(form)
 }
 
 function ValidateNicknameForm(form){
-    newNickname = form.newNickname.value.trim();
-    newBirthday = new Date(form.newBirthday.value);
+    newNicknameInput = form.newNickname.value.trim();
+    newBirthdayInput = new Date(form.newBirthday.value);
     const currentDate = new Date();
     let erro = 0;
 
     currentDate.setHours(0, 0, 0, 0);
 
-    if (!(newNickname.length <= 20)) erro += 1;
-    if (!(newBirthday < currentDate)) erro += 1;
+    if (!(newNicknameInput.length <= 20)) {
+        form.newNickname.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(newNicknameInput.length > 0)) {
+        form.newNickname.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(newBirthdayInput < currentDate)) {
+        form.newBirthday.classList.remove('is-valid');
+        erro += 1;
+    }
     if (erro == 0) return true;
     return false;
 }
 
 function ValidateResetPwdForm(form){
-    newPassword = form.newPassword.value;
-    confirmPassword = form.confirmPassword.value;
+    newPasswordInput = form.newPassword.value;
+    confirmPasswordInput = form.confirmPassword.value;
 
-    const hasUpperCase = /[A-Z]/.test(newPassword);
-	const hasNumbers = /\d/.test(newPassword);
-	const hasSpecialChars = /[!@#_$%^&*(),.?":+{}|<>]/.test(newPassword);
-	const isValidLength = newPassword.length >= 8;
+    const hasUpperCase = /[A-Z]/.test(newPasswordInput);
+	const hasNumbers = /\d/.test(newPasswordInput);
+	const hasSpecialChars = /[!@#_$%^&*(),.?":+{}|<>]/.test(newPasswordInput);
+	const isValidLength = newPasswordInput.length >= 8;
     let erro = 0;
 
-    if (!(hasUpperCase)) erro += 1;
-    if (!(hasNumbers)) erro += 1;
-    if (!(hasSpecialChars)) erro += 1;
-    if (!(isValidLength)) erro += 1;
-    if (!(newPassword == confirmPassword)) erro += 1;
+    if (!(hasUpperCase)) {
+        form.newPassword.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(hasNumbers)) {
+        form.newPassword.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(hasSpecialChars)) {
+        form.newPassword.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(isValidLength)) {
+        form.newPassword.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(newPasswordInput == confirmPasswordInput)) {
+        form.confirmPassword.classList.remove('is-valid');
+        erro += 1;
+    }
     if (erro == 0) return true;
     return false;
 }
 
 function ValidateSignupForm(form){
-    signupFirstname = form.signupFirstname.value;
-    signupLastname = form.signupLastname.value;
-    signupPhone = form.signupPhone.value;
-    signupPassword = form.signupPassword.value;
-    retypePassword = form.signupPassword2.value;
-    const isNumeric = /^\d+$/.test(signupPhone);
-    const hasUpperCase = /[A-Z]/.test(signupPassword);
-	const hasNumbers = /\d/.test(signupPassword);
-	const hasSpecialChars = /[!@#_$%^&*(),.?":+{}|<>]/.test(signupPassword);
-	const isValidLength = signupPassword.length >= 8;
+    signupFirstnameInput = form.signupFirstname.value;
+    signupLastnameInput = form.signupLastname.value;
+    signupPhoneInput = form.signupPhone.value;
+    signupPasswordInput = form.signupPassword.value;
+    retypePasswordInput = form.signupPassword2.value;
+    const isNumeric = /^\d+$/.test(signupPhoneInput);
+    const hasUpperCase = /[A-Z]/.test(signupPasswordInput);
+	const hasNumbers = /\d/.test(signupPasswordInput);
+	const hasSpecialChars = /[!@#_$%^&*(),.?":+{}|<>]/.test(signupPasswordInput);
+	const isValidLength = signupPasswordInput.length >= 8;
     let erro = 0;
     
-    if (!(signupFirstname.length <= 50)) erro += 1;
-    if (!(signupLastname.length <= 50)) erro += 1;
-    if (!(signupPhone.length <= 20)) erro += 1;
-    if (!(isNumeric)) erro += 1;
-    if (!(hasUpperCase)) erro += 1;
-    if (!(hasNumbers)) erro += 1;
-    if (!(hasSpecialChars)) erro += 1;
-    if (!(isValidLength)) erro += 1;
-    if (!(signupPassword == retypePassword)) erro += 1;
+    if (!(signupFirstnameInput.length <= 50)) {
+        form.signupFirstname.classList.remove('is-valid');
+        erro += 1;
+    } 
+    if (!(signupLastnameInput.length <= 50)) {
+        form.signupLastname.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(signupPhoneInput.length <= 20)) {
+        form.signupPhone.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(isNumeric)) {
+        form.signupPhone.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(hasUpperCase)) {
+        form.signupPassword.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(hasNumbers)) {
+        form.signupPassword.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(hasSpecialChars)) {
+        form.signupPassword.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(isValidLength)) {
+        form.signupPassword.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(signupPasswordInput == retypePasswordInput)) {
+        form.retypePassword.classList.remove('is-valid');
+        erro += 1;
+    }
     if (erro == 0) return true;
     return false;
 }
 
 function ValidatechangePasswordForm(form) {
-    newPasswordChange = form.newPasswordChange.value;
-    confirmPasswordChange = form.confirmPasswordChange.value;
+    newPasswordChangeInput = form.newPasswordChange.value;
+    confirmPasswordChangeInput = form.confirmPasswordChange.value;
 
-    const hasUpperCase = /[A-Z]/.test(newPasswordChange);
-	const hasNumbers = /\d/.test(newPasswordChange);
-	const hasSpecialChars = /[!@#_$%^&*(),.?":+{}|<>]/.test(newPasswordChange);
-	const isValidLength = newPasswordChange.length >= 8;
+    const hasUpperCase = /[A-Z]/.test(newPasswordChangeInput);
+	const hasNumbers = /\d/.test(newPasswordChangeInput);
+	const hasSpecialChars = /[!@#_$%^&*(),.?":+{}|<>]/.test(newPasswordChangeInput);
+	const isValidLength = newPasswordChangeInput.length >= 8;
     let erro = 0;
 
-    if (!(hasUpperCase)) erro += 1;
-    if (!(hasNumbers)) erro += 1;
-    if (!(hasSpecialChars)) erro += 1;
-    if (!(isValidLength)) erro += 1;
-    if (!(newPasswordChange == confirmPasswordChange)) erro += 1;
+    if (!(hasUpperCase)) {
+        form.newPasswordChange.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(hasNumbers)) {
+        form.newPasswordChange.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(hasSpecialChars)) {
+        form.newPasswordChange.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(isValidLength)) {
+        form.newPasswordChange.classList.remove('is-valid');
+        erro += 1;
+    }
+    if (!(newPasswordChangeInput == confirmPasswordChangeInput)) {
+        form.confirmPasswordChange.classList.remove('is-valid');
+        erro += 1;
+    }
     if (erro == 0) return true;
     return false;
 }

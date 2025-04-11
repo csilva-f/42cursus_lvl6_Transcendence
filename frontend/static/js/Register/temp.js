@@ -89,8 +89,8 @@ function validatePhoneNumber(phoneId, validationId, errorIcon) {
     const dddNumber = firstElement.textContent;
     console.log("firstElement: ", dddNumber);
   }
-  console.log("numero: ", phone.value);
-  if (isNumeric && phone.value.length <= 20) {
+
+  if (isNumeric && phone.value.length <= 20 && phone.value.length > 0) {
     validationMessage.classList.add("d-none");
     validationMessage.classList.add("valid");
     validationMessage.classList.remove("invalid");
@@ -151,7 +151,6 @@ function clearForm(formElement) {
 
   formElement.querySelectorAll(".is-invalid, .is-valid").forEach((el) => {
       el.classList.remove("is-invalid", "is-valid");
-      el.setCustomValidity("");
   });
 
   formElement.querySelectorAll(".invalid-feedback, .text-muted").forEach((el) => {

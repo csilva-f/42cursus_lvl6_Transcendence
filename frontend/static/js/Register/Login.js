@@ -39,6 +39,7 @@ function validateEmail(emailId, validationId, checkId) {
     if (isValid) {
         validationMessage.classList.add('d-none', 'valid');
         validationMessage.classList.remove('invalid');
+        validationMessage.classList.add('is-valid');
     } else {
         checkIcon.style.color = 'red';
         validationMessage.classList.remove('d-none');

@@ -172,6 +172,7 @@ class User {
     const accessToken = await JWT.getAccess();
     const userLang = localStorage.getItem("language") || "en";
     const langData = await getLanguageData(userLang);
+
     let userData = {
       first_name: this.userFirstName,
       last_name: this.userLastName,
