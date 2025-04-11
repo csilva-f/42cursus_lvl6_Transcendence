@@ -146,18 +146,17 @@ function validateName(name, validationName, checkId, formID) {
 	}
 }
 
-// function clearForm(formElement) {
-//   formElement.classList.remove("was-validated");
+function clearForm(formElement) {
+  formElement.classList.remove("was-validated");
 
-//   formElement.querySelectorAll(".is-invalid, .is-valid").forEach((el) => {
-//       el.classList.remove("is-invalid", "is-valid");
-//       el.setCustomValidity("");
-//   });
+  formElement.querySelectorAll(".is-invalid, .is-valid").forEach((el) => {
+      el.classList.remove("is-invalid", "is-valid");
+  });
 
-//   formElement.querySelectorAll(".invalid-feedback, .text-muted").forEach((el) => {
-//       el.classList.add("d-none");
-//   });
-// }
+  formElement.querySelectorAll(".invalid-feedback, .text-muted").forEach((el) => {
+      el.classList.add("d-none");
+  });
+}
 
 function goToForgotPwd() {
   window.history.pushState({}, "", "/forgotPassword");

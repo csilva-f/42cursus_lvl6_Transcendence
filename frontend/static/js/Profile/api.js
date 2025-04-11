@@ -134,7 +134,7 @@ async function uploadAvatar(event) {
 			$("#signup-message").text("Change password successfully");
 			showSuccessToast(langData, langData.ChangePasswordSuccess);
 			form.reset();
-			// clearForm(form);
+			clearForm(form);
 			$("#changePasswordModal").modal("hide");
 		},
 		error: function (xhr) {
