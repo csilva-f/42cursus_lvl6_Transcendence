@@ -14,6 +14,9 @@ secrets:
 	@touch ./secrets/VAULT_ROOT_TOKEN.txt
 	@echo eva > ./secrets/POSTGRES_USER.txt
 	@echo gina > ./secrets/POSTGRES_PASSWORD.txt
+	@echo noreply@cucabeludo.pt > ./secrets/EMAIL_USER.txt
+	@echo Cuc@3elud0 > ./secrets/EMAIL_PASSWORD.txt
+	@echo webdomain04.dnscpanel.com > ./secrets/EMAIL_HOST.txt
 
 
 build:

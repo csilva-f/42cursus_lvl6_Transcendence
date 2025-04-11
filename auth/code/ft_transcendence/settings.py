@@ -13,8 +13,6 @@ from os import getenv
 from pathlib import Path
 from .hvac import get_secret_key
 
-#rom .hvac import get_database_credentials
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'rest_framework',
     'rest_framework_simplejwt',
-    'mailer',
+    #'mailer',
     'pyotp',
     'cuca',
     'two_factor',

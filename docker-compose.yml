@@ -85,6 +85,9 @@ services:
       - vault_root_token
       - postgres_user
       - postgres_password
+      - email_password
+      - email_host
+      - email_user
     depends_on:
       vault-db:
         condition: service_healthy
@@ -254,6 +257,12 @@ secrets:
     file: ./secrets/POSTGRES_USER.txt
   postgres_password:
     file: ./secrets/POSTGRES_PASSWORD.txt
+  email_password:
+    file: ./secrets/EMAIL_PASSWORD.txt
+  email_host:
+    file: ./secrets/EMAIL_HOST.txt
+  email_user:
+    file: ./secrets/EMAIL_USER.txt
 
 volumes:
   auth-db-data:

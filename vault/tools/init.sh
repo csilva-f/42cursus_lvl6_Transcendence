@@ -1,6 +1,9 @@
 #!/bin/sh
 POSTGRES_USER=$(cat "$POSTGRES_USER_FILE")
 POSTGRES_PASSWORD=$(cat "$POSTGRES_PASSWORD_FILE")
+EMAIL_HOST=$(cat "$EMAIL_HOST_FILE")
+EMAIL_HOST_USER=$(cat "$EMAIL_USER_FILE")
+EMAIL_HOST_PASSWORD=$(cat "$EMAIL_PASSWORD_FILE")
 
 chmod 777 /vault -R
 cat <<EOF > /vault/vault.hcl
@@ -54,6 +57,19 @@ echo $ROOT_TOKEN > /vault/secrets/VAULT_ROOT_TOKEN.txt
 echo "Enabling the database secrets engine..."
 vault secrets enable database
 vault secrets enable -path=secret kv
+
+
+if vault kv get -field=EMAIL_HOST secret/data/email_config &> /dev/null; then
+    echo "Secret already exists at $VAULT_PATH."
+else
+    echo "Secret does not exist. Adding it to Vault..."
+    vault kv put secret/data/email_config \
+        EMAIL_HOST="$EMAIL_HOST" \
+        EMAIL_HOST_USER="$EMAIL_HOST_USER" \
+        EMAIL_HOST_PASSWORD="$EMAIL_HOST_PASSWORD"
+    echo "Secret added successfully."
+fi
+
 
 if ! vault secrets list | grep -q "database/config/config-auth-db"; then
     # Configure the PostgreSQL database connection
