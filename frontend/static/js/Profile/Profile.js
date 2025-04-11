@@ -19,6 +19,13 @@ function updateIcon() {
 
 async function insertProfileInfo(UserElement, users_on) {
     console.log("[insertProfileInfo]")
+    const userLang = localStorage.getItem("language") || "en";
+    const langData = await getLanguageData(userLang);
+    const errorMsg = "Error, empty field"; 
+    if ((!UserElement.birthdate) || (!UserElement.gender) || (!UserElement.nick)) {
+        showErrorUserToast(langData, errorMsg);
+        return ;
+    }
     document.getElementById("birthdayText").textContent = UserElement.birthdate;
     document.getElementById("genderText").textContent = UserElement.gender;
     document.getElementById("nicknameText").textContent = UserElement.nick;
@@ -83,7 +90,7 @@ function validateNick(nick, validationNick, checkId) {
     const validationMessage = document.getElementById(validationNick);
     const checkIcon = document.getElementById(checkId);
 
-    if (nickInput.value.length <= 20) {
+    if (nickInput.value.length <= 20 && nickInput.value.length > 0) {
         validationMessage.classList.add("d-none");
         validationMessage.classList.add("valid");
         validationMessage.classList.remove("invalid");
@@ -152,9 +159,17 @@ async function insertOwnProfileInfo() {
     //? Pop-up Info
     document.getElementById("firstName").value = fName;
     document.getElementById("lastName").value = lName;
-    document.getElementById("phoneNumber").value = pN;
+    //document.getElementById("phoneNumber").value = pN;
     document.getElementById("birthday").value = bDate;
     document.getElementById("biography").value = bio;
+    const input = document.querySelector("#phoneNumber");
+    const iti = window.intlTelInput(input, {
+        separateDialCode: true,
+        initialCountry: "auto",
+        loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
+    });
+    iti.setNumber(pN);
+    const countryData = iti.getSelectedCountryData();
 
     let genderSelect = document.getElementById("gender");
     let userGender = await UserInfo.getUserGender();

@@ -3,10 +3,21 @@ function handleOTPInput(field) {
 	const nextField = document.getElementById(`otp${currentId + 1}`);
 	const prevField = document.getElementById(`otp${currentId - 1}`);
 
-  if (field.value && nextField) nextField.focus();
+  if (field.value && nextField) 
+    nextField.focus();
 
   field.addEventListener("keydown", function (e) {
-    if (e.key === "Backspace" && !field.value && prevField) prevField.focus();
+    if (e.key === "Backspace" && !field.value && prevField) 
+      prevField.focus();
+    else if (e.key === "ArrowRight" && nextField){
+      if (nextField)
+        nextField.focus();
+    }
+      
+    else if (e.key === "ArrowLeft" && prevField) {
+      if (prevField)
+        prevField.focus();
+    }
   });
 
   field.addEventListener("paste", function (e) {
@@ -17,6 +28,7 @@ function handleOTPInput(field) {
     pasteData.forEach((char) => {
       const targetField = document.getElementById(`otp${currentId}`);
       if (targetField) {
+        console.log("paste element: ", currentId);
         targetField.value = char;
         currentId++;
       }
