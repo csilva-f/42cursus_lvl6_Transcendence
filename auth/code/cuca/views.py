@@ -31,7 +31,6 @@ class UserCreate(generics.CreateAPIView):
             #validation_link  = request.headers['Origin'] + '/authapi/validate-email/validate-email/' + uid + '/' + token
             validation_link  = request.headers['Origin'] + '/validate-email?uid=' + uid + '&token=' + token
             print('build_absolute_uri: ',validation_link)
-            print(user)
             try:
                 response = requests.post('http://email:8000/send_email/', json={
                     'subject': 'Your Activation Link',
