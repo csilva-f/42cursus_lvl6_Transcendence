@@ -38,7 +38,7 @@ BACKEND_REQUESTS_URL = 'http://backend:8002/backend/get_pendingrequests/'
 BACKEND_NONFRIENDSLIST_URL = 'http://backend:8002/backend/get_nonfriendslist/'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 

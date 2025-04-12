@@ -32,7 +32,7 @@ BACKEND_CREATE_TOURNAMENT_URL = 'http://backend:8002/backend/create_tournament/'
 BACKEND_GAMES_URL = 'http://backend:8002/backend/games/'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 

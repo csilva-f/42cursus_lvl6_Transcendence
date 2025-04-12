@@ -4,7 +4,7 @@ const KEY_W = 87;
 const KEY_S = 83;
 const F5 = 116;
 const keyPressed = [];
-const localMaxSpeed = 20;
+const localMaxSpeed = 17;
 const remoteMaxSpeed = 12;
 const maxScore = 5;
 const ballVelocity = 7;
@@ -20,6 +20,7 @@ var remoteGame = false;
 const wsConnections = {};
 var imgLeft, imgRight;
 var gameID = 0;
+var gameDuration;
 
 window.addEventListener('keydown', function (e) {
     keyPressed[e.keyCode] = true;
@@ -149,17 +150,16 @@ class Game  {
             const data = {
                 uid: this.gameData.P1_uid,
                 gameID: this.gameData.gameID,
-                user1_points : this.objects[1].paddleScore,
+                user1_points: this.objects[1].paddleScore,
                 user2_points: this.objects[2].paddleScore,
                 user1_hits: this.objects[1].paddleColisionTimes,
                 user2_hits: this.objects[2].paddleColisionTimes,
+                isT: this.gameData.isTournament,
+                P1: this.gameData.P1,
+                P2: this.gameData.P2,
             }
-            await updateGameStatus(data);
+            await updateGameStatus(data, null, true);
             localGame = false;
-            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes,
-                this.gameData.P2, this.objects[2].paddleScore, this.objects[2].paddleColisionTimes,
-                this.gameData.isTournament, imgLeft, imgRight, this.gameData.isTournament, this.gameDuration);
-                startWinAnimation();
         }
     }
     gameUpdate(){

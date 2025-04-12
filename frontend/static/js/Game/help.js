@@ -80,7 +80,7 @@ async function showGameStats(leftName, leftScore, leftColision, rightName, right
 
     // Tempo total da partida
     const matchTotalTime = document.getElementById('matchTotalTime');
-    matchTotalTime.textContent = formatTime(gameDuration || 0); // Garante que timerSeconds seja um número válido
+    matchTotalTime.textContent = gameDuration; // Garante que timerSeconds seja um número válido
 }
 
 function startWinAnimation() {
@@ -122,7 +122,13 @@ function stopTimer() {
     return timerSeconds;
 }
 
-async function updateGameStatus(data){
+function getResult(response) {
+  gameDuration = response;
+  console.log(response);
+  //use return_first variable here
+}
+
+async function updateGameStatus(data, ws, isWinner){
     const userLang = localStorage.getItem("language") || "en";
     const langData = await getLanguageData(userLang);
     console.log(data);
@@ -138,9 +144,30 @@ async function updateGameStatus(data){
         },
         data: JSON.stringify(data),
         success: async function (res) {
-            console.log(res);
             await UserInfo.refreshUser();
             activateTopBar();
+            const timeString = res.game.gameDuration;
+            const formattedTime = timeString.split('.')[0];
+            console.log("Game duration:", formattedTime);
+            if(!ws){
+                showGameStats(data.P1, data.user1_points, data.user1_hits,
+                    data.P2, data.user2_points, data.user2_hits,
+                        data.isT, imgLeft, imgRight, data.isT, formattedTime);
+            }
+            if(ws){
+                showGameStats(data.P1, data.user1_points, data.user1_hits,
+                    data.P2, data.user2_points, data.user2_hits, true, 
+                    data.imgLeft, data.imgRight, false, formattedTime);
+                let msg = {
+                    message: "Refresh game status",
+                    gameDuration: formattedTime,
+                }
+                //console.log(msg.message);
+                ws.send(JSON.stringify(msg));
+                ws.close(1000);
+            }
+            if(isWinner)
+                startWinAnimation();
         },
         error: function (xhr, status, error) {
             showErrorToast(APIurl, error, langData);

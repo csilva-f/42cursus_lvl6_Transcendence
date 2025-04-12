@@ -110,7 +110,14 @@ class RemoteGame  {
                 //console.log("IT WORKS")
                 await UserInfo.refreshUser();
                 await activateTopBar();
+                showGameStats(this.gameData.P1, this.objects[1].paddleScore, 
+                    this.objects[1].paddleColisionTimes, this.gameData.P2, 
+                        this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, 
+                            true, this.gameData.imgLeft, this.gameData.imgRight, false, data.gameDuration);
+                remoteGame = false;
                 this.ws.close(1000);
+                if(this.isWinner())
+                    startWinAnimation();
             }
             if(data.message == "A player left the game." && data.close_code != 1000){
                 this.disconnect = true;
@@ -166,25 +173,20 @@ class RemoteGame  {
             if(this.isHost){
                 const data = {
                     uid: this.gameData.P2_uid,
-                    gameID: this.gameData.gameID, 
-                    user1_points : this.objects[2].paddleScore,
+                    gameID: this.gameData.gameID,
+                    user1_points: this.objects[2].paddleScore,
                     user2_points: this.objects[1].paddleScore,
                     user1_hits: this.objects[2].paddleColisionTimes,
                     user2_hits: this.objects[1].paddleColisionTimes,
+                    isT: this.gameData.isTournament,
+                    P1: this.gameData.P1,
+                    P2: this.gameData.P2,
+                    imgLeft: this.gameData.imgLeft,
+                    imgRight: this.gameData.imgRight,
                 }
-                await updateGameStatus(data);
-                let msg = {
-                    message: "Refresh game status",
-                }
-                //console.log(msg.message);
-                this.ws.send(JSON.stringify(msg));
-                this.ws.close(1000);
+                await updateGameStatus(data, this.ws, this.isWinner());
             }
             remoteGame = false;
-            showGameStats(this.gameData.P1, this.objects[1].paddleScore, this.objects[1].paddleColisionTimes, this.gameData.P2, 
-            this.objects[2].paddleScore, this.objects[2].paddleColisionTimes, true, this.gameData.imgLeft, this.gameData.imgRight, false, this.gameDuration);
-            if(this.isWinner())
-                startWinAnimation();
         }
     }
     hostGame(){

@@ -27,7 +27,7 @@ SECRET_KEY = get_secret_key()
 HOST_IP = read_host_ip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['auth','*']
 

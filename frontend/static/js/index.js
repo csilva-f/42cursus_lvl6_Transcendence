@@ -149,6 +149,7 @@ async function logOut() {
 	JWT.deleteToken();
   await UserInfo.closeWebSocket();
 	await UserInfo.resetUser();
+  console.log(UserInfo);
 	window.history.pushState({}, "", "/mainPage");
 	locationHandler();
 }
