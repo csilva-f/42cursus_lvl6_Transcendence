@@ -101,44 +101,45 @@ function getForms() {
   "use strict";
   //Only the forms with the needs-validation enter in this function
   const forms = document.querySelectorAll(".needs-validation");
-  Array.from(forms).forEach((form) => {
+  Array.from(forms).forEach(async form => {
     form.addEventListener(
-      "submit",
-      async (event) => {
-        event.preventDefault();
-        const nick = await UserInfo.getUserNick();
+      "submit", async event => {
+        console.log("form: ", form.id);
+        const myC = myCustomValidity(form)
+        const bootstrap = form.checkValidity()
+        const isSub = form.classList.contains("is-submitting")
         form.classList.remove("was-validated");
-        if (!(myCustomValidity(form)) || !(form.checkValidity())) {
+        event.preventDefault()
+        if (!bootstrap){
+          event.preventDefault()
+          event.stopPropagation();
+          return
+        } 
+        if (!myC) {
           event.preventDefault();
           event.stopPropagation();
+          return
+        } 
+        if (isSub) {
+          event.preventDefault();
+          event.stopPropagation();
+          return;
         } else {
-          //if (form.id == "localFormID") postLocalGame();
-          //if (form.id == "remoteFormID") postRemoteGame();
           if (form.id == "localTournamentFormID") initLocalTournament();
           else if (form.id == "login-form") sendLogin();
           else if (form.id == "signup-form") sendSignup(form);
           else if (form.id == "forgotPwd-form") forgotPwd();
-          else if (form.id == "nicknameModal-form"){
-          //console.log("before: ", nick);
-          if (!nick){
-            //console.log("after: ", nick);
-            await finishProfile();
+          else if (form.id == "nicknameModal-form") {
+            form.classList.add("is-submitting");
+            finishProfile();
           }
-            //console.log("getForms - finish profile");
-          }
-            //else if (form.id == "mfa-form") verifyAccount();
           else if (form.id == "resetPwd-form") resetPassword();
           else if (form.id == "changePasswordForm") changePassword();
           else if (form.id == "editProfileForm") updateProfile();
-          // else if (form.id == "resendCode-form")
-          // 	sendCode();
-          // else if (form.id == "resetPwd-form")
-          // 	resetPwd();
-          event.preventDefault();
+          event.preventDefault()
           form.classList.add("was-validated");
         }
-      },
-      false,
+      }, false,
     );
   });
 }

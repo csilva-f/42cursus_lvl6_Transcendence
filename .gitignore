@@ -8,4 +8,5 @@ secrets/
 .vscode/
 **/.DS_Store
 channels/code/db.sqlite3
+frontend/static/img/profilePic/*
 email/code/send_mail.lock

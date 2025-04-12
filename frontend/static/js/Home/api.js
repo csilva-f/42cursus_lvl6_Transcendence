@@ -166,8 +166,7 @@ async function finishProfile() {
 		},
 		data: JSON.stringify(userData),
 		success: async function (res) {
-			console.log("success update user extencion: ", res)
-			document.querySelector("#nicknameModal-form").classList.remove('was-validated');
+			document.querySelector("#nicknameModal-form").classList.remove('was-validated', 'is-submitting');
         	document.querySelector("#nicknameModal-form").reset();
 			$("#nickModal").modal("hide");
 			await UserInfo.refreshUser();

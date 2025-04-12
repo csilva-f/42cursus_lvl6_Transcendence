@@ -48,7 +48,7 @@ async function fetchProfileInfo(userID) {
 			if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
 				console.warn("WebSocket not found or closed. Reinitializing...");
 				initializeWebSocket(() => {
-					requestOnlineUsers(function (onlineUsers) {						
+					requestOnlineUsers(function (onlineUsers) {
 						console.log("Updated online users list:", onlineUsers);
 						if (window.location.pathname.includes("/profile"))
 							insertProfileInfo(res.users[0], onlineUsers);
@@ -74,6 +74,8 @@ async function uploadAvatar(event) {
 	const file = event.target.files[0];
 	const reader = new FileReader();
 	const imgElement = document.getElementById("avatarPreview");
+	const userLang = localStorage.getItem("language") || "en";
+	const langData = await getLanguageData(userLang);
 	const apiUrl = "/upload";
 	if (file) {
 	  reader.readAsDataURL(file);
@@ -81,7 +83,7 @@ async function uploadAvatar(event) {
 		var form = new FormData();
 		form.append("user", await UserInfo.getUserID());
 		form.append("image", event.target.files[0], event.target.files[0].name);
-  
+
 		var settings = {
 		  url: `${apiUrl}/`,
 		  method: "POST",
@@ -98,7 +100,7 @@ async function uploadAvatar(event) {
 			imgElement.src = e.target.result;
 		  },
 		  error: function (response) {
-			console.log(response);
+				showErrorUserToast(langData, response.statusText);
 		  },
 		};
 		$.ajax(settings).done(async function (response) {
@@ -125,7 +127,7 @@ async function uploadAvatar(event) {
         type: "POST",
         url: `${apiUrl}/change-password/`,
         contentType: "application/json",
-        headers: { 
+        headers: {
 			Accept: "application/json",
 			Authorization: `Bearer ${accessToken}`,
 		 },

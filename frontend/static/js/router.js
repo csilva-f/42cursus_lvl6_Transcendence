@@ -2,8 +2,6 @@
 // 0 - No need to be logged in
 // 1 - Need to be logged in
 // 2 - Exclusive for logged out users
-
-
 const routes = {
 	401: {
 		template: "/templates/Error/401.html",
@@ -253,10 +251,9 @@ async function changeToBig(location) {
 		headerElement.setAttribute("data-i18n", "login");
 		const input = document.querySelector("#signupPhone");
 		window.intlTelInput(input, {
-			separateDialCode: true,
-			initialCountry: "auto",
-			utilsScript: "/static/js/Libraries/intl.js"
-		});
+			initialCountry: "pt",
+			loadUtils: () => import("/static/js/Libraries/intl.js"),
+		 });
 		// window.intlTelInput(input, {
 		// 	separateDialCode: true,
 		// 	loadUtils: () => await import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
@@ -439,7 +436,7 @@ async function changeActive(location) {
 			const input = document.querySelector("#phoneNumber");
 			window.intlTelInput(input, {
 				separateDialCode: true,
-				utilsScript: "/static/js/Libraries/intl.js"
+				loadUtils: () => import("/static/js/Libraries/intl.js"),
 			});
 			// window.intlTelInput(input, {
 			// 	separateDialCode: true,

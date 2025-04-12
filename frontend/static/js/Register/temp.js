@@ -87,15 +87,9 @@ function validatePhoneNumber(phoneId, validationId, errorIcon) {
   const validationMessage = document.getElementById(validationId);
   const icon = document.getElementById(errorIcon);
   const isNumeric = /^[\d\s-]*$/.test(phone.value);
+  const iti = intlTelInput.getInstance(phone);
 
-  var elements = document.getElementsByClassName('iti__selected-dial-code');
-  if (elements.length > 0) {
-    var firstElement = elements[0];
-    const dddNumber = firstElement.textContent;
-    console.log("dddNumber: ", dddNumber);
-  }
-
-  if (isNumeric && phone.value.length <= 20 && phone.value.length > 0) {
+  if (isNumeric && iti.isValidNumber()) {
     validationMessage.classList.add("d-none");
     validationMessage.classList.add("valid");
     validationMessage.classList.remove("invalid");
@@ -135,31 +129,31 @@ function validateName(name, validationName, checkId, formID) {
   const nameInput = document.getElementById(name);
   const validationMessage = document.getElementById(validationName);
   const checkIcon = document.getElementById(checkId);
-	if (nameInput.value.length <= 50  && nameInput.value.length > 0) {
+  if (nameInput.value.length <= 50 && nameInput.value.length > 0) {
     validationMessage.classList.add('d-none');
-		validationMessage.classList.add('valid');
+    validationMessage.classList.add('valid');
     nameInput.classList.add('is-valid');
-		validationMessage.classList.remove('invalid');
+    validationMessage.classList.remove('invalid');
     nameInput.classList.remove('is-invalid');
-	} else {
+  } else {
     checkIcon.style.color = 'red';
-		validationMessage.classList.remove('d-none');
-		validationMessage.classList.remove('valid');
-		validationMessage.classList.add('invalid');
+    validationMessage.classList.remove('d-none');
+    validationMessage.classList.remove('valid');
+    validationMessage.classList.add('invalid');
     nameInput.classList.remove('is-valid');
     nameInput.classList.add('is-invalid');
-	}
+  }
 }
 
 function clearForm(formElement) {
   formElement.classList.remove("was-validated");
 
   formElement.querySelectorAll(".is-invalid, .is-valid").forEach((el) => {
-      el.classList.remove("is-invalid", "is-valid");
+    el.classList.remove("is-invalid", "is-valid");
   });
 
   formElement.querySelectorAll(".invalid-feedback, .text-muted").forEach((el) => {
-      el.classList.add("d-none");
+    el.classList.add("d-none");
   });
 }
 
