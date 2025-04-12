@@ -208,8 +208,11 @@ function showGameForm(formID, tabOpenID, confirmBtnID, backBtnID) {
 //* Function to hide Forms
 function hideGameForm(formOpenID, tabID, confirmBtnID) {
     const form = document.getElementById(formOpenID);
-    if (form) form.classList.add('d-none');
-    form.classList.remove('was-validated')
+    if (form) {
+        console.log("form: ", form)
+        form.classList.add('d-none');
+        form.classList.remove('was-validated')
+    }
     const tab = document.getElementById(tabID);
     if (tab) tab.classList.remove('d-none');
     const confirmBtn = document.getElementById(confirmBtnID);
@@ -225,10 +228,12 @@ function closeGameForm(formIDs, tabID, confirmBtnID, backBtnID) {
     if (tournErrorNick) tournErrorSection.classList.add('d-none');
     const tournErrorName = document.querySelector('#tournErrorName');
     if (tournErrorName) tournErrorSection.classList.add('d-none');
+
     if (formIDs != null)
         hideGameForm(formIDs, tabID, confirmBtnID)
     formIDs.forEach((f) => {
         const form = document.getElementById(f.id)
+        form.classList.remove('was-validated')
         const inputs = document.querySelectorAll(`#${f.id} input`)
         inputs.forEach((i) => {
             i.value = '';

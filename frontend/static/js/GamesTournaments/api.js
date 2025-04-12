@@ -456,19 +456,20 @@ async function enterTournamentGame(gameID) {
     success: async function (res) {
       const divElement = document.getElementById("gamesContent");
       divElement.innerHTML = "";
-      game = res.game;
       let gameInfo = {};
-      gameInfo["gameID"] = game.gameID;
-      gameInfo["islocal"] = game.isLocal;
-      gameInfo["P1"] = game.user1Nick;
-      gameInfo["P1_uid"] = game.user1ID;
-      gameInfo["P2"] = game.user2Nick;
-      gameInfo["P2_uid"] = game.user2ID;
+      gameInfo["gameID"] = res.game.gameID;
+      gameInfo["islocal"] = res.game.isLocal;
+      gameInfo["P1"] = res.game.user1Nick;
+      gameInfo["P1_uid"] = res.game.user1ID;
+      gameInfo["P2"] = res.game.user2Nick;
+      gameInfo["P2_uid"] = res.game.user2ID;
       gameInfo["isTournament"] = true;
       localStorage.setItem("gameInfo", JSON.stringify(gameInfo));
       window.history.pushState({}, "", "/pong");
       await locationHandler();
       updateContent(langData);
+      const game = new Game(gameInfo);
+      game.initGame();
     },
     error: function (xhr, status, error) {
       console.error("Error Thrown:", error);

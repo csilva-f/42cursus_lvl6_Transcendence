@@ -16,12 +16,10 @@ class Tournament {
 async function initLocalTournament() {
     try {
         let tournamentID = await postLocalTournament();
-        console.log(tournamentID);
         const tournament = new Tournament(tournamentID);
         let tGames = await fetchTournamentGames(tournamentID);
-        await tournament.setGames(tGames);
+        tournament.setGames(tGames);
         
     } catch (error) {
-        console.error("Error initializing local tournament:", error);
     }
 }

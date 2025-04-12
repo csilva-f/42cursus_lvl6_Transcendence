@@ -174,7 +174,7 @@ class Paddle {
         this.dist_BallCenter_PaddleTopRightCornner = this.distBetweenTwoPoints(ballCenter, PaddleTopRightCornner);
     }
 
-    leftColissionBall(ball) {
+    leftColissionBall(ball, maxSpeed) {
         if (ball.lastColision == 1){
             return false;
         }
@@ -221,7 +221,7 @@ class Paddle {
         return false;
     }
 
-    rightColissionBall(ball) {
+    rightColissionBall(ball, maxSpeed) {
         if (ball.lastColision == 2){
             return false;
         }
