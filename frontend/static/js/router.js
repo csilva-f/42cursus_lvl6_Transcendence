@@ -118,13 +118,7 @@ const routes = {
 		title: "Profile",
 		descripton: "Validate Email",
 		needAuth: 2,
-	},
-	"/tournament": {
-		template: "/templates/TournamentBracket.html",
-		title: "Tournament",
-		descripton: "Tournament Bracket",
-		needAuth: 1,
-	},
+	}
 };
 
 const bigScreenLocation = [
