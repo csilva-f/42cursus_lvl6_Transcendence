@@ -1136,7 +1136,7 @@ def get_userstatistics(request):
 
         total_tournaments_played = tTournaments.objects.filter(
             Q(tgames__tournament__isnull=False) &
-            Q(tgames__phase__phase=1) &
+            Q(tgames__phase__phase=2) &
             (Q(tgames__user1=userext.user) | Q(tgames__user2=userext.user)) &
             ~Q(status__statusID__in=ongoing_statuses)
         ).distinct().count()

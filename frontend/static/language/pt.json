@@ -46,7 +46,7 @@
     "gameEntered": "Jogo iniciado com sucesso",
     "signUpSuccess": "Utilizador registado com successo, por favor verifique o seu email",
     "RecoverPasswordSuccess": "Verifique seu e-mail para recuperar a sua palavra passe",
-    "ResetPasswordSuccess": "verifique seu e-mail para redefinir sua palavra passe",
+    "ResetPasswordSuccess": "Sucesso ao redefinir sua senha",
     "ChangePasswordSuccess": "Sua senha foi alterada com sucesso",
     "UpdateProfileSuccess": "O perfil foi atualizado com sucesso",
     "gameInvited": "Convite enviado com sucesso, esperando confirmacao do outro utilizador",
