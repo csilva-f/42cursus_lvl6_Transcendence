@@ -133,7 +133,7 @@ def get_games(request):
             'createdByUser': game.createdByUser,
             'startTS': game.startTS.strftime("%Y-%m-%d %H:%M:%S") if game.startTS else None,
             'endTS': game.endTS.strftime("%Y-%m-%d %H:%M:%S") if game.endTS else None,
-            'duration': str(game.endTS - game.creationTS) if game.endTS else "00:00:00",
+            'duration': str(game.endTS - game.startTS) if game.endTS else "00:00:00",
             'user1ID': game.user1,
             'user1Nick': game.user1_nick if game.tournament else (user1.nick if user1 else None),
             'user1Avatar': user1.avatar if user1 else None,
@@ -631,8 +631,11 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 gstatus = tauxStatus.objects.get(statusID=3)
                 game.status = gstatus
                 game.endTS = now()
+                game_duration = game.endTS - game.startTS
+                game_duration_str = str(game_duration) if game_duration else "00:00:00"
                 print(game.user1)
                 print(game.user2)
+                print(game_duration_str)
 
                 u1_points = data.get('user1_points')
                 u2_points = data.get('user2_points')
@@ -712,6 +715,7 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 gstatus = tauxStatus.objects.get(statusID=2)
                 game.status = gstatus
                 game.startTS = now()
+                game_duration_str = ""
             game.save()
             game_data = {
                 "id": game.game,
@@ -719,7 +723,8 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 "user2": game.user2,
                 "user1_nick": game.user1_nick,
                 "user2_nick": game.user2_nick,
-                "isLocal": game.isLocal
+                "isLocal": game.isLocal,
+                "gameDuration": game_duration_str,
             }
             print("fim")
             return JsonResponse({"message": "Game updated successfully", "game": game_data}, status=201)

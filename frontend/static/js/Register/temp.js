@@ -3,14 +3,19 @@ function passwordVisibility(passwordFieldId, toggleIconId) {
   const passwordInput = document.getElementById(passwordFieldId);
   const passwordIcon = document.getElementById(toggleIconId).querySelector("i");
 
+  //console.log( "PasswordIcon: ", passwordIcon);
   if (passwordInput.type === "password") {
     passwordInput.type = "text";
-    passwordIcon.classList.remove("fa-eye-slash");
-    passwordIcon.classList.add("fa-eye");
+    if(passwordIcon){
+      passwordIcon.classList.remove("fa-eye-slash");
+      passwordIcon.classList.add("fa-eye");
+    }
   } else {
     passwordInput.type = "password";
-    passwordIcon.classList.remove("fa-eye");
-    passwordIcon.classList.add("fa-eye-slash");
+    if(passwordIcon){
+      passwordIcon.classList.remove("fa-eye");
+      passwordIcon.classList.add("fa-eye-slash");
+    }
   }
 }
 
@@ -27,7 +32,7 @@ function validateNewPassword(passwordId, validationId, confirmPassId) {
 
 	const hasUpperCase = /[A-Z]/.test(password.value);
 	const hasNumbers = /\d/.test(password.value);
-	const hasSpecialChars = /[!@#_$%^&*(),.?":+{}|<>]/.test(password.value);
+	const hasSpecialChars = /[!@#_$%^&*()\[\]\\/,.?":+{}|<>]/.test(password.value);
 	const isValidLength = password.value.length >= 8;
 
   lengthCheck.className = isValidLength

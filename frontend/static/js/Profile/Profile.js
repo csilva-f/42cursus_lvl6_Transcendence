@@ -1,5 +1,5 @@
-function updateIcon() {
-    const genderSelect = document.getElementById('gender');
+function updateIcon(genderID) {
+    const genderSelect = document.getElementById(genderID);
     const icon = document.getElementById('icon');
 
     switch (genderSelect.value) {
@@ -174,7 +174,7 @@ async function insertOwnProfileInfo() {
     document.getElementById("birthday").value = bDate;
     document.getElementById("biography").value = bio;
     document.getElementById("gender").value = gender;
-    updateIcon();
+    updateIcon('gender');
 
     const input = document.querySelector("#phoneNumber");
     const iti = window.intlTelInput(input, {

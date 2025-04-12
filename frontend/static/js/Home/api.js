@@ -154,6 +154,7 @@ async function finishProfile() {
 		birthdate: document.getElementById("newBirthday").value,
 		genderid: genderID,
 	};
+	console.log(["finishProfile"])
 	console.log(userData);
 	$.ajax({
 		type: "POST",
@@ -165,14 +166,15 @@ async function finishProfile() {
 		},
 		data: JSON.stringify(userData),
 		success: async function (res) {
+			console.log("success update user extencion: ", res)
 			document.querySelector("#nicknameModal-form").classList.remove('was-validated');
         	document.querySelector("#nicknameModal-form").reset();
 			$("#nickModal").modal("hide");
 			await UserInfo.refreshUser();
 			await activateTopBar();
-			fetchTopUsers();
+			await fetchTopUsers();
 		},
-		error: function (xhr, status, error) {
+		error: async function (xhr, status, error) {
 			const data = JSON.parse(xhr.responseJSON);
 			showErrorUserToast(langData, data.error);
 		},

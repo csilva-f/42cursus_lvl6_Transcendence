@@ -104,7 +104,9 @@ function getForms() {
   Array.from(forms).forEach((form) => {
     form.addEventListener(
       "submit",
-      (event) => {
+      async (event) => {
+        event.preventDefault();
+        const nick = await UserInfo.getUserNick();
         form.classList.remove("was-validated");
         if (!(myCustomValidity(form)) || !(form.checkValidity())) {
           event.preventDefault();
@@ -116,7 +118,14 @@ function getForms() {
           else if (form.id == "login-form") sendLogin();
           else if (form.id == "signup-form") sendSignup(form);
           else if (form.id == "forgotPwd-form") forgotPwd();
-          else if (form.id == "nicknameModal-form") finishProfile();
+          else if (form.id == "nicknameModal-form"){
+          //console.log("before: ", nick);
+          if (!nick){
+            //console.log("after: ", nick);
+            await finishProfile();
+          }
+            //console.log("getForms - finish profile");
+          }
             //else if (form.id == "mfa-form") verifyAccount();
           else if (form.id == "resetPwd-form") resetPassword();
           else if (form.id == "changePasswordForm") changePassword();
@@ -139,6 +148,7 @@ async function logOut() {
 	JWT.deleteToken();
   await UserInfo.closeWebSocket();
 	await UserInfo.resetUser();
+  console.log(UserInfo);
 	window.history.pushState({}, "", "/mainPage");
 	locationHandler();
 }

@@ -271,7 +271,6 @@ async function changeToBig(location) {
 		let tempToken = await JWT.getTempToken();
 		headerElement.setAttribute("data-i18n", "mfa");
 		disableTopBar();
-
 		getForms();
 	} else if (location == "/resetPassword") {
 		headerElement.setAttribute("data-i18n", "resetPassword");
@@ -584,6 +583,7 @@ async function reloadPage() {
 		await JWT.reloadPage();
 		if (await JWT.getAccess())
 			await UserInfo.refreshUser();
+		console.log("User reload: ", UserInfo)
 		if (!UserInfo.getUserID())
 			initializeWebSocket();
 		locationHandler();
