@@ -104,32 +104,43 @@ function getForms() {
   Array.from(forms).forEach(async form => {
     form.addEventListener(
       "submit", async event => {
-        console.log("form: ", form.id)
+        console.log("form: ", form.id);
+        const myC = myCustomValidity(form)
+        const bootstrap = form.checkValidity()
+        const isSub = form.classList.contains("is-submitting")
         form.classList.remove("was-validated");
-        if (!(myCustomValidity(form)) || !(form.checkValidity()) || form.classList.contains("is-submitting")) {
+        event.preventDefault()
+        if (!bootstrap){
+          event.preventDefault()
+          event.stopPropagation();
+          return
+        } 
+        if (!myC) {
           event.preventDefault();
           event.stopPropagation();
+          return
+        } 
+        if (isSub) {
+          event.preventDefault();
+          event.stopPropagation();
+          return;
         } else {
-          form.classList.add("is-submitting");
-          //if (form.id == "localFormID") postLocalGame();
-          //if (form.id == "remoteFormID") postRemoteGame();
           if (form.id == "localTournamentFormID") initLocalTournament();
           else if (form.id == "login-form") sendLogin();
           else if (form.id == "signup-form") sendSignup(form);
           else if (form.id == "forgotPwd-form") forgotPwd();
-          else if (form.id == "nicknameModal-form") finishProfile();
-            //else if (form.id == "mfa-form") verifyAccount();
+          else if (form.id == "nicknameModal-form") {
+            form.classList.add("is-submitting");
+            finishProfile();
+          }
           else if (form.id == "resetPwd-form") resetPassword();
           else if (form.id == "changePasswordForm") changePassword();
           else if (form.id == "editProfileForm") updateProfile();
-          // else if (form.id == "resendCode-form")
-          // 	sendCode();
-          // else if (form.id == "resetPwd-form")
-          // 	resetPwd();
-          event.preventDefault();
+          event.preventDefault()
           form.classList.add("was-validated");
         }
-      }, false, );
+      }, false,
+    );
   });
 }
 

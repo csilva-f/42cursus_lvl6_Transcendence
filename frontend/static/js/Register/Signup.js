@@ -9,7 +9,8 @@ async function sendSignup(form) {
 	const retyped = $("#signupPassword2").val();
 	const first_name = $("#signupFirstname").val();
 	const last_name = $("#signupLastname").val();
-	const phone_number = $("#signupPhone").val();
+	const iti = intlTelInput.getInstance(document.getElementById('signupPhone'));
+	const phone_number = iti.getNumber();
 	const apiUrl = "/authapi/register/";
 	$.ajax({
 		type: "POST",

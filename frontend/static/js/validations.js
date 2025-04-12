@@ -1,5 +1,4 @@
-function myCustomValidity(form)
-{
+function myCustomValidity(form) {
     if (form.id == "signup-form") return ValidateSignupForm(form);
     else if (form.id == "nicknameModal-form") return ValidateNicknameForm(form);
     else if (form.id == "editProfileForm") return (validateUpdateProfileForm(form));
@@ -8,27 +7,27 @@ function myCustomValidity(form)
     else return true
 }
 
-function validateUpdateProfileForm(form)
-{
+function validateUpdateProfileForm(form) {
     firstInput = form.firstName.value;
     lastInput = form.lastName.value;
-    phoneNumberInput = form.phoneNumber.value;
     birthdayInput = new Date(form.birthday.value);
     biographyInput = form.biography.value;
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
-    const isNumeric = /^\d+$/.test(phoneNumberInput);
     let erro = 0;
+    const phone = document.getElementById("phoneNumber")
+    const iti = intlTelInput.getInstance(phone);
+    const isNumeric = /^\+?\d[\d\s]*$/.test(iti.getNumber());
 
     if (!(firstInput.length <= 50 && firstInput.length > 0)) {
         form.firstName.classList.remove('is-valid');
-        erro += 1;  
-    } 
+        erro += 1;
+    }
     if (!(lastInput.length <= 50 && lastInput.length > 0)) {
         form.lastName.classList.remove('is-valid');
         erro += 1;
     }
-    if (!(phoneNumberInput.length <= 20 && phoneNumberInput.length > 0)){
+    if (!iti.isValidNumber()) {
         form.phoneNumber.classList.remove('is-valid');
         erro += 1;
     }
@@ -48,7 +47,7 @@ function validateUpdateProfileForm(form)
     return false;
 }
 
-function ValidateNicknameForm(form){
+function ValidateNicknameForm(form) {
     newNicknameInput = form.newNickname.value.trim();
     newBirthdayInput = new Date(form.newBirthday.value);
     const currentDate = new Date();
@@ -72,14 +71,14 @@ function ValidateNicknameForm(form){
     return false;
 }
 
-function ValidateResetPwdForm(form){
+function ValidateResetPwdForm(form) {
     newPasswordInput = form.newPassword.value;
     confirmPasswordInput = form.confirmPassword.value;
 
     const hasUpperCase = /[A-Z]/.test(newPasswordInput);
-	const hasNumbers = /\d/.test(newPasswordInput);
-	const hasSpecialChars = /[!@#_$%^&*(),.?":+{}|<>]/.test(newPasswordInput);
-	const isValidLength = newPasswordInput.length >= 8;
+    const hasNumbers = /\d/.test(newPasswordInput);
+    const hasSpecialChars = /[!@#_$%^&*(),.?":+{}|<>]/.test(newPasswordInput);
+    const isValidLength = newPasswordInput.length >= 8;
     let erro = 0;
 
     if (!(hasUpperCase)) {
@@ -106,28 +105,29 @@ function ValidateResetPwdForm(form){
     return false;
 }
 
-function ValidateSignupForm(form){
+function ValidateSignupForm(form) {
     signupFirstnameInput = form.signupFirstname.value;
     signupLastnameInput = form.signupLastname.value;
-    signupPhoneInput = form.signupPhone.value;
     signupPasswordInput = form.signupPassword.value;
     retypePasswordInput = form.signupPassword2.value;
-    const isNumeric = /^\d+$/.test(signupPhoneInput);
     const hasUpperCase = /[A-Z]/.test(signupPasswordInput);
-	const hasNumbers = /\d/.test(signupPasswordInput);
-	const hasSpecialChars = /[!@#_$%^&*(),.?":+{}|<>]/.test(signupPasswordInput);
-	const isValidLength = signupPasswordInput.length >= 8;
+    const hasNumbers = /\d/.test(signupPasswordInput);
+    const hasSpecialChars = /[!@#_$%^&*(),.?":+{}|<>]/.test(signupPasswordInput);
+    const isValidLength = signupPasswordInput.length >= 8;
     let erro = 0;
-    
+    const phone = document.getElementById("signupPhone")
+    const iti = intlTelInput.getInstance(phone);
+    const isNumeric = /^\+?\d[\d\s]*$/.test(iti.getNumber());
+
     if (!(signupFirstnameInput.length <= 50)) {
         form.signupFirstname.classList.remove('is-valid');
         erro += 1;
-    } 
+    }
     if (!(signupLastnameInput.length <= 50)) {
         form.signupLastname.classList.remove('is-valid');
         erro += 1;
     }
-    if (!(signupPhoneInput.length <= 20)) {
+    if (!iti.isValidNumber()) {
         form.signupPhone.classList.remove('is-valid');
         erro += 1;
     }
@@ -152,9 +152,10 @@ function ValidateSignupForm(form){
         erro += 1;
     }
     if (!(signupPasswordInput == retypePasswordInput)) {
-        form.retypePassword.classList.remove('is-valid');
+        form.signupPassword2.classList.remove('is-valid');
         erro += 1;
     }
+    console.log("erro: ", erro)
     if (erro == 0) return true;
     return false;
 }
@@ -164,9 +165,9 @@ function ValidatechangePasswordForm(form) {
     confirmPasswordChangeInput = form.confirmPasswordChange.value;
 
     const hasUpperCase = /[A-Z]/.test(newPasswordChangeInput);
-	const hasNumbers = /\d/.test(newPasswordChangeInput);
-	const hasSpecialChars = /[!@#_$%^&*(),.?":+{}|<>]/.test(newPasswordChangeInput);
-	const isValidLength = newPasswordChangeInput.length >= 8;
+    const hasNumbers = /\d/.test(newPasswordChangeInput);
+    const hasSpecialChars = /[!@#_$%^&*(),.?":+{}|<>]/.test(newPasswordChangeInput);
+    const isValidLength = newPasswordChangeInput.length >= 8;
     let erro = 0;
 
     if (!(hasUpperCase)) {

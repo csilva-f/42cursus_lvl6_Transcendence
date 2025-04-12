@@ -55,7 +55,9 @@ async function insertProfileInfo(UserElement, users_on) {
 async function updateProfile() {
     UserInfo.updateFirstName(document.getElementById("firstName").value);
     UserInfo.updateLastName(document.getElementById("lastName").value);
-    UserInfo.updatePhoneNumber(document.getElementById("phoneNumber").value);
+    const iti = intlTelInput.getInstance(document.getElementById('phoneNumber'));
+	const pN = iti.getNumber();
+    UserInfo.updatePhoneNumber(pN);
     UserInfo.updateBirthdate(document.getElementById("birthday").value);
     let gender = document.getElementById("gender").value;
     if (gender == "male")
@@ -177,12 +179,7 @@ async function insertOwnProfileInfo() {
     updateIcon();
 
     const input = document.querySelector("#phoneNumber");
-    const iti = window.intlTelInput(input, {
-        separateDialCode: true,
-        initialCountry: "auto",
-        loadUtils: () => import("/static/js/Libraries/intl.js"),
-    });
+    const iti = intlTelInput.getInstance(input)
     iti.setNumber(pN);
-    const countryData = iti.getSelectedCountryData();
 }
 
