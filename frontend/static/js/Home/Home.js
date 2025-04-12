@@ -66,7 +66,7 @@ function insertTopPlayerInfo(newCard, element) {
 function searchFriend() {
     const inputHomeSearchFriends = document.getElementById('inputHomeSearchFriends');
     var filter = inputHomeSearchFriends.value.toUpperCase();
-    const usersCards = document.querySelectorAll("#friendsContent");
+    const usersCards = document.querySelectorAll("#friendUserContent");
     usersCards.forEach(card => {
         var usersNick = card.querySelector('h4');
         if (usersNick) {
@@ -85,6 +85,7 @@ function renderHomeFriends(usersList, cardTemplate, users_on) {
     if (divElement) divElement.innerHTML = "";
     usersList.forEach(element => {
         const newCard = document.createElement("div");
+        newCard.id = "friendUserContent";
         newCard.innerHTML = cardTemplate;
         insertHomeFriendInfo(newCard, element, users_on);
         if (divElement) divElement.appendChild(newCard);
