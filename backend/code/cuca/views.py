@@ -84,7 +84,7 @@ def get_games(request):
                 u_ext = tUserExtension.objects.get(user=u_id)
             except tUserExtension.DoesNotExist:
                 return JsonResponse({"error": "Invalid - user does not exist."}, status=400)
-        games = tGames.objects.all()
+        games = tGames.objects.all().order_by('-game')
         if game_id:
             game_id = validate_id(game_id)
             games = games.filter(game=game_id)
@@ -365,7 +365,7 @@ def get_tournaments(request):
 
         if name == "" or status_id == "" or winner_id == "" or tournament_id == "":
             return JsonResponse({"error": "Filter can't be empty."}, status=400)
-        tournaments = tTournaments.objects.all()
+        tournaments = tTournaments.objects.all().order_by('-tournament')
         if tournament_id:
             tournament_id = validate_id(tournament_id)
             tournaments = tournaments.filter(tournament=tournament_id)
@@ -388,7 +388,7 @@ def get_tournaments(request):
             'name': tournament.name,
             'winnerUserID': tournament.winnerUser,
             'winnerNick': tournament.winnerNick,
-            'statusID': tournament.status.statusID, 
+            'statusID': tournament.status.statusID,
             'status': tournament.status.status,
             'user1ID': tournament.createdByUser,
             'user1Nick': tournament.nick1,
