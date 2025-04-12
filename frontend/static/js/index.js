@@ -101,15 +101,16 @@ function getForms() {
   "use strict";
   //Only the forms with the needs-validation enter in this function
   const forms = document.querySelectorAll(".needs-validation");
-  Array.from(forms).forEach((form) => {
+  Array.from(forms).forEach(async form => {
     form.addEventListener(
-      "submit",
-      (event) => {
+      "submit", async event => {
+        console.log("form: ", form.id)
         form.classList.remove("was-validated");
-        if (!(myCustomValidity(form)) || !(form.checkValidity())) {
+        if (!(myCustomValidity(form)) || !(form.checkValidity()) || form.classList.contains("is-submitting")) {
           event.preventDefault();
           event.stopPropagation();
         } else {
+          form.classList.add("is-submitting");
           //if (form.id == "localFormID") postLocalGame();
           //if (form.id == "remoteFormID") postRemoteGame();
           if (form.id == "localTournamentFormID") initLocalTournament();
@@ -128,9 +129,7 @@ function getForms() {
           event.preventDefault();
           form.classList.add("was-validated");
         }
-      },
-      false,
-    );
+      }, false, );
   });
 }
 
