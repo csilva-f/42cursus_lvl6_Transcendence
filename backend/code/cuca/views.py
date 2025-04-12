@@ -267,8 +267,8 @@ def get_usergames(request):
             return JsonResponse({"error": f"User ID {user_id} does not exist in tUserExtension"}, status=404)
         if status_id == "" or tournament_id == "":
             return JsonResponse({"error": "Filter can't be empty."}, status=400)
-        games_user1 = tGames.objects.filter(user1=user_id)
-        games_user2 = tGames.objects.filter(user2=user_id)
+        games_user1 = tGames.objects.filter(user1=user_id).order_by('-game')
+        games_user2 = tGames.objects.filter(user2=user_id).order_by('-game')
         games = games_user1 | games_user2
         if status_id:
             status_id = validate_status(status_id)
