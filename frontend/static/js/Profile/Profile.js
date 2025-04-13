@@ -165,6 +165,9 @@ async function insertOwnProfileInfo() {
     //? Pop-up Info
     document.getElementById("firstName").value = fName;
     document.getElementById("lastName").value = lName;
+    const otp = await JWT.getOTPStatus()
+    if (otp > 0)
+        document.getElementById("twoFactor").checked = true;
     //document.getElementById("phoneNumber").value = pN;
     document.getElementById("birthday").value = bDate;
     document.getElementById("biography").value = bio;

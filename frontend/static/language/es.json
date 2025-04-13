@@ -103,8 +103,6 @@
     "errorName": "El nombre del torneo debe ser diferente al de otros torneos activos",
 	"Error": "Error",
     "globalStatistics": "Estadísticas globales",
-    "Error": "Error",
-    "globalStatistics": "Estadísticas globales",
     "opponent": "Adversario:",
     "hCardWin": "Victoria",
     "hCardLoss": "Derrota",
@@ -158,5 +156,15 @@
     "checkEmail": "Revisa tu correo electrónico para obtener el código",
     "emailSent": "Te enviamos un código de seis caracteres a tu correo electrónico.",
     "noCodeReceived": "¿No recibiste el código?",
-    "resend": "Reenviar"    
+    "resend": "Reenviar",
+    "loginWith": "Iniciar sesión con",
+    "loginSuccess": "¡Inicio de sesión exitoso!",
+    "toBeDefined": "Por definir",
+    "noGamesFound": "No se encontraron juegos",
+    "semiFinal": "Semifinal",
+    "final": "Final",
+    "scanQR": "Escanea el código QR",
+    "OTPEnabled": "OTP habilitado con éxito",
+    "OTPDisabled": "OTP deshabilitado con éxito"
+
 }

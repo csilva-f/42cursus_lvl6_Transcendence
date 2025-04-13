@@ -144,6 +144,7 @@ function getForms() {
 }
 
 async function logOut() {
+  $("#logOutModal").modal("hide");
 	localStorage.removeItem("jwt");
 	JWT.deleteToken();
   await UserInfo.closeWebSocket();

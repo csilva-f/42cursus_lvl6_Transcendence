@@ -45,7 +45,7 @@ class SendOTPView(generics.GenericAPIView):
             'message': f'Your OTP code is {otp}',
             'from_email': 'noreply@cucabeludo.pt',
             #'recipient_list': ['bcamarinha92@gmail.com'],
-            'recipient_list': [email],
+            'recipient_list': [user.email],
         })
         if response.status_code == 200:
             print('Email sent successfully!')

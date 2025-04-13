@@ -48,18 +48,20 @@ async function fetchUsers() {
 
 function renderUserCards(usersList, cardTemplate, users_on, isNonFriends) {
   const divElement = document.getElementById("usersContent");
-  divElement.innerHTML = "";
-  usersList.forEach(element => {
-      const newCard = document.createElement("div");
-      newCard.id = "cardUserContent";
-      newCard.innerHTML = cardTemplate;
-      if (isNonFriends) {
-        insertGlobalUserInfo(newCard, element, users_on);
-      } else {
-        insertFriendInfo(newCard, element, users_on);
-      }
-      divElement.appendChild(newCard);
-  });
+  if(divElement){
+    divElement.innerHTML = "";
+    usersList.forEach(element => {
+        const newCard = document.createElement("div");
+        newCard.id = "cardUserContent";
+        newCard.innerHTML = cardTemplate;
+        if (isNonFriends) {
+          insertGlobalUserInfo(newCard, element, users_on);
+        } else {
+          insertFriendInfo(newCard, element, users_on);
+        }
+        divElement.appendChild(newCard);
+    });
+  }
 }
 
 async function fetchFriends() {

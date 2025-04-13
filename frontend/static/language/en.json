@@ -156,5 +156,14 @@
     "checkEmail": "Check your e-mail to get the code",
     "emailSent": "We sent a six-character code to your e-mail.",
     "noCodeReceived": "Didn't receive code?",
-    "resend": "Resend"
+    "resend": "Resend",
+    "loginWith": "Login with",
+    "loginSuccess": "Login Successfull!",
+    "toBeDefined": "To be defined",
+    "noGamesFound": "No games found",
+    "semiFinal": "Semi Final",
+    "final": "Final",
+    "scanQR": "Scan the QR Code",
+    "OTPEnabled": "OTP enabled successfully",
+    "OTPDisabled": "OTP disabled successfully"
 }

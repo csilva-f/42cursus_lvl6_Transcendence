@@ -134,7 +134,7 @@ async function postRemoteGame() {
         localStorage.setItem("gameInfo", JSON.stringify(res.game.id));
         window.history.pushState({}, "", `/pong`);
         await locationHandler();
-        document.getElementById("leftPlayerName").innerHTML = "Waiting...";
+        document.getElementById("leftPlayerName").innerHTML = langData.waiting;
         document.getElementById("leftPlayerGameImg").src = `/static/img/bot/guest.svg`;
         document.getElementById("rightPlayerName").innerHTML = res.game.user1_nick;
         document.getElementById("rightPlayerGameImg").src = myAvatar;

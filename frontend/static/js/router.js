@@ -255,6 +255,8 @@ async function changeToBig(location) {
 		// 	separateDialCode: true,
 		// 	loadUtils: () => await import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"),
 		// });
+		insertPlaceholders("/login", langData);
+		updateContent(langData)
 		disableTopBar();
 		getForms();
 	} else if (location == "/forgotPassword") {
@@ -319,6 +321,13 @@ async function insertPlaceholders(location, langData) {
 		case "/games":
 			document.getElementById('localNameTournamentInput').placeholder = langData.tournamentName;
 			document.getElementById('P1NickInput').placeholder = await UserInfo.getUserNick();
+			break;
+		case "/login":
+			document.getElementById('loginPassword').placeholder = langData.password;
+			document.getElementById('signupFirstname').placeholder = langData.firstName;
+			document.getElementById('signupLastname').placeholder = langData.lastName;
+			document.getElementById('signupPassword').placeholder = langData.password;
+			document.getElementById('signupPassword2').placeholder = langData.password;
 			break;
 	}
 }

@@ -121,8 +121,8 @@ async function updateGameStatus(data, ws, isWinner){
                         data.isT, imgLeft, imgRight, data.isT, formattedTime);
             }
             if(ws){
-                showGameStats(data.P1, data.user1_points, data.user1_hits,
-                    data.P2, data.user2_points, data.user2_hits, true, 
+                showGameStats(data.P1, data.user2_points, data.user2_hits,
+                    data.P2, data.user1_points, data.user1_hits, true, 
                     data.imgLeft, data.imgRight, false, formattedTime);
                 let msg = {
                     message: "Refresh game status",

@@ -101,8 +101,6 @@
     "errorName": "Le nom du tournoi doit être différent des autres tournois actifs",
     "Error": "Error",
 	"opponent": "Adversaire:",
-	"Error": "Error",
-	"opponent": "Adversaire:",
     "hCardWin": "Victoire",
     "hCardLoss": "Défaite",
     "hCardWinT": "Victoire en Tournoi",
@@ -155,5 +153,17 @@
     "checkEmail": "Consultez votre boîte mail pour obtenir le code",
     "emailSent": "Nous vous avons envoyé un code à six caractères par e-mail.",
     "noCodeReceived": "Vous n'avez pas reçu le code?",
-    "resend": "Renvoyer"
+    "resend": "Renvoyer",
+	"users": "Utilisateurs",
+	"status": "Statut",
+	"players": "Joueurs",
+    "loginWith": "Se connecter avec",
+    "loginSuccess": "Connexion réussie !",
+    "toBeDefined": "À définir",
+    "noGamesFound": "Aucun jeu trouvé",
+    "semiFinal": "Demi-finale",
+    "final": "Finale",
+    "scanQR": "Scannez le code QR",
+    "OTPEnabled": "OTP activé avec succès",
+    "OTPDisabled": "OTP désactivé avec succès"
 }

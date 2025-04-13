@@ -2,6 +2,8 @@
 async function EnableOTPViewSet(status) {
 	jwtToken = await JWT.getAccess();
 	const apiUrl = "/authapi";
+	const userLang = localStorage.getItem("language") || "en";
+	const langData = await getLanguageData(userLang);
 	$.ajax({
 		type: "POST",
 		url: `${apiUrl}/otp-enable/`,
@@ -11,11 +13,22 @@ async function EnableOTPViewSet(status) {
 			Authorization: `Bearer ${jwtToken}`,
 		},
 		data: JSON.stringify({ status }),
-		success: function (data) {
+		success: async function (data) {
 			if (status == 1) {
 				createQrCode(data.otpauth_uri);
 				let modal = new bootstrap.Modal(document.getElementById("codeModal"));
 				modal.show();
+				await JWT.setOTPStatus(1);
+			}
+			if (status == 2) {
+				showSuccessToast(langData, langData.OTPEnabled);
+				$("#twoFactorModal").modal("hide");
+				await JWT.setOTPStatus(2);
+			}
+			if (status == 0) {
+				showSuccessToast(langData, langData.OTPDisabled);
+				await JWT.setOTPStatus(0);
+
 			}
 		},
 		error: function (xhr) {

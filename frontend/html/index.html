@@ -224,8 +224,8 @@
 		</div>
 	</nav>
 
-	<div class="modal fade" id="logOutModal" tabindex="-1" aria-labelledby="logOutModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered modal-sm">
+	<div class="modal fade" id="logOutModal" tabindex="-1" aria-labelledby="logOutModalLabel" data-bs-keyboard="false" data-bs-backdrop="static">
+		<div class="modal-dialog modal-dialog-centered modal-sm" >
 			<div class="modal-content" style="background-color: var(--bodyBg)">
 				<div class="modal-header" style="background-color: var(--primary)">
 					<div class="container-fluid">
@@ -243,7 +243,7 @@
 							<button type="button" class="btn btn-secondary" style="
                                         background-color: var(--primary);
                                         color: white;
-                                    " id="codeButton" onclick="logOut() " data-bs-dismiss="modal">
+                                    " id="codeButton" onclick="logOut() " >
 								<i class="fa-solid fa-check fa-xl" style="color: white"></i>
 							</button>
 						</div>
@@ -262,7 +262,7 @@
 	</div>
 
 	<div class="modal fade" id="nickModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-		aria-labelledby="nickModalLabel" aria-hidden="true">
+		aria-labelledby="nickModalLabel">
 		<div class="modal-dialog">
 			<div class="modal-content" style="background-color: var(--bodyBg);">
 				<div class="modal-header" style="background-color: var(--primary); justify-content: center;">

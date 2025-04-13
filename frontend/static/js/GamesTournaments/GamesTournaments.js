@@ -254,20 +254,23 @@ function toggleTournamentGames(divID) {
 }
 
 //* Function to insert in frontend the info regarding a tournament's games
-async function insertTournamentGameInfo(newCard, game) {
+async function insertTournamentGameInfo(newCard, game, langData) {
     const tournGameNbr = newCard.querySelector("#tournGameNumber")
-    tournGameNbr.textContent = game.phase;
+    if (game.phase == "Final")
+        tournGameNbr.textContent = langData.final;
+    else  if (game.phase.localeCompare("Semi Final"))
+        tournGameNbr.textContent = langData.semiFinal;
     const tournP1 = newCard.querySelector("#tournGamePlayer1")
     if (game.user1Nick) {
         tournP1.textContent = game.user1Nick;
     } else {
-        tournP1.textContent = "(To be be defined)";
+        tournP1.textContent = langData.toBeDefined;
     }
     const tournP2 = newCard.querySelector("#tournGamePlayer2")
     if (game.user2Nick) {
         tournP2.textContent = game.user2Nick;
     } else {
-        tournP2.textContent = "(To be be defined)";
+        tournP2.textContent = langData.toBeDefined;
     }
     const enterTournGameBtn = newCard.querySelector("#enterLi");
     enterTournGameBtn.setAttribute("data-id", game.gameID);
@@ -283,7 +286,12 @@ async function insertTournamentGameInfo(newCard, game) {
         tournGameWinner.textContent = game.winnerNick;
     }
     const tournGameStat = newCard.querySelector("#tournGameStatus")
-    tournGameStat.textContent = game.status;
+    if (game.status == "Searching")
+        tournGameStat.textContent = langData.searching;
+    else if (game.status == "Happening")
+        tournGameStat.textContent = langData.happening;
+    else if (game.status == "Finished")
+        tournGameStat.textContent = langData.finished;
 }
 
 //* Function to laod the tournament games
@@ -291,16 +299,16 @@ async function loadTournamentGames(tournamentID, containerDiv) {
     try {
         const games = await fetchTournamentGames(tournamentID);
         containerDiv.classList.remove("d-none");
+        const userLang = localStorage.getItem("language") || "en";
+        const langData = await getLanguageData(userLang);
 
         if (!games || games.length === 0) {
             const noGamesMsg = document.createElement("p");
             noGamesMsg.classList.add("text-muted");
-            noGamesMsg.textContent = "No games found for this tournament.";
+            noGamesMsg.textContent = langData.noGamesFound;
             containerDiv.appendChild(noGamesMsg);
             return;
         }
-        const userLang = localStorage.getItem("language") || "en";
-        const langData = await getLanguageData(userLang);
         fetch("/templates/Components/CardTournamentGame.html")
             .then((response) => {
                 if (!response.ok) {
@@ -314,7 +322,7 @@ async function loadTournamentGames(tournamentID, containerDiv) {
                 games.forEach((element) => {
                     const newCard = document.createElement("div");
                     newCard.innerHTML = data;
-                    insertTournamentGameInfo(newCard, element);
+                    insertTournamentGameInfo(newCard, element, langData);
                     divElement.appendChild(newCard);
                 });
                 updateContent(langData);
@@ -345,15 +353,15 @@ async function loadGameStats(gameID, containerDiv) {
     try {
         const statistics = await fetchGameStatistics(gameID);
         containerDiv.classList.remove("d-none");
+        const userLang = localStorage.getItem("language") || "en";
+        const langData = await getLanguageData(userLang);
         if (!statistics || statistics.length === 0) {
             const noStatsMsg = document.createElement("p");
             noStatsMsg.classList.add("text-muted");
-            noStatsMsg.textContent = "No statistics found for this game.";
+            noStatsMsg.textContent = langData.noGamesFound;
             containerDiv.appendChild(noStatsMsg);
             return;
         }
-        const userLang = localStorage.getItem("language") || "en";
-        const langData = await getLanguageData(userLang);
         fetch("/templates/Components/CardGameStatistics.html")
             .then((response) => {
                 if (!response.ok) {

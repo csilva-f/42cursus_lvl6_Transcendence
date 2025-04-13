@@ -108,7 +108,7 @@
 
 <!-- CREATE GAME MODAL -->
 <div class="modal fade" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  aria-labelledby="staticBackdropLabel">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content" style="min-height: 22rem; background-color: white">
       <div class="modal-header" style="background-color: var(--primary); justify-content: center;">
@@ -157,7 +157,7 @@
 <!-- ! -->
 <!-- CREATE TOURNAMENT MODAL -->
 <div class="modal fade" id="createTournamentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  aria-labelledby="staticBackdropLabel">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content" style="min-height: 22rem; background-color: white">
       <div class="modal-header" style="background-color: var(--primary); justify-content: center;">
@@ -174,7 +174,7 @@
                   <i class="fa-solid fa-signature fa-lg"></i>
                 </span>
                 <input id="localNameTournamentInput" required type="text" class="form-control" placeholder=""
-                  aria-describedby="basic-addon1" style="margin-top: 20px;"
+                  aria-describedby="basic-addon1" style="margin-top: 20px;" maxlength="15"
                   oninput="this.value = this.value.replace(/\s/g, '');">
               </div>
               <!-- End Name -->
@@ -197,7 +197,7 @@
                   <i class="fa-solid fa-2 fa-lg"></i>
                 </span>
                 <input type="text" class="form-control" id="P2NickInputTourn" required placeholder="P2"
-                  aria-describedby="inputGroupPrepend" required
+                  aria-describedby="inputGroupPrepend"  maxlength="15" required
                   oninput="this.value = this.value.replace(/\s/g, '');">
                 <div class="invalid-feedback" data-i18n="p2NickError">
                 </div>
@@ -210,7 +210,7 @@
                   <i class="fa-solid fa-3 fa-lg"></i>
                 </span>
                 <input type="text" class="form-control" id="P3NickInput" required placeholder="P3"
-                  aria-describedby="inputGroupPrepend" required
+                  aria-describedby="inputGroupPrepend" maxlength="15" required
                   oninput="this.value = this.value.replace(/\s/g, '');">
                 <div class="invalid-feedback" data-i18n="p1NickError">
                 </div>
@@ -223,7 +223,7 @@
                   <i class="fa-solid fa-4 fa-lg"></i>
                 </span>
                 <input type="text" class="form-control" id="P4NickInput" required placeholder="P4"
-                  aria-describedby="inputGroupPrepend" required
+                  aria-describedby="inputGroupPrepend" maxlength="15" required
                   oninput="this.value = this.value.replace(/\s/g, '');">
                 <div class="invalid-feedback" data-i18n="p1NickError">
                 </div>

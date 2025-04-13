@@ -40,7 +40,7 @@ async function oauthLogin() {
             if (url) {
                 window.location.href = url;
             }
-            showSuccessToast(langData, "Login successful!");
+            showSuccessToast(langData, langData.loginSuccess);
         },
         error: function (xhr) {
             const data = JSON.parse(xhr.responseJSON);
@@ -63,7 +63,7 @@ async function oauthCallback() {
             headers: { Accept: "application/json" },
             success: async function (data) {
                 await sendOAuthLogin(data);
-                showSuccessToast(langData, "Login successful!");
+                showSuccessToast(langData, langData.loginSuccess);
             },
             error: function (xhr) {
                 const data = JSON.parse(xhr.responseJSON);
@@ -208,6 +208,8 @@ async function OTP_check_enable(jwtToken) {
 //! NOT IN USE (commented on Login.js:7)
 //? /authapi/otp-send/
 async function OTP_send_email() {
+    const userLang = localStorage.getItem("language") || "en";
+	const langData = await getLanguageData(userLang);
     const apiUrl = "/authapi";
     let jwtToken= await JWT.getTempToken();
     if (await JWT.getOTPStatus() != 2) return;
@@ -223,6 +225,7 @@ async function OTP_send_email() {
          },
         //data: JSON.stringify({ access }),
         success: function (data) {
+            showSuccessToast(langData, "OTP code sent successfully");
         },
         error: function (xhr) {
             const data = JSON.parse(xhr.responseJSON);

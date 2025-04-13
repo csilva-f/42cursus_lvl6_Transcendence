@@ -156,5 +156,15 @@
     "checkEmail": "Controlla la tua email per ricevere il codice",
     "emailSent": "Ti abbiamo inviato un codice di sei caratteri al tuo indirizzo email.",
     "noCodeReceived": "Non hai ricevuto il codice?",
-    "resend": "Invia di nuovo"
+    "resend": "Invia di nuovo",
+    "loginWith": "Accedi con",
+    "loginSuccess": "Accesso riuscito!",
+    "toBeDefined": "Da definire",
+    "noGamesFound": "Nessun gioco trovato",
+    "semiFinal": "Semifinale",
+    "final": "Finale",
+    "scanQR": "Scansiona il codice QR",
+    "OTPEnabled": "OTP abilitato con successo",
+    "OTPDisabled": "OTP disabilitato con successo"
+
 }

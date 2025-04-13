@@ -5,7 +5,6 @@ EMAIL_DB_CONTAINER_NAME = email-db
 all: build up
 DATA_DIR = $(HOME)/ft_transcendence_data
 ROOT_TOKEN_FILE = ./secrets/VAULT_ROOT_TOKEN.txt
-DOCKER_COMPOSE_BINARY=./docker-compose-linux-x86_64
 
 HOST_IP_FILE= ./secrets/HOST_IP.txt
 
@@ -17,7 +16,7 @@ get_ip:
 
 build:
 	@echo "Building Docker Compose setup..."
-	@$(DOCKER_COMPOSE_BINARY) -p $(NAME) build
+	@docker compose -p $(NAME) build
 
 directories:
 	@echo "Creating directories..."
@@ -30,10 +29,10 @@ directories:
 	@mkdir -p ./vault/data
 
 up: directories get_ip
-	@$(DOCKER_COMPOSE_BINARY) down
+	@docker compose down
 	@echo "" > $(ROOT_TOKEN_FILE)
 	@echo "Running Docker Compose setup..."
-	@$(DOCKER_COMPOSE_BINARY) up -d
+	@docker compose up -d
 	@echo "Service build successfully"
 	@echo -n "https://" &&  cat $(HOST_IP_FILE) | tr -d '\n' && echo -n ":8000\n"
 
@@ -44,17 +43,17 @@ down:
 	@docker exec -it email-db chmod 777 /var/lib/postgresql/data -R
 	@docker exec -it vault-db chmod 777 /var/lib/postgresql/data -R
 	@docker exec -it vault chmod 777 /vault -R
-	@$(DOCKER_COMPOSE_BINARY) down
+	@docker compose down
 
 
 
 clean:down
 	@echo "Cleaning up stopped containers and networks..."
-	@$(DOCKER_COMPOSE_BINARY) -p $(NAME) down
+	@docker compose -p $(NAME) down
 
 fclean: clean db-clear
 	@echo "Force cleaning: removing all images..."
-	@$(DOCKER_COMPOSE_BINARY) -p $(NAME) down --rmi all
+	@docker compose -p $(NAME) down --rmi all
 	@docker system prune -af
 	@docker volume rm $(docker volume ls -q)
 
