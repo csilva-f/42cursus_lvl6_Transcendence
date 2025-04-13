@@ -20,7 +20,6 @@ class RemoteGame  {
         this.maxScore = 5;
         this.ws = ws;
         this.isHost = isHost;
-        this.gameDuration = 0;
         this.disconnect = false;
         this.stopGame = false;
     }
@@ -68,9 +67,6 @@ class RemoteGame  {
         }
         document.getElementById("playerLeftScore").innerHTML = this.objects[1].paddleScore;
         document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
-        //this.runCountdown()
-        if(this.isHost)
-            startTimer();
         this.ws.onmessage = async (event) => {
             const data = JSON.parse(event.data);
             //NOTE - 1 - Atualizar a bola
@@ -102,7 +98,6 @@ class RemoteGame  {
                 if(!this.isHost){
                     this.objects[1].paddleColisionTimes = data.paddleColisionTimesLeft;
                     this.objects[2].paddleColisionTimes = data.paddleColisionTimesRight;
-                    this.gameDuration = data.gameDuration;
                     this.objects[data.paddleSide].paddleScore = data.paddleScore;
                 }
             }
@@ -250,13 +245,11 @@ class RemoteGame  {
             if(this.objects[2].paddleScore < this.maxScore)
                 this.respawnBallLeft();
             else {
-                this.gameDuration = stopTimer();
                 this.stopGame = true;
                 let msg = {
                     element: 4,
                     paddleColisionTimesLeft: this.objects[1].paddleColisionTimes,
                     paddleColisionTimesRight: this.objects[2].paddleColisionTimes,
-                    gameDuration: this.gameDuration,
                     paddleScore: this.objects[2].paddleScore,
                     paddleSide: 2,
                 }
@@ -270,13 +263,11 @@ class RemoteGame  {
             if(this.objects[1].paddleScore < this.maxScore)
                 this.respawnBallRight();
             else {
-                this.gameDuration = stopTimer();
                 this.stopGame = true;
                 let msg = {
                     element: 4,
                     paddleColisionTimesLeft: this.objects[1].paddleColisionTimes,
                     paddleColisionTimesRight: this.objects[2].paddleColisionTimes,
-                    gameDuration: this.gameDuration,
                     paddleScore: this.objects[1].paddleScore,
                     paddleSide: 1,
                 }

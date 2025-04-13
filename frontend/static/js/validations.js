@@ -155,7 +155,6 @@ function ValidateSignupForm(form) {
         form.signupPassword2.classList.remove('is-valid');
         erro += 1;
     }
-    console.log("erro: ", erro)
     if (erro == 0) return true;
     return false;
 }

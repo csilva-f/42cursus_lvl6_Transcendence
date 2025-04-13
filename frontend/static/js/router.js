@@ -196,7 +196,6 @@ function resetNotifications() {
 }
 
 async function insertUserLevel(element, otherUserLvl) {
-	console.log("[insertUserLevel]")
 	var userLvl = null;
 	if (otherUserLvl == null)
 		userLvl = await UserInfo.getUserLvl();
@@ -218,7 +217,6 @@ async function changeTopBarImg(newImg) {
 }
 
 async function activateTopBar() {
-	console.log("[activateTopBar]")
 	const topbar = document.getElementById("topbar")
 	topbar.classList.remove('d-none')
 	document.getElementById("personNickname").textContent = await UserInfo.getUserNick();
@@ -228,7 +226,6 @@ async function activateTopBar() {
 }
 
 async function changeToBig(location) {
-	console.log("[changeToBig]")
 	const allContent = document.getElementById("allContent")
 	allContent.classList.remove('d-none');
 	allContent.style.cssText += 'height: calc(100vh - 7rem);';
@@ -478,7 +475,6 @@ const locationHandler = async () => {
 	route = routes[location] || routes["404"];
 	let uid = await UserInfo.getUserID();
 	let tempToken = await JWT.getTempToken();
-	console.log("[Location] ", location)
 	try {
 		$('.modal').modal('hide');
 	} catch (e) {}
@@ -501,7 +497,6 @@ const locationHandler = async () => {
 	}
 
 	if (isProfile(location)) {
-		console.log("[isProfile(location)]")
 		route = routes["/profile/:userID"];
 		html = await fetch(route.template).then((response) => response.text());
 		document.title = route.title;
@@ -545,7 +540,6 @@ document.addEventListener("click", (e) => {
 });
 
 async function loadProfileFromURL() {
-	console.log("[loadProfileFromURL]");
 	const path = window.location.pathname;
 	const match = path.match(/\/profile\/(\w+)/);
 	if (match) {
@@ -580,7 +574,6 @@ async function reloadPage() {
 		await JWT.reloadPage();
 		if (await JWT.getAccess())
 			await UserInfo.refreshUser();
-		console.log("User reload: ", UserInfo)
 		if (!UserInfo.getUserID())
 			initializeWebSocket();
 		locationHandler();

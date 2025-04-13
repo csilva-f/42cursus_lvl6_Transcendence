@@ -80,7 +80,7 @@ async function showGameStats(leftName, leftScore, leftColision, rightName, right
 
     // Tempo total da partida
     const matchTotalTime = document.getElementById('matchTotalTime');
-    matchTotalTime.textContent = gameDuration; // Garante que timerSeconds seja um número válido
+    matchTotalTime.textContent = gameDuration;
 }
 
 function startWinAnimation() {
@@ -99,34 +99,34 @@ function startWinAnimation() {
     }
 }
 
-function formatTime(seconds) {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-}
+// function formatTime(seconds) {
+//     const minutes = Math.floor(seconds / 60);
+//     const remainingSeconds = seconds % 60;
+//     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+// }
 
-function startTimer() {
-    if (!timerActive) {
-        timerActive = true;
-        timer = setInterval(() => {
-            timerSeconds++;
-        }, 1000);
-    }
-}
+// function startTimer() {
+//     if (!timerActive) {
+//         timerActive = true;
+//         timer = setInterval(() => {
+//             timerSeconds++;
+//         }, 1000);
+//     }
+// }
 
-function stopTimer() {
-    if (timerActive) {
-        clearInterval(timer);
-        timerActive = false;
-    }
-    return timerSeconds;
-}
+// function stopTimer() {
+//     if (timerActive) {
+//         clearInterval(timer);
+//         timerActive = false;
+//     }
+//     return timerSeconds;
+// }
 
-function getResult(response) {
-  gameDuration = response;
-  console.log(response);
-  //use return_first variable here
-}
+// function getResult(response) {
+//   gameDuration = response;
+//   console.log(response);
+//   //use return_first variable here
+// }
 
 async function updateGameStatus(data, ws, isWinner){
     const userLang = localStorage.getItem("language") || "en";
