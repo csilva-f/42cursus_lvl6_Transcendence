@@ -594,7 +594,7 @@ def post_create_tournament(request):
 def post_update_game(request): #update statusID acording to user2 and winner vars
     if request.method == 'POST':
         try:
-            print("chega aqui")
+            game_duration_str = ""
             data = json.loads(request.body)
             game_id = data.get('gameID')
             if not game_id:
@@ -615,7 +615,7 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 return JsonResponse({"error": "Override status only allowed for finished"}, status=400)
             user_id = data.get('uid')
             is_join = str(data.get('isJoin')).lower() in ['true', '1', 'yes']
-            print("user_id")
+            #print("user_id")
             if not user_id and not is_join:
                 return JsonResponse({"error": "User ID is required for update"}, status=400)
             if is_join and game.user1 and game.user2:
@@ -633,9 +633,8 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 game.endTS = now()
                 game_duration = game.endTS - game.startTS
                 game_duration_str = str(game_duration) if game_duration else "00:00:00"
-                print(game.user1)
-                print(game.user2)
-                print(game_duration_str)
+                #print(game.user1)
+                #print(game.user2)
 
                 u1_points = data.get('user1_points')
                 u2_points = data.get('user2_points')
@@ -715,7 +714,6 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 gstatus = tauxStatus.objects.get(statusID=2)
                 game.status = gstatus
                 game.startTS = now()
-                game_duration_str = ""
             game.save()
             game_data = {
                 "id": game.game,
@@ -726,7 +724,7 @@ def post_update_game(request): #update statusID acording to user2 and winner var
                 "isLocal": game.isLocal,
                 "gameDuration": game_duration_str,
             }
-            print("fim")
+            #print("fim")
             return JsonResponse({"message": "Game updated successfully", "game": game_data}, status=201)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
@@ -1010,7 +1008,7 @@ def post_join_tournament(request):  # user joins an active tournament
 def post_update_userextension(request):
     if request.method == 'POST':
         try:
-            print("cucu")
+            #print("cucu")
             data = json.loads(request.body)
             uext_id = data.get('uid')
             if not uext_id:
@@ -1033,10 +1031,10 @@ def post_update_userextension(request):
                     uext.gender = gen
                 except tauxGender.DoesNotExist:
                     return JsonResponse({"error": f"Gender with id {gender_id} does not exist"}, status=404)
-            print("nick from request: ")
-            print(unick)
-            print("nick from u extension: ")
-            print(uext.nick)
+            #print("nick from request: ")
+            #print(unick)
+            #print("nick from u extension: ")
+            #print(uext.nick)
             if unick and unick != uext.nick:
                 if len(unick) > 20:
                     return JsonResponse({"error": "Nickname cannot exceed 20 characters"}, status=400)

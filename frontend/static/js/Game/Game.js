@@ -20,7 +20,6 @@ var remoteGame = false;
 const wsConnections = {};
 var imgLeft, imgRight;
 var gameID = 0;
-var gameDuration;
 
 window.addEventListener('keydown', function (e) {
     keyPressed[e.keyCode] = true;
@@ -73,7 +72,6 @@ class Game  {
         this.ballRadius = 15;
         this.maxScore = maxScore;
         this.stopGame = false;
-        this.gameDuration = 0;
     }
     async initGame() {
         gameID = this.gameData.gameID;
@@ -114,7 +112,6 @@ class Game  {
         }
         document.getElementById("playerLeftScore").innerHTML = this.objects[1].paddleScore;
         document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
-        startTimer();
         this.gameLoop();
     }
     async loadPageInfo() {
@@ -207,7 +204,6 @@ class Game  {
                 this.respawnBall();
             else {
                 this.stopGame = true;
-                this.gameDuration = stopTimer();
             }
         }
         if (this.objects[0].ballX - this.objects[0].ballRadius > this.canvas.width){
@@ -218,7 +214,6 @@ class Game  {
                 this.respawnBall();
             else {
                 this.stopGame = true;
-                this.gameDuration = stopTimer();
             }
         }
     }

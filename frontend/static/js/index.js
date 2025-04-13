@@ -104,7 +104,6 @@ function getForms() {
   Array.from(forms).forEach(async form => {
     form.addEventListener(
       "submit", async event => {
-        console.log("form: ", form.id);
         const myC = myCustomValidity(form)
         const bootstrap = form.checkValidity()
         const isSub = form.classList.contains("is-submitting")
@@ -149,7 +148,6 @@ async function logOut() {
 	JWT.deleteToken();
   await UserInfo.closeWebSocket();
 	await UserInfo.resetUser();
-  console.log(UserInfo);
 	window.history.pushState({}, "", "/mainPage");
 	locationHandler();
 }
