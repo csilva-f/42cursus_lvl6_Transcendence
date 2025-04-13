@@ -22,7 +22,6 @@ async function fetchStatistics(userID) {
       insertPageInfo(userStats);
     },
     error: function (xhr, status, error) {
-      console.error("Error Thrown:", error);
       showErrorToast(APIurl, error, langData);
     },
   });

@@ -70,7 +70,6 @@ function searchUser() {
     var filter = userSearchInput.value.toUpperCase();
     const usersCards = document.querySelectorAll("#cardUserContent");
     usersCards.forEach(card => {
-        console.log("card: ", card)
         var usersNick = card.querySelector('h4');
         if (usersNick) {
             let txtValue = usersNick.textContent || usersNick.innerText;

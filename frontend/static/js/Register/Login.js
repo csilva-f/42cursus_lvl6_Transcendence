@@ -2,7 +2,6 @@ async function loginSuccess(data) {
     jwtToken = data.access;
     await JWT.setTempToken(data);
     const opt_status = await OTP_check_enable(jwtToken);
-    console.log(opt_status);
 
     if (opt_status == true) {
         await OTP_send_email();
@@ -19,7 +18,6 @@ async function loginSuccess(data) {
     } else {
         if (jwtToken) {
             await JWT.setToken(data);
-            console.log("Access: ", await JWT.getAccess());
         }
         await UserInfo.refreshUser();
         localStorage.setItem('language', await UserInfo.getUserLang());

@@ -3,7 +3,6 @@ async function sendSignup(form) {
 	// Login function
 	const userLang = localStorage.getItem("language") || "en";
 	const langData = await getLanguageData(userLang);
-	console.log("[sendSignup]");
 	const email = $("#signupEmail").val();
 	const password = $("#signupPassword").val();
 	const retyped = $("#signupPassword2").val();

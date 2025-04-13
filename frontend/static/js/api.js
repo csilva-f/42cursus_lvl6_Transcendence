@@ -61,13 +61,11 @@ async function fetchUserNotificationGame() {
           updateContent(langData);
         },
         error: function (xhr, status, error) {
-          console.error("Error Thrown:", error);
           showErrorToast(APIurl, error, langData);
         },
       });
     })
     .catch((error) => {
-      console.error("There was a problem with the fetch operation:", error);
     });
 }
 

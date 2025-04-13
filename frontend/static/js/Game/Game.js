@@ -77,7 +77,6 @@ class Game  {
         gameID = this.gameData.gameID;
         closeGame = false;
         localGame = true;
-        //console.info("onload");
 
         // Get the device pixel ratio (DPR)
         const dpr = window.devicePixelRatio || 1;
@@ -102,7 +101,6 @@ class Game  {
             document.getElementById("leftPlayerName").innerHTML = "Shin";
             document.getElementById("rightPlayerName").innerHTML = "Chan";
         } else {
-            //console.log(this.gameData)
             this.objects = [
                 new Ball(this.canvas.width / 2, this.canvas.height / 2, this.ballVelocity, this.ballVelocity, this.ballRadius),
                 new Paddle(1, paddleWidth, paddleHeight, "#94DEC5", 30, (this.canvas.height / 2) - 75, paddleVelocity),
@@ -136,14 +134,11 @@ class Game  {
             this.gameUpdate();
             this.incScore();
             this.gameDraw();
-            //console.log("game on going");
         }
         else if (closeGame) {
-            //console.log("force finish");
             closeGame = false;
             localGame = false;
         } else {
-            //console.log("Normal finish!");
             const data = {
                 uid: this.gameData.P1_uid,
                 gameID: this.gameData.gameID,
@@ -173,10 +168,8 @@ class Game  {
         this.objects[1].colissionEdge(this.canvas);
         let colision = this.objects[1].leftColissionBall(this.objects[0], localMaxSpeed);
         if(colision){
-            //console.log("Colision left: update ball again");
             this.objects[1].paddleColisionTimes++;
             this.objects[0].lastColision = 1;
-            //this.objects[0].update();
         }
     }
     paddleUpdateRight(){
@@ -184,10 +177,8 @@ class Game  {
         this.objects[2].colissionEdge(this.canvas);
         let colision = this.objects[2].rightColissionBall(this.objects[0], localMaxSpeed);
         if(colision){
-            //console.log("Colision right: update ball again");
             this.objects[2].paddleColisionTimes++;
             this.objects[0].lastColision = 2;
-            //this.objects[0].update();
         }
     }
     gameDraw() {
@@ -218,7 +209,6 @@ class Game  {
         }
     }
     respawnBall() {
-        //console.info("respawn")
         if (this.objects[0].ballVelocityX > 0) {
             this.objects[0].ballX = this.canvas.width / 2;
             this.objects[0].ballY = (Math.random() * (this.canvas.height - 200)) + 100;

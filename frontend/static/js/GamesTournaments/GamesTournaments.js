@@ -110,7 +110,6 @@ function setRandomImage(imgElement) {
 
 async function insertInfo(newCard, element, statusID) {
     newCard.innerHTML = newCard.innerHTML.replaceAll("{{GAME_ID}}", element.gameID);
-    console.log("statusID: ", statusID)
     const user1Level = newCard.querySelector("#user1Level");
     const user1Nick = newCard.querySelector("#user1Nick");
     const user1Img = newCard.querySelector("#user1Img");
@@ -209,7 +208,6 @@ function showGameForm(formID, tabOpenID, confirmBtnID, backBtnID) {
 function hideGameForm(formOpenID, tabID, confirmBtnID) {
     const form = document.getElementById(formOpenID);
     if (form) {
-        console.log("form: ", form)
         form.classList.add('d-none');
         form.classList.remove('was-validated')
     }
@@ -221,7 +219,6 @@ function hideGameForm(formOpenID, tabID, confirmBtnID) {
 
 //* Function to cancel and reset Forms
 function closeGameForm(formIDs, tabID, confirmBtnID, backBtnID) {
-    console.log("closeeeee");
     const tournErrorSection = document.querySelector('#tournErrorSection');
     if (tournErrorSection) tournErrorSection.classList.add('d-none');
     const tournErrorNick = document.querySelector('#tournErrorNick');
@@ -244,14 +241,12 @@ function closeGameForm(formIDs, tabID, confirmBtnID, backBtnID) {
 //* Function to expand or retract the games section of each tournament
 function toggleTournamentGames(divID) {
     const gamesDiv = document.getElementById(divID);
-    console.log(gamesDiv);
   
     if (!gamesDiv) return;
     if (gamesDiv.classList.contains("d-none")) {
         gamesDiv.classList.remove("d-none");
         
         const tournamentID = divID.split("-")[1];
-        console.log(tournamentID);
         loadTournamentGames(tournamentID, gamesDiv);
     } else {
         gamesDiv.classList.add("d-none");
@@ -260,7 +255,6 @@ function toggleTournamentGames(divID) {
 
 //* Function to insert in frontend the info regarding a tournament's games
 async function insertTournamentGameInfo(newCard, game) {
-    console.log(game);
     const tournGameNbr = newCard.querySelector("#tournGameNumber")
     tournGameNbr.textContent = game.phase;
     const tournP1 = newCard.querySelector("#tournGamePlayer1")
@@ -278,8 +272,6 @@ async function insertTournamentGameInfo(newCard, game) {
     const enterTournGameBtn = newCard.querySelector("#enterLi");
     enterTournGameBtn.setAttribute("data-id", game.gameID);
     if (game.user1Nick && game.user2Nick && game.statusID == 2) {
-        console.log(game.createdByUser);
-        console.log(await UserInfo.getUserID());
         if (game.createdByUser == await UserInfo.getUserID()) {
             const element = newCard.querySelector('#tournGameBtn');
             if (element) element.classList.remove('d-none');
@@ -297,9 +289,7 @@ async function insertTournamentGameInfo(newCard, game) {
 //* Function to laod the tournament games
 async function loadTournamentGames(tournamentID, containerDiv) {
     try {
-        console.log("Loading games for tournament:", tournamentID);
         const games = await fetchTournamentGames(tournamentID);
-        console.log("Fetched games:", games);
         containerDiv.classList.remove("d-none");
 
         if (!games || games.length === 0) {
@@ -330,24 +320,20 @@ async function loadTournamentGames(tournamentID, containerDiv) {
                 updateContent(langData);
             })
             .catch((error) => {
-                console.error("There was a problem with the fetch operation:", error);
             });
     } catch (error) {
-        console.error("Error fetching games:", error);
         containerDiv.innerHTML = "<p class='text-danger'>Error loading games.</p>";
     }
 }
 
 function toggleGameStats(divID) {
     const gameStatsDiv = document.getElementById(divID);
-    console.log(gameStatsDiv);
   
     if (!gameStatsDiv) return;
     if (gameStatsDiv.classList.contains("d-none")) {
         gameStatsDiv.classList.remove("d-none");
         
         const gameID = divID.split("-")[1];
-        console.log(gameID);
         loadGameStats(gameID, gameStatsDiv);
     } else {
         gameStatsDiv.classList.add("d-none");
@@ -358,7 +344,6 @@ function toggleGameStats(divID) {
 async function loadGameStats(gameID, containerDiv) {
     try {
         const statistics = await fetchGameStatistics(gameID);
-        console.log("Fetched statistics:", statistics);
         containerDiv.classList.remove("d-none");
         if (!statistics || statistics.length === 0) {
             const noStatsMsg = document.createElement("p");
@@ -388,10 +373,8 @@ async function loadGameStats(gameID, containerDiv) {
                 updateContent(langData);
             })
             .catch((error) => {
-                console.error("There was a problem with the fetch operation:", error);
             });
     } catch (error) {
-        console.error("Error fetching game statistics:", error);
         containerDiv.innerHTML = "<p class='text-danger'>Error loading game statistics.</p>";
     }
 }

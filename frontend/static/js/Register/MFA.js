@@ -28,7 +28,6 @@ function handleOTPInput(field) {
     pasteData.forEach((char) => {
       const targetField = document.getElementById(`otp${currentId}`);
       if (targetField) {
-        console.log("paste element: ", currentId);
         targetField.value = char;
         currentId++;
       }

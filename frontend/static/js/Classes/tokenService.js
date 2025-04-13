@@ -19,7 +19,6 @@ class tokenService {
   }
 
   async setToken(t) {
-    console.log("setToken");
     this.token = t;
     await this.setCookie();
   }
@@ -37,7 +36,6 @@ class tokenService {
   }
 
   async setTempToken(t) {
-    console.log("setTempToken: ", t);
     this.tempToken = t;
   }
 
@@ -64,17 +62,11 @@ class tokenService {
         await this.updateToken();
       }
       catch(error){
-        console.log("Error updating token");
         this.isUpdating = false;
         await this.redirectLogin();
       }
     }
     else {
-      if (!cookieRefresh) {
-        console.log("No refresh token found");
-        //await this.redirectLogin();
-      }
-      else console.log("Waiting for token update");
       while (this.isUpdating) {
         await new Promise((resolve) => setTimeout(resolve, 10));
       }
@@ -105,12 +97,10 @@ class tokenService {
 
 
   async updateToken() {
-    console.log("[updateToken]")
       const apiUrl = "/authapi";
       let token = await this.checkCookie(this.cookieRefreshName);
 
       if (!token) {
-          console.log("No token found");
           await this.redirectLogin();
           return; // Exit if no token is found
       }
@@ -126,11 +116,9 @@ class tokenService {
             this.isUpdating = false;
             await this.setToken(tk);
 
-            console.log("[Finished updateToken]")
             resolve(); // Resolve the promise when the token is updated
           },
           error: async (xhr) => {
-            console.log("Error occurred, redirecting to login");
             this.isUpdating = false;
             await this.redirectLogin();
             reject(); // Reject the promise on error

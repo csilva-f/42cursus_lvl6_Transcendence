@@ -48,7 +48,6 @@ async function fetchGames(statusID) {
           updateContent(langData);
         },
         error: function (xhr, status, error) {
-          console.error("Error Thrown:", error);
           showErrorToast(APIurl, error, langData);
         },
       });
@@ -119,10 +118,8 @@ async function postRemoteGame() {
     },
     data: JSON.stringify(gameData),
     success: async function (res) {
-      console.log("Enter game: ", res);
       showSuccessToast(langData, langData.gamecreated);
       $("#createModal").modal("hide");
-      console.log("Game Created Response:", res);
       const game = res.game;
       if (!game || !game.id) {
           throw new Error("Game not found in API response.");
@@ -132,11 +129,8 @@ async function postRemoteGame() {
       localStorage.setItem("currentGameId", gameId);
       const wsUrl = `wss://${window.location.host}/channels/${gameId}/`;
       const ws = new WebSocket(wsUrl);
-      let playerCount = 0;
-      // let gameInterval;
       let myAvatar = await UserInfo.getUserAvatarPath();
       ws.onopen = async function () {
-        //console.log("WebSocket connection established successfully.");
         localStorage.setItem("gameInfo", JSON.stringify(res.game.id));
         window.history.pushState({}, "", `/pong`);
         await locationHandler();
@@ -144,15 +138,12 @@ async function postRemoteGame() {
         document.getElementById("leftPlayerGameImg").src = `/static/img/bot/guest.svg`;
         document.getElementById("rightPlayerName").innerHTML = res.game.user1_nick;
         document.getElementById("rightPlayerGameImg").src = myAvatar;
-        //waitingRoom = true;
         remoteGame = true;
         remoteWs = ws;
       };
       ws.onmessage = async function (e) {
         const data = JSON.parse(e.data);
-        //console.log(data.message);
         if(data.type == "join") {
-          console.log("Both players connected. Opening the game page...");
           gameData["gameID"] = res.game.id;
           gameData["P2"] = res.game.user1_nick;
           gameData["P2_uid"] = res.game.user1;
@@ -160,18 +151,9 @@ async function postRemoteGame() {
           gameData["P1_uid"] = data.user_id;
           gameData["imgLeft"] = data.img;
           gameData["imgRight"] = myAvatar;
-          //console.table(gameData)
           const game = new RemoteGame(gameData, ws, true);
           game.initGame();
         }
-      };
-      
-      ws.onerror = function (error) {
-        //console.error("WebSocket error:", error);
-      };
-      
-      ws.onclose = function (e) {
-        //console.log(e);
       };
     },
     error: function (xhr, status, error) {
@@ -201,7 +183,6 @@ async function enterGame(gameID) {
     },
     data: JSON.stringify(gameData),
     success: async function (res) {
-      console.log("Enter game: ", res);
       showSuccessToast(langData, langData.gameEntered);
       fetchGames(1);
 
@@ -230,20 +211,6 @@ async function enterGame(gameID) {
         const game = new RemoteGame(gameData, ws, false);
         game.initGame();
       };
-
-      ws.onmessage = async function (event) {
-        const data = JSON.parse(event.data);
-        //console.log(data);
-      }
-
-      ws.onerror = function (error) {
-        //console.error("WebSocket error:", error);
-      };
-
-      ws.onclose = function (event) {
-        //console.log("WebSocket connection closed:", event);
-      };
-
     },
     error: function (xhr, status, error) {
       const data = JSON.parse(xhr.responseJSON);
@@ -297,7 +264,6 @@ async function fetchTournaments(statusID) {
     })
     .then((data) => {
       const APIurl = `/api/get-tournaments/?statusID=${statusID}`;
-      console.log(APIurl)
       $.ajax({
         type: "GET",
         url: APIurl,
@@ -316,13 +282,11 @@ async function fetchTournaments(statusID) {
           updateContent(langData);
         },
         error: function (xhr, status, error) {
-          console.error("Error Thrown:", error);
           showErrorToast(APIurl, error, langData);
         },
       });
     })
     .catch((error) => {
-      console.error("There was a problem with the fetch operation:", error);
     });
 }
 
@@ -376,44 +340,10 @@ async function postLocalTournament() {
   });
 }
 
-//? POST - /api/update-game/
-async function enterTournament(gameID) {
-  const userLang = localStorage.getItem("language") || "en";
-  const langData = await getLanguageData(userLang);
-  const APIurl = `/api/get-games/?tournamentID=${gameID}`;
-  console.log(APIurl)
-  let gameData = {};
-  $.ajax({
-    type: "GET",
-    url: APIurl,
-    contentType: "application/json",
-    headers: {
-      Authorization: `Bearer ${JWT.getAccess()}`,
-    },
-    success: function (res) {
-      console.log(res);
-      res.games.forEach((element) => {
-        if (element.phaseID == 1) {
-          //Logica para entrar nos jogos dos quartos de final
-          //Perguntar carolina se faz-se aqui a logica de entrar para user1 ou user2
-        }
-      });
-      updateContent(langData);
-    },
-    error: function (xhr, status, error) {
-      const data = JSON.parse(xhr.responseJSON);
-			showErrorUserToast(langData, data.error);
-      // showErrorToast(APIurl, error, langData);
-      // resetModal();
-    },
-  });
-}
-
 async function fetchTournamentGames(tournamentID) {
   const langData = localStorage.getItem("language") || "en";
   const accessToken = await JWT.getAccess();
   const APIurl = `/api/get-games/?tournamentID=${tournamentID}`;
-  console.log(APIurl)
   if (!tournamentID)
     return Promise.resolve([]);
   return new Promise((resolve, reject) => {
@@ -472,7 +402,6 @@ async function enterTournamentGame(gameID) {
       game.initGame();
     },
     error: function (xhr, status, error) {
-      console.error("Error Thrown:", error);
       showErrorToast(APIurl, error, langData);
     },
   });
@@ -481,7 +410,6 @@ async function enterTournamentGame(gameID) {
 async function fetchGameStatistics(gameID) {
   const accessToken = await JWT.getAccess();
   const APIurl = `/api/get-games/?gameID=${gameID}`;
-  console.log(APIurl)
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "GET",

@@ -11,7 +11,6 @@ async function goToScreen(isTournament) {
     window.history.pushState({}, "", "/games");
     await locationHandler();
     if (isTournament == '0') {
-        console.log("[isTournament == 0]")
         const iconElement = document.getElementById("loadGamesIcon");
 		disableIcon(iconElement);
 		const iconStatusElement = document.getElementById("searchingLi");
@@ -24,7 +23,6 @@ async function goToScreen(isTournament) {
 //tirar botao de play again nos jogos remotos e de torneios
 async function showGameStats(leftName, leftScore, leftColision, rightName, rightScore,
     rightColision, removePlayAgain, imgLeft, imgRight, isTournament, gameDuration) {
-    console.log(window.location.href);
     const pongGameDiv = document.getElementById('pongGameDiv');
     const mainGameScore = document.getElementById('mainGameScore');
     const finishedGame = document.getElementById('finishedGame');
@@ -85,7 +83,6 @@ async function showGameStats(leftName, leftScore, leftColision, rightName, right
 
 function startWinAnimation() {
     const randomIndex = Math.floor(Math.random() * 3);
-    console.log("randomIndex: ", randomIndex)
     switch (randomIndex){
         case 0:
             fireworkAnimation();
@@ -99,39 +96,9 @@ function startWinAnimation() {
     }
 }
 
-// function formatTime(seconds) {
-//     const minutes = Math.floor(seconds / 60);
-//     const remainingSeconds = seconds % 60;
-//     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-// }
-
-// function startTimer() {
-//     if (!timerActive) {
-//         timerActive = true;
-//         timer = setInterval(() => {
-//             timerSeconds++;
-//         }, 1000);
-//     }
-// }
-
-// function stopTimer() {
-//     if (timerActive) {
-//         clearInterval(timer);
-//         timerActive = false;
-//     }
-//     return timerSeconds;
-// }
-
-// function getResult(response) {
-//   gameDuration = response;
-//   console.log(response);
-//   //use return_first variable here
-// }
-
 async function updateGameStatus(data, ws, isWinner){
     const userLang = localStorage.getItem("language") || "en";
     const langData = await getLanguageData(userLang);
-    console.log(data);
     const APIurl = `/api/update-game/`;
     const accessToken = await JWT.getAccess();
     $.ajax({
@@ -148,7 +115,6 @@ async function updateGameStatus(data, ws, isWinner){
             activateTopBar();
             const timeString = res.game.gameDuration;
             const formattedTime = timeString.split('.')[0];
-            console.log("Game duration:", formattedTime);
             if(!ws){
                 showGameStats(data.P1, data.user1_points, data.user1_hits,
                     data.P2, data.user2_points, data.user2_hits,
@@ -162,7 +128,6 @@ async function updateGameStatus(data, ws, isWinner){
                     message: "Refresh game status",
                     gameDuration: formattedTime,
                 }
-                //console.log(msg.message);
                 ws.send(JSON.stringify(msg));
                 ws.close(1000);
             }

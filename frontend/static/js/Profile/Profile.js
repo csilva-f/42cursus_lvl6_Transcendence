@@ -18,7 +18,6 @@ function updateIcon(genderID) {
 }
 
 async function insertProfileInfo(UserElement, users_on) {
-    console.log("[insertProfileInfo]")
     const userLang = localStorage.getItem("language") || "en";
     const langData = await getLanguageData(userLang);
     const errorMsg = "Error, empty field"; 
@@ -26,7 +25,6 @@ async function insertProfileInfo(UserElement, users_on) {
         showErrorUserToast(langData, errorMsg);
         return ;
     }
-    console.table(UserElement)
     if (UserElement.id != await UserInfo.getUserID()){
         document.getElementById("birthdayText").textContent = UserElement.birthdate;
         document.getElementById("genderText").textContent = UserElement.gender;
@@ -35,10 +33,6 @@ async function insertProfileInfo(UserElement, users_on) {
         document.getElementById("avatarPreview").src = `/static/img/profilePic/${UserElement.avatar}`;
         document.getElementById("phoneNumberText").textContent = "PRIVATE";
         
-        console.log("gender: ", gender);
-        console.log()
-        console.log(Number(UserElement.id));
-        console.log(users_on);
         if (users_on.includes(Number(UserElement.id))) {
             userOnStatus.style.backgroundColor = "green"; // Online
         } else {
@@ -148,7 +142,6 @@ function validateBio(bioText, validationBio, checkId) {
 }
 
 async function insertOwnProfileInfo() {
-    console.log("[insertOwnProfileInfo]")
     const fName = await UserInfo.getUserFirstName();
     const lName = await UserInfo.getUserLastName();
     const bDate = await UserInfo.getUserBirthdate();

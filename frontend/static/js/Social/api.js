@@ -25,15 +25,12 @@ async function fetchUsers() {
         },
         success: function (res) {
           if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
-            console.warn("WebSocket not found or closed. Reinitializing...");
             requestOnlineUsers(function (onlineUsers) {
-                console.log("Updated online users list:", onlineUsers);
                 if (window.location.pathname == "/social")
                   renderUserCards(res.nonFriendsList, data, onlineUsers, 1);
             });
           } else {
             requestOnlineUsers(function (onlineUsers) {
-                console.log("Updated online users list:", onlineUsers);
                 if (window.location.pathname == "/social")
                   renderUserCards(res.nonFriendsList, data, onlineUsers, 1);
             });
@@ -41,13 +38,11 @@ async function fetchUsers() {
           updateContent(langData);
         },
         error: function (xhr, status, error) {
-          console.error("Error Thrown:", error);
           showErrorToast(APIurl, error, langData);
         },
       });
     })
     .catch((error) => {
-      console.error("There was a problem with the fetch operation:", error);
     });
 }
 
@@ -55,7 +50,6 @@ function renderUserCards(usersList, cardTemplate, users_on, isNonFriends) {
   const divElement = document.getElementById("usersContent");
   divElement.innerHTML = "";
   usersList.forEach(element => {
-    console.log(element)
       const newCard = document.createElement("div");
       newCard.id = "cardUserContent";
       newCard.innerHTML = cardTemplate;
@@ -95,17 +89,14 @@ async function fetchFriends() {
         },
         success: function (res) {
           if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
-            console.warn("WebSocket not found or closed. Reinitializing...");
             initializeWebSocket(() => {
                 requestOnlineUsers(function (onlineUsers) {
-                    console.log("Updated online users list:", onlineUsers);
                     if (window.location.pathname == "/social")
                       renderUserCards(res.friendships, data, onlineUsers, 0);
                 });
             });
           } else {
             requestOnlineUsers(function (onlineUsers) {
-                console.log("Updated online users list:", onlineUsers);
                 if (window.location.pathname == "/social")
                   renderUserCards(res.friendships, data, onlineUsers, 0);
             });
@@ -113,13 +104,11 @@ async function fetchFriends() {
           updateContent(langData);
         },
         error: function (xhr, status, error) {
-          console.error("Error Thrown:", error);
           showErrorToast(APIurl, error, langData);
         },
       });
     })
     .catch((error) => {
-      console.error("There was a problem with the fetch operation:", error);
     });
 }
 
@@ -158,7 +147,6 @@ async function addPlayer(requestedFriend) {
   let body = {
     user2ID: requestedFriend,
   };
-  console.log("body: ", body);
   $.ajax({
     type: "POST",
     url: APIurl,

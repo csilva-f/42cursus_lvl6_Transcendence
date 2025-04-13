@@ -36,10 +36,8 @@ async function oauthLogin() {
         headers: { Accept: "application/json" },
         data: JSON.stringify({}),
         success: function (data) {
-            console.log(data);
             url = data.url;
             if (url) {
-                console.log(url);
                 window.location.href = url;
             }
             showSuccessToast(langData, "Login successful!");
@@ -58,20 +56,17 @@ async function oauthCallback() {
     const userLang = localStorage.getItem("language") || "en";
 	const langData = await getLanguageData(userLang);
     if (code) {
-        console.log("oauthCallback");
         $.ajax({
             type: "GET",
             url: `${oauthapiUrl}/callback?code=${encodeURIComponent(code)}`,
             contentType: "application/json",
             headers: { Accept: "application/json" },
             success: async function (data) {
-                console.log(data);
                 await sendOAuthLogin(data);
                 showSuccessToast(langData, "Login successful!");
             },
             error: function (xhr) {
                 const data = JSON.parse(xhr.responseJSON);
-                console.log(data["error_description"]);
                 showErrorUserToast(langData, data["error_description"] || "Login failed.");
             },
         });
@@ -164,7 +159,6 @@ async function resetPassword() {
         data: JSON.stringify({ uid, token, password, confirm_password }),
         success: function (data) {
             //renderizar aqui o form de reset password
-            // console.log("Token validated successfully");
             $("#signup-message").text("Reset password successfully");
 			showSuccessToast(langData, langData.ResetPasswordSuccess);
             form.reset();
@@ -195,7 +189,6 @@ async function OTP_check_enable(jwtToken) {
                 Authorization: `Bearer ${jwtToken}`
             },
             success: async function (data) {
-                console.log(data);
                 var status = data.is_2fa_enabled;
                 await JWT.setOTPStatus(status);
                 if (status > 0) {
@@ -220,7 +213,6 @@ async function OTP_send_email() {
     if (await JWT.getOTPStatus() != 2) return;
     if (!jwtToken) return;
     let access = jwtToken.access;
-    console.log(access);
     $.ajax({
         type: "POST",
         url: `${apiUrl}/otp-send/`, // Adjust the endpoint as needed
@@ -231,7 +223,6 @@ async function OTP_send_email() {
          },
         //data: JSON.stringify({ access }),
         success: function (data) {
-            console.log("sucess");
         },
         error: function (xhr) {
             const data = JSON.parse(xhr.responseJSON);
@@ -262,8 +253,6 @@ async function verifyAccount() {
     const apiUrl = "/authapi";
     let token = await JWT.getTempToken();
     let access = await JWT.getTempAccess();
-    console.log('Token:', token);
-    console.log('Access:', access);
     $.ajax({
         type: "POST",
         url: `${apiUrl}/otp-verify/`,
@@ -274,7 +263,6 @@ async function verifyAccount() {
         },
         data: JSON.stringify({ code }),
         success: async function (data) {
-            console.log(data);
             JWT.setToken(token);
             await UserInfo.refreshUser();
             let uid = await UserInfo.getUserID();

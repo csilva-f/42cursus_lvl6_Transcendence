@@ -27,9 +27,6 @@ class RemoteGame  {
         closeGame = false;
         remoteWs = this.ws;
         remoteGame = true;
-        //console.log("onload");
-        //this.canvas = document.getElementById('pongGameCanvas');
-        //const context = canvas.getContext('2d');
 
         // Get the device pixel ratio (DPR)
         const dpr = window.devicePixelRatio || 1;
@@ -54,7 +51,6 @@ class RemoteGame  {
             document.getElementById("leftPlayerName").innerHTML = "Shin";
             document.getElementById("rightPlayerName").innerHTML = "Chan";
         } else {
-            //console.log(this.gameData)
             this.objects = [
                 new Ball(this.canvas.width / 2, this.canvas.height / 2, this.ballVelocity, this.ballVelocity, this.ballRadius),
                 new Paddle(1, paddleWidth, paddleHeight, "#94DEC5", 30, (this.canvas.height / 2) - 75, paddleVelocity),
@@ -102,7 +98,6 @@ class RemoteGame  {
                 }
             }
             if(!this.isHost && data.message == "Refresh game status"){
-                //console.log("IT WORKS")
                 await UserInfo.refreshUser();
                 await activateTopBar();
                 showGameStats(this.gameData.P1, this.objects[1].paddleScore, 
@@ -116,13 +111,11 @@ class RemoteGame  {
             }
             if(data.message == "A player left the game." && data.close_code != 1000){
                 this.disconnect = true;
-                //console.log("close code:", data.close_code);
             }
         };
         this.gameLoop();
     }
     ballUpdateByValue(x, y, velocityX, velocityY, lastColision){
-        //console.log("=>> Ball update by value")
         this.objects[0].updateByValue(x, y, velocityX, velocityY, lastColision);
         this.objects[0].colissionEdge(this.canvas);
     }
@@ -130,7 +123,6 @@ class RemoteGame  {
         this.objects[2].paddleY = y;
         this.objects[2].colissionEdge(this.canvas);
         this.objects[2].rightColissionBall(this.objects[0], remoteMaxSpeed);
-        //console.log("=>> Paddle update right by value")
     }
     paddleUpdateByValueLeft(y){
         this.objects[1].paddleY = y;
@@ -155,11 +147,9 @@ class RemoteGame  {
             else
                 this.joinerGame();
         } else if(closeGame){
-            //console.log("force finish");
             closeGame = false;
             remoteGame = false;
         } else if (this.disconnect){
-            //console.log("disconect");
             this.ws.close(3000); // meu codigo de unexpected close
             window.history.pushState({}, "", `/games`);
             await locationHandler();
@@ -209,8 +199,6 @@ class RemoteGame  {
         this.objects[1].colissionEdge(this.canvas);
         let colision = this.objects[1].leftColissionBall(this.objects[0], remoteMaxSpeed);
         if(colision){
-            // console.log("=>> Paddle update left")
-            // console.log("Colision with paddle LEFT! Update ball again");
             if(this.isHost){
                 this.objects[1].paddleColisionTimes++;
                 let msg = JSON.stringify(this.objects[0].toJSON());
@@ -223,8 +211,6 @@ class RemoteGame  {
         this.objects[2].colissionEdge(this.canvas);
         let colision = this.objects[2].rightColissionBall(this.objects[0], remoteMaxSpeed);
         if(colision){
-            //console.log("=>> Paddle update right")
-            //console.log("Colision with paddle RIGHT! Update ball again");
             if(this.isHost){
                 this.objects[2].paddleColisionTimes++;
                 let msg = JSON.stringify(this.objects[0].toJSON());
@@ -241,7 +227,6 @@ class RemoteGame  {
         if (this.objects[0].ballX + this.objects[0].ballRadius < 0){
             this.objects[0].lastColision = 0;
             this.objects[2].paddleScore += 1;
-            //document.getElementById("playerRightScore").innerHTML = this.objects[2].paddleScore;
             if(this.objects[2].paddleScore < this.maxScore)
                 this.respawnBallLeft();
             else {
@@ -257,7 +242,6 @@ class RemoteGame  {
             }
         }
         if (this.objects[0].ballX - this.objects[0].ballRadius > this.canvas.width){
-            //console.log("=>> GOLOOOO")
             this.objects[0].lastColision = 0;
             this.objects[1].paddleScore += 1;
             if(this.objects[1].paddleScore < this.maxScore)
@@ -275,26 +259,6 @@ class RemoteGame  {
             }
         }
     }
-    // respawnBall() {
-    //     if (this.objects[0].ballVelocityX > 0) {
-    //         this.objects[0].ballX = this.canvas.width / 2;
-    //         this.objects[0].ballY = (Math.random() * (this.canvas.height - 200)) + 100; 
-    //         this.objects[0].ballVelocityX = -ballVelocity;
-    //     }
-    //     if (this.objects[0].ballVelocityX < 0) {
-    //         this.objects[0].ballX = this.canvas.width / 2;
-    //         this.objects[0].ballY = (Math.random() * (this.canvas.height - 200)) + 100;
-    //         this.objects[0].ballVelocityX = ballVelocity;
-    //         let msg = {
-    //             element: 3,
-    //             paddleSide: 2,
-    //             paddleScore: this.objects[2].paddleScore,
-    //         }
-    //     }
-    //     this.objects[0].ballVelocityY *= -1;
-    //     let msg = JSON.stringify(this.objects[0].toJSON());
-    //     this.ws.send(msg);
-    // }
     respawnBallLeft() {
         this.objects[0].ballX = this.canvas.width / 2;
         this.objects[0].ballY = (Math.random() * (this.canvas.height - 200)) + 100;
@@ -304,7 +268,6 @@ class RemoteGame  {
         msg["element"] = 3;
         msg["paddleSide"] = 2;
         msg["paddleScore"] = this.objects[2].paddleScore;
-        //console.log(msg);
         this.ws.send(JSON.stringify(msg));
     }
     respawnBallRight() {
@@ -316,7 +279,6 @@ class RemoteGame  {
         msg["element"] = 3;
         msg["paddleSide"] = 1;
         msg["paddleScore"] = this.objects[1].paddleScore;
-        //console.log(msg);
         this.ws.send(JSON.stringify(msg));
     }
 }

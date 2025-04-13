@@ -1,7 +1,6 @@
 //? /authapi/otp-enable/
 async function EnableOTPViewSet(status) {
 	jwtToken = await JWT.getAccess();
-	console.log("JWT: ", jwtToken);
 	const apiUrl = "/authapi";
 	$.ajax({
 		type: "POST",
@@ -13,7 +12,6 @@ async function EnableOTPViewSet(status) {
 		},
 		data: JSON.stringify({ status }),
 		success: function (data) {
-			console.log("Sucess");
 			if (status == 1) {
 				createQrCode(data.otpauth_uri);
 				let modal = new bootstrap.Modal(document.getElementById("codeModal"));
@@ -42,21 +40,17 @@ async function fetchProfileInfo(userID) {
 			Authorization: `Bearer ${accessToken}`,
 		},
 		success: function (res) {
-			console.log(res);
 			if (userID != null)
 				insertUserLevel("profileLvlProgress", res.users[0].level);
 			if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
-				console.warn("WebSocket not found or closed. Reinitializing...");
 				initializeWebSocket(() => {
 					requestOnlineUsers(function (onlineUsers) {
-						console.log("Updated online users list:", onlineUsers);
 						if (window.location.pathname.includes("/profile"))
 							insertProfileInfo(res.users[0], onlineUsers);
 					});
 				});
 			} else {
 				requestOnlineUsers(function (onlineUsers) {
-					console.log("Updated online users list:", onlineUsers);
 					if (window.location.pathname.includes("/profile"))
 						insertProfileInfo(res.users[0], onlineUsers);
 				});
@@ -64,7 +58,6 @@ async function fetchProfileInfo(userID) {
 			updateContent(langData);
 		},
 		error: function (xhr, status, error) {
-			console.error("Error thrown:", error);
 			showErrorToast(APIurl, error, langData);
 		},
 	});
@@ -96,7 +89,6 @@ async function uploadAvatar(event) {
 		  contentType: false,
 		  data: form,
 		  success: function (response) {
-			console.log(response);
 			imgElement.src = e.target.result;
 		  },
 		  error: function (response) {
@@ -141,7 +133,6 @@ async function uploadAvatar(event) {
 		},
 		error: function (xhr) {
             const data = JSON.parse(xhr.responseJSON);
-            console.log("Change password failed:", data.error, xhr.responseJSON, data.error[0]);
 			showErrorUserToast(langData, data.error[0]);
 			// retornar os erros!!!
 		}

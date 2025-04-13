@@ -3,7 +3,6 @@ function passwordVisibility(passwordFieldId, toggleIconId) {
   const passwordInput = document.getElementById(passwordFieldId);
   const passwordIcon = document.getElementById(toggleIconId).querySelector("i");
 
-  //console.log( "PasswordIcon: ", passwordIcon);
   if (passwordInput.type === "password") {
     passwordInput.type = "text";
     if(passwordIcon){

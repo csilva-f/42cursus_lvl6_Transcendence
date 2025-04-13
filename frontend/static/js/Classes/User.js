@@ -19,7 +19,6 @@ class User {
     let uid = this.userID;
     initializeWebSocket(() => {
       if (uid && window.ws_os && window.ws_os.readyState === WebSocket.OPEN) {
-        //console.log("User ID:", UserInfo.getUserID());
         window.ws_os.send(JSON.stringify({ user_id: uid }));
       }
     });
@@ -32,7 +31,6 @@ class User {
   }
 
   async refreshUser() {
-    console.log("[refreshUser]");
     if (!this.isUpdating) {
       this.isUpdating = true;
       try {
@@ -40,7 +38,6 @@ class User {
       } catch (error) {
       } finally {
         this.isUpdating = false;
-        console.log("[Finished refreshUser]");
         await notificationLoad();
       }
     } else {
@@ -148,7 +145,6 @@ class User {
       avatar: this.userAvatar,
       language: this.userLang
     };
-    console.table(userData);
     $.ajax({
       type: "POST",
       url: `/api/update-userextension/`,
@@ -161,7 +157,6 @@ class User {
         this.isUpdating = false;
       },
       error: function (xhr, status, error) {
-        console.log("error: ", error);
         this.isUpdating = false;
       },
     });
@@ -215,7 +210,6 @@ class User {
           resolve();
         },
         error: function (xhr, status, error) {
-          console.log("error: ", error);
           this.isUpdating = false;
           reject(error);
         },
@@ -239,7 +233,6 @@ class User {
           resolve();
         },
         error: function (xhr, status, error) {
-          console.log("error: ", error);
           this.isUpdating = false;
           reject(error);
         },

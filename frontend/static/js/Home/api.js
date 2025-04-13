@@ -32,13 +32,11 @@ async function fetchMatchHistory() {
 					updateContent(langData);
 				},
 				error: function (xhr, status, error) {
-					console.error("Error Thrown:", error);
 					showErrorToast(APIurl, error, langData);
 				},
 			});
 		})
 		.catch((error) => {
-			console.error("There was a problem with the fetch operation:", error);
 		});
 }
 
@@ -66,17 +64,14 @@ async function fetchHomeFriends() {
 				},
 				success: function (res) {
 					if (!window.ws_os || window.ws_os.readyState !== WebSocket.OPEN) {
-						console.warn("WebSocket not found or closed. Reinitializing...");
 						initializeWebSocket(() => {
 							requestOnlineUsers(function (onlineUsers) {
-								console.log("Updated online users list:", onlineUsers);
 								if (window.location.pathname == "/")
 									renderHomeFriends(res.friendships, data, onlineUsers);
 							});
 						});
 					} else {
 						requestOnlineUsers(function (onlineUsers) {
-							console.log("Updated online users list:", onlineUsers);
 							if (window.location.pathname == "/")
 								renderHomeFriends(res.friendships, data, onlineUsers);
 						});
@@ -84,13 +79,11 @@ async function fetchHomeFriends() {
 					updateContent(langData);
 				},
 				error: function (xhr, status, error) {
-					console.error("Error Thrown:", error);
 					showErrorToast(APIurl, error, langData);
 				},
 			});
 		})
 		.catch((error) => {
-			console.error("There was a problem with the fetch operation:", error);
 		});
 }
 
@@ -129,13 +122,11 @@ async function fetchTopUsers() {
 					updateContent(langData);
 				},
 				error: function (xhr, status, error) {
-					console.error("Error Thrown:", error);
 					showErrorToast(APIurl, error, langData);
 				},
 			});
 		})
 		.catch((error) => {
-			console.error("There was a problem with the fetch operation:", error);
 		});
 }
 
@@ -154,8 +145,6 @@ async function finishProfile() {
 		birthdate: document.getElementById("newBirthday").value,
 		genderid: genderID,
 	};
-	console.log(["finishProfile"])
-	console.log(userData);
 	$.ajax({
 		type: "POST",
 		url: APIurl,
